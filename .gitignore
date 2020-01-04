@@ -9,6 +9,7 @@ vendor/
 *.db
 *.zip
 *.tgz
+*.log
 
 # Test binary, build with `go test -c`
 *.test

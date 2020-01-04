@@ -10,7 +10,9 @@ require (
 	github.com/golang/protobuf v1.3.2
 	github.com/mattn/go-colorable v0.1.4
 	github.com/mattn/go-isatty v0.0.11
+	github.com/mattn/go-runewidth v0.0.7 // indirect
 	github.com/mgutz/ansi v0.0.0-20170206155736-9520e82c474b
+	github.com/nsf/termbox-go v0.0.0-20191229070316-58d4fcbce2a7
 	github.com/vmihailenco/msgpack v0.0.0-20190804092921-cd92a145e6d2
 	github.com/vmihailenco/tagparser v0.1.1
 	golang.org/x/crypto v0.0.0-20191227163750-53104e6ec876

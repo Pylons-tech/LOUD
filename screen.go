@@ -4,22 +4,25 @@ import (
 	"fmt"
 	"io"
 	"math"
+	"os"
 	"unicode/utf8"
 
 	"github.com/ahmetb/go-cursor"
 	"github.com/gliderlabs/ssh"
 	"github.com/mgutz/ansi"
+	"golang.org/x/crypto/ssh/terminal"
+	"github.com/nsf/termbox-go"
 )
 
-// Screen represents a UI screen. For now, just an SSH terminal.
+// Screen represents a UI screen.
 type Screen interface {
-	HandleInputKey(string)
+	SetScreenSize(int, int)
+	HandleInputKey(termbox.Key)
 	Render()
 	Reset()
 }
 
-type sshScreen struct {
-	session        ssh.Session
+type GameScreen struct {
 	world          World
 	user           User
 	screenSize     ssh.Window
@@ -83,7 +86,15 @@ func centerText(message, pad string, width int) string {
 	return fmt.Sprintf("%s%s%s", string([]rune(leftString)[0:left]), message, string([]rune(leftString)[0:right]))
 }
 
-func (screen *sshScreen) colorFunc(color string) func(string) string {
+func (screen *GameScreen) SetScreenSize(Width, Height int) {
+	screen.screenSize = ssh.Window{
+		Width:  Width,
+		Height: Height,
+	}
+	screen.refreshed = false
+}
+
+func (screen *GameScreen) colorFunc(color string) func(string) string {
 	_, ok := screen.colorCodeCache[color]
 
 	if !ok {
@@ -93,37 +104,37 @@ func (screen *sshScreen) colorFunc(color string) func(string) string {
 	return screen.colorCodeCache[color]
 }
 
-func (screen *sshScreen) drawBox(x, y, width, height int) {
+func (screen *GameScreen) drawBox(x, y, width, height int) {
 	color := ansi.ColorCode(fmt.Sprintf("255:%v", bgcolor))
 
 	for i := 1; i < width; i++ {
-		io.WriteString(screen.session, fmt.Sprintf("%s%s─", cursor.MoveTo(y, x+i), color))
-		io.WriteString(screen.session, fmt.Sprintf("%s%s─", cursor.MoveTo(y+height, x+i), color))
+		io.WriteString(os.Stdout, fmt.Sprintf("%s%s─", cursor.MoveTo(y, x+i), color))
+		io.WriteString(os.Stdout, fmt.Sprintf("%s%s─", cursor.MoveTo(y+height, x+i), color))
 	}
 
 	for i := 1; i < height; i++ {
 		midString := fmt.Sprintf("%%s%%s│%%%vs│", (width - 1))
-		io.WriteString(screen.session, fmt.Sprintf("%s%s│", cursor.MoveTo(y+i, x), color))
-		io.WriteString(screen.session, fmt.Sprintf("%s%s│", cursor.MoveTo(y+i, x+width), color))
-		io.WriteString(screen.session, fmt.Sprintf(midString, cursor.MoveTo(y+i, x), color, " "))
+		io.WriteString(os.Stdout, fmt.Sprintf("%s%s│", cursor.MoveTo(y+i, x), color))
+		io.WriteString(os.Stdout, fmt.Sprintf("%s%s│", cursor.MoveTo(y+i, x+width), color))
+		io.WriteString(os.Stdout, fmt.Sprintf(midString, cursor.MoveTo(y+i, x), color, " "))
 	}
 
-	io.WriteString(screen.session, fmt.Sprintf("%s%s╭", cursor.MoveTo(y, x), color))
-	io.WriteString(screen.session, fmt.Sprintf("%s%s╰", cursor.MoveTo(y+height, x), color))
-	io.WriteString(screen.session, fmt.Sprintf("%s%s╮", cursor.MoveTo(y, x+width), color))
-	io.WriteString(screen.session, fmt.Sprintf("%s%s╯", cursor.MoveTo(y+height, x+width), color))
+	io.WriteString(os.Stdout, fmt.Sprintf("%s%s╭", cursor.MoveTo(y, x), color))
+	io.WriteString(os.Stdout, fmt.Sprintf("%s%s╰", cursor.MoveTo(y+height, x), color))
+	io.WriteString(os.Stdout, fmt.Sprintf("%s%s╮", cursor.MoveTo(y, x+width), color))
+	io.WriteString(os.Stdout, fmt.Sprintf("%s%s╯", cursor.MoveTo(y+height, x+width), color))
 }
 
-func (screen *sshScreen) drawFill(x, y, width, height int) {
+func (screen *GameScreen) drawFill(x, y, width, height int) {
 	color := ansi.ColorCode(fmt.Sprintf("0:%v", bgcolor))
 
 	midString := fmt.Sprintf("%%s%%s%%%vs", (width))
 	for i := 0; i <= height; i++ {
-		io.WriteString(screen.session, fmt.Sprintf(midString, cursor.MoveTo(y+i, x), color, " "))
+		io.WriteString(os.Stdout, fmt.Sprintf(midString, cursor.MoveTo(y+i, x), color, " "))
 	}
 }
 
-func (screen *sshScreen) drawProgressMeter(min, max, fgcolor, bgcolor, width uint64) string {
+func (screen *GameScreen) drawProgressMeter(min, max, fgcolor, bgcolor, width uint64) string {
 	var blink bool
 	if min > max {
 		min = max
@@ -166,28 +177,28 @@ func (screen *sshScreen) drawProgressMeter(min, max, fgcolor, bgcolor, width uin
 	return onColor(on) + offColor(off)
 }
 
-func (screen *sshScreen) drawVerticalLine(x, y, height int) {
+func (screen *GameScreen) drawVerticalLine(x, y, height int) {
 	color := ansi.ColorCode(fmt.Sprintf("255:%v", bgcolor))
 	for i := 1; i < height; i++ {
-		io.WriteString(screen.session, fmt.Sprintf("%s%s│", cursor.MoveTo(y+i, x), color))
+		io.WriteString(os.Stdout, fmt.Sprintf("%s%s│", cursor.MoveTo(y+i, x), color))
 	}
 
-	io.WriteString(screen.session, fmt.Sprintf("%s%s┬", cursor.MoveTo(y, x), color))
-	io.WriteString(screen.session, fmt.Sprintf("%s%s┴", cursor.MoveTo(y+height, x), color))
+	io.WriteString(os.Stdout, fmt.Sprintf("%s%s┬", cursor.MoveTo(y, x), color))
+	io.WriteString(os.Stdout, fmt.Sprintf("%s%s┴", cursor.MoveTo(y+height, x), color))
 }
 
-func (screen *sshScreen) drawHorizontalLine(x, y, width int) {
+func (screen *GameScreen) drawHorizontalLine(x, y, width int) {
 	color := ansi.ColorCode(fmt.Sprintf("255:%v", bgcolor))
 	for i := 1; i < width; i++ {
-		io.WriteString(screen.session, fmt.Sprintf("%s%s─", cursor.MoveTo(y, x+i), color))
+		io.WriteString(os.Stdout, fmt.Sprintf("%s%s─", cursor.MoveTo(y, x+i), color))
 	}
 
-	io.WriteString(screen.session, fmt.Sprintf("%s%s├", cursor.MoveTo(y, x), color))
-	io.WriteString(screen.session, fmt.Sprintf("%s%s┤", cursor.MoveTo(y, x+width), color))
+	io.WriteString(os.Stdout, fmt.Sprintf("%s%s├", cursor.MoveTo(y, x), color))
+	io.WriteString(os.Stdout, fmt.Sprintf("%s%s┤", cursor.MoveTo(y, x+width), color))
 }
 
-func (screen *sshScreen) redrawBorders() {
-	io.WriteString(screen.session, ansi.ColorCode(fmt.Sprintf("255:%v", bgcolor)))
+func (screen *GameScreen) redrawBorders() {
+	io.WriteString(os.Stdout, ansi.ColorCode(fmt.Sprintf("255:%v", bgcolor)))
 	screen.drawBox(1, 1, screen.screenSize.Width-1, screen.screenSize.Height-1)
 	screen.drawVerticalLine(screen.screenSize.Width/2-2, 1, screen.screenSize.Height)
 
@@ -201,7 +212,7 @@ func (screen *sshScreen) redrawBorders() {
 	screen.drawHorizontalLine(1, screen.screenSize.Height-2, screen.screenSize.Width/2-3)
 }
 
-func (screen *sshScreen) renderCharacterSheet(slotKeys map[string]func()) {
+func (screen *GameScreen) renderCharacterSheet(slotKeys map[string]func()) {
 	var HP uint64 = 10
 	var MaxHP uint64 = 10
 	bgcolor := uint64(bgcolor)
@@ -232,7 +243,7 @@ func (screen *sshScreen) renderCharacterSheet(slotKeys map[string]func()) {
 	infoLines = append(infoLines, centerText(" ❦ ", "─", width))
 
 	for index, line := range infoLines {
-		io.WriteString(screen.session, fmt.Sprintf("%s%s", cursor.MoveTo(2+index, x), fmtFunc(line)))
+		io.WriteString(os.Stdout, fmt.Sprintf("%s%s", cursor.MoveTo(2+index, x), fmtFunc(line)))
 		if index+2 > int(screen.screenSize.Height) {
 			break
 		}
@@ -242,33 +253,33 @@ func (screen *sshScreen) renderCharacterSheet(slotKeys map[string]func()) {
 	screen.drawFill(x, lastLine+1, width, screen.screenSize.Height-(lastLine+2))
 }
 
-func (screen *sshScreen) HandleInputKey(input string) {
+func (screen *GameScreen) HandleInputKey(input termbox.Key) {
 	screen.Render()
 }
 
-func (screen *sshScreen) Render() {
+func (screen *GameScreen) Render() {
 	var HP uint64 = 10
 
-	screen.user.Reload()
+	// screen.user.Reload()
 
 	if screen.screenSize.Height < 20 || screen.screenSize.Width < 60 {
 		clear := cursor.ClearEntireScreen()
 		move := cursor.MoveTo(1, 1)
-		io.WriteString(screen.session,
+		io.WriteString(os.Stdout,
 			fmt.Sprintf("%s%sScreen is too small. Make your terminal larger. (60x20 minimum)", clear, move))
 		return
 	} else if HP == 0 {
 		clear := cursor.ClearEntireScreen()
 		dead := "You died. Respawning..."
 		move := cursor.MoveTo(screen.screenSize.Height/2, screen.screenSize.Width/2-utf8.RuneCountInString(dead)/2)
-		io.WriteString(screen.session, clear+move+dead)
+		io.WriteString(os.Stdout, clear+move+dead)
 		screen.refreshed = false
 		return
 	}
 
 	if !screen.refreshed {
 		clear := cursor.ClearEntireScreen() + allowMouseInputAndHideCursor
-		io.WriteString(screen.session, clear)
+		io.WriteString(os.Stdout, clear)
 		screen.redrawBorders()
 		screen.refreshed = true
 	}
@@ -278,37 +289,24 @@ func (screen *sshScreen) Render() {
 	screen.renderCharacterSheet(slotKeys)
 }
 
-func (screen *sshScreen) Reset() {
-	io.WriteString(screen.session, fmt.Sprintf("%s👋\n", resetScreen))
+func (screen *GameScreen) Reset() {
+	io.WriteString(os.Stdout, fmt.Sprintf("%s👋\n", resetScreen))
 }
 
-func (screen *sshScreen) watchSSHScreen(resizeChan <-chan ssh.Window) {
-	done := screen.session.Context().Done()
-	for {
-		select {
-		case <-done:
-			return
-		case win := <-resizeChan:
-			screen.screenSize = win
-			screen.refreshed = false
-		}
+// NewScreen manages the window rendering for game
+func NewScreen(world World, user User) Screen {
+	width, height, _ := terminal.GetSize(0)
+
+	window := ssh.Window{
+		Width:  width,
+		Height: height,
 	}
-}
 
-// NewSSHScreen manages the window rendering for a game session
-func NewSSHScreen(session ssh.Session, world World, user User) Screen {
-	pty, resize, isPty := session.Pty()
-
-	screen := sshScreen{
-		session:        session,
+	screen := GameScreen{
 		world:          world,
 		user:           user,
-		screenSize:     pty.Window,
+		screenSize:     window,
 		colorCodeCache: make(map[string](func(string) string))}
-
-	if isPty {
-		go screen.watchSSHScreen(resize)
-	}
 
 	return &screen
 }

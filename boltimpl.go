@@ -108,26 +108,12 @@ func (user *dbUser) Save() {
 	})
 }
 
-func (user *dbUser) SSHKeysEmpty() bool {
-	return len(user.UserData.PublicKeys) == 0
-}
-
-func (user *dbUser) ValidateSSHKey(sshKey string) bool {
-	val, ok := user.UserData.PublicKeys[sshKey]
-	return val && ok
-}
-
-func (user *dbUser) AddSSHKey(sshKey string) {
-	user.UserData.PublicKeys[sshKey] = true
-	user.Save()
-}
-
 func getUserFromDB(world *dbWorld, username string) User {
 	user := dbUser{UserData: UserData{
 		Username: username},
 		world: world}
 
-	user.Reload()
+	// user.Reload()
 
 	return &user
 }
