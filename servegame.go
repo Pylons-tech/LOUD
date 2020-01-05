@@ -47,18 +47,10 @@ eventloop:
 			case termbox.KeyEsc:
 				screen.Reset()
 				break eventloop
-			// case "UP":
-			// case "DOWN":
-			// case "LEFT":
-			// case "RIGHT":
-			// case "TAB":
-			// case "/":
-			// case "BACKSPACE":
-			// case "ENTER":
 			default:
-				screen.HandleInputKey(ev.Key)
+				screen.HandleInputKey(ev)
 			}
-		case termbox.EventResize: 
+		case termbox.EventResize:
 			logMessage := fmt.Sprintf("Handling TermBox Resize Event (%d, %d) at %s", ev.Width, ev.Height, time.Now().UTC().Format(time.RFC3339))
 			log.Println(logMessage)
 

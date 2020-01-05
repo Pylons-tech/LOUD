@@ -11,6 +11,7 @@ const (
 // User represents an active user in the system.
 type User interface {
 	GetLocation() UserLocation
+	SetLocation(UserLocation)
 	Reload()
 	Save()
 }

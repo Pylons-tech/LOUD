@@ -78,6 +78,10 @@ func (user *dbUser) GetLocation() UserLocation {
 	return user.UserData.Location
 }
 
+func (user *dbUser) SetLocation(loc UserLocation) {
+	user.UserData.Location = loc
+}
+
 func (user *dbUser) Reload() {
 	var record []byte
 	user.world.database.View(func(tx *bolt.Tx) error {

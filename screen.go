@@ -18,7 +18,7 @@ import (
 // Screen represents a UI screen.
 type Screen interface {
 	SetScreenSize(int, int)
-	HandleInputKey(termbox.Key)
+	HandleInputKey(termbox.Event)
 	Render()
 	Reset()
 }
@@ -213,6 +213,31 @@ func (screen *GameScreen) redrawBorders() {
 	screen.drawHorizontalLine(1, screen.screenSize.Height-2, screen.screenSize.Width/2-3)
 }
 
+func (screen *GameScreen) renderUserCommands() {
+	CommandsMap := map[UserLocation]string{
+		HOME:   "F)orest\nS)hop",
+		FOREST: "Hu)nt\nH)ome\nS)hop",
+		SHOP:   "B)uy Items\nU)pgrade Items\nH)ome\nF)orest",
+	}
+
+	cmdString := CommandsMap[screen.user.GetLocation()]
+	infoLines := strings.Split(cmdString, "\n")
+
+	// box start point (x, y)
+	x := 2
+	y := screen.screenSize.Height/2 + 1
+
+	bgcolor := uint64(bgcolor)
+	fmtFunc := screen.colorFunc(fmt.Sprintf("255:%v", bgcolor))
+	for index, line := range infoLines {
+		io.WriteString(os.Stdout, fmt.Sprintf("%s%s",
+			cursor.MoveTo(y+index, x), fmtFunc(line)))
+		if index+2 > int(screen.screenSize.Height) {
+			break
+		}
+	}
+}
+
 func (screen *GameScreen) renderUserSituation() {
 	// For now this describes current game situation to user
 	LocationDescMap := map[UserLocation]string{
@@ -230,11 +255,14 @@ func (screen *GameScreen) renderUserSituation() {
 		infoLines = append(infoLines, ChunkString(line, screen.screenSize.Width/2-4)...)
 	}
 
+	// box start point (x, y)
 	x := 2
+	y := 2
+
 	bgcolor := uint64(bgcolor)
 	fmtFunc := screen.colorFunc(fmt.Sprintf("255:%v", bgcolor))
 	for index, line := range infoLines {
-		io.WriteString(os.Stdout, fmt.Sprintf("%s%s", cursor.MoveTo(2+index, x), fmtFunc(line)))
+		io.WriteString(os.Stdout, fmt.Sprintf("%s%s", cursor.MoveTo(y+index, x), fmtFunc(line)))
 		if index+2 > int(screen.screenSize.Height) {
 			break
 		}
@@ -282,7 +310,25 @@ func (screen *GameScreen) renderCharacterSheet() {
 	screen.drawFill(x, lastLine+1, width, screen.screenSize.Height-(lastLine+2))
 }
 
-func (screen *GameScreen) HandleInputKey(input termbox.Key) {
+func (screen *GameScreen) HandleInputKey(input termbox.Event) {
+	Key := string(input.Ch)
+	switch Key {
+	case "H": // HOME
+		fallthrough
+	case "h":
+		screen.user.SetLocation(HOME)
+		screen.refreshed = false
+	case "F": // FOREST
+		fallthrough
+	case "f":
+		screen.user.SetLocation(FOREST)
+		screen.refreshed = false
+	case "S": // SHOP
+		fallthrough
+	case "s":
+		screen.user.SetLocation(SHOP)
+		screen.refreshed = false
+	}
 	screen.Render()
 }
 
@@ -313,6 +359,7 @@ func (screen *GameScreen) Render() {
 		screen.refreshed = true
 	}
 
+	screen.renderUserCommands()
 	screen.renderUserSituation()
 	screen.renderCharacterSheet()
 }
