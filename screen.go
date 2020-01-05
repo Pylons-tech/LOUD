@@ -5,13 +5,14 @@ import (
 	"io"
 	"math"
 	"os"
+	"strings"
 	"unicode/utf8"
 
 	"github.com/ahmetb/go-cursor"
 	"github.com/gliderlabs/ssh"
 	"github.com/mgutz/ansi"
-	"golang.org/x/crypto/ssh/terminal"
 	"github.com/nsf/termbox-go"
+	"golang.org/x/crypto/ssh/terminal"
 )
 
 // Screen represents a UI screen.
@@ -212,7 +213,35 @@ func (screen *GameScreen) redrawBorders() {
 	screen.drawHorizontalLine(1, screen.screenSize.Height-2, screen.screenSize.Width/2-3)
 }
 
-func (screen *GameScreen) renderCharacterSheet(slotKeys map[string]func()) {
+func (screen *GameScreen) renderUserSituation() {
+	// For now this describes current game situation to user
+	LocationDescMap := map[UserLocation]string{
+		HOME:   "You are now at home.\nIf you like to hunt something go to forest.\nAnd if you like to buy/sell something go to shop",
+		FOREST: "You are now at forest.\nYou can hunt here or go back to home.",
+		SHOP:   "You are now at a shop.\nIf you want you can buy or sell items here.",
+	}
+
+	locDesc := LocationDescMap[screen.user.GetLocation()]
+
+	basicLines := strings.Split(locDesc, "\n")
+
+	infoLines := []string{}
+	for _, line := range basicLines {
+		infoLines = append(infoLines, ChunkString(line, screen.screenSize.Width/2-4)...)
+	}
+
+	x := 2
+	bgcolor := uint64(bgcolor)
+	fmtFunc := screen.colorFunc(fmt.Sprintf("255:%v", bgcolor))
+	for index, line := range infoLines {
+		io.WriteString(os.Stdout, fmt.Sprintf("%s%s", cursor.MoveTo(2+index, x), fmtFunc(line)))
+		if index+2 > int(screen.screenSize.Height) {
+			break
+		}
+	}
+}
+
+func (screen *GameScreen) renderCharacterSheet() {
 	var HP uint64 = 10
 	var MaxHP uint64 = 10
 	bgcolor := uint64(bgcolor)
@@ -284,9 +313,8 @@ func (screen *GameScreen) Render() {
 		screen.refreshed = true
 	}
 
-	var slotKeys map[string]func()
-
-	screen.renderCharacterSheet(slotKeys)
+	screen.renderUserSituation()
+	screen.renderCharacterSheet()
 }
 
 func (screen *GameScreen) Reset() {

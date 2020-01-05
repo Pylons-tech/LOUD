@@ -17,8 +17,9 @@ func (w *dbWorld) GetUser(username string) User {
 
 func (w *dbWorld) newUser(username string) UserData {
 	userData := UserData{
-		Username:   username,
-		PublicKeys: make(map[string]bool)}
+		Username: username,
+		Location: HOME,
+	}
 
 	return userData
 }
@@ -64,14 +65,17 @@ func LoadWorldFromDB(filename string) World {
 
 // UserData is a JSON-serializable set of information about a User.
 type UserData struct {
-	Username    string          `json:""`
-	Initialized bool            `json:""`
-	PublicKeys  map[string]bool `json:""`
+	Username string `json:""`
+	Location UserLocation
 }
 
 type dbUser struct {
 	UserData
 	world *dbWorld
+}
+
+func (user *dbUser) GetLocation() UserLocation {
+	return user.UserData.Location
 }
 
 func (user *dbUser) Reload() {
