@@ -350,3 +350,55 @@ Lv2 copper sword
     "BlockInterval":"0"
 }
 ```
+
+### Wooden sword lv1 sell recipe, 80 gold
+```
+{
+    "RType": "1",
+    "CoinInputs":[],
+    "ItemInput": [{
+        "Doubles": [],
+        "Longs": [{"Key": "level", "MinValue": "1", "MaxValue": "1"}],
+        "Strings": [{"Key": "Name", "Value": "Wooden sword"}]
+    }],
+    "Entries": {
+        "CoinOutputs": [{
+            "Coin":"loudcoin",
+            "Count": 80,
+            "Weight":1
+        }]
+    },
+    "ExtraInfo":"",
+    "Sender":"eugen",
+    "Name": "LOUD's Lv1 wooden sword sell recipe",
+    "CookbookName": "LOUD",
+    "Description": "this recipe is used to sell lv1 wooden sword.",
+    "BlockInterval":"0"
+}
+```
+
+### Wooden sword lv2 sell recipe, 160 gold
+```
+{
+    "RType": "1",
+    "CoinInputs":[],
+    "ItemInput": [{
+        "Doubles": [],
+        "Longs": [{"Key": "level", "MinValue": "2", "MaxValue": "2"}],
+        "Strings": [{"Key": "Name", "Value": "Wooden sword"}]
+    }],
+    "Entries": {
+        "CoinOutputs": [{
+            "Coin":"loudcoin",
+            "Count": 160,
+            "Weight":1
+        }]
+    },
+    "ExtraInfo":"",
+    "Sender":"eugen",
+    "Name": "LOUD's Lv1 wooden sword sell recipe",
+    "CookbookName": "LOUD",
+    "Description": "this recipe is used to sell lv1 wooden sword.",
+    "BlockInterval":"0"
+}
+```
