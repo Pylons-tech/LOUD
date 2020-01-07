@@ -10,6 +10,9 @@ const (
 
 // User represents an active user in the system.
 type User interface {
+	GetGold() int
+	GetUserName() string
+	InventoryItems() []Item
 	GetLocation() UserLocation
 	SetLocation(UserLocation)
 	Reload()

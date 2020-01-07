@@ -23,11 +23,22 @@ type Screen interface {
 	Reset()
 }
 
+type ScreenStatus int
+
+const (
+	SHOW_LOCATION ScreenStatus = iota
+	SELECT_SELL_ITEM
+	SELECT_BUY_ITEM
+	SELECT_HUNT_ITEM
+	SELECT_UPGRADE_ITEM
+)
+
 type GameScreen struct {
 	world          World
 	user           User
 	screenSize     ssh.Window
 	refreshed      bool
+	scrStatus      ScreenStatus
 	colorCodeCache map[string](func(string) string)
 }
 
@@ -214,14 +225,53 @@ func (screen *GameScreen) redrawBorders() {
 }
 
 func (screen *GameScreen) renderUserCommands() {
-	CommandsMap := map[UserLocation]string{
-		HOME:   "F)orest\nS)hop",
-		FOREST: "Hu)nt\nH)ome\nS)hop",
-		SHOP:   "B)uy Items\nU)pgrade Items\nH)ome\nF)orest",
-	}
+	infoLines := []string{}
+	if screen.scrStatus == SHOW_LOCATION {
+		cmdMap := map[UserLocation]string{
+			HOME:   "F)orest\nS)hop",
+			FOREST: "Hu)nt\nH)ome\nS)hop",
+			SHOP:   "B)uy Items\nSe)ll Items\nUp)grade Items\nH)ome\nF)orest",
+		}
 
-	cmdString := CommandsMap[screen.user.GetLocation()]
-	infoLines := strings.Split(cmdString, "\n")
+		cmdString := cmdMap[screen.user.GetLocation()]
+		infoLines = strings.Split(cmdString, "\n")
+	} else if screen.scrStatus == SELECT_BUY_ITEM {
+		shopItems := []Item{
+			Item{
+				ID:    "001",
+				Name:  "Wooden sword",
+				Level: 1,
+			},
+			Item{
+				ID:    "002",
+				Name:  "Copper sword",
+				Level: 1,
+			},
+		}
+		for idx, item := range shopItems {
+			infoLines = append(infoLines, fmt.Sprintf("%d) %s Lv%d", idx+1, item.Name, item.Level))
+		}
+		infoLines = append(infoLines, "C)ancel")
+	} else if screen.scrStatus == SELECT_SELL_ITEM {
+		userItems := screen.user.InventoryItems()
+		for idx, item := range userItems {
+			infoLines = append(infoLines, fmt.Sprintf("%d) %s Lv%d", idx+1, item.Name, item.Level))
+		}
+		infoLines = append(infoLines, "C)ancel")
+	} else if screen.scrStatus == SELECT_HUNT_ITEM {
+		userWeaponItems := screen.user.InventoryItems()
+		infoLines = append(infoLines, "N)o Item")
+		for idx, item := range userWeaponItems {
+			infoLines = append(infoLines, fmt.Sprintf("%d) %s Lv%d", idx+1, item.Name, item.Level))
+		}
+		infoLines = append(infoLines, "C)ancel")
+	} else if screen.scrStatus == SELECT_UPGRADE_ITEM {
+		userUpgradeItems := screen.user.InventoryItems()
+		for idx, item := range userUpgradeItems {
+			infoLines = append(infoLines, fmt.Sprintf("%d) %s Lv%d", idx+1, item.Name, item.Level))
+		}
+		infoLines = append(infoLines, "C)ancel")
+	}
 
 	// box start point (x, y)
 	x := 2
@@ -239,18 +289,26 @@ func (screen *GameScreen) renderUserCommands() {
 }
 
 func (screen *GameScreen) renderUserSituation() {
-	// For now this describes current game situation to user
-	LocationDescMap := map[UserLocation]string{
-		HOME:   "You are now at home.\nIf you like to hunt something go to forest.\nAnd if you like to buy/sell something go to shop",
-		FOREST: "You are now at forest.\nYou can hunt here or go back to home.",
-		SHOP:   "You are now at a shop.\nIf you want you can buy or sell items here.",
-	}
-
-	locDesc := LocationDescMap[screen.user.GetLocation()]
-
-	basicLines := strings.Split(locDesc, "\n")
-
 	infoLines := []string{}
+	desc := ""
+	if screen.scrStatus == SHOW_LOCATION {
+		locationDescMap := map[UserLocation]string{
+			HOME:   "You are now at home.\nIf you like to hunt something go to forest.\nAnd if you like to buy/sell something go to shop",
+			FOREST: "You are now at forest.\nYou can hunt here or go back to home.",
+			SHOP:   "You are now at a shop.\nIf you want you can buy or sell items here.",
+		}
+		desc = locationDescMap[screen.user.GetLocation()]
+	} else if screen.scrStatus == SELECT_BUY_ITEM {
+		desc = "You are gonna buy an item.\nPlease select an item to buy."
+	} else if screen.scrStatus == SELECT_SELL_ITEM {
+		desc = "You are gonna sell an item.\nPlease select an item to sell."
+	} else if screen.scrStatus == SELECT_HUNT_ITEM {
+		desc = "You are preparing for hunt.\nPlease select an item to carry."
+	} else if screen.scrStatus == SELECT_UPGRADE_ITEM {
+		desc = "You are now upgrading an item.\nPlease select an item to upgrade."
+	}
+	basicLines := strings.Split(desc, "\n")
+
 	for _, line := range basicLines {
 		infoLines = append(infoLines, ChunkString(line, screen.screenSize.Width/2-4)...)
 	}
@@ -287,16 +345,21 @@ func (screen *GameScreen) renderCharacterSheet() {
 	fmtFunc := screen.colorFunc(fmt.Sprintf("255:%v", bgcolor))
 
 	infoLines := []string{
-		centerText(fmt.Sprintf("%v the %v", "eugen", "Unworthy"), " ", width),
+		centerText(fmt.Sprintf("%v", screen.user.GetUserName()), " ", width),
 		centerText(warning, "─", width),
-		truncateRight(fmt.Sprintf("%s (%v, %v)", "Delaware", 111, 222), width),
-		truncateRight(fmt.Sprintf("Charge: %v/%v", "0", "1"), width),
+		screen.drawProgressMeter(1, 1, 208, bgcolor, 1) + fmtFunc(truncateRight(fmt.Sprintf(" Gold: %v", screen.user.GetGold()), width-1)),
 		screen.drawProgressMeter(HP, MaxHP, 196, bgcolor, 10) + fmtFunc(truncateRight(fmt.Sprintf(" HP: %v/%v", HP, MaxHP), width-10)),
-		screen.drawProgressMeter(HP, 6, 225, bgcolor, 10) + fmtFunc(truncateRight(fmt.Sprintf(" XP: %v/%v", HP, 10), width-10)),
-		screen.drawProgressMeter(HP, MaxHP, 208, bgcolor, 10) + fmtFunc(truncateRight(fmt.Sprintf(" AP: %v/%v", HP, MaxHP), width-10)),
-		screen.drawProgressMeter(HP, MaxHP, 117, bgcolor, 10) + fmtFunc(truncateRight(fmt.Sprintf(" RP: %v/%v", HP, MaxHP), width-10)),
-		screen.drawProgressMeter(HP, MaxHP, 76, bgcolor, 10) + fmtFunc(truncateRight(fmt.Sprintf(" MP: %v/%v", HP, MaxHP), width-10))}
+		// screen.drawProgressMeter(HP, MaxHP, 225, bgcolor, 10) + fmtFunc(truncateRight(fmt.Sprintf(" XP: %v/%v", HP, 10), width-10)),
+		// screen.drawProgressMeter(HP, MaxHP, 208, bgcolor, 10) + fmtFunc(truncateRight(fmt.Sprintf(" AP: %v/%v", HP, MaxHP), width-10)),
+		// screen.drawProgressMeter(HP, MaxHP, 117, bgcolor, 10) + fmtFunc(truncateRight(fmt.Sprintf(" RP: %v/%v", HP, MaxHP), width-10)),
+		// screen.drawProgressMeter(HP, MaxHP, 76, bgcolor, 10) + fmtFunc(truncateRight(fmt.Sprintf(" MP: %v/%v", HP, MaxHP), width-10)),
+	}
 
+	infoLines = append(infoLines, centerText(" Inventory Items ", "─", width))
+	items := screen.user.InventoryItems()
+	for _, item := range items {
+		infoLines = append(infoLines, truncateRight(fmt.Sprintf("%s Lv%d", item.Name, item.Level), width))
+	}
 	infoLines = append(infoLines, centerText(" ❦ ", "─", width))
 
 	for index, line := range infoLines {
@@ -327,6 +390,48 @@ func (screen *GameScreen) HandleInputKey(input termbox.Event) {
 		fallthrough
 	case "s":
 		screen.user.SetLocation(SHOP)
+		screen.refreshed = false
+	case "C": // CANCEL
+		fallthrough
+	case "c":
+		screen.scrStatus = SHOW_LOCATION
+		screen.refreshed = false
+	case "U": // HUNT
+		fallthrough
+	case "u":
+		screen.scrStatus = SELECT_HUNT_ITEM
+		screen.refreshed = false
+	case "B": // BUY
+		fallthrough
+	case "b": // BUY
+		screen.scrStatus = SELECT_BUY_ITEM
+		screen.refreshed = false
+	case "E": // SELL
+		fallthrough
+	case "e":
+		screen.scrStatus = SELECT_SELL_ITEM
+		screen.refreshed = false
+	case "P": // UPGRADE ITEM
+		fallthrough
+	case "N": // No Item
+		fallthrough
+	case "n":
+		screen.scrStatus = SHOW_LOCATION
+		screen.refreshed = false
+	case "p":
+		screen.scrStatus = SELECT_UPGRADE_ITEM
+		screen.refreshed = false
+	case "1": // SELECT 1st item
+		screen.scrStatus = SHOW_LOCATION
+		screen.refreshed = false
+	case "2": // SELECT 2nd item
+		screen.scrStatus = SHOW_LOCATION
+		screen.refreshed = false
+	case "3": // SELECT 3rd item
+		screen.scrStatus = SHOW_LOCATION
+		screen.refreshed = false
+	case "4": // SELECT 4th item
+		screen.scrStatus = SHOW_LOCATION
 		screen.refreshed = false
 	}
 	screen.Render()

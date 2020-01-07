@@ -116,10 +116,36 @@ func (user *dbUser) Save() {
 	})
 }
 
+func (user *dbUser) GetUserName() string {
+	return user.UserData.Username
+}
+
+func (user *dbUser) GetGold() int {
+	return 10
+}
+
+func (user *dbUser) InventoryItems() []Item {
+	return []Item{
+		Item{
+			ID:    "1",
+			Name:  "Wooden sword",
+			Level: 1,
+		},
+		Item{
+			ID:    "1",
+			Name:  "Copper sword",
+			Level: 1,
+		},
+	}
+}
+
 func getUserFromDB(world *dbWorld, username string) User {
-	user := dbUser{UserData: UserData{
-		Username: username},
-		world: world}
+	user := dbUser{
+		UserData: UserData{
+			Username: username,
+		},
+		world: world,
+	}
 
 	// user.Reload()
 
