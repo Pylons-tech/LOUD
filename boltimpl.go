@@ -17,8 +17,9 @@ func (w *dbWorld) GetUser(username string) User {
 
 func (w *dbWorld) newUser(username string) UserData {
 	userData := UserData{
-		Username:   username,
-		PublicKeys: make(map[string]bool)}
+		Username: username,
+		Location: HOME,
+	}
 
 	return userData
 }
@@ -64,14 +65,21 @@ func LoadWorldFromDB(filename string) World {
 
 // UserData is a JSON-serializable set of information about a User.
 type UserData struct {
-	Username    string          `json:""`
-	Initialized bool            `json:""`
-	PublicKeys  map[string]bool `json:""`
+	Username string `json:""`
+	Location UserLocation
 }
 
 type dbUser struct {
 	UserData
 	world *dbWorld
+}
+
+func (user *dbUser) GetLocation() UserLocation {
+	return user.UserData.Location
+}
+
+func (user *dbUser) SetLocation(loc UserLocation) {
+	user.UserData.Location = loc
 }
 
 func (user *dbUser) Reload() {
@@ -87,8 +95,10 @@ func (user *dbUser) Reload() {
 	if record == nil {
 		log.Printf("User %s does not exist, creating anew...", user.UserData.Username)
 		user.UserData = user.world.newUser(user.UserData.Username)
+		user.Save()
 	} else {
 		MSGUnpack(record, &(user.UserData))
+		log.Printf("Loaded user %v", user.UserData)
 	}
 }
 
@@ -108,12 +118,38 @@ func (user *dbUser) Save() {
 	})
 }
 
-func getUserFromDB(world *dbWorld, username string) User {
-	user := dbUser{UserData: UserData{
-		Username: username},
-		world: world}
+func (user *dbUser) GetUserName() string {
+	return user.UserData.Username
+}
 
-	// user.Reload()
+func (user *dbUser) GetGold() int {
+	return 10
+}
+
+func (user *dbUser) InventoryItems() []Item {
+	return []Item{
+		Item{
+			ID:    "1",
+			Name:  "Wooden sword",
+			Level: 1,
+		},
+		Item{
+			ID:    "1",
+			Name:  "Copper sword",
+			Level: 1,
+		},
+	}
+}
+
+func getUserFromDB(world *dbWorld, username string) User {
+	user := dbUser{
+		UserData: UserData{
+			Username: username,
+		},
+		world: world,
+	}
+
+	user.Reload()
 
 	return &user
 }
