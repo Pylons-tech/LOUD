@@ -6,6 +6,7 @@ import (
 	"math"
 	"os"
 	"strings"
+	"time"
 	"unicode/utf8"
 
 	"github.com/ahmetb/go-cursor"
@@ -28,9 +29,17 @@ type ScreenStatus int
 const (
 	SHOW_LOCATION ScreenStatus = iota
 	SELECT_SELL_ITEM
+	WAIT_SELL_PROCESS
+	RESULT_SELL_FINISH
 	SELECT_BUY_ITEM
+	WAIT_BUY_PROCESS
+	RESULT_BUY_FINISH
 	SELECT_HUNT_ITEM
+	WAIT_HUNT_PROCESS
+	RESULT_HUNT_FINISH
 	SELECT_UPGRADE_ITEM
+	WAIT_UPGRADE_PROCESS
+	RESULT_UPGRADE_FINISH
 )
 
 type GameScreen struct {
@@ -226,16 +235,16 @@ func (screen *GameScreen) redrawBorders() {
 
 func (screen *GameScreen) renderUserCommands() {
 	infoLines := []string{}
-	if screen.scrStatus == SHOW_LOCATION {
+	switch screen.scrStatus {
+	case SHOW_LOCATION:
 		cmdMap := map[UserLocation]string{
 			HOME:   "F)orest\nS)hop",
 			FOREST: "Hu)nt\nH)ome\nS)hop",
 			SHOP:   "B)uy Items\nSe)ll Items\nUp)grade Items\nH)ome\nF)orest",
 		}
-
 		cmdString := cmdMap[screen.user.GetLocation()]
 		infoLines = strings.Split(cmdString, "\n")
-	} else if screen.scrStatus == SELECT_BUY_ITEM {
+	case SELECT_BUY_ITEM:
 		shopItems := []Item{
 			Item{
 				ID:    "001",
@@ -252,25 +261,34 @@ func (screen *GameScreen) renderUserCommands() {
 			infoLines = append(infoLines, fmt.Sprintf("%d) %s Lv%d", idx+1, item.Name, item.Level))
 		}
 		infoLines = append(infoLines, "C)ancel")
-	} else if screen.scrStatus == SELECT_SELL_ITEM {
+	case SELECT_SELL_ITEM:
 		userItems := screen.user.InventoryItems()
 		for idx, item := range userItems {
 			infoLines = append(infoLines, fmt.Sprintf("%d) %s Lv%d", idx+1, item.Name, item.Level))
 		}
 		infoLines = append(infoLines, "C)ancel")
-	} else if screen.scrStatus == SELECT_HUNT_ITEM {
+	case SELECT_HUNT_ITEM:
 		userWeaponItems := screen.user.InventoryItems()
 		infoLines = append(infoLines, "N)o Item")
 		for idx, item := range userWeaponItems {
 			infoLines = append(infoLines, fmt.Sprintf("%d) %s Lv%d", idx+1, item.Name, item.Level))
 		}
 		infoLines = append(infoLines, "C)ancel")
-	} else if screen.scrStatus == SELECT_UPGRADE_ITEM {
+	case SELECT_UPGRADE_ITEM:
 		userUpgradeItems := screen.user.InventoryItems()
 		for idx, item := range userUpgradeItems {
 			infoLines = append(infoLines, fmt.Sprintf("%d) %s Lv%d", idx+1, item.Name, item.Level))
 		}
 		infoLines = append(infoLines, "C)ancel")
+	case RESULT_BUY_FINISH:
+		fallthrough
+	case RESULT_HUNT_FINISH:
+		fallthrough
+	case RESULT_SELL_FINISH:
+		fallthrough
+	case RESULT_UPGRADE_FINISH:
+		infoLines = append(infoLines, "Go) on")
+	default:
 	}
 
 	// box start point (x, y)
@@ -291,22 +309,40 @@ func (screen *GameScreen) renderUserCommands() {
 func (screen *GameScreen) renderUserSituation() {
 	infoLines := []string{}
 	desc := ""
-	if screen.scrStatus == SHOW_LOCATION {
+	switch screen.scrStatus {
+	case SHOW_LOCATION:
 		locationDescMap := map[UserLocation]string{
 			HOME:   "You are now at home.\nIf you like to hunt something go to forest.\nAnd if you like to buy/sell something go to shop",
 			FOREST: "You are now at forest.\nYou can hunt here or go back to home.",
 			SHOP:   "You are now at a shop.\nIf you want you can buy or sell items here.",
 		}
 		desc = locationDescMap[screen.user.GetLocation()]
-	} else if screen.scrStatus == SELECT_BUY_ITEM {
+	case SELECT_BUY_ITEM:
 		desc = "You are gonna buy an item.\nPlease select an item to buy."
-	} else if screen.scrStatus == SELECT_SELL_ITEM {
+	case SELECT_SELL_ITEM:
 		desc = "You are gonna sell an item.\nPlease select an item to sell."
-	} else if screen.scrStatus == SELECT_HUNT_ITEM {
+	case SELECT_HUNT_ITEM:
 		desc = "You are preparing for hunt.\nPlease select an item to carry."
-	} else if screen.scrStatus == SELECT_UPGRADE_ITEM {
-		desc = "You are now upgrading an item.\nPlease select an item to upgrade."
+	case SELECT_UPGRADE_ITEM:
+		desc = "You are gonna upgrade an item.\nPlease select an item to upgrade."
+	case WAIT_BUY_PROCESS:
+		desc = "You are now buying item.\nPlease wait for a moment to finish the process."
+	case WAIT_HUNT_PROCESS:
+		desc = "You are now hunting.\nPlease wait for a moment to finish the process."
+	case WAIT_SELL_PROCESS:
+		desc = "You are now selling an item.\nPlease wait for a moment to finish the process."
+	case WAIT_UPGRADE_PROCESS:
+		desc = "You are now upgrading an item.\nPlease wait for a moment to finish the process."
+	case RESULT_BUY_FINISH:
+		desc = "You have bought an item from shop.\nPlease use it for hunting."
+	case RESULT_HUNT_FINISH:
+		desc = "You did hunt animals and sold it for gold."
+	case RESULT_SELL_FINISH:
+		desc = "You sold an item for gold."
+	case RESULT_UPGRADE_FINISH:
+		desc = "You have upgraded item to get better hunt result."
 	}
+
 	basicLines := strings.Split(desc, "\n")
 
 	for _, line := range basicLines {
@@ -396,6 +432,11 @@ func (screen *GameScreen) HandleInputKey(input termbox.Event) {
 	case "c":
 		screen.scrStatus = SHOW_LOCATION
 		screen.refreshed = false
+	case "O": // GO ON
+		fallthrough
+	case "o":
+		screen.scrStatus = SHOW_LOCATION
+		screen.refreshed = false
 	case "U": // HUNT
 		fallthrough
 	case "u":
@@ -413,26 +454,57 @@ func (screen *GameScreen) HandleInputKey(input termbox.Event) {
 		screen.refreshed = false
 	case "P": // UPGRADE ITEM
 		fallthrough
-	case "N": // No Item
-		fallthrough
-	case "n":
-		screen.scrStatus = SHOW_LOCATION
-		screen.refreshed = false
 	case "p":
 		screen.scrStatus = SELECT_UPGRADE_ITEM
 		screen.refreshed = false
+	case "N": // Go hunt with no weapon
+		fallthrough
+	case "n":
+		screen.scrStatus = WAIT_HUNT_PROCESS
+		screen.refreshed = false
+		time.AfterFunc(3*time.Second, func() {
+			screen.scrStatus = RESULT_HUNT_FINISH
+			screen.refreshed = false
+			screen.Render()
+		})
 	case "1": // SELECT 1st item
-		screen.scrStatus = SHOW_LOCATION
-		screen.refreshed = false
+		fallthrough
 	case "2": // SELECT 2nd item
-		screen.scrStatus = SHOW_LOCATION
-		screen.refreshed = false
+		fallthrough
 	case "3": // SELECT 3rd item
-		screen.scrStatus = SHOW_LOCATION
-		screen.refreshed = false
+		fallthrough
 	case "4": // SELECT 4th item
-		screen.scrStatus = SHOW_LOCATION
 		screen.refreshed = false
+		switch screen.scrStatus {
+		case SELECT_BUY_ITEM:
+			screen.scrStatus = WAIT_BUY_PROCESS
+			time.AfterFunc(3*time.Second, func() {
+				screen.scrStatus = RESULT_BUY_FINISH
+				screen.refreshed = false
+				screen.Render()
+			})
+		case SELECT_HUNT_ITEM:
+			screen.scrStatus = WAIT_HUNT_PROCESS
+			time.AfterFunc(3*time.Second, func() {
+				screen.scrStatus = RESULT_HUNT_FINISH
+				screen.refreshed = false
+				screen.Render()
+			})
+		case SELECT_SELL_ITEM:
+			screen.scrStatus = WAIT_SELL_PROCESS
+			time.AfterFunc(3*time.Second, func() {
+				screen.scrStatus = RESULT_SELL_FINISH
+				screen.refreshed = false
+				screen.Render()
+			})
+		case SELECT_UPGRADE_ITEM:
+			screen.scrStatus = WAIT_UPGRADE_PROCESS
+			time.AfterFunc(3*time.Second, func() {
+				screen.scrStatus = RESULT_UPGRADE_FINISH
+				screen.refreshed = false
+				screen.Render()
+			})
+		}
 	}
 	screen.Render()
 }
