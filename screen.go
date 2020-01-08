@@ -18,6 +18,7 @@ import (
 
 // Screen represents a UI screen.
 type Screen interface {
+	SaveGame()
 	SetScreenSize(int, int)
 	HandleInputKey(termbox.Event)
 	Render()
@@ -512,8 +513,6 @@ func (screen *GameScreen) HandleInputKey(input termbox.Event) {
 func (screen *GameScreen) Render() {
 	var HP uint64 = 10
 
-	// screen.user.Reload()
-
 	if screen.screenSize.Height < 20 || screen.screenSize.Width < 60 {
 		clear := cursor.ClearEntireScreen()
 		move := cursor.MoveTo(1, 1)
@@ -543,6 +542,10 @@ func (screen *GameScreen) Render() {
 
 func (screen *GameScreen) Reset() {
 	io.WriteString(os.Stdout, fmt.Sprintf("%s👋\n", resetScreen))
+}
+
+func (screen *GameScreen) SaveGame() {
+	screen.user.Save()
 }
 
 // NewScreen manages the window rendering for game

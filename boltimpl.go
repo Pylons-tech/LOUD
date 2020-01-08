@@ -95,8 +95,10 @@ func (user *dbUser) Reload() {
 	if record == nil {
 		log.Printf("User %s does not exist, creating anew...", user.UserData.Username)
 		user.UserData = user.world.newUser(user.UserData.Username)
+		user.Save()
 	} else {
 		MSGUnpack(record, &(user.UserData))
+		log.Printf("Loaded user %v", user.UserData)
 	}
 }
 
@@ -147,7 +149,7 @@ func getUserFromDB(world *dbWorld, username string) User {
 		world: world,
 	}
 
-	// user.Reload()
+	user.Reload()
 
 	return &user
 }

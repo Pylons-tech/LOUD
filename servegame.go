@@ -45,6 +45,7 @@ eventloop:
 		case termbox.EventKey:
 			switch ev.Key {
 			case termbox.KeyEsc:
+				screen.SaveGame()
 				screen.Reset()
 				break eventloop
 			default:
