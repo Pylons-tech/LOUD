@@ -11,6 +11,8 @@ vendor/
 *.tgz
 *.log
 
+test/nonce.json
+
 # Test binary, build with `go test -c`
 *.test
 
