@@ -463,6 +463,7 @@ func (screen *GameScreen) HandleInputKey(input termbox.Event) {
 	case "n":
 		screen.scrStatus = WAIT_HUNT_PROCESS
 		screen.refreshed = false
+		Hunt(screen.user)
 		time.AfterFunc(3*time.Second, func() {
 			screen.scrStatus = RESULT_HUNT_FINISH
 			screen.refreshed = false
@@ -551,7 +552,7 @@ func (screen *GameScreen) SaveGame() {
 // NewScreen manages the window rendering for game
 func NewScreen(world World, user User) Screen {
 	width, _ := terminal.Width()
-    height, _ := terminal.Height()
+	height, _ := terminal.Height()
 
 	window := ssh.Window{
 		Width:  int(width),
