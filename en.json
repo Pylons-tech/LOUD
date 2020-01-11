@@ -1,0 +1,17 @@
+{
+"home": {
+  "description": "",
+  "one": "F)orest\nS)hop",
+  "other": "F)orest\nS)hop"
+  },
+  "forest": {
+    "description": "",
+    "one": "Hu)nt\nH)ome\nS)hop",
+    "other": "Hu)nt\nH)ome\nS)hop"
+  },
+  "shop": {
+    "description": "",
+    "one": "B)uy Items\nSe)ll Items\nUp)grade Items\nH)ome\nF)orest",
+    "other": "B)uy Items\nSe)ll Items\nUp)grade Items\nH)ome\nF)orest"
+  }
+}

@@ -8,6 +8,7 @@ import (
 	"strings"
 	"time"
 	"unicode/utf8"
+	"encoding/json"
 
 	pylonSDK "github.com/MikeSofaer/pylons/cmd/test"
 	"github.com/MikeSofaer/pylons/x/pylons/handlers"
@@ -15,8 +16,14 @@ import (
 	"github.com/gliderlabs/ssh"
 	"github.com/mgutz/ansi"
 	"github.com/nsf/termbox-go"
+
 	terminal "github.com/wayneashleyberry/terminal-dimensions"
+
+	"github.com/nicksnyder/go-i18n/v2/i18n"
+  "golang.org/x/text/language"
 )
+
+
 
 // Screen represents a UI screen.
 type Screen interface {
@@ -252,13 +259,23 @@ func (screen *GameScreen) redrawBorders() {
 }
 
 func (screen *GameScreen) renderUserCommands() {
+
+	// Pending encapsulation, will return i18n.Localizer to be used for translation.
+	// Locale Bundle that contain the default locale and the list of supported locales.
+	bundle := i18n.NewBundle(language.English)
+	bundle.RegisterUnmarshalFunc("json", json.Unmarshal)
+	bundle.MustLoadMessageFile("en.json")
+	bundle.MustLoadMessageFile("sp.json")
+	// Pending create a flagg to be used in terminal to switch between languages.
+	loc := i18n.NewLocalizer(bundle, "en")
+
 	infoLines := []string{}
 	switch screen.scrStatus {
 	case SHOW_LOCATION:
 		cmdMap := map[UserLocation]string{
-			HOME:   "F)orest\nS)hop",
-			FOREST: "Hu)nt\nH)ome\nS)hop",
-			SHOP:   "B)uy Items\nSe)ll Items\nUp)grade Items\nH)ome\nF)orest",
+			HOME:   loc.MustLocalize(&i18n.LocalizeConfig{ MessageID: "home", PluralCount: 1}),
+			FOREST: loc.MustLocalize(&i18n.LocalizeConfig{ MessageID: "forest", PluralCount: 1}),
+			SHOP:   loc.MustLocalize(&i18n.LocalizeConfig{ MessageID: "shop", PluralCount: 1}),
 		}
 		cmdString := cmdMap[screen.user.GetLocation()]
 		infoLines = strings.Split(cmdString, "\n")
