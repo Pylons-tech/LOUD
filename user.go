@@ -15,6 +15,8 @@ type User interface {
 	InventoryItems() []Item
 	GetLocation() UserLocation
 	SetLocation(UserLocation)
+	GetLastTransaction() string
+	SetLastTransaction(string)
 	Reload()
 	Save()
 }

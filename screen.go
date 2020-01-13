@@ -406,7 +406,21 @@ func (screen *GameScreen) renderCharacterSheet() {
 		}
 	}
 
-	lastLine := len(infoLines) + 1
+	nodeLines:= []string{
+		centerText("Pylons Network Status", " ", width),
+		centerText(screen.user.GetLastTransaction(), " ", width),
+		centerText(" ❦ ", "─", width),
+	}
+
+	for index, line := range nodeLines {
+		io.WriteString(os.Stdout, fmt.Sprintf("%s%s", cursor.MoveTo(2+len(infoLines)+index, x), fmtFunc(line)))
+		if index+2 > int(screen.screenSize.Height) {
+			break
+		}
+	}
+
+
+	lastLine := len(infoLines) + len(nodeLines) + 1
 	screen.drawFill(x, lastLine+1, width, screen.screenSize.Height-(lastLine+2))
 }
 

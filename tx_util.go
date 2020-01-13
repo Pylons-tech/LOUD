@@ -32,5 +32,5 @@ func Hunt(user User) {
 	sdkAddr, _ := sdk.AccAddressFromBech32(eugenAddr)
 	// execMsg := msgs.NewMsgExecuteRecipe(execType.RecipeID, execType.Sender, ItemIDs)
 	execMsg := msgs.NewMsgExecuteRecipe(rcpID, sdkAddr, []string{})
-	pylonSDK.TestTxWithMsgWithNonce(&newT, execMsg, "eugen", false)
+	user.SetLastTransaction(pylonSDK.TestTxWithMsgWithNonce(&newT, execMsg, "eugen", false))
 }
