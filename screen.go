@@ -62,6 +62,19 @@ const hpon = "◆"
 const hpoff = "◇"
 const bgcolor = 232
 
+var shopItems []Item = []Item{
+	Item{
+		ID:    "001",
+		Name:  "Wooden sword",
+		Level: 1,
+	},
+	Item{
+		ID:    "002",
+		Name:  "Copper sword",
+		Level: 1,
+	},
+}
+
 func truncateRight(message string, width int) string {
 	if utf8.RuneCountInString(message) < width {
 		fmtString := fmt.Sprintf("%%-%vs", width)
@@ -249,18 +262,6 @@ func (screen *GameScreen) renderUserCommands() {
 		cmdString := cmdMap[screen.user.GetLocation()]
 		infoLines = strings.Split(cmdString, "\n")
 	case SELECT_BUY_ITEM:
-		shopItems := []Item{
-			Item{
-				ID:    "001",
-				Name:  "Wooden sword",
-				Level: 1,
-			},
-			Item{
-				ID:    "002",
-				Name:  "Copper sword",
-				Level: 1,
-			},
-		}
 		for idx, item := range shopItems {
 			infoLines = append(infoLines, fmt.Sprintf("%d) %s Lv%d", idx+1, item.Name, item.Level))
 		}
@@ -279,7 +280,7 @@ func (screen *GameScreen) renderUserCommands() {
 		}
 		infoLines = append(infoLines, "C)ancel")
 	case SELECT_UPGRADE_ITEM:
-		userUpgradeItems := screen.user.InventoryItems()
+		userUpgradeItems := screen.user.UpgradableItems()
 		for idx, item := range userUpgradeItems {
 			infoLines = append(infoLines, fmt.Sprintf("%d) %s Lv%d", idx+1, item.Name, item.Level))
 		}
@@ -488,8 +489,13 @@ func (screen *GameScreen) HandleInputKey(input termbox.Event) {
 		screen.refreshed = false
 		switch screen.scrStatus {
 		case SELECT_BUY_ITEM:
+			txhash := Buy(screen.user, Key)
 			screen.scrStatus = WAIT_BUY_PROCESS
-			time.AfterFunc(3*time.Second, func() {
+			screen.refreshed = false
+			screen.Render()
+			time.AfterFunc(1*time.Second, func() {
+				pylonSDK.WaitForNextBlock()
+				screen.txResult = ProcessTxResult(screen.user, txhash)
 				screen.scrStatus = RESULT_BUY_FINISH
 				screen.refreshed = false
 				screen.Render()
@@ -501,21 +507,31 @@ func (screen *GameScreen) HandleInputKey(input termbox.Event) {
 			screen.Render()
 			time.AfterFunc(1*time.Second, func() {
 				pylonSDK.WaitForNextBlock()
-				screen.txResult = ProcessHuntResult(screen.user, txhash)
+				screen.txResult = ProcessTxResult(screen.user, txhash)
 				screen.scrStatus = RESULT_HUNT_FINISH
 				screen.refreshed = false
 				screen.Render()
 			})
 		case SELECT_SELL_ITEM:
+			txhash := Sell(screen.user, Key)
 			screen.scrStatus = WAIT_SELL_PROCESS
-			time.AfterFunc(3*time.Second, func() {
+			screen.refreshed = false
+			screen.Render()
+			time.AfterFunc(1*time.Second, func() {
+				pylonSDK.WaitForNextBlock()
+				screen.txResult = ProcessTxResult(screen.user, txhash)
 				screen.scrStatus = RESULT_SELL_FINISH
 				screen.refreshed = false
 				screen.Render()
 			})
 		case SELECT_UPGRADE_ITEM:
+			txhash := Upgrade(screen.user, Key)
 			screen.scrStatus = WAIT_UPGRADE_PROCESS
-			time.AfterFunc(3*time.Second, func() {
+			screen.refreshed = false
+			screen.Render()
+			time.AfterFunc(1*time.Second, func() {
+				pylonSDK.WaitForNextBlock()
+				screen.txResult = ProcessTxResult(screen.user, txhash)
 				screen.scrStatus = RESULT_UPGRADE_FINISH
 				screen.refreshed = false
 				screen.Render()

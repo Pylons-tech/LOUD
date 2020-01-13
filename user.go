@@ -14,6 +14,7 @@ type User interface {
 	GetGold() int
 	GetUserName() string
 	InventoryItems() []Item
+	UpgradableItems() []Item
 	GetLocation() UserLocation
 	SetLocation(UserLocation)
 	GetLastTransaction() string

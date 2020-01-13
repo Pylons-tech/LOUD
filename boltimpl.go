@@ -140,11 +140,22 @@ func (user *dbUser) InventoryItems() []Item {
 			Level: 1,
 		},
 		Item{
-			ID:    "1",
+			ID:    "2",
 			Name:  "Copper sword",
-			Level: 1,
+			Level: 2,
 		},
 	}
+}
+
+func (user *dbUser) UpgradableItems() []Item {
+	iis := user.InventoryItems()
+	uis := []Item{}
+	for _, ii := range iis {
+		if ii.Level == 1 {
+			uis = append(uis, ii)
+		}
+	}
+	return uis
 }
 
 func (user *dbUser) GetLastTransaction() string {
