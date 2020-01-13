@@ -9,6 +9,8 @@ import (
 	"time"
 	"unicode/utf8"
 
+	pylonSDK "github.com/MikeSofaer/pylons/cmd/test"
+	"github.com/MikeSofaer/pylons/x/pylons/handlers"
 	"github.com/ahmetb/go-cursor"
 	"github.com/gliderlabs/ssh"
 	"github.com/mgutz/ansi"
@@ -47,6 +49,7 @@ type GameScreen struct {
 	world          World
 	user           User
 	screenSize     ssh.Window
+	txResult       handlers.ExecuteRecipeSerialize
 	refreshed      bool
 	scrStatus      ScreenStatus
 	colorCodeCache map[string](func(string) string)
@@ -337,7 +340,7 @@ func (screen *GameScreen) renderUserSituation() {
 	case RESULT_BUY_FINISH:
 		desc = "You have bought an item from shop.\nPlease use it for hunting."
 	case RESULT_HUNT_FINISH:
-		desc = "You did hunt animals and sold it for gold."
+		desc = fmt.Sprintf("You did hunt animals and sold it for %d gold.", screen.txResult.Amount)
 	case RESULT_SELL_FINISH:
 		desc = "You sold an item for gold."
 	case RESULT_UPGRADE_FINISH:
@@ -406,7 +409,7 @@ func (screen *GameScreen) renderCharacterSheet() {
 		}
 	}
 
-	nodeLines:= []string{
+	nodeLines := []string{
 		centerText("Pylons Network Status", " ", width),
 		centerText(screen.user.GetLastTransaction(), " ", width),
 		centerText(" ❦ ", "─", width),
@@ -418,7 +421,6 @@ func (screen *GameScreen) renderCharacterSheet() {
 			break
 		}
 	}
-
 
 	lastLine := len(infoLines) + len(nodeLines) + 1
 	screen.drawFill(x, lastLine+1, width, screen.screenSize.Height-(lastLine+2))
@@ -475,10 +477,13 @@ func (screen *GameScreen) HandleInputKey(input termbox.Event) {
 	case "N": // Go hunt with no weapon
 		fallthrough
 	case "n":
+		txhash := Hunt(screen.user)
 		screen.scrStatus = WAIT_HUNT_PROCESS
 		screen.refreshed = false
-		Hunt(screen.user)
-		time.AfterFunc(3*time.Second, func() {
+		screen.Render()
+		time.AfterFunc(1*time.Second, func() {
+			pylonSDK.WaitForNextBlock()
+			screen.txResult = ProcessHuntResult(screen.user, txhash)
 			screen.scrStatus = RESULT_HUNT_FINISH
 			screen.refreshed = false
 			screen.Render()

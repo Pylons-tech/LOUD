@@ -19,6 +19,7 @@ func (w *dbWorld) newUser(username string) UserData {
 	userData := UserData{
 		Username: username,
 		Location: HOME,
+		Gold:     0,
 	}
 
 	return userData
@@ -65,13 +66,14 @@ func LoadWorldFromDB(filename string) World {
 
 // UserData is a JSON-serializable set of information about a User.
 type UserData struct {
+	Gold     int
 	Username string `json:""`
 	Location UserLocation
 }
 
 type dbUser struct {
 	UserData
-	world *dbWorld
+	world           *dbWorld
 	lastTransaction string
 }
 
@@ -123,8 +125,11 @@ func (user *dbUser) GetUserName() string {
 	return user.UserData.Username
 }
 
+func (user *dbUser) AddGold(amount int) {
+	user.UserData.Gold += amount
+}
 func (user *dbUser) GetGold() int {
-	return 10
+	return user.UserData.Gold
 }
 
 func (user *dbUser) InventoryItems() []Item {

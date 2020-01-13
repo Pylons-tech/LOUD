@@ -1,17 +1,23 @@
 package loud
 
 import (
+	"encoding/json"
+	"log"
 	originT "testing"
 
+	fixtureSDK "github.com/MikeSofaer/pylons/cmd/fixtures_test"
 	testing "github.com/MikeSofaer/pylons/cmd/fixtures_test/evtesting"
 	pylonSDK "github.com/MikeSofaer/pylons/cmd/test"
+	"github.com/MikeSofaer/pylons/x/pylons/handlers"
 	"github.com/MikeSofaer/pylons/x/pylons/msgs"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
-func Hunt(user User) {
+func Hunt(user User) string {
 	orgT := originT.T{}
 	newT := testing.NewT(&orgT)
+	t := &newT
+
 	RcpIDs := map[string]string{
 		"LOUD's Lv1 wooden sword sell recipe":           "cosmos19vlpdf25cxh0w2s80z44r9ktrgzncf7zsaqey205e63ef7-1cea-4430-8a88-139eae46da38",
 		"LOUD's Lv2 copper sword sell recipe":           "cosmos19vlpdf25cxh0w2s80z44r9ktrgzncf7zsaqey20b7499c3-8059-43af-a2ed-e7b6ccb599bc",
@@ -32,5 +38,30 @@ func Hunt(user User) {
 	sdkAddr, _ := sdk.AccAddressFromBech32(eugenAddr)
 	// execMsg := msgs.NewMsgExecuteRecipe(execType.RecipeID, execType.Sender, ItemIDs)
 	execMsg := msgs.NewMsgExecuteRecipe(rcpID, sdkAddr, []string{})
-	user.SetLastTransaction(pylonSDK.TestTxWithMsgWithNonce(&newT, execMsg, "eugen", false))
+	txhash := pylonSDK.TestTxWithMsgWithNonce(t, execMsg, "eugen", false)
+	user.SetLastTransaction(txhash)
+
+	return txhash
+}
+
+func ProcessHuntResult(user User, txhash string) handlers.ExecuteRecipeSerialize {
+	orgT := originT.T{}
+	newT := testing.NewT(&orgT)
+	t := &newT
+
+	txHandleResBytes, err := pylonSDK.WaitAndGetTxData(txhash, 3, t)
+	pylonSDK.ErrValidation(t, "error getting tx result bytes %+v", err)
+
+	fixtureSDK.CheckErrorOnTx(txhash, t)
+	resp := handlers.ExecuteRecipeResp{}
+	respOutput := handlers.ExecuteRecipeSerialize{}
+	err = pylonSDK.GetAminoCdc().UnmarshalJSON(txHandleResBytes, &resp)
+	if err != nil {
+		log.Println("failed to parse transaction result txhash=", txhash)
+	}
+
+	json.Unmarshal(resp.Output, &respOutput)
+	log.Println("ProcessHuntResult::txResp", resp.Message, respOutput)
+	user.AddGold(int(respOutput.Amount))
+	return respOutput
 }
