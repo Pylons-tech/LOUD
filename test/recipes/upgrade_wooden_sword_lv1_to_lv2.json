@@ -1,0 +1,17 @@
+{
+    "RType": "1",
+    "CoinInputs":[{
+        "Coin": "loudcoin",
+        "Count": "100"
+    }],
+    "ItemInputRefs":[
+        "./recipes/item_input/wooden_sword_lv1.json"
+    ],
+    "ToUpgradeRef": "./recipes/upgrader/level.json",
+    "ExtraInfo":"",
+    "Sender":"eugen",
+    "Name": "LOUD's Wooden sword lv1 to lv2 upgrade recipe",
+    "CookbookName": "Legend of Undead Dragon",
+    "Description": "this recipe is used to upgrade wooden sword level.",
+    "BlockInterval":"0"
+}

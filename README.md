@@ -23,3 +23,11 @@ Key action descriptions
 'S': go to shop
 'F': go to forest
 ```
+
+## To run test
+
+Since Pylons repos are private below command will be needed to run test correctly.  
+
+```
+export GOPRIVATE="github.com/MikeSofaer"
+```

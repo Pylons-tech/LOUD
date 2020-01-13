@@ -13,7 +13,7 @@ import (
 	"github.com/gliderlabs/ssh"
 	"github.com/mgutz/ansi"
 	"github.com/nsf/termbox-go"
-	"golang.org/x/crypto/ssh/terminal"
+	terminal "github.com/wayneashleyberry/terminal-dimensions"
 )
 
 // Screen represents a UI screen.
@@ -463,6 +463,7 @@ func (screen *GameScreen) HandleInputKey(input termbox.Event) {
 	case "n":
 		screen.scrStatus = WAIT_HUNT_PROCESS
 		screen.refreshed = false
+		Hunt(screen.user)
 		time.AfterFunc(3*time.Second, func() {
 			screen.scrStatus = RESULT_HUNT_FINISH
 			screen.refreshed = false
@@ -550,11 +551,12 @@ func (screen *GameScreen) SaveGame() {
 
 // NewScreen manages the window rendering for game
 func NewScreen(world World, user User) Screen {
-	width, height, _ := terminal.GetSize(0)
+	width, _ := terminal.Width()
+	height, _ := terminal.Height()
 
 	window := ssh.Window{
-		Width:  width,
-		Height: height,
+		Width:  int(width),
+		Height: int(height),
 	}
 
 	screen := GameScreen{

@@ -1,0 +1,20 @@
+{
+    "RType": "0",
+    "CoinInputs":[],    
+    "ItemInputRefs":[
+        "./recipes/item_input/copper_sword_lv2.json"
+    ],
+    "Entries": {
+        "CoinOutputs": [{
+            "Coin":"loudcoin",
+            "Count": 400,
+            "Weight":1
+        }]
+    },
+    "ExtraInfo":"",
+    "Sender":"eugen",
+    "Name": "LOUD's Lv2 copper sword sell recipe",
+    "CookbookName": "Legend of Undead Dragon",
+    "Description": "this recipe is used to sell lv2 copper sword.",
+    "BlockInterval":"0"
+}

@@ -10,3 +10,7 @@ mod:
 
 clean:
 	rm bin/* || true
+
+fixture_tests:
+	rm ./test/nonce.json || true
+	go test -v ./test/
