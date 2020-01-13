@@ -72,6 +72,7 @@ type UserData struct {
 type dbUser struct {
 	UserData
 	world *dbWorld
+	lastTransaction string
 }
 
 func (user *dbUser) GetLocation() UserLocation {
@@ -139,6 +140,14 @@ func (user *dbUser) InventoryItems() []Item {
 			Level: 1,
 		},
 	}
+}
+
+func (user *dbUser) GetLastTransaction() string {
+	return user.lastTransaction
+}
+
+func (user *dbUser) SetLastTransaction(trans string) {
+	user.lastTransaction = trans
 }
 
 func getUserFromDB(world *dbWorld, username string) User {
