@@ -477,17 +477,7 @@ func (screen *GameScreen) HandleInputKey(input termbox.Event) {
 	case "N": // Go hunt with no weapon
 		fallthrough
 	case "n":
-		txhash := Hunt(screen.user)
-		screen.scrStatus = WAIT_HUNT_PROCESS
-		screen.refreshed = false
-		screen.Render()
-		time.AfterFunc(1*time.Second, func() {
-			pylonSDK.WaitForNextBlock()
-			screen.txResult = ProcessHuntResult(screen.user, txhash)
-			screen.scrStatus = RESULT_HUNT_FINISH
-			screen.refreshed = false
-			screen.Render()
-		})
+		fallthrough
 	case "1": // SELECT 1st item
 		fallthrough
 	case "2": // SELECT 2nd item
@@ -505,8 +495,13 @@ func (screen *GameScreen) HandleInputKey(input termbox.Event) {
 				screen.Render()
 			})
 		case SELECT_HUNT_ITEM:
+			txhash := Hunt(screen.user, Key)
 			screen.scrStatus = WAIT_HUNT_PROCESS
-			time.AfterFunc(3*time.Second, func() {
+			screen.refreshed = false
+			screen.Render()
+			time.AfterFunc(1*time.Second, func() {
+				pylonSDK.WaitForNextBlock()
+				screen.txResult = ProcessHuntResult(screen.user, txhash)
 				screen.scrStatus = RESULT_HUNT_FINISH
 				screen.refreshed = false
 				screen.Render()

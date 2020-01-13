@@ -13,7 +13,17 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
-func Hunt(user User) string {
+type Weapon int
+
+const (
+	NO_WEAPON Weapon = iota
+	WOODEN_SWORD_LV1
+	WOODEN_SWORD_LV2
+	COPPER_SWORD_LV1
+	COPPER_SWORD_LV2
+)
+
+func Hunt(user User, key string) string {
 	orgT := originT.T{}
 	newT := testing.NewT(&orgT)
 	t := &newT
@@ -33,7 +43,34 @@ func Hunt(user User) string {
 		"LOUD's Wooden sword lv1 to lv2 upgrade recipe": "cosmos19vlpdf25cxh0w2s80z44r9ktrgzncf7zsaqey28d30f11a-f4ad-4ea3-b3ee-8814d025ae06",
 		"LOUD's hunt with lv2 wooden sword recipe":      "cosmos19vlpdf25cxh0w2s80z44r9ktrgzncf7zsaqey2f51e5c1b-1af9-44f5-b1f0-aeced8b6d144",
 	}
-	rcpID := RcpIDs["LOUD's hunt without sword recipe"]
+	items := user.InventoryItems()
+	useItem := Item{}
+	switch key {
+	case "1": // SELECT 1st item
+		useItem = items[0]
+	case "2": // SELECT 2nd item
+		useItem = items[1]
+	case "3": // SELECT 3rd item
+		useItem = items[2]
+	case "4": // SELECT 4th item
+		useItem = items[3]
+	}
+	rcpName := "LOUD's hunt without sword recipe"
+	switch useItem.Name {
+	case "Wooden sword":
+		if useItem.Level == 1 {
+			rcpName = "LOUD's hunt with lv1 wooden sword recipe"
+		} else {
+			rcpName = "LOUD's hunt with lv2 wooden sword recipe"
+		}
+	case "Copper sword":
+		if useItem.Level == 1 {
+			rcpName = "LOUD's hunt with lv1 copper sword recipe"
+		} else {
+			rcpName = "LOUD's hunt with lv2 copper sword recipe"
+		}
+	}
+	rcpID := RcpIDs[rcpName]
 	eugenAddr := pylonSDK.GetAccountAddr("eugen", nil)
 	sdkAddr, _ := sdk.AccAddressFromBech32(eugenAddr)
 	// execMsg := msgs.NewMsgExecuteRecipe(execType.RecipeID, execType.Sender, ItemIDs)
