@@ -19,6 +19,8 @@ func (w *dbWorld) newUser(username string) UserData {
 	userData := UserData{
 		Username: username,
 		Location: HOME,
+		Gold:     0,
+		Items:    []Item{},
 	}
 
 	return userData
@@ -65,13 +67,15 @@ func LoadWorldFromDB(filename string) World {
 
 // UserData is a JSON-serializable set of information about a User.
 type UserData struct {
+	Gold     int
 	Username string `json:""`
 	Location UserLocation
+	Items    []Item
 }
 
 type dbUser struct {
 	UserData
-	world *dbWorld
+	world           *dbWorld
 	lastTransaction string
 }
 
@@ -123,23 +127,30 @@ func (user *dbUser) GetUserName() string {
 	return user.UserData.Username
 }
 
+func (user *dbUser) SetGold(amount int) {
+	user.UserData.Gold = amount
+}
 func (user *dbUser) GetGold() int {
-	return 10
+	return user.UserData.Gold
+}
+
+func (user *dbUser) SetItems(items []Item) {
+	user.UserData.Items = items
 }
 
 func (user *dbUser) InventoryItems() []Item {
-	return []Item{
-		Item{
-			ID:    "1",
-			Name:  "Wooden sword",
-			Level: 1,
-		},
-		Item{
-			ID:    "1",
-			Name:  "Copper sword",
-			Level: 1,
-		},
+	return user.UserData.Items
+}
+
+func (user *dbUser) UpgradableItems() []Item {
+	iis := user.InventoryItems()
+	uis := []Item{}
+	for _, ii := range iis {
+		if ii.Level == 1 {
+			uis = append(uis, ii)
+		}
 	}
+	return uis
 }
 
 func (user *dbUser) GetLastTransaction() string {
