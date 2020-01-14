@@ -85,9 +85,8 @@ func localize(key string) string {
 	bundle.RegisterUnmarshalFunc("json", json.Unmarshal)
 	bundle.MustLoadMessageFile("en.json")
 	bundle.MustLoadMessageFile("es.json")
-
 	// Pending create a flag to be used in terminal to switch between languages.
-	loc := i18n.NewLocalizer(bundle, "en")
+	loc := i18n.NewLocalizer(bundle, "es")
 	translate := loc.MustLocalize(
 		&i18n.LocalizeConfig{
 			MessageID: key,
@@ -290,31 +289,31 @@ func (screen *GameScreen) renderUserCommands() {
 		shopItems := []Item{
 			Item{
 				ID:    "001",
-				Name:  localize("wooden sword"),
+				Name:  localize("Wooden sword"),
 				Level: 1,
 			},
 			Item{
 				ID:    "002",
-				Name:  localize("copper sword"),
+				Name:  localize("Copper sword"),
 				Level: 1,
 			},
 		}
 >>>>>>> Refactor i18n functionality
 		for idx, item := range shopItems {
-			infoLines = append(infoLines, fmt.Sprintf("%d) %s Lv%d", idx+1, item.Name, item.Level))
+			infoLines = append(infoLines, fmt.Sprintf("%d) %s Lv%d", idx+1, localize(item.Name), item.Level))
 		}
 		infoLines = append(infoLines, localize("C)ancel"))
 	case SELECT_SELL_ITEM:
 		userItems := screen.user.InventoryItems()
 		for idx, item := range userItems {
-			infoLines = append(infoLines, fmt.Sprintf("%d) %s Lv%d", idx+1, item.Name, item.Level))
+			infoLines = append(infoLines, fmt.Sprintf("%d) %s Lv%d", idx+1, localize(item.Name), item.Level))
 		}
 		infoLines = append(infoLines, localize("C)ancel"))
 	case SELECT_HUNT_ITEM:
 		userWeaponItems := screen.user.InventoryItems()
 		infoLines = append(infoLines, localize("N)o item"))
 		for idx, item := range userWeaponItems {
-			infoLines = append(infoLines, fmt.Sprintf("%d) %s Lv%d", idx+1, item.Name, item.Level))
+			infoLines = append(infoLines, fmt.Sprintf("%d) %s Lv%d", idx+1, localize(item.Name), item.Level))
 		}
 <<<<<<< HEAD
 		infoLines = append(infoLines, "Get I)nitial Coin")
@@ -325,7 +324,7 @@ func (screen *GameScreen) renderUserCommands() {
 	case SELECT_UPGRADE_ITEM:
 		userUpgradeItems := screen.user.UpgradableItems()
 		for idx, item := range userUpgradeItems {
-			infoLines = append(infoLines, fmt.Sprintf("%d) %s Lv%d", idx+1, item.Name, item.Level))
+			infoLines = append(infoLines, fmt.Sprintf("%d) %s Lv%d", idx+1, localize(item.Name), item.Level))
 		}
 		infoLines = append(infoLines, localize("C)ancel"))
 	case RESULT_BUY_FINISH:
@@ -464,7 +463,7 @@ func (screen *GameScreen) renderCharacterSheet() {
 	infoLines = append(infoLines, centerText(localize("inventory items"), "─", width))
 	items := screen.user.InventoryItems()
 	for _, item := range items {
-		infoLines = append(infoLines, truncateRight(fmt.Sprintf("%s Lv%d", item.Name, item.Level), width))
+		infoLines = append(infoLines, truncateRight(fmt.Sprintf("%s Lv%d", localize(item.Name), item.Level), width))
 	}
 	infoLines = append(infoLines, centerText(" ❦ ", "─", width))
 
@@ -621,11 +620,11 @@ func (screen *GameScreen) Render() {
 		clear := cursor.ClearEntireScreen()
 		move := cursor.MoveTo(1, 1)
 		io.WriteString(os.Stdout,
-			fmt.Sprintf("%s%sScreen is too small. Make your terminal larger. (60x20 minimum)", clear, move))
+			fmt.Sprintf("%s%s%s", clear, move, localize("screen size warning")))
 		return
 	} else if HP == 0 {
 		clear := cursor.ClearEntireScreen()
-		dead := "You died. Respawning..."
+		dead := localize("dead")
 		move := cursor.MoveTo(screen.screenSize.Height/2, screen.screenSize.Width/2-utf8.RuneCountInString(dead)/2)
 		io.WriteString(os.Stdout, clear+move+dead)
 		screen.refreshed = false

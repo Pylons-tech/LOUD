@@ -11,11 +11,11 @@
     "description": "",
     "one": "B)uy Items\nSe)ll Items\nUp)grade Items\nH)ome\nF)orest"
   },
-  "wooden sword": {
+  "Wooden sword": {
     "one": "Wooden sword",
     "other": "Wooden swords"
   },
-  "copper sword": {
+  "Copper sword": {
     "one": "Copper sword",
     "other": "Copper swords"
   },
@@ -84,5 +84,11 @@
   },
   "inventory items": {
     "one": " Inventory Items "
+  },
+  "screen size warning": {
+    "one": "Screen is too small. Make your terminal larger. (60x20 minimum)"
+  },
+  "dead": {
+    "one": "You died. Respawning..."
   }
 }

@@ -1,0 +1,94 @@
+{
+  "home": {
+  "description": "",
+  "one": "Bosque(F)\nTienda(S)"
+  },
+  "forest": {
+    "description": "",
+    "one": "Cazar(U)\nInicio(H)\nTienda(S)"
+  },
+  "shop": {
+    "description": "",
+    "one": "Comprar(B) Artículos\nVender(E) Artículos\nMejorar(P) Artículos\nInicio(H)\nBosque(F)"
+  },
+  "Wooden sword": {
+    "one": "Espada de Madera",
+    "other": "Espadas de Madera"
+  },
+  "Copper sword": {
+    "one": "Espada de Cobre",
+    "other": "Espadas de Cobre"
+  },
+  "C)ancel": {
+    "one": "C)ancelar"
+  },
+  "N)o item": {
+    "one": "N)o Artículo"
+  },
+  "Go) on": {
+    "one": "Seguir(O)"
+  },
+  "home desc": {
+    "one": "You are now at home.\nIf you like to hunt something go to forest.\nAnd if you like to buy/sell something go to shop."
+  },
+  "forest desc": {
+    "one": "You are now at forest.\nYou can hunt here or go back to home."
+  },
+  "shop desc": {
+    "one": "You are now at a shop.\nIf you want you can buy or sell items here."
+  },
+  "select buy item desc": {
+    "one": "You are gonna buy an item.\nPlease select an item to buy."
+  },
+  "select sell item desc": {
+    "one": "You are gonna sell an item.\nPlease select an item to sell."
+  },
+  "select hunt item desc": {
+    "one": "You are preparing for hunt.\nPlease select an item to carry."
+  },
+  "select upgrade item desc": {
+    "one": "You are gonna upgrade an item.\nPlease select an item to upgrade."
+  },
+  "wait buy process desc": {
+    "one": "You are now buying item.\nPlease wait for a moment to finish the process."
+  },
+  "wait hunt process desc": {
+    "one": "You are now hunting.\nPlease wait for a moment to finish the process."
+  },
+  "wait sell process desc": {
+    "one": "You are now selling an item.\nPlease wait for a moment to finish the process."
+  },
+  "wait upgrade process desc": {
+    "one": "You are now upgrading an item.\nPlease wait for a moment to finish the process."
+  },
+  "result buy finish desc": {
+    "one": "You have bought an item from shop.\nPlease use it for hunting."
+  },
+  "result hunt finish desc": {
+    "one": "You did hunt animals and sold it for gold."
+  },
+  "result sell finish desc": {
+    "one": "You sold an item for gold."
+  },
+  "result upgrade finish desc": {
+    "one": "You have upgraded item to get better hunt result."
+  },
+  "health low warning": {
+    "one": " (Salud baja) "
+  },
+  "health critical warning": {
+    "one": " (Salud CRITICA) "
+  },
+  "gold": {
+    "one": "Oro"
+  },
+  "inventory items": {
+    "one": " Inventario de Artículos "
+  },
+  "screen size warning": {
+    "one": "La pantalla es muy pequena. Haga su terminal mas larga. (60x20 minimo)"
+  },
+  "dead": {
+    "one": "Tu moriste. Reapareciendo..."
+  }
+}
