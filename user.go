@@ -10,7 +10,8 @@ const (
 
 // User represents an active user in the system.
 type User interface {
-	AddGold(amount int)
+	SetGold(int)
+	SetItems([]Item)
 	GetGold() int
 	GetUserName() string
 	InventoryItems() []Item

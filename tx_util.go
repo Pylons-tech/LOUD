@@ -39,8 +39,27 @@ var RcpIDs map[string]string = map[string]string{
 	"LOUD's hunt with lv2 wooden sword recipe":      "cosmos19vlpdf25cxh0w2s80z44r9ktrgzncf7zsaqey2f51e5c1b-1af9-44f5-b1f0-aeced8b6d144",
 }
 
-func SyncFromNode(user User) { // TODO refresh user state; items and coins
+func SyncFromNode(user User) {
+	orgT := originT.T{}
+	newT := testing.NewT(&orgT)
+	t := &newT
 
+	rawItems, _ := pylonSDK.ListItemsViaCLI("eugen")
+	items := []Item{}
+	for _, rawItem := range rawItems {
+		Level, _ := rawItem.FindLong("Level")
+		Name, _ := rawItem.FindString("Name")
+		items = append(items, Item{
+			Level: Level,
+			Name:  Name,
+			ID:    rawItem.ID,
+		})
+	}
+	user.SetItems(items)
+	log.Println("SyncFromNode items=", items)
+	accInfo := pylonSDK.GetAccountInfoFromName("eugen", t)
+	user.SetGold(int(accInfo.Coins.AmountOf("loudcoin").Int64()))
+	log.Println("SyncFromNode gold=", accInfo.Coins.AmountOf("loudcoin").Int64())
 }
 
 func ProcessTxResult(user User, txhash string) handlers.ExecuteRecipeSerialize {

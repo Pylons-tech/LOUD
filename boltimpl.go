@@ -20,6 +20,7 @@ func (w *dbWorld) newUser(username string) UserData {
 		Username: username,
 		Location: HOME,
 		Gold:     0,
+		Items:    []Item{},
 	}
 
 	return userData
@@ -69,6 +70,7 @@ type UserData struct {
 	Gold     int
 	Username string `json:""`
 	Location UserLocation
+	Items    []Item
 }
 
 type dbUser struct {
@@ -125,11 +127,15 @@ func (user *dbUser) GetUserName() string {
 	return user.UserData.Username
 }
 
-func (user *dbUser) AddGold(amount int) {
-	user.UserData.Gold += amount
+func (user *dbUser) SetGold(amount int) {
+	user.UserData.Gold = amount
 }
 func (user *dbUser) GetGold() int {
 	return user.UserData.Gold
+}
+
+func (user *dbUser) SetItems(items []Item) {
+	user.Items = items
 }
 
 func (user *dbUser) InventoryItems() []Item {
