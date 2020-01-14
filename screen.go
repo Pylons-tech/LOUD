@@ -1,6 +1,7 @@
 package loud
 
 import (
+	"encoding/json"
 	"fmt"
 	"io"
 	"math"
@@ -15,7 +16,11 @@ import (
 	"github.com/gliderlabs/ssh"
 	"github.com/mgutz/ansi"
 	"github.com/nsf/termbox-go"
+
 	terminal "github.com/wayneashleyberry/terminal-dimensions"
+
+	"github.com/nicksnyder/go-i18n/v2/i18n"
+	"golang.org/x/text/language"
 )
 
 // Screen represents a UI screen.
@@ -74,6 +79,22 @@ var shopItems []Item = []Item{
 		Name:  "Copper sword",
 		Level: 1,
 	},
+}
+
+func localize(key string) string {
+	bundle := i18n.NewBundle(language.English)
+	bundle.RegisterUnmarshalFunc("json", json.Unmarshal)
+	bundle.MustLoadMessageFile("en.json")
+	bundle.MustLoadMessageFile("es.json")
+	// Pending create a flag to be used in terminal to switch between languages.
+	loc := i18n.NewLocalizer(bundle, "es")
+	translate := loc.MustLocalize(
+		&i18n.LocalizeConfig{
+			MessageID: key,
+			// How to create PluralCount as optional param with default value ?
+			PluralCount: 1,
+		})
+	return translate
 }
 
 func truncateRight(message string, width int) string {
@@ -252,41 +273,42 @@ func (screen *GameScreen) redrawBorders() {
 }
 
 func (screen *GameScreen) renderUserCommands() {
+
 	infoLines := []string{}
 	switch screen.scrStatus {
 	case SHOW_LOCATION:
 		cmdMap := map[UserLocation]string{
-			HOME:   "F)orest\nS)hop",
-			FOREST: "Hu)nt\nH)ome\nS)hop",
-			SHOP:   "B)uy Items\nSe)ll Items\nUp)grade Items\nH)ome\nF)orest",
+			HOME:   localize("home"),
+			FOREST: localize("forest"),
+			SHOP:   localize("shop"),
 		}
 		cmdString := cmdMap[screen.user.GetLocation()]
 		infoLines = strings.Split(cmdString, "\n")
 	case SELECT_BUY_ITEM:
 		for idx, item := range shopItems {
-			infoLines = append(infoLines, fmt.Sprintf("%d) %s Lv%d", idx+1, item.Name, item.Level))
+			infoLines = append(infoLines, fmt.Sprintf("%d) %s Lv%d", idx+1, localize(item.Name), item.Level))
 		}
-		infoLines = append(infoLines, "C)ancel")
+		infoLines = append(infoLines, localize("C)ancel"))
 	case SELECT_SELL_ITEM:
 		userItems := screen.user.InventoryItems()
 		for idx, item := range userItems {
-			infoLines = append(infoLines, fmt.Sprintf("%d) %s Lv%d", idx+1, item.Name, item.Level))
+			infoLines = append(infoLines, fmt.Sprintf("%d) %s Lv%d", idx+1, localize(item.Name), item.Level))
 		}
-		infoLines = append(infoLines, "C)ancel")
+		infoLines = append(infoLines, localize("C)ancel"))
 	case SELECT_HUNT_ITEM:
 		userWeaponItems := screen.user.InventoryItems()
-		infoLines = append(infoLines, "N)o Item")
+		infoLines = append(infoLines, localize("N)o item"))
 		for idx, item := range userWeaponItems {
-			infoLines = append(infoLines, fmt.Sprintf("%d) %s Lv%d", idx+1, item.Name, item.Level))
+			infoLines = append(infoLines, fmt.Sprintf("%d) %s Lv%d", idx+1, localize(item.Name), item.Level))
 		}
-		infoLines = append(infoLines, "Get I)nitial Coin")
-		infoLines = append(infoLines, "C)ancel")
+		infoLines = append(infoLines, localize("Get I)nitial Coin"))
+		infoLines = append(infoLines, localize("C)ancel"))
 	case SELECT_UPGRADE_ITEM:
 		userUpgradeItems := screen.user.UpgradableItems()
 		for idx, item := range userUpgradeItems {
-			infoLines = append(infoLines, fmt.Sprintf("%d) %s Lv%d", idx+1, item.Name, item.Level))
+			infoLines = append(infoLines, fmt.Sprintf("%d) %s Lv%d", idx+1, localize(item.Name), item.Level))
 		}
-		infoLines = append(infoLines, "C)ancel")
+		infoLines = append(infoLines, localize("C)ancel"))
 	case RESULT_BUY_FINISH:
 		fallthrough
 	case RESULT_HUNT_FINISH:
@@ -294,7 +316,7 @@ func (screen *GameScreen) renderUserCommands() {
 	case RESULT_SELL_FINISH:
 		fallthrough
 	case RESULT_UPGRADE_FINISH:
-		infoLines = append(infoLines, "Go) on")
+		infoLines = append(infoLines, localize("Go) on"))
 	default:
 	}
 
@@ -316,42 +338,43 @@ func (screen *GameScreen) renderUserCommands() {
 func (screen *GameScreen) renderUserSituation() {
 	infoLines := []string{}
 	desc := ""
+	waitProcessEnd := localize("wait process to end")
 	switch screen.scrStatus {
 	case SHOW_LOCATION:
 		locationDescMap := map[UserLocation]string{
-			HOME:   "You are now at home.\nIf you like to hunt something go to forest.\nAnd if you like to buy/sell something go to shop",
-			FOREST: "You are now at forest.\nYou can hunt here or go back to home.",
-			SHOP:   "You are now at a shop.\nIf you want you can buy or sell items here.",
+			HOME:   localize("home desc"),
+			FOREST: localize("forest desc"),
+			SHOP:   localize("shop desc"),
 		}
 		desc = locationDescMap[screen.user.GetLocation()]
 	case SELECT_BUY_ITEM:
-		desc = "You are gonna buy an item.\nPlease select an item to buy."
+		desc = localize("select buy item desc")
 	case SELECT_SELL_ITEM:
-		desc = "You are gonna sell an item.\nPlease select an item to sell."
+		desc = localize("select sell item desc")
 	case SELECT_HUNT_ITEM:
-		desc = "You are preparing for hunt.\nPlease select an item to carry."
+		desc = localize("select hunt item desc")
 	case SELECT_UPGRADE_ITEM:
-		desc = "You are gonna upgrade an item.\nPlease select an item to upgrade."
+		desc = localize("select upgrade item desc")
 	case WAIT_BUY_PROCESS:
-		desc = fmt.Sprintf("You are now buying %s Lv%d at shop.\nPlease wait for a moment to finish the process.", screen.activeItem.Name, screen.activeItem.Level)
+		desc = fmt.Sprintf("%s %s Lv%d.\n%s", localize("wait buy process desc"), localize(screen.activeItem.Name), screen.activeItem.Level, waitProcessEnd)
 	case WAIT_HUNT_PROCESS:
 		if len(screen.activeItem.Name) > 0 {
-			desc = fmt.Sprintf("You are now hunting with %s Lv%d.\nPlease wait for a moment to finish the process.", screen.activeItem.Name, screen.activeItem.Level)
+			desc = fmt.Sprintf("%s %s Lv%d.\n%s", localize("wait hunt process desc"), localize(screen.activeItem.Name), screen.activeItem.Level, waitProcessEnd)
 		} else {
-			desc = fmt.Sprintf("You are now hunting without weapon.\nPlease wait for a moment to finish the process.")
+			desc = fmt.Sprintf("%s\n%s", localize("hunting without weapon"), waitProcessEnd)
 		}
 	case WAIT_SELL_PROCESS:
-		desc = fmt.Sprintf("You are now selling %s Lv%d for gold.\nPlease wait for a moment to finish the process.", screen.activeItem.Name, screen.activeItem.Level)
+		desc = fmt.Sprintf("%s %s Lv%d.\n%s", localize("wait sell process desc"), localize(screen.activeItem.Name), screen.activeItem.Level, waitProcessEnd)
 	case WAIT_UPGRADE_PROCESS:
-		desc = fmt.Sprintf("You are now upgrading %s.\nPlease wait for a moment to finish the process.", screen.activeItem.Name)
+		desc = fmt.Sprintf("%s %s.\n%s", localize("wait upgrade process desc"), localize(screen.activeItem.Name), waitProcessEnd)
 	case RESULT_BUY_FINISH:
-		desc = fmt.Sprintf("You have bought %s Lv%d from shop.\nPlease use it for hunting.", screen.activeItem.Name, screen.activeItem.Level)
+		desc = fmt.Sprintf("%s %s Lv%d.\n%s", localize("result buy finish desc"), localize(screen.activeItem.Name), screen.activeItem.Level, localize("use for hunting"))
 	case RESULT_HUNT_FINISH:
-		desc = fmt.Sprintf("You did hunt animals and sold it for %d gold.", screen.txResult.Amount)
+		desc = fmt.Sprintf("%s %d.", localize("result hunt finish desc"), screen.txResult.Amount)
 	case RESULT_SELL_FINISH:
-		desc = fmt.Sprintf("You sold %s Lv%d for gold.", screen.activeItem.Name, screen.activeItem.Level)
+		desc = fmt.Sprintf("%s %s Lv%d.", localize("result sell finish desc"), localize(screen.activeItem.Name), screen.activeItem.Level)
 	case RESULT_UPGRADE_FINISH:
-		desc = fmt.Sprintf("You have upgraded %s from Lv1 to Lv2 to get better hunt result.", screen.activeItem.Name)
+		desc = fmt.Sprintf("%s: %s.", localize("result upgrade finish desc"), localize(screen.activeItem.Name))
 	}
 
 	basicLines := strings.Split(desc, "\n")
@@ -381,10 +404,10 @@ func (screen *GameScreen) renderCharacterSheet() {
 	warning := ""
 	if float32(HP) < float32(MaxHP)*.25 {
 		bgcolor = 124
-		warning = " (Health low) "
+		warning = localize("health low warning")
 	} else if float32(HP) < float32(MaxHP)*.1 {
 		bgcolor = 160
-		warning = " (Health CRITICAL) "
+		warning = localize("health critical warning")
 	}
 
 	x := screen.screenSize.Width/2 - 1
@@ -394,7 +417,7 @@ func (screen *GameScreen) renderCharacterSheet() {
 	infoLines := []string{
 		centerText(fmt.Sprintf("%v", screen.user.GetUserName()), " ", width),
 		centerText(warning, "─", width),
-		screen.drawProgressMeter(1, 1, 208, bgcolor, 1) + fmtFunc(truncateRight(fmt.Sprintf(" Gold: %v", screen.user.GetGold()), width-1)),
+		screen.drawProgressMeter(1, 1, 208, bgcolor, 1) + fmtFunc(truncateRight(fmt.Sprintf(" %s: %v", localize("gold"), screen.user.GetGold()), width-1)),
 		screen.drawProgressMeter(HP, MaxHP, 196, bgcolor, 10) + fmtFunc(truncateRight(fmt.Sprintf(" HP: %v/%v", HP, MaxHP), width-10)),
 		// screen.drawProgressMeter(HP, MaxHP, 225, bgcolor, 10) + fmtFunc(truncateRight(fmt.Sprintf(" XP: %v/%v", HP, 10), width-10)),
 		// screen.drawProgressMeter(HP, MaxHP, 208, bgcolor, 10) + fmtFunc(truncateRight(fmt.Sprintf(" AP: %v/%v", HP, MaxHP), width-10)),
@@ -402,10 +425,10 @@ func (screen *GameScreen) renderCharacterSheet() {
 		// screen.drawProgressMeter(HP, MaxHP, 76, bgcolor, 10) + fmtFunc(truncateRight(fmt.Sprintf(" MP: %v/%v", HP, MaxHP), width-10)),
 	}
 
-	infoLines = append(infoLines, centerText(" Inventory Items ", "─", width))
+	infoLines = append(infoLines, centerText(localize("inventory items"), "─", width))
 	items := screen.user.InventoryItems()
 	for _, item := range items {
-		infoLines = append(infoLines, truncateRight(fmt.Sprintf("%s Lv%d", item.Name, item.Level), width))
+		infoLines = append(infoLines, truncateRight(fmt.Sprintf("%s Lv%d", localize(item.Name), item.Level), width))
 	}
 	infoLines = append(infoLines, centerText(" ❦ ", "─", width))
 
@@ -417,7 +440,7 @@ func (screen *GameScreen) renderCharacterSheet() {
 	}
 
 	nodeLines := []string{
-		centerText("Pylons Network Status", " ", width),
+		centerText(localize("pylons network status"), " ", width),
 		centerText(screen.user.GetLastTransaction(), " ", width),
 		centerText(" ❦ ", "─", width),
 	}
@@ -562,11 +585,11 @@ func (screen *GameScreen) Render() {
 		clear := cursor.ClearEntireScreen()
 		move := cursor.MoveTo(1, 1)
 		io.WriteString(os.Stdout,
-			fmt.Sprintf("%s%sScreen is too small. Make your terminal larger. (60x20 minimum)", clear, move))
+			fmt.Sprintf("%s%s%s", clear, move, localize("screen size warning")))
 		return
 	} else if HP == 0 {
 		clear := cursor.ClearEntireScreen()
-		dead := "You died. Respawning..."
+		dead := localize("dead")
 		move := cursor.MoveTo(screen.screenSize.Height/2, screen.screenSize.Width/2-utf8.RuneCountInString(dead)/2)
 		io.WriteString(os.Stdout, clear+move+dead)
 		screen.refreshed = false

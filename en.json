@@ -1,0 +1,109 @@
+{
+  "home": {
+  "description": "",
+  "one": "F)orest\nS)hop"
+  },
+  "forest": {
+    "description": "",
+    "one": "Hu)nt\nH)ome\nS)hop"
+  },
+  "shop": {
+    "description": "",
+    "one": "B)uy Items\nSe)ll Items\nUp)grade Items\nH)ome\nF)orest"
+  },
+  "Wooden sword": {
+    "one": "Wooden sword",
+    "other": "Wooden swords"
+  },
+  "Copper sword": {
+    "one": "Copper sword",
+    "other": "Copper swords"
+  },
+  "C)ancel": {
+    "one": "C)ancel"
+  },
+  "N)o item": {
+    "one": "N)o Item"
+  },
+  "Get I)nitial Coin": {
+    "one": "Get I)nitial Coin"
+  },
+  "Go) on": {
+    "one": "Go) on"
+  },
+  "home desc": {
+    "one": "You are now at home.\nIf you like to hunt something go to forest.\nAnd if you like to buy/sell something go to shop."
+  },
+  "forest desc": {
+    "one": "You are now at forest.\nYou can hunt here or go back to home."
+  },
+  "shop desc": {
+    "one": "You are now at a shop.\nIf you want you can buy or sell items here."
+  },
+  "select buy item desc": {
+    "one": "You are gonna buy an item.\nPlease select an item to buy."
+  },
+  "select sell item desc": {
+    "one": "You are gonna sell an item.\nPlease select an item to sell."
+  },
+  "select hunt item desc": {
+    "one": "You are preparing for hunt.\nPlease select an item to carry."
+  },
+  "select upgrade item desc": {
+    "one": "You are gonna upgrade %s.\nPlease select an item to upgrade."
+  },
+  "wait process to end": {
+    "one": "Please wait for a moment to finish the process."
+  },
+  "wait buy process desc": {
+    "one": "You are now buying at the shop"
+  },
+  "wait hunt process desc": {
+    "one": "You are now hunting with"
+  },
+  "hunting without weapon": {
+    "one": "You are now hunting without weapon."
+  },
+  "wait sell process desc": {
+    "one": "You are now selling for gold"
+  },
+  "wait upgrade process desc": {
+    "one": "You are now upgrading"
+  },
+  "result buy finish desc": {
+    "one": "You have bought from the shop.\nPlease use it for hunting."
+  },
+  "use for hunting": {
+    "one": "Please use it for hunting."
+  },
+  "result hunt finish desc": {
+    "one": "You did hunt animals and sold it for gold"
+  },
+  "result sell finish desc": {
+    "one": "You sold for gold"
+  },
+  "result upgrade finish desc": {
+    "one": "You have upgraded from Lv1 to Lv2 to get better hunt result"
+  },
+  "health low warning": {
+    "one": " (Health low) "
+  },
+  "health critical warning": {
+    "one": " (Health CRITICAL) "
+  },
+  "gold": {
+    "one": "Gold"
+  },
+  "inventory items": {
+    "one": " Inventory Items "
+  },
+  "screen size warning": {
+    "one": "Screen is too small. Make your terminal larger. (60x20 minimum)"
+  },
+  "dead": {
+    "one": "You died. Respawning..."
+  },
+  "pylons network status": {
+    "one": "Pylons Network Status"
+  }
+}

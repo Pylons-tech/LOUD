@@ -21,6 +21,7 @@ require (
 	github.com/mattn/go-isatty v0.0.11
 	github.com/mattn/go-runewidth v0.0.7 // indirect
 	github.com/mgutz/ansi v0.0.0-20170206155736-9520e82c474b
+	github.com/nicksnyder/go-i18n/v2 v2.0.3
 	github.com/nsf/termbox-go v0.0.0-20191229070316-58d4fcbce2a7
 	github.com/rakyll/statik v0.1.5 // indirect
 	github.com/rs/cors v1.7.0 // indirect
@@ -39,6 +40,7 @@ require (
 	github.com/wayneashleyberry/terminal-dimensions v1.0.0
 	golang.org/x/net v0.0.0-20191209160850-c0dbc17a3553
 	golang.org/x/sys v0.0.0-20200102141924-c96a22e43c9c
+	golang.org/x/text v0.3.2
 	google.golang.org/appengine v1.6.5
 	google.golang.org/grpc v1.25.1 // indirect
 	gopkg.in/yaml.v2 v2.2.7 // indirect
