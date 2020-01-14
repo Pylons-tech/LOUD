@@ -79,6 +79,7 @@ var shopItems []Item = []Item{
 		Name:  "Copper sword",
 		Level: 1,
 	},
+}
 
 func localize(key string) string {
 	bundle := i18n.NewBundle(language.English)
@@ -284,21 +285,6 @@ func (screen *GameScreen) renderUserCommands() {
 		cmdString := cmdMap[screen.user.GetLocation()]
 		infoLines = strings.Split(cmdString, "\n")
 	case SELECT_BUY_ITEM:
-<<<<<<< HEAD
-=======
-		shopItems := []Item{
-			Item{
-				ID:    "001",
-				Name:  localize("Wooden sword"),
-				Level: 1,
-			},
-			Item{
-				ID:    "002",
-				Name:  localize("Copper sword"),
-				Level: 1,
-			},
-		}
->>>>>>> Refactor i18n functionality
 		for idx, item := range shopItems {
 			infoLines = append(infoLines, fmt.Sprintf("%d) %s Lv%d", idx+1, localize(item.Name), item.Level))
 		}
@@ -315,12 +301,8 @@ func (screen *GameScreen) renderUserCommands() {
 		for idx, item := range userWeaponItems {
 			infoLines = append(infoLines, fmt.Sprintf("%d) %s Lv%d", idx+1, localize(item.Name), item.Level))
 		}
-<<<<<<< HEAD
-		infoLines = append(infoLines, "Get I)nitial Coin")
-		infoLines = append(infoLines, "C)ancel")
-=======
+		infoLines = append(infoLines, localize("Get I)nitial Coin"))
 		infoLines = append(infoLines, localize("C)ancel"))
->>>>>>> Refactor i18n functionality
 	case SELECT_UPGRADE_ITEM:
 		userUpgradeItems := screen.user.UpgradableItems()
 		for idx, item := range userUpgradeItems {
@@ -356,6 +338,7 @@ func (screen *GameScreen) renderUserCommands() {
 func (screen *GameScreen) renderUserSituation() {
 	infoLines := []string{}
 	desc := ""
+	waitProcessEnd := localize("wait process to end")
 	switch screen.scrStatus {
 	case SHOW_LOCATION:
 		locationDescMap := map[UserLocation]string{
@@ -373,43 +356,25 @@ func (screen *GameScreen) renderUserSituation() {
 	case SELECT_UPGRADE_ITEM:
 		desc = localize("select upgrade item desc")
 	case WAIT_BUY_PROCESS:
-<<<<<<< HEAD
-		desc = fmt.Sprintf("You are now buying %s Lv%d at shop.\nPlease wait for a moment to finish the process.", screen.activeItem.Name, screen.activeItem.Level)
+		desc = fmt.Sprintf("%s %s Lv%d.\n%s", localize("wait buy process desc"), localize(screen.activeItem.Name), screen.activeItem.Level, waitProcessEnd)
 	case WAIT_HUNT_PROCESS:
 		if len(screen.activeItem.Name) > 0 {
-			desc = fmt.Sprintf("You are now hunting with %s Lv%d.\nPlease wait for a moment to finish the process.", screen.activeItem.Name, screen.activeItem.Level)
+			desc = fmt.Sprintf("%s %s Lv%d.\n%s", localize("wait hunt process desc"), localize(screen.activeItem.Name), screen.activeItem.Level, waitProcessEnd)
 		} else {
-			desc = fmt.Sprintf("You are now hunting without weapon.\nPlease wait for a moment to finish the process.")
+			desc = fmt.Sprintf("%s\n%s", localize("hunting without weapon"), waitProcessEnd)
 		}
 	case WAIT_SELL_PROCESS:
-		desc = fmt.Sprintf("You are now selling %s Lv%d for gold.\nPlease wait for a moment to finish the process.", screen.activeItem.Name, screen.activeItem.Level)
+		desc = fmt.Sprintf("%s %s Lv%d.\n%s", localize("wait sell process desc"), localize(screen.activeItem.Name), screen.activeItem.Level, waitProcessEnd)
 	case WAIT_UPGRADE_PROCESS:
-		desc = fmt.Sprintf("You are now upgrading %s.\nPlease wait for a moment to finish the process.", screen.activeItem.Name)
+		desc = fmt.Sprintf("%s %s.\n%s", localize("wait upgrade process desc"), localize(screen.activeItem.Name), waitProcessEnd)
 	case RESULT_BUY_FINISH:
-		desc = fmt.Sprintf("You have bought %s Lv%d from shop.\nPlease use it for hunting.", screen.activeItem.Name, screen.activeItem.Level)
+		desc = fmt.Sprintf("%s %s Lv%d.\n%s", localize("result buy finish desc"), localize(screen.activeItem.Name), screen.activeItem.Level, localize("use for hunting"))
 	case RESULT_HUNT_FINISH:
-		desc = fmt.Sprintf("You did hunt animals and sold it for %d gold.", screen.txResult.Amount)
+		desc = fmt.Sprintf("%s %d.", localize("result hunt finish desc"), screen.txResult.Amount)
 	case RESULT_SELL_FINISH:
-		desc = fmt.Sprintf("You sold %s Lv%d for gold.", screen.activeItem.Name, screen.activeItem.Level)
+		desc = fmt.Sprintf("%s %s Lv%d.", localize("result sell finish desc"), localize(screen.activeItem.Name), screen.activeItem.Level)
 	case RESULT_UPGRADE_FINISH:
-		desc = fmt.Sprintf("You have upgraded %s from Lv1 to Lv2 to get better hunt result.", screen.activeItem.Name)
-=======
-		desc = localize("wait buy process desc")
-	case WAIT_HUNT_PROCESS:
-		desc = localize("wait hunt process desc")
-	case WAIT_SELL_PROCESS:
-		desc = localize("wait sell process desc")
-	case WAIT_UPGRADE_PROCESS:
-		desc = localize("wait upgrade process desc")
-	case RESULT_BUY_FINISH:
-		desc = localize("result buy finish desc")
-	case RESULT_HUNT_FINISH:
-		desc = localize("result hunt finish desc")
-	case RESULT_SELL_FINISH:
-		desc = localize("result sell finish desc")
-	case RESULT_UPGRADE_FINISH:
-		desc = localize("result upgrade finish desc")
->>>>>>> Refactor i18n functionality
+		desc = fmt.Sprintf("%s: %s.", localize("result upgrade finish desc"), localize(screen.activeItem.Name))
 	}
 
 	basicLines := strings.Split(desc, "\n")

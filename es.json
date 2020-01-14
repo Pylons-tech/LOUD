@@ -25,53 +25,65 @@
   "N)o item": {
     "one": "N)o Artículo"
   },
+  "Get I)nitial Coin": {
+    "one": "Obtener la moneda I)nicial"
+  },
   "Go) on": {
     "one": "Seguir(O)"
   },
   "home desc": {
-    "one": "You are now at home.\nIf you like to hunt something go to forest.\nAnd if you like to buy/sell something go to shop."
+    "one": "Estás en inicio.\nSi quieres cazar, dirígete al bosque.\nY si quieres comprar/vender algo, dirígete a la tienda."
   },
   "forest desc": {
-    "one": "You are now at forest.\nYou can hunt here or go back to home."
+    "one": "Estás en el bosque.\nPuedes cazar aquí o regresar a inicio."
   },
   "shop desc": {
-    "one": "You are now at a shop.\nIf you want you can buy or sell items here."
+    "one": "Estás en una tienda.\nSi quieres, puedes comprar o vender artículos aquí."
   },
   "select buy item desc": {
-    "one": "You are gonna buy an item.\nPlease select an item to buy."
+    "one": "Vas a comprar un artículo.\nPor favor selecciona un artículo a comprar."
   },
   "select sell item desc": {
-    "one": "You are gonna sell an item.\nPlease select an item to sell."
+    "one": "Vas a vender un artículo.\nPor favor selecciona un artículo a vender."
   },
   "select hunt item desc": {
-    "one": "You are preparing for hunt.\nPlease select an item to carry."
+    "one": "Te estás preparando para cazar.\nPor favor selecciona un artículo a llevar."
   },
   "select upgrade item desc": {
-    "one": "You are gonna upgrade an item.\nPlease select an item to upgrade."
+    "one": "Vas a mejorar un artículo.\nPor favor selecciona un artículo para mejorar."
+  },
+  "wait process to end": {
+    "one": "Por favor espere un momento a finalizar el proceso."
   },
   "wait buy process desc": {
-    "one": "You are now buying item.\nPlease wait for a moment to finish the process."
+    "one": "Estás comprando en la tienda"
   },
   "wait hunt process desc": {
-    "one": "You are now hunting.\nPlease wait for a moment to finish the process."
+    "one": "Estás cazando con"
+  },
+  "hunting without weapon": {
+    "one": "Estás cazando sin arma."
   },
   "wait sell process desc": {
-    "one": "You are now selling an item.\nPlease wait for a moment to finish the process."
+    "one": "Estás vendiendo por oro"
   },
   "wait upgrade process desc": {
-    "one": "You are now upgrading an item.\nPlease wait for a moment to finish the process."
+    "one": "Estás mejorando"
   },
   "result buy finish desc": {
-    "one": "You have bought an item from shop.\nPlease use it for hunting."
+    "one": "Has comprado de la tienda"
+  },
+  "use for hunting": {
+    "one": "Por favor usar para cazar."
   },
   "result hunt finish desc": {
-    "one": "You did hunt animals and sold it for gold."
+    "one": "Cazaste animales y los vendiste por oro"
   },
   "result sell finish desc": {
-    "one": "You sold an item for gold."
+    "one": "Vendiste por oro"
   },
   "result upgrade finish desc": {
-    "one": "You have upgraded item to get better hunt result."
+    "one": "Has mejorado del Lv1 al Lv2 para tener un mejor resultado en la cazería"
   },
   "health low warning": {
     "one": " (Salud baja) "

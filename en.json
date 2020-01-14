@@ -25,6 +25,9 @@
   "N)o item": {
     "one": "N)o Item"
   },
+  "Get I)nitial Coin": {
+    "one": "Get I)nitial Coin"
+  },
   "Go) on": {
     "one": "Go) on"
   },
@@ -47,31 +50,40 @@
     "one": "You are preparing for hunt.\nPlease select an item to carry."
   },
   "select upgrade item desc": {
-    "one": "You are gonna upgrade an item.\nPlease select an item to upgrade."
+    "one": "You are gonna upgrade %s.\nPlease select an item to upgrade."
+  },
+  "wait process to end": {
+    "one": "Please wait for a moment to finish the process."
   },
   "wait buy process desc": {
-    "one": "You are now buying item.\nPlease wait for a moment to finish the process."
+    "one": "You are now buying at the shop"
   },
   "wait hunt process desc": {
-    "one": "You are now hunting.\nPlease wait for a moment to finish the process."
+    "one": "You are now hunting with"
+  },
+  "hunting without weapon": {
+    "one": "You are now hunting without weapon."
   },
   "wait sell process desc": {
-    "one": "You are now selling an item.\nPlease wait for a moment to finish the process."
+    "one": "You are now selling for gold"
   },
   "wait upgrade process desc": {
-    "one": "You are now upgrading an item.\nPlease wait for a moment to finish the process."
+    "one": "You are now upgrading"
   },
   "result buy finish desc": {
-    "one": "You have bought an item from shop.\nPlease use it for hunting."
+    "one": "You have bought from the shop.\nPlease use it for hunting."
+  },
+  "use for hunting": {
+    "one": "Please use it for hunting."
   },
   "result hunt finish desc": {
-    "one": "You did hunt animals and sold it for gold."
+    "one": "You did hunt animals and sold it for gold"
   },
   "result sell finish desc": {
-    "one": "You sold an item for gold."
+    "one": "You sold for gold"
   },
   "result upgrade finish desc": {
-    "one": "You have upgraded item to get better hunt result."
+    "one": "You have upgraded from Lv1 to Lv2 to get better hunt result"
   },
   "health low warning": {
     "one": " (Health low) "
