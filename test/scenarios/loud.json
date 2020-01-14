@@ -18,6 +18,24 @@
         }
     },
     {
+        "ID": "CREATE_GET_INITIAL_COIN_RECIPE",
+        "runAfter": {
+            "precondition": ["CREATE_LOUD_COOKBOOK"],
+            "blockWait": 0
+        },
+        "action": "create_recipe",
+        "paramsRef": "./recipes/get_initial_coin.json",
+        "output": {
+            "txResult": {
+                "status": "Success"
+            },
+            "property": {
+                "owner": "eugen",
+                "recipes": ["LOUD's get initial coin recipe"]
+            }
+        }
+    },
+    {
         "ID": "CREATE_BUY_COPPER_SWORD_LV1_RECIPE",
         "runAfter": {
             "precondition": ["CREATE_LOUD_COOKBOOK"],

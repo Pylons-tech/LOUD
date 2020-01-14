@@ -135,22 +135,11 @@ func (user *dbUser) GetGold() int {
 }
 
 func (user *dbUser) SetItems(items []Item) {
-	user.Items = items
+	user.UserData.Items = items
 }
 
 func (user *dbUser) InventoryItems() []Item {
-	return []Item{
-		Item{
-			ID:    "1",
-			Name:  "Wooden sword",
-			Level: 1,
-		},
-		Item{
-			ID:    "2",
-			Name:  "Copper sword",
-			Level: 2,
-		},
-	}
+	return user.UserData.Items
 }
 
 func (user *dbUser) UpgradableItems() []Item {

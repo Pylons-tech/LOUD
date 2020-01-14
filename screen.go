@@ -49,6 +49,7 @@ type GameScreen struct {
 	world          World
 	user           User
 	screenSize     ssh.Window
+	activeItem     Item
 	txResult       handlers.ExecuteRecipeSerialize
 	refreshed      bool
 	scrStatus      ScreenStatus
@@ -278,6 +279,7 @@ func (screen *GameScreen) renderUserCommands() {
 		for idx, item := range userWeaponItems {
 			infoLines = append(infoLines, fmt.Sprintf("%d) %s Lv%d", idx+1, item.Name, item.Level))
 		}
+		infoLines = append(infoLines, "Get I)nitial Coin")
 		infoLines = append(infoLines, "C)ancel")
 	case SELECT_UPGRADE_ITEM:
 		userUpgradeItems := screen.user.UpgradableItems()
@@ -331,21 +333,25 @@ func (screen *GameScreen) renderUserSituation() {
 	case SELECT_UPGRADE_ITEM:
 		desc = "You are gonna upgrade an item.\nPlease select an item to upgrade."
 	case WAIT_BUY_PROCESS:
-		desc = "You are now buying item.\nPlease wait for a moment to finish the process."
+		desc = fmt.Sprintf("You are now buying %s Lv%d at shop.\nPlease wait for a moment to finish the process.", screen.activeItem.Name, screen.activeItem.Level)
 	case WAIT_HUNT_PROCESS:
-		desc = "You are now hunting.\nPlease wait for a moment to finish the process."
+		if len(screen.activeItem.Name) > 0 {
+			desc = fmt.Sprintf("You are now hunting with %s Lv%d.\nPlease wait for a moment to finish the process.", screen.activeItem.Name, screen.activeItem.Level)
+		} else {
+			desc = fmt.Sprintf("You are now hunting without weapon.\nPlease wait for a moment to finish the process.")
+		}
 	case WAIT_SELL_PROCESS:
-		desc = "You are now selling an item.\nPlease wait for a moment to finish the process."
+		desc = fmt.Sprintf("You are now selling %s Lv%d for gold.\nPlease wait for a moment to finish the process.", screen.activeItem.Name, screen.activeItem.Level)
 	case WAIT_UPGRADE_PROCESS:
-		desc = "You are now upgrading an item.\nPlease wait for a moment to finish the process."
+		desc = fmt.Sprintf("You are now upgrading %s.\nPlease wait for a moment to finish the process.", screen.activeItem.Name)
 	case RESULT_BUY_FINISH:
-		desc = "You have bought an item from shop.\nPlease use it for hunting."
+		desc = fmt.Sprintf("You have bought %s Lv%d from shop.\nPlease use it for hunting.", screen.activeItem.Name, screen.activeItem.Level)
 	case RESULT_HUNT_FINISH:
 		desc = fmt.Sprintf("You did hunt animals and sold it for %d gold.", screen.txResult.Amount)
 	case RESULT_SELL_FINISH:
-		desc = "You sold an item for gold."
+		desc = fmt.Sprintf("You sold %s Lv%d for gold.", screen.activeItem.Name, screen.activeItem.Level)
 	case RESULT_UPGRADE_FINISH:
-		desc = "You have upgraded item to get better hunt result."
+		desc = fmt.Sprintf("You have upgraded %s from Lv1 to Lv2 to get better hunt result.", screen.activeItem.Name)
 	}
 
 	basicLines := strings.Split(desc, "\n")
@@ -479,6 +485,10 @@ func (screen *GameScreen) HandleInputKey(input termbox.Event) {
 		fallthrough
 	case "n":
 		fallthrough
+	case "I":
+		fallthrough
+	case "i":
+		fallthrough
 	case "1": // SELECT 1st item
 		fallthrough
 	case "2": // SELECT 2nd item
@@ -489,6 +499,7 @@ func (screen *GameScreen) HandleInputKey(input termbox.Event) {
 		screen.refreshed = false
 		switch screen.scrStatus {
 		case SELECT_BUY_ITEM:
+			screen.activeItem = GetToBuyItemFromKey(Key)
 			txhash := Buy(screen.user, Key)
 			screen.scrStatus = WAIT_BUY_PROCESS
 			screen.refreshed = false
@@ -501,6 +512,7 @@ func (screen *GameScreen) HandleInputKey(input termbox.Event) {
 				screen.Render()
 			})
 		case SELECT_HUNT_ITEM:
+			screen.activeItem = GetWeaponItemFromKey(screen.user, Key)
 			txhash := Hunt(screen.user, Key)
 			screen.scrStatus = WAIT_HUNT_PROCESS
 			screen.refreshed = false
@@ -513,6 +525,7 @@ func (screen *GameScreen) HandleInputKey(input termbox.Event) {
 				screen.Render()
 			})
 		case SELECT_SELL_ITEM:
+			screen.activeItem = GetToSellItemFromKey(screen.user, Key)
 			txhash := Sell(screen.user, Key)
 			screen.scrStatus = WAIT_SELL_PROCESS
 			screen.refreshed = false
@@ -525,6 +538,7 @@ func (screen *GameScreen) HandleInputKey(input termbox.Event) {
 				screen.Render()
 			})
 		case SELECT_UPGRADE_ITEM:
+			screen.activeItem = GetToUpgradeItemFromKey(screen.user, Key)
 			txhash := Upgrade(screen.user, Key)
 			screen.scrStatus = WAIT_UPGRADE_PROCESS
 			screen.refreshed = false
