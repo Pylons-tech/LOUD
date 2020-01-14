@@ -102,5 +102,8 @@
   },
   "dead": {
     "one": "Tu moriste. Reapareciendo..."
+  },
+  "pylons network status": {
+    "one": "Estado de red de Pylons"
   }
 }

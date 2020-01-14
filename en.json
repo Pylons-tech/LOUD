@@ -102,5 +102,8 @@
   },
   "dead": {
     "one": "You died. Respawning..."
+  },
+  "pylons network status": {
+    "one": "Pylons Network Status"
   }
 }

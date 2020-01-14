@@ -1,6 +1,7 @@
 package loud
 
 import (
+	"encoding/json"
 	"fmt"
 	"io"
 	"math"
@@ -8,7 +9,6 @@ import (
 	"strings"
 	"time"
 	"unicode/utf8"
-	"encoding/json"
 
 	pylonSDK "github.com/MikeSofaer/pylons/cmd/test"
 	"github.com/MikeSofaer/pylons/x/pylons/handlers"
@@ -20,7 +20,7 @@ import (
 	terminal "github.com/wayneashleyberry/terminal-dimensions"
 
 	"github.com/nicksnyder/go-i18n/v2/i18n"
-  "golang.org/x/text/language"
+	"golang.org/x/text/language"
 )
 
 // Screen represents a UI screen.
@@ -440,7 +440,7 @@ func (screen *GameScreen) renderCharacterSheet() {
 	}
 
 	nodeLines := []string{
-		centerText("Pylons Network Status", " ", width),
+		centerText(localize("pylons network status"), " ", width),
 		centerText(screen.user.GetLastTransaction(), " ", width),
 		centerText(" ❦ ", "─", width),
 	}
