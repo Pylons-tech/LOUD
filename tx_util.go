@@ -24,20 +24,20 @@ const (
 )
 
 var RcpIDs map[string]string = map[string]string{
-	"LOUD's hunt with lv2 wooden sword recipe":      "cosmos19vlpdf25cxh0w2s80z44r9ktrgzncf7zsaqey2050ec6df-1ad4-418a-83f1-e40253fc1199",
-	"LOUD's Copper sword lv1 buy recipe":            "cosmos19vlpdf25cxh0w2s80z44r9ktrgzncf7zsaqey217240bde-3b24-46f6-83e4-e44445c68c7e",
-	"LOUD's Lv1 copper sword sell recipe":           "cosmos19vlpdf25cxh0w2s80z44r9ktrgzncf7zsaqey21acc52a0-413b-4903-98b2-4c96d8bb43e2",
-	"LOUD's Lv2 copper sword sell recipe":           "cosmos19vlpdf25cxh0w2s80z44r9ktrgzncf7zsaqey2298b995f-bb1d-460b-b3c3-c00dd2505fd8",
-	"LOUD's hunt with lv1 wooden sword recipe":      "cosmos19vlpdf25cxh0w2s80z44r9ktrgzncf7zsaqey231718069-49ce-4067-9ded-c008df4318d5",
-	"LOUD's hunt with lv1 copper sword recipe":      "cosmos19vlpdf25cxh0w2s80z44r9ktrgzncf7zsaqey23613b882-0854-4913-bde4-73af72d45ba3",
-	"LOUD's hunt without sword recipe":              "cosmos19vlpdf25cxh0w2s80z44r9ktrgzncf7zsaqey256550368-4108-4929-94e3-6f6b17502b46",
-	"LOUD's get initial coin recipe":                "cosmos19vlpdf25cxh0w2s80z44r9ktrgzncf7zsaqey262561db4-5aec-44bf-a461-74246b52ad1b",
-	"LOUD's Lv1 wooden sword sell recipe":           "cosmos19vlpdf25cxh0w2s80z44r9ktrgzncf7zsaqey2822fe7de-a514-4c42-960b-ab42b63864c6",
-	"LOUD's Wooden sword lv1 to lv2 upgrade recipe": "cosmos19vlpdf25cxh0w2s80z44r9ktrgzncf7zsaqey28b553aa3-e0ec-4dd9-8adf-2f80dd71d88c",
-	"LOUD's Lv2 wooden sword sell recipe":           "cosmos19vlpdf25cxh0w2s80z44r9ktrgzncf7zsaqey2be3cc622-518c-4dec-8c55-3275df1faf76",
-	"LOUD's Wooden sword lv1 buy recipe":            "cosmos19vlpdf25cxh0w2s80z44r9ktrgzncf7zsaqey2d8ba2de2-3bc7-4c0d-89fd-e409ddf97205",
-	"LOUD's Copper sword lv1 to lv2 upgrade recipe": "cosmos19vlpdf25cxh0w2s80z44r9ktrgzncf7zsaqey2e2a922bb-0b7f-4d59-bd84-4419e7a9c8ff",
-	"LOUD's hunt with lv2 copper sword recipe":      "cosmos19vlpdf25cxh0w2s80z44r9ktrgzncf7zsaqey2e818407d-d670-44c5-b94f-17a45fbd2e93",
+	"LOUD's Copper sword lv1 buy recipe":            "LOUD-copper-sword-lv1-buy-recipe-v0.0.0-1579053457",
+	"LOUD's get initial coin recipe":                "LOUD-get-initial-coin-recipe-v0.0.0-1579053457",
+	"LOUD's hunt with lv1 copper sword recipe":      "LOUD-hunt-with-copper-sword-lv1-recipe-v0.0.0-1579053457",
+	"LOUD's hunt with lv2 copper sword recipe":      "LOUD-hunt-with-copper-sword-lv2-recipe-v0.0.0-1579053457",
+	"LOUD's hunt without sword recipe":              "LOUD-hunt-with-no-weapon-recipe-v0.0.0-1579053457",
+	"LOUD's hunt with lv1 wooden sword recipe":      "LOUD-hunt-with-wooden-sword-lv1-recipe-v0.0.0-1579053457",
+	"LOUD's hunt with lv2 wooden sword recipe":      "LOUD-hunt-with-wooden-sword-lv2-recipe-v0.0.0-1579053457",
+	"LOUD's Lv1 copper sword sell recipe":           "LOUD-sell-copper-sword-lv1-recipe-v0.0.0-1579053457",
+	"LOUD's Lv2 copper sword sell recipe":           "LOUD-sell-copper-sword-lv2-recipe-v0.0.0-1579053457",
+	"LOUD's Lv1 wooden sword sell recipe":           "LOUD-sell-wooden-sword-lv1-recipe-v0.0.0-1579053457",
+	"LOUD's Lv2 wooden sword sell recipe":           "LOUD-sell-wooden-sword-lv2-recipe-v0.0.0-1579053457",
+	"LOUD's Copper sword lv1 to lv2 upgrade recipe": "LOUD-upgrade-copper-sword-lv1-to-lv2-recipe-v0.0.0-1579053457",
+	"LOUD's Wooden sword lv1 to lv2 upgrade recipe": "LOUD-upgrade-wooden-sword-lv1-to-lv2-recipe-v0.0.0-1579053457",
+	"LOUD's Wooden sword lv1 buy recipe":            "LOUD-wooden-sword-lv1-buy-recipe-v0.0.0-1579053457",
 }
 
 func SyncFromNode(user User) {
