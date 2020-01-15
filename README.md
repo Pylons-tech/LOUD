@@ -29,5 +29,5 @@ Key action descriptions
 Since Pylons repos are private below command will be needed to run test correctly.  
 
 ```
-export GOPRIVATE="github.com/MikeSofaer"
+export GOPRIVATE="github.com/Pylons-tech"
 ```

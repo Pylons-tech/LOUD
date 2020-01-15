@@ -10,8 +10,8 @@ import (
 	"time"
 	"unicode/utf8"
 
-	pylonSDK "github.com/MikeSofaer/pylons/cmd/test"
-	"github.com/MikeSofaer/pylons/x/pylons/handlers"
+	pylonSDK "github.com/Pylons-tech/pylons/cmd/test"
+	"github.com/Pylons-tech/pylons/x/pylons/handlers"
 	"github.com/ahmetb/go-cursor"
 	"github.com/gliderlabs/ssh"
 	"github.com/mgutz/ansi"
