@@ -1,8 +1,13 @@
 package loud
 
 import (
+	"bytes"
 	"encoding/json"
+	"io/ioutil"
 	"log"
+	"net/http"
+	"path/filepath"
+
 	originT "testing"
 
 	fixtureSDK "github.com/MikeSofaer/pylons/cmd/fixtures_test"
@@ -10,6 +15,7 @@ import (
 	pylonSDK "github.com/MikeSofaer/pylons/cmd/test"
 	"github.com/MikeSofaer/pylons/x/pylons/handlers"
 	"github.com/MikeSofaer/pylons/x/pylons/msgs"
+	"github.com/MikeSofaer/pylons/x/pylons/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
@@ -40,12 +46,20 @@ var RcpIDs map[string]string = map[string]string{
 	"LOUD's Wooden sword lv1 buy recipe":            "LOUD-wooden-sword-lv1-buy-recipe-v0.0.0-1579053457",
 }
 
+// Remote mode
+// var customNode string = "35.223.7.2:26657"
+// var restEndpoint string = "http://35.238.123.59:80"
+
+// Local mode
+var customNode string = "localhost:26657"
+var restEndpoint string = "http://localhost:1317"
+
 func SyncFromNode(user User) {
 	orgT := originT.T{}
 	newT := testing.NewT(&orgT)
 	t := &newT
 
-	accInfo := pylonSDK.GetAccountInfoFromName("eugen", t)
+	accInfo := pylonSDK.GetAccountInfoFromName(user.GetUserName(), t)
 	user.SetGold(int(accInfo.Coins.AmountOf("loudcoin").Int64()))
 	log.Println("SyncFromNode gold=", accInfo.Coins.AmountOf("loudcoin").Int64())
 
@@ -62,6 +76,60 @@ func SyncFromNode(user User) {
 	}
 	user.SetItems(items)
 	log.Println("SyncFromNode items=", items)
+}
+
+func CreatePylonAccount(username string) {
+	// "pylonscli keys add ${username}"
+	addResult, err := pylonSDK.RunPylonsCli([]string{
+		"keys", "add", username,
+	}, "11111111\n11111111\n")
+	log.Println("addResult, err := pylonSDK.RunPylonsCli", string(addResult), err)
+	addr := pylonSDK.GetAccountAddr(username, GetTestingT())
+	log.Println("pylonSDK.GetAccountAddr(username, GetTestingT())", addr)
+	sdkAddr, err := sdk.AccAddressFromBech32(addr)
+	log.Println("sdkAddr, err := sdk.AccAddressFromBech32(addr)", sdkAddr, err)
+
+	// this code is making the account to useable by doing get-pylons
+	txModel, err := pylonSDK.GenTxWithMsg([]sdk.Msg{msgs.NewMsgGetPylons(types.NewPylon(pylonSDK.DefaultCoinPerRequest), sdkAddr)})
+	output, err := pylonSDK.GetAminoCdc().MarshalJSON(txModel)
+
+	tmpDir, err := ioutil.TempDir("", "pylons")
+
+	rawTxFile := filepath.Join(tmpDir, "raw_tx_get_pylons_"+addr+".json")
+	ioutil.WriteFile(rawTxFile, output, 0644)
+
+	// pylonscli tx sign raw_tx_get_pylons_eugen.json --account-number 0 --sequence 0 --offline --from eugen
+	txSignArgs := []string{"tx", "sign", rawTxFile,
+		"--from", addr,
+		"--offline",
+		"--chain-id", "pylonschain",
+		"--sequence", "0",
+		"--account-number", "0",
+	}
+	signedTx, err := pylonSDK.RunPylonsCli(txSignArgs, "11111111\n")
+
+	postBodyJSON := make(map[string]interface{})
+	json.Unmarshal(signedTx, &postBodyJSON)
+	postBodyJSON["tx"] = postBodyJSON["value"]
+	postBodyJSON["value"] = nil
+	postBodyJSON["mode"] = "sync"
+	postBody, err := json.Marshal(postBodyJSON)
+
+	log.Println("postBody", string(postBody))
+
+	if err != nil {
+		log.Fatalln(err)
+	}
+	resp, err := http.Post(restEndpoint+"/txs", "application/json", bytes.NewBuffer(postBody))
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	var result map[string]interface{}
+
+	json.NewDecoder(resp.Body).Decode(&result)
+	defer resp.Body.Close()
+	log.Println("get_pylons_api_response", result)
 }
 
 func ProcessTxResult(user User, txhash string) handlers.ExecuteRecipeSerialize {
@@ -97,11 +165,13 @@ func ExecuteRecipe(user User, rcpName string, itemIDs []string) string {
 	t := GetTestingT()
 
 	rcpID := RcpIDs[rcpName]
-	eugenAddr := pylonSDK.GetAccountAddr("eugen", nil)
+	eugenAddr := pylonSDK.GetAccountAddr(user.GetUserName(), nil)
 	sdkAddr, _ := sdk.AccAddressFromBech32(eugenAddr)
 	// execMsg := msgs.NewMsgExecuteRecipe(execType.RecipeID, execType.Sender, ItemIDs)
 	execMsg := msgs.NewMsgExecuteRecipe(rcpID, sdkAddr, itemIDs)
-	txhash := pylonSDK.TestTxWithMsgWithNonce(t, execMsg, "eugen", false)
+	// TODO: should set after pylons repo PR merge
+	// pylonSDK.CLIOpts.CustomNode = customNode
+	txhash := pylonSDK.TestTxWithMsgWithNonce(t, execMsg, user.GetUserName(), false)
 	user.SetLastTransaction(txhash)
 	return txhash
 }
