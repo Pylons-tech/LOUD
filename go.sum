@@ -8,6 +8,8 @@ github.com/MikeSofaer/pylons v0.0.0-20200109032114-329649389ffe h1:WcFC5lC2NIR2C
 github.com/MikeSofaer/pylons v0.0.0-20200109032114-329649389ffe/go.mod h1:EKu7/myyMk1SVEPbcmvkq3MDaygL0gBb23IzV3An6Yk=
 github.com/MikeSofaer/pylons v0.0.0-20200109093152-0fd86e373c10 h1:D397+NMynnQ3M/jRgILoXNf2jqtXY4us8R3kc/7acU8=
 github.com/MikeSofaer/pylons v0.0.0-20200109093152-0fd86e373c10/go.mod h1:EKu7/myyMk1SVEPbcmvkq3MDaygL0gBb23IzV3An6Yk=
+github.com/MikeSofaer/pylons v0.0.0-20200113084847-87d2af29ab18 h1:W2fvHWhMnEIu4YZ2VoQq31jOtV+M1MluQvK0V0FztxI=
+github.com/MikeSofaer/pylons v0.0.0-20200113084847-87d2af29ab18/go.mod h1:8wh81gM6ig6X9f/6lAkW2e0thkVwvdYEgLrPcM3UUtg=
 github.com/OneOfOne/xxhash v1.2.2/go.mod h1:HSdplMjZKSmBqAxg5vPj2TmRDmfkzw+cTzAElWljhcU=
 github.com/VividCortex/gohistogram v1.0.0/go.mod h1:Pf5mBqqDxYaXu3hDrrU+w6nw50o/4+TcAqDqk/vUH7g=
 github.com/Workiva/go-datastructures v1.0.50/go.mod h1:Z+F2Rca0qCsVYDS8z7bAGm8f3UkzuWYS/oBZz5a7VVA=

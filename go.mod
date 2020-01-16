@@ -3,8 +3,7 @@ module github.com/MikeSofaer/LOUD
 go 1.13
 
 require (
-	github.com/MikeSofaer/pylons v0.0.0-20200109093152-0fd86e373c10
-	github.com/Workiva/go-datastructures v1.0.50 // indirect
+	github.com/MikeSofaer/pylons v0.0.0-20200113084847-87d2af29ab18
 	github.com/ahmetb/go-cursor v0.0.0-20131010032410-8136607ea412
 	github.com/anmitsu/go-shlex v0.0.0-20161002113705-648efa622239
 	github.com/coreos/bbolt v1.3.3
