@@ -31,3 +31,13 @@ Since Pylons repos are private below command will be needed to run test correctl
 ```
 export GOPRIVATE="github.com/MikeSofaer"
 ```
+
+Fresh Local test
+
+pylonsd unsafe-reset-all
+pylonsd start
+pylonscli rest-server --chain-id pylonschain
+make fixture_tests
+make
+rm nonce.json
+./bin/loud

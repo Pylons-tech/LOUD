@@ -100,6 +100,7 @@ func (user *dbUser) Reload() {
 	if record == nil {
 		log.Printf("User %s does not exist, creating anew...", user.UserData.Username)
 		user.UserData = user.world.newUser(user.UserData.Username)
+		CreatePylonAccount(user.UserData.Username)
 		user.Save()
 	} else {
 		MSGUnpack(record, &(user.UserData))
