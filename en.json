@@ -1,7 +1,7 @@
 {
   "home": {
-  "description": "",
-  "one": "F)orest\nS)hop"
+    "description": "",
+    "one": "F)orest\nS)hop\nSet)tings"
   },
   "forest": {
     "description": "",
@@ -10,6 +10,9 @@
   "shop": {
     "description": "",
     "one": "B)uy Items\nSe)ll Items\nUp)grade Items\nH)ome\nF)orest"
+  },
+  "settings": {
+    "one": "Language:\nEng)lish\nEspa)ñol\nH)ome"
   },
   "Wooden sword": {
     "one": "Wooden sword",
@@ -39,6 +42,9 @@
   },
   "shop desc": {
     "one": "You are now at a shop.\nIf you want you can buy or sell items here."
+  },
+  "settings desc": {
+    "one": "Settings"
   },
   "select buy item desc": {
     "one": "You are gonna buy an item.\nPlease select an item to buy."

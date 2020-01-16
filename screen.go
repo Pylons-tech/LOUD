@@ -68,6 +68,8 @@ const hpon = "◆"
 const hpoff = "◇"
 const bgcolor = 232
 
+var gameLanguage string = "en"
+
 var shopItems []Item = []Item{
 	Item{
 		ID:    "001",
@@ -86,12 +88,12 @@ func localize(key string) string {
 	bundle.RegisterUnmarshalFunc("json", json.Unmarshal)
 	bundle.MustLoadMessageFile("en.json")
 	bundle.MustLoadMessageFile("es.json")
-	// Pending create a flag to be used in terminal to switch between languages.
-	loc := i18n.NewLocalizer(bundle, "es")
+
+	loc := i18n.NewLocalizer(bundle, gameLanguage)
+
 	translate := loc.MustLocalize(
 		&i18n.LocalizeConfig{
 			MessageID: key,
-			// How to create PluralCount as optional param with default value ?
 			PluralCount: 1,
 		})
 	return translate
@@ -281,6 +283,7 @@ func (screen *GameScreen) renderUserCommands() {
 			HOME:   localize("home"),
 			FOREST: localize("forest"),
 			SHOP:   localize("shop"),
+			SETTINGS: localize("settings"),
 		}
 		cmdString := cmdMap[screen.user.GetLocation()]
 		infoLines = strings.Split(cmdString, "\n")
@@ -345,6 +348,7 @@ func (screen *GameScreen) renderUserSituation() {
 			HOME:   localize("home desc"),
 			FOREST: localize("forest desc"),
 			SHOP:   localize("shop desc"),
+			SETTINGS : localize("settings desc"),
 		}
 		desc = locationDescMap[screen.user.GetLocation()]
 	case SELECT_BUY_ITEM:
@@ -473,6 +477,21 @@ func (screen *GameScreen) HandleInputKey(input termbox.Event) {
 		fallthrough
 	case "s":
 		screen.user.SetLocation(SHOP)
+		screen.refreshed = false
+	case "T": // SETTINGS
+		fallthrough
+	case "t":
+		screen.user.SetLocation(SETTINGS)
+		screen.refreshed = false
+	case "G":
+		fallthrough
+	case "g":
+		gameLanguage = "en"
+		screen.refreshed = false
+	case "A":
+		fallthrough
+	case "a":
+		gameLanguage = "es"
 		screen.refreshed = false
 	case "C": // CANCEL
 		fallthrough
