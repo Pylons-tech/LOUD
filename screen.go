@@ -87,7 +87,7 @@ func localize(key string) string {
 	bundle.MustLoadMessageFile("en.json")
 	bundle.MustLoadMessageFile("es.json")
 	// Pending create a flag to be used in terminal to switch between languages.
-	loc := i18n.NewLocalizer(bundle, "es")
+	loc := i18n.NewLocalizer(bundle, "en")
 	translate := loc.MustLocalize(
 		&i18n.LocalizeConfig{
 			MessageID: key,

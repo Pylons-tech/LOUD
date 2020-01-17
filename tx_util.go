@@ -47,12 +47,12 @@ var RcpIDs map[string]string = map[string]string{
 }
 
 // Remote mode
-// var customNode string = "35.223.7.2:26657"
-// var restEndpoint string = "http://35.238.123.59:80"
+var customNode string = "35.223.7.2:26657"
+var restEndpoint string = "http://35.238.123.59:80"
 
 // Local mode
-var customNode string = "localhost:26657"
-var restEndpoint string = "http://localhost:1317"
+// var customNode string = "localhost:26657"
+// var restEndpoint string = "http://localhost:1317"
 
 func SyncFromNode(user User) {
 	orgT := originT.T{}
@@ -78,19 +78,15 @@ func SyncFromNode(user User) {
 	log.Println("SyncFromNode items=", items)
 }
 
-func CreatePylonAccount(username string) {
-	// "pylonscli keys add ${username}"
-	addResult, err := pylonSDK.RunPylonsCli([]string{
-		"keys", "add", username,
-	}, "11111111\n11111111\n")
-	log.Println("addResult, err := pylonSDK.RunPylonsCli", string(addResult), err)
+func GetInitialPylons(username string) {
+
 	addr := pylonSDK.GetAccountAddr(username, GetTestingT())
 	log.Println("pylonSDK.GetAccountAddr(username, GetTestingT())", addr)
 	sdkAddr, err := sdk.AccAddressFromBech32(addr)
 	log.Println("sdkAddr, err := sdk.AccAddressFromBech32(addr)", sdkAddr, err)
 
 	// this code is making the account to useable by doing get-pylons
-	txModel, err := pylonSDK.GenTxWithMsg([]sdk.Msg{msgs.NewMsgGetPylons(types.NewPylon(pylonSDK.DefaultCoinPerRequest), sdkAddr)})
+	txModel, err := pylonSDK.GenTxWithMsg([]sdk.Msg{msgs.NewMsgGetPylons(types.PremiumTier.Fee, sdkAddr)})
 	output, err := pylonSDK.GetAminoCdc().MarshalJSON(txModel)
 
 	tmpDir, err := ioutil.TempDir("", "pylons")
@@ -132,6 +128,20 @@ func CreatePylonAccount(username string) {
 	log.Println("get_pylons_api_response", result)
 }
 
+func CreatePylonAccount(username string) {
+	// "pylonscli keys add ${username}"
+	addResult, err := pylonSDK.RunPylonsCli([]string{
+		"keys", "add", username,
+	}, "11111111\n11111111\n")
+	log.Println("addResult, err := pylonSDK.RunPylonsCli", string(addResult), err)
+	if err != nil {
+		log.Println("using existing account for", username)
+	} else {
+		log.Println("created new account for", username)
+	}
+	GetInitialPylons(username)
+}
+
 func ProcessTxResult(user User, txhash string) handlers.ExecuteRecipeSerialize {
 	orgT := originT.T{}
 	newT := testing.NewT(&orgT)
@@ -169,8 +179,7 @@ func ExecuteRecipe(user User, rcpName string, itemIDs []string) string {
 	sdkAddr, _ := sdk.AccAddressFromBech32(eugenAddr)
 	// execMsg := msgs.NewMsgExecuteRecipe(execType.RecipeID, execType.Sender, ItemIDs)
 	execMsg := msgs.NewMsgExecuteRecipe(rcpID, sdkAddr, itemIDs)
-	// TODO: should set after pylons repo PR merge
-	// pylonSDK.CLIOpts.CustomNode = customNode
+	pylonSDK.CLIOpts.CustomNode = customNode
 	txhash := pylonSDK.TestTxWithMsgWithNonce(t, execMsg, user.GetUserName(), false)
 	user.SetLastTransaction(txhash)
 	return txhash
