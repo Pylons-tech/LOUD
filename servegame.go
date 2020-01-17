@@ -13,7 +13,7 @@ import (
 )
 
 func SetupScreenAndEvents(world World) {
-	user := world.GetUser("michael")
+	user := world.GetUser("afti")
 	screen := NewScreen(world, user)
 
 	logMessage := fmt.Sprintf("setting up screen and events at %s", time.Now().UTC().Format(time.RFC3339))
