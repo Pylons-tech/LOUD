@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"os"
 	"path/filepath"
 
 	originT "testing"
@@ -54,12 +55,13 @@ var restEndpoint string = "http://35.238.123.59:80"
 // var customNode string = "localhost:26657"
 // var restEndpoint string = "http://localhost:1317"
 
-func SyncFromNode(user User) {
-	orgT := originT.T{}
-	newT := testing.NewT(&orgT)
-	t := &newT
+func init() {
+	log.Println("initing pylonSDK to customNode", customNode)
+	pylonSDK.CLIOpts.CustomNode = customNode
+}
 
-	accInfo := pylonSDK.GetAccountInfoFromName(user.GetUserName(), t)
+func SyncFromNode(user User) {
+	accInfo := pylonSDK.GetAccountInfoFromName(user.GetUserName(), GetTestingT())
 	user.SetGold(int(accInfo.Coins.AmountOf("loudcoin").Int64()))
 	log.Println("SyncFromNode gold=", accInfo.Coins.AmountOf("loudcoin").Int64())
 
@@ -78,10 +80,8 @@ func SyncFromNode(user User) {
 	log.Println("SyncFromNode items=", items)
 }
 
-func GetInitialPylons(username string) {
+func GetInitialPylons(addr string) {
 
-	addr := pylonSDK.GetAccountAddr(username, GetTestingT())
-	log.Println("pylonSDK.GetAccountAddr(username, GetTestingT())", addr)
 	sdkAddr, err := sdk.AccAddressFromBech32(addr)
 	log.Println("sdkAddr, err := sdk.AccAddressFromBech32(addr)", sdkAddr, err)
 
@@ -128,7 +128,7 @@ func GetInitialPylons(username string) {
 	log.Println("get_pylons_api_response", result)
 }
 
-func CreatePylonAccount(username string) {
+func InitPylonAccount(username string) {
 	// "pylonscli keys add ${username}"
 	addResult, err := pylonSDK.RunPylonsCli([]string{
 		"keys", "add", username,
@@ -139,7 +139,23 @@ func CreatePylonAccount(username string) {
 	} else {
 		log.Println("created new account for", username)
 	}
-	GetInitialPylons(username)
+	addr := pylonSDK.GetAccountAddr(username, GetTestingT())
+	// pylonSDK.CLIOpts.CustomNode = customNode
+	accBytes, err := pylonSDK.RunPylonsCli([]string{"query", "account", addr}, "")
+	log.Println("query account for", addr, "result", string(accBytes), err)
+	if err != nil { // account does not exist
+		GetInitialPylons(addr)
+		log.Println("created new account on remote chain", addr)
+	} else {
+		log.Println("using existing account on remote chain", addr)
+	}
+
+	// Remove nonce file
+	log.Println("start removing nonce file")
+	nonceRootDir := "./"
+	nonceFile := filepath.Join(nonceRootDir, "nonce.json")
+	err = os.Remove(nonceFile)
+	log.Println("remove nonce file result", err)
 }
 
 func ProcessTxResult(user User, txhash string) handlers.ExecuteRecipeSerialize {
@@ -175,13 +191,14 @@ func ExecuteRecipe(user User, rcpName string, itemIDs []string) string {
 	t := GetTestingT()
 
 	rcpID := RcpIDs[rcpName]
-	eugenAddr := pylonSDK.GetAccountAddr(user.GetUserName(), nil)
-	sdkAddr, _ := sdk.AccAddressFromBech32(eugenAddr)
+	addr := pylonSDK.GetAccountAddr(user.GetUserName(), nil)
+	sdkAddr, _ := sdk.AccAddressFromBech32(addr)
 	// execMsg := msgs.NewMsgExecuteRecipe(execType.RecipeID, execType.Sender, ItemIDs)
 	execMsg := msgs.NewMsgExecuteRecipe(rcpID, sdkAddr, itemIDs)
-	pylonSDK.CLIOpts.CustomNode = customNode
+	log.Println("started sending transaction", user.GetUserName(), execMsg)
 	txhash := pylonSDK.TestTxWithMsgWithNonce(t, execMsg, user.GetUserName(), false)
 	user.SetLastTransaction(txhash)
+	log.Println("ended sending transaction")
 	return txhash
 }
 

@@ -4,8 +4,10 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"log"
 	"math"
 	"os"
+	"strconv"
 	"strings"
 	"time"
 	"unicode/utf8"
@@ -26,6 +28,7 @@ import (
 // Screen represents a UI screen.
 type Screen interface {
 	SaveGame()
+	UpdateBlockHeight(int64)
 	SetScreenSize(int, int)
 	HandleInputKey(termbox.Event)
 	Render()
@@ -55,6 +58,7 @@ type GameScreen struct {
 	user           User
 	screenSize     ssh.Window
 	activeItem     Item
+	blockHeight    int64
 	txResult       handlers.ExecuteRecipeSerialize
 	refreshed      bool
 	scrStatus      ScreenStatus
@@ -442,6 +446,7 @@ func (screen *GameScreen) renderCharacterSheet() {
 	nodeLines := []string{
 		centerText(localize("pylons network status"), " ", width),
 		centerText(screen.user.GetLastTransaction(), " ", width),
+		centerText("BlockHeight: "+strconv.FormatInt(screen.blockHeight, 10), " ", width),
 		centerText(" ❦ ", "─", width),
 	}
 
@@ -456,8 +461,15 @@ func (screen *GameScreen) renderCharacterSheet() {
 	screen.drawFill(x, lastLine+1, width, screen.screenSize.Height-(lastLine+2))
 }
 
+func (screen *GameScreen) UpdateBlockHeight(blockHeight int64) {
+	screen.blockHeight = blockHeight
+	screen.refreshed = false
+	screen.Render()
+}
+
 func (screen *GameScreen) HandleInputKey(input termbox.Event) {
 	Key := string(input.Ch)
+	log.Println("Handling Key \"", Key, "\"")
 	switch Key {
 	case "H": // HOME
 		fallthrough
@@ -523,10 +535,12 @@ func (screen *GameScreen) HandleInputKey(input termbox.Event) {
 		switch screen.scrStatus {
 		case SELECT_BUY_ITEM:
 			screen.activeItem = GetToBuyItemFromKey(Key)
-			txhash := Buy(screen.user, Key)
 			screen.scrStatus = WAIT_BUY_PROCESS
 			screen.refreshed = false
 			screen.Render()
+			log.Println("started buying item")
+			txhash := Buy(screen.user, Key)
+			log.Println("ended buying item")
 			time.AfterFunc(1*time.Second, func() {
 				pylonSDK.WaitForNextBlock()
 				screen.txResult = ProcessTxResult(screen.user, txhash)
@@ -536,10 +550,12 @@ func (screen *GameScreen) HandleInputKey(input termbox.Event) {
 			})
 		case SELECT_HUNT_ITEM:
 			screen.activeItem = GetWeaponItemFromKey(screen.user, Key)
-			txhash := Hunt(screen.user, Key)
 			screen.scrStatus = WAIT_HUNT_PROCESS
 			screen.refreshed = false
 			screen.Render()
+			log.Println("started hunting item")
+			txhash := Hunt(screen.user, Key)
+			log.Println("ended hunting item")
 			time.AfterFunc(1*time.Second, func() {
 				pylonSDK.WaitForNextBlock()
 				screen.txResult = ProcessTxResult(screen.user, txhash)
@@ -549,10 +565,12 @@ func (screen *GameScreen) HandleInputKey(input termbox.Event) {
 			})
 		case SELECT_SELL_ITEM:
 			screen.activeItem = GetToSellItemFromKey(screen.user, Key)
-			txhash := Sell(screen.user, Key)
 			screen.scrStatus = WAIT_SELL_PROCESS
 			screen.refreshed = false
 			screen.Render()
+			log.Println("started selling item")
+			txhash := Sell(screen.user, Key)
+			log.Println("ended selling item")
 			time.AfterFunc(1*time.Second, func() {
 				pylonSDK.WaitForNextBlock()
 				screen.txResult = ProcessTxResult(screen.user, txhash)
@@ -562,10 +580,12 @@ func (screen *GameScreen) HandleInputKey(input termbox.Event) {
 			})
 		case SELECT_UPGRADE_ITEM:
 			screen.activeItem = GetToUpgradeItemFromKey(screen.user, Key)
-			txhash := Upgrade(screen.user, Key)
 			screen.scrStatus = WAIT_UPGRADE_PROCESS
 			screen.refreshed = false
 			screen.Render()
+			log.Println("started upgrading item")
+			txhash := Upgrade(screen.user, Key)
+			log.Println("ended upgrading item")
 			time.AfterFunc(1*time.Second, func() {
 				pylonSDK.WaitForNextBlock()
 				screen.txResult = ProcessTxResult(screen.user, txhash)
