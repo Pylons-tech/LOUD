@@ -100,12 +100,18 @@ func (user *dbUser) Reload() {
 	if record == nil {
 		log.Printf("User %s does not exist, creating anew...", user.UserData.Username)
 		user.UserData = user.world.newUser(user.UserData.Username)
-		CreatePylonAccount(user.UserData.Username)
 		user.Save()
 	} else {
 		MSGUnpack(record, &(user.UserData))
 		log.Printf("Loaded user %v", user.UserData)
 	}
+	log.Println("start InitPylonAccount")
+	InitPylonAccount(user.UserData.Username)
+	log.Println("finished InitPylonAccount")
+	// Initial Synchronization
+	log.Println("start initial synchronization from node")
+	SyncFromNode(user)
+	log.Println("finished initial synchronization from node")
 }
 
 func (user *dbUser) Save() {

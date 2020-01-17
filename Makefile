@@ -12,7 +12,6 @@ clean:
 	rm bin/* || true
 
 run:
-	rm ./nonce.json
 	./bin/loud
 
 fixture_tests:
