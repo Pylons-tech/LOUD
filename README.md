@@ -53,7 +53,7 @@ func SetupScreenAndEvents(world World) {
 And change the username to "eugen"
 ```
 make
-./bin/loud
+make run
 ```
 
 Check eugen account created correctly on node by running
@@ -74,4 +74,4 @@ rm world.db
 rm nonce.json
 change username to "afti" or your name
 make
-./bin/loud
+make run
