@@ -10,6 +10,14 @@ github.com/MikeSofaer/pylons v0.0.0-20200109093152-0fd86e373c10 h1:D397+NMynnQ3M
 github.com/MikeSofaer/pylons v0.0.0-20200109093152-0fd86e373c10/go.mod h1:EKu7/myyMk1SVEPbcmvkq3MDaygL0gBb23IzV3An6Yk=
 github.com/MikeSofaer/pylons v0.0.0-20200113084847-87d2af29ab18 h1:W2fvHWhMnEIu4YZ2VoQq31jOtV+M1MluQvK0V0FztxI=
 github.com/MikeSofaer/pylons v0.0.0-20200113084847-87d2af29ab18/go.mod h1:8wh81gM6ig6X9f/6lAkW2e0thkVwvdYEgLrPcM3UUtg=
+github.com/MikeSofaer/pylons v0.0.0-20200116032621-341f8ffe7750 h1:oR9AV3l/+E/ZRYtYQCdE3Sq/bvIgPT5EIhRjttl9SRo=
+github.com/MikeSofaer/pylons v0.0.0-20200116032621-341f8ffe7750/go.mod h1:8wh81gM6ig6X9f/6lAkW2e0thkVwvdYEgLrPcM3UUtg=
+github.com/MikeSofaer/pylons v0.0.0-20200117002433-ddeca7a92522 h1:/d12XHc7LFybN1KEtvFnTonbgZbfx8kyYUJwikW0gb4=
+github.com/MikeSofaer/pylons v0.0.0-20200117002433-ddeca7a92522/go.mod h1:8wh81gM6ig6X9f/6lAkW2e0thkVwvdYEgLrPcM3UUtg=
+github.com/MikeSofaer/pylons v0.0.0-20200117003514-73ad4ff49160 h1:Sv48SfAHNbVK3jg5cKh6q2zgOqW4HVmKJor2ZX9sI/k=
+github.com/MikeSofaer/pylons v0.0.0-20200117003514-73ad4ff49160/go.mod h1:8wh81gM6ig6X9f/6lAkW2e0thkVwvdYEgLrPcM3UUtg=
+github.com/MikeSofaer/pylons v0.0.0-20200117012212-de5be0076185 h1:txRsAyb7jUSbjuWwlFuaT6PHZzJ++g8HvKKD4hSTt0o=
+github.com/MikeSofaer/pylons v0.0.0-20200117012212-de5be0076185/go.mod h1:8wh81gM6ig6X9f/6lAkW2e0thkVwvdYEgLrPcM3UUtg=
 github.com/OneOfOne/xxhash v1.2.2/go.mod h1:HSdplMjZKSmBqAxg5vPj2TmRDmfkzw+cTzAElWljhcU=
 github.com/VividCortex/gohistogram v1.0.0/go.mod h1:Pf5mBqqDxYaXu3hDrrU+w6nw50o/4+TcAqDqk/vUH7g=
 github.com/Workiva/go-datastructures v1.0.50/go.mod h1:Z+F2Rca0qCsVYDS8z7bAGm8f3UkzuWYS/oBZz5a7VVA=
