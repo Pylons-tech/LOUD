@@ -100,7 +100,7 @@ func localize(key string) string {
 
 	translate := loc.MustLocalize(
 		&i18n.LocalizeConfig{
-			MessageID: key,
+			MessageID:   key,
 			PluralCount: 1,
 		})
 	return translate
@@ -287,16 +287,16 @@ func (screen *GameScreen) renderUserCommands() {
 	switch screen.scrStatus {
 	case SHOW_LOCATION:
 		cmdMap := map[UserLocation]string{
-			HOME:   localize("home"),
-			FOREST: localize("forest"),
-			SHOP:   localize("shop"),
+			HOME:     localize("home"),
+			FOREST:   localize("forest"),
+			SHOP:     localize("shop"),
 			SETTINGS: localize("settings"),
 		}
 		cmdString := cmdMap[screen.user.GetLocation()]
 		infoLines = strings.Split(cmdString, "\n")
 	case SELECT_BUY_ITEM:
 		for idx, item := range shopItems {
-			infoLines = append(infoLines, fmt.Sprintf("%d) %s Lv%d", idx+1, localize(item.Name), item.Level))
+			infoLines = append(infoLines, fmt.Sprintf("%d) %s Lv%d  ", idx+1, localize(item.Name), item.Level)+screen.drawProgressMeter(1, 1, 208, bgcolor, 1)+fmt.Sprintf(" %d", item.Price))
 		}
 		infoLines = append(infoLines, localize("C)ancel"))
 	case SELECT_SELL_ITEM:
@@ -352,10 +352,10 @@ func (screen *GameScreen) renderUserSituation() {
 	switch screen.scrStatus {
 	case SHOW_LOCATION:
 		locationDescMap := map[UserLocation]string{
-			HOME:   localize("home desc"),
-			FOREST: localize("forest desc"),
-			SHOP:   localize("shop desc"),
-			SETTINGS : localize("settings desc"),
+			HOME:     localize("home desc"),
+			FOREST:   localize("forest desc"),
+			SHOP:     localize("shop desc"),
+			SETTINGS: localize("settings desc"),
 		}
 		desc = locationDescMap[screen.user.GetLocation()]
 	case SELECT_BUY_ITEM:
