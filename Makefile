@@ -11,6 +11,9 @@ mod:
 clean:
 	rm bin/* || true
 
+run:
+	./bin/loud ${ARGS}
+
 fixture_tests:
 	rm ./test/nonce.json || true
 	go test -v ./test/

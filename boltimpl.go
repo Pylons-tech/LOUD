@@ -105,6 +105,13 @@ func (user *dbUser) Reload() {
 		MSGUnpack(record, &(user.UserData))
 		log.Printf("Loaded user %v", user.UserData)
 	}
+	log.Println("start InitPylonAccount")
+	InitPylonAccount(user.UserData.Username)
+	log.Println("finished InitPylonAccount")
+	// Initial Synchronization
+	log.Println("start initial synchronization from node")
+	SyncFromNode(user)
+	log.Println("finished initial synchronization from node")
 }
 
 func (user *dbUser) Save() {

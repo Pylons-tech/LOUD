@@ -9,17 +9,43 @@ import (
 	"syscall"
 	"time"
 
+	pylonSDK "github.com/MikeSofaer/pylons/cmd/test"
 	"github.com/nsf/termbox-go"
 )
 
+func SetupLoggingFile() {
+	f, err := os.OpenFile("loud.log", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
+	if err != nil {
+		log.Fatalf("error opening file: %v", err)
+	}
+	defer f.Close()
+	log.Println("Starting to save log into file")
+	log.SetOutput(f)
+
+	log.Println("Starting")
+}
+
 func SetupScreenAndEvents(world World) {
-	user := world.GetUser("eugen")
+	args := os.Args
+	username := ""
+	log.Println("args SetupScreenAndEvents", args)
+	if len(args) < 2 {
+		log.Println("you didn't configure username when running, using default username \"eugen\"")
+		username = "eugen"
+	} else {
+		username = args[1]
+	}
+	user := world.GetUser(username)
+
+	SetupLoggingFile()
+
 	screen := NewScreen(world, user)
 
 	logMessage := fmt.Sprintf("setting up screen and events at %s", time.Now().UTC().Format(time.RFC3339))
 	log.Println(logMessage)
 
 	tick := time.Tick(50 * time.Millisecond)
+	daemonStatusTick := time.Tick(10 * time.Second)
 
 	// Setup terminal close handler
 	c := make(chan os.Signal, 2)
@@ -63,6 +89,14 @@ eventloop:
 		case <-tick:
 			screen.Render()
 			continue
+		case <-daemonStatusTick:
+			ds, err := pylonSDK.GetDaemonStatus()
+			if err != nil {
+				log.Println("couldn't get daemon status", err)
+			} else {
+				log.Println("success getting daemon status", err)
+				screen.UpdateBlockHeight(ds.SyncInfo.LatestBlockHeight)
+			}
 		}
 	}
 }
