@@ -61,7 +61,11 @@ func init() {
 }
 
 func SyncFromNode(user User) {
+	log.Println("SyncFromNode username=", user.GetUserName())
+	log.Println("SyncFromNode username=", pylonSDK.GetAccountAddr(user.GetUserName(), GetTestingT()))
 	accInfo := pylonSDK.GetAccountInfoFromName(user.GetUserName(), GetTestingT())
+	log.Println("accountInfo Result=", accInfo)
+
 	user.SetGold(int(accInfo.Coins.AmountOf("loudcoin").Int64()))
 	log.Println("SyncFromNode gold=", accInfo.Coins.AmountOf("loudcoin").Int64())
 
@@ -145,7 +149,8 @@ func InitPylonAccount(username string) {
 	log.Println("query account for", addr, "result", string(accBytes), err)
 	if err != nil { // account does not exist
 		GetInitialPylons(addr)
-		log.Println("created new account on remote chain", addr)
+		log.Println("ran command for new account on remote chain and waiting for next block ...", addr)
+		pylonSDK.WaitForNextBlock()
 	} else {
 		log.Println("using existing account on remote chain", addr)
 	}

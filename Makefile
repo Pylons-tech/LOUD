@@ -12,7 +12,7 @@ clean:
 	rm bin/* || true
 
 run:
-	./bin/loud
+	./bin/loud ${ARGS}
 
 fixture_tests:
 	rm ./test/nonce.json || true

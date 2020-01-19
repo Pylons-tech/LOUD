@@ -13,8 +13,32 @@ import (
 	"github.com/nsf/termbox-go"
 )
 
+func SetupLoggingFile() {
+	f, err := os.OpenFile("loud.log", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
+	if err != nil {
+		log.Fatalf("error opening file: %v", err)
+	}
+	defer f.Close()
+	log.Println("Starting to save log into file")
+	log.SetOutput(f)
+
+	log.Println("Starting")
+}
+
 func SetupScreenAndEvents(world World) {
-	user := world.GetUser("afti")
+	args := os.Args
+	username := ""
+	log.Println("args SetupScreenAndEvents", args)
+	if len(args) < 2 {
+		log.Println("you didn't configure username when running, using default username \"eugen\"")
+		username = "eugen"
+	} else {
+		username = args[1]
+	}
+	user := world.GetUser(username)
+
+	SetupLoggingFile()
+
 	screen := NewScreen(world, user)
 
 	logMessage := fmt.Sprintf("setting up screen and events at %s", time.Now().UTC().Format(time.RFC3339))
