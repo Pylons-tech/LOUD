@@ -12,6 +12,10 @@ clean:
 	rm bin/* || true
 
 run:
+	pylonscli config chain-id pylonschain
+	pylonscli config output json
+	pylonscli config indent true
+	pylonscli config trust-node true
 	./bin/loud ${ARGS}
 
 fixture_tests:
