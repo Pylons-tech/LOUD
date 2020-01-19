@@ -26,6 +26,9 @@ Key action descriptions
 
 ## To run test
 
+Install pylonscli at `GOPATH/bin/pylonscli`.
+Here GOPATH is configured as /Users/{username}/go
+
 Since Pylons repos are private below command will be needed to run test correctly.  
 
 ```
