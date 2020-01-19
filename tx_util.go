@@ -3,6 +3,7 @@ package loud
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -294,20 +295,28 @@ func GetToBuyItemFromKey(key string) Item {
 	}
 	return useItem
 }
-func Buy(user User, key string) string {
+func Buy(user User, key string) (string, error) {
 	useItem := GetToBuyItemFromKey(key)
 	rcpName := ""
 	switch useItem.Name {
 	case "Wooden sword":
 		if useItem.Level == 1 {
+			if useItem.Price > user.GetGold() {
+				return "", errors.New("You don't have enough funds to buy this item")
+			}
 			rcpName = "LOUD's Wooden sword lv1 buy recipe"
 		}
 	case "Copper sword":
 		if useItem.Level == 1 {
+			if useItem.Price > user.GetGold() {
+				return "", errors.New("You don't have enough funds to buy this item")
+			}
 			rcpName = "LOUD's Copper sword lv1 buy recipe"
 		}
+	default:
+		return "", errors.New("you are trying to buy something which is not in shop")
 	}
-	return ExecuteRecipe(user, rcpName, []string{})
+	return ExecuteRecipe(user, rcpName, []string{}), nil
 }
 
 func GetToSellItemFromKey(user User, key string) Item {
