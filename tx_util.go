@@ -9,6 +9,7 @@ import (
 	"os"
 	"os/user"
 	"path/filepath"
+	"strings"
 
 	originT "testing"
 
@@ -138,16 +139,22 @@ func InitPylonAccount(username string) {
 	addResult, err := pylonSDK.RunPylonsCli([]string{
 		"keys", "add", username,
 	}, "11111111\n11111111\n")
-	log.Println("addResult, err := pylonSDK.RunPylonsCli", string(addResult), err)
+
+	log.Println("addResult, err := pylonSDK.RunPylonsCli", string(addResult), "---", err)
 	if err != nil {
-		log.Println("using existing account for", username)
+		if strings.Contains(err.Error(), "no such file or directory") {
+			log.Println("pylonscli is not globally installed on your machine")
+			os.Exit(1)
+		} else {
+			log.Println("using existing account for", username)
+		}
 	} else {
 		usr, _ := user.Current()
 		pylonsDir := filepath.Join(usr.HomeDir, ".pylons")
 		os.MkdirAll(pylonsDir, os.ModePerm)
-		log.Println("created new account for", username)
 		keyFile := filepath.Join(pylonsDir, username+".json")
 		ioutil.WriteFile(keyFile, addResult, 0644)
+		log.Println("created new account for", username, "and saved to ~/.pylons/"+username+".json")
 	}
 	addr := pylonSDK.GetAccountAddr(username, GetTestingT())
 	// pylonSDK.CLIOpts.CustomNode = customNode
