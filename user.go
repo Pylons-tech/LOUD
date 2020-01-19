@@ -6,6 +6,7 @@ const (
 	HOME UserLocation = iota
 	FOREST
 	SHOP
+	SETTINGS
 )
 
 // User represents an active user in the system.

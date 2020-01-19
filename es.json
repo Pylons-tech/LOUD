@@ -1,7 +1,7 @@
 {
   "home": {
-  "description": "",
-  "one": "Bosque(F)\nTienda(S)"
+    "description": "",
+    "one": "Bosque(F)\nTienda(S)\nAjust)es"
   },
   "forest": {
     "description": "",
@@ -10,6 +10,9 @@
   "shop": {
     "description": "",
     "one": "Comprar(B) Artículos\nVender(E) Artículos\nMejorar(P) Artículos\nInicio(H)\nBosque(F)"
+  },
+  "settings": {
+    "one": "Idioma:\nEng)lish\nEspa)ñol\nInicio(H)"
   },
   "Wooden sword": {
     "one": "Espada de Madera",
@@ -39,6 +42,9 @@
   },
   "shop desc": {
     "one": "Estás en una tienda.\nSi quieres, puedes comprar o vender artículos aquí."
+  },
+  "settings desc": {
+    "one": "Ajustes"
   },
   "select buy item desc": {
     "one": "Vas a comprar un artículo.\nPor favor selecciona un artículo a comprar."
@@ -104,6 +110,6 @@
     "one": "Tu moriste. Reapareciendo..."
   },
   "pylons network status": {
-    "one": "Estado de red de Pylons"
+    "one": "Estado de Red de Pylons"
   }
 }
