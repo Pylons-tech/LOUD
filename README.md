@@ -74,4 +74,4 @@ rm world.db
 rm nonce.json
 change username to "afti" or your name
 make
-make run
+make ARGS="eugen" run
