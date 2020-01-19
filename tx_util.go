@@ -207,18 +207,36 @@ func ExecuteRecipe(user User, rcpName string, itemIDs []string) string {
 	return txhash
 }
 
+func GetIndexFromString(key string) int {
+	switch key {
+	case "1": // SELECT 1st item
+		return 0
+	case "2": // SELECT 2nd item
+		return 1
+	case "3": // SELECT 3rd item
+		return 2
+	case "4": // SELECT 4th item
+		return 3
+	case "5": // SELECT 5th item
+		return 4
+	case "6": // SELECT 6th item
+		return 5
+	case "7": // SELECT 7th item
+		return 6
+	case "8": // SELECT 8th item
+		return 7
+	case "9": // SELECT 9th item
+		return 8
+	}
+	return -1
+}
+
 func GetWeaponItemFromKey(user User, key string) Item {
 	items := user.InventoryItems()
 	useItem := Item{}
-	switch key {
-	case "1": // SELECT 1st item
-		useItem = items[0]
-	case "2": // SELECT 2nd item
-		useItem = items[1]
-	case "3": // SELECT 3rd item
-		useItem = items[2]
-	case "4": // SELECT 4th item
-		useItem = items[3]
+	itemKey := GetIndexFromString(key)
+	if itemKey >= 0 {
+		useItem = items[itemKey]
 	}
 	return useItem
 }
@@ -257,15 +275,9 @@ func Hunt(user User, key string) string {
 
 func GetToBuyItemFromKey(key string) Item {
 	useItem := Item{}
-	switch key {
-	case "1": // SELECT 1st item
-		useItem = shopItems[0]
-	case "2": // SELECT 2nd item
-		useItem = shopItems[1]
-	case "3": // SELECT 3rd item
-		useItem = shopItems[2]
-	case "4": // SELECT 4th item
-		useItem = shopItems[3]
+	itemKey := GetIndexFromString(key)
+	if itemKey >= 0 {
+		useItem = shopItems[itemKey]
 	}
 	return useItem
 }
@@ -288,15 +300,9 @@ func Buy(user User, key string) string {
 func GetToSellItemFromKey(user User, key string) Item {
 	items := user.InventoryItems()
 	useItem := Item{}
-	switch key {
-	case "1": // SELECT 1st item
-		useItem = items[0]
-	case "2": // SELECT 2nd item
-		useItem = items[1]
-	case "3": // SELECT 3rd item
-		useItem = items[2]
-	case "4": // SELECT 4th item
-		useItem = items[3]
+	itemKey := GetIndexFromString(key)
+	if itemKey >= 0 {
+		useItem = items[itemKey]
 	}
 	return useItem
 }
@@ -326,15 +332,9 @@ func Sell(user User, key string) string {
 func GetToUpgradeItemFromKey(user User, key string) Item {
 	items := user.UpgradableItems()
 	useItem := Item{}
-	switch key {
-	case "1": // SELECT 1st item
-		useItem = items[0]
-	case "2": // SELECT 2nd item
-		useItem = items[1]
-	case "3": // SELECT 3rd item
-		useItem = items[2]
-	case "4": // SELECT 4th item
-		useItem = items[3]
+	itemKey := GetIndexFromString(key)
+	if itemKey >= 0 {
+		useItem = items[itemKey]
 	}
 	return useItem
 }

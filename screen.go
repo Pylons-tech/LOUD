@@ -531,6 +531,16 @@ func (screen *GameScreen) HandleInputKey(input termbox.Event) {
 	case "3": // SELECT 3rd item
 		fallthrough
 	case "4": // SELECT 4th item
+		fallthrough
+	case "5": // SELECT 5rd item
+		fallthrough
+	case "6": // SELECT 6rd item
+		fallthrough
+	case "7": // SELECT 7rd item
+		fallthrough
+	case "8": // SELECT 8rd item
+		fallthrough
+	case "9": // SELECT 9rd item
 		screen.refreshed = false
 		switch screen.scrStatus {
 		case SELECT_BUY_ITEM:
