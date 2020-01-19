@@ -59,6 +59,7 @@ type GameScreen struct {
 	screenSize     ssh.Window
 	activeItem     Item
 	blockHeight    int64
+	txFailReason   string
 	txResult       handlers.ExecuteRecipeSerialize
 	refreshed      bool
 	scrStatus      ScreenStatus
@@ -77,11 +78,13 @@ var shopItems []Item = []Item{
 		ID:    "001",
 		Name:  "Wooden sword",
 		Level: 1,
+		Price: 100,
 	},
 	Item{
 		ID:    "002",
 		Name:  "Copper sword",
 		Level: 1,
+		Price: 250,
 	},
 }
 
@@ -372,7 +375,11 @@ func (screen *GameScreen) renderUserSituation() {
 	case WAIT_UPGRADE_PROCESS:
 		desc = fmt.Sprintf("%s %s.\n%s", localize("wait upgrade process desc"), localize(screen.activeItem.Name), waitProcessEnd)
 	case RESULT_BUY_FINISH:
-		desc = fmt.Sprintf("%s %s Lv%d.\n%s", localize("result buy finish desc"), localize(screen.activeItem.Name), screen.activeItem.Level, localize("use for hunting"))
+		if screen.txFailReason != "" {
+			desc = screen.txFailReason
+		} else {
+			desc = fmt.Sprintf("%s %s Lv%d.\n%s", localize("result buy finish desc"), localize(screen.activeItem.Name), screen.activeItem.Level, localize("use for hunting"))
+		}
 	case RESULT_HUNT_FINISH:
 		desc = fmt.Sprintf("%s %d.", localize("result hunt finish desc"), screen.txResult.Amount)
 	case RESULT_SELL_FINISH:
@@ -531,6 +538,16 @@ func (screen *GameScreen) HandleInputKey(input termbox.Event) {
 	case "3": // SELECT 3rd item
 		fallthrough
 	case "4": // SELECT 4th item
+		fallthrough
+	case "5": // SELECT 5rd item
+		fallthrough
+	case "6": // SELECT 6rd item
+		fallthrough
+	case "7": // SELECT 7rd item
+		fallthrough
+	case "8": // SELECT 8rd item
+		fallthrough
+	case "9": // SELECT 9rd item
 		screen.refreshed = false
 		switch screen.scrStatus {
 		case SELECT_BUY_ITEM:
@@ -539,15 +556,22 @@ func (screen *GameScreen) HandleInputKey(input termbox.Event) {
 			screen.refreshed = false
 			screen.Render()
 			log.Println("started buying item")
-			txhash := Buy(screen.user, Key)
+			txhash, err := Buy(screen.user, Key)
 			log.Println("ended buying item")
-			time.AfterFunc(1*time.Second, func() {
-				pylonSDK.WaitForNextBlock()
-				screen.txResult = ProcessTxResult(screen.user, txhash)
+			if err != nil {
+				screen.txFailReason = err.Error()
 				screen.scrStatus = RESULT_BUY_FINISH
 				screen.refreshed = false
 				screen.Render()
-			})
+			} else {
+				time.AfterFunc(1*time.Second, func() {
+					pylonSDK.WaitForNextBlock()
+					screen.txResult = ProcessTxResult(screen.user, txhash)
+					screen.scrStatus = RESULT_BUY_FINISH
+					screen.refreshed = false
+					screen.Render()
+				})
+			}
 		case SELECT_HUNT_ITEM:
 			screen.activeItem = GetWeaponItemFromKey(screen.user, Key)
 			screen.scrStatus = WAIT_HUNT_PROCESS
