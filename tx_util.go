@@ -7,6 +7,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"os/user"
 	"path/filepath"
 
 	originT "testing"
@@ -141,7 +142,12 @@ func InitPylonAccount(username string) {
 	if err != nil {
 		log.Println("using existing account for", username)
 	} else {
+		usr, _ := user.Current()
+		pylonsDir := filepath.Join(usr.HomeDir, ".pylons")
+		os.MkdirAll(pylonsDir, os.ModePerm)
 		log.Println("created new account for", username)
+		keyFile := filepath.Join(pylonsDir, username+".json")
+		ioutil.WriteFile(keyFile, addResult, 0644)
 	}
 	addr := pylonSDK.GetAccountAddr(username, GetTestingT())
 	// pylonSDK.CLIOpts.CustomNode = customNode
