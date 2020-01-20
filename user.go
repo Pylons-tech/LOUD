@@ -12,8 +12,10 @@ const (
 // User represents an active user in the system.
 type User interface {
 	SetGold(int)
+	SetPylonAmount(int)
 	SetItems([]Item)
 	GetGold() int
+	GetPylonAmount() int
 	GetUserName() string
 	InventoryItems() []Item
 	UpgradableItems() []Item

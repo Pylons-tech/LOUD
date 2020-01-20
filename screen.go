@@ -431,6 +431,7 @@ func (screen *GameScreen) renderCharacterSheet() {
 	infoLines := []string{
 		centerText(fmt.Sprintf("%v", screen.user.GetUserName()), " ", width),
 		centerText(warning, "─", width),
+		screen.drawProgressMeter(1, 1, 117, bgcolor, 1) + fmtFunc(truncateRight(fmt.Sprintf(" %s: %v", "Pylon", screen.user.GetPylonAmount()), width-1)),
 		screen.drawProgressMeter(1, 1, 208, bgcolor, 1) + fmtFunc(truncateRight(fmt.Sprintf(" %s: %v", localize("gold"), screen.user.GetGold()), width-1)),
 		screen.drawProgressMeter(HP, MaxHP, 196, bgcolor, 10) + fmtFunc(truncateRight(fmt.Sprintf(" HP: %v/%v", HP, MaxHP), width-10)),
 		// screen.drawProgressMeter(HP, MaxHP, 225, bgcolor, 10) + fmtFunc(truncateRight(fmt.Sprintf(" XP: %v/%v", HP, 10), width-10)),
@@ -456,7 +457,7 @@ func (screen *GameScreen) renderCharacterSheet() {
 	nodeLines := []string{
 		centerText(localize("pylons network status"), " ", width),
 		centerText(screen.user.GetLastTransaction(), " ", width),
-		centerText("BlockHeight: "+strconv.FormatInt(screen.blockHeight, 10), " ", width),
+		centerText("Block Height: "+strconv.FormatInt(screen.blockHeight, 10), " ", width),
 		centerText(" ❦ ", "─", width),
 	}
 

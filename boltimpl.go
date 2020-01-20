@@ -67,10 +67,11 @@ func LoadWorldFromDB(filename string) World {
 
 // UserData is a JSON-serializable set of information about a User.
 type UserData struct {
-	Gold     int
-	Username string `json:""`
-	Location UserLocation
-	Items    []Item
+	Gold        int
+	PylonAmount int
+	Username    string `json:""`
+	Location    UserLocation
+	Items       []Item
 }
 
 type dbUser struct {
@@ -139,6 +140,14 @@ func (user *dbUser) SetGold(amount int) {
 }
 func (user *dbUser) GetGold() int {
 	return user.UserData.Gold
+}
+
+func (user *dbUser) GetPylonAmount() int {
+	return user.UserData.PylonAmount
+}
+
+func (user *dbUser) SetPylonAmount(amount int) {
+	user.UserData.PylonAmount = amount
 }
 
 func (user *dbUser) SetItems(items []Item) {

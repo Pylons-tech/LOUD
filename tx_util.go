@@ -24,16 +24,6 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
-type Weapon int
-
-const (
-	NO_WEAPON Weapon = iota
-	WOODEN_SWORD_LV1
-	WOODEN_SWORD_LV2
-	COPPER_SWORD_LV1
-	COPPER_SWORD_LV2
-)
-
 var RcpIDs map[string]string = map[string]string{
 	"LOUD's Copper sword lv1 buy recipe":            "LOUD-copper-sword-lv1-buy-recipe-v0.0.0-1579053457",
 	"LOUD's get initial coin recipe":                "LOUD-get-initial-coin-recipe-v0.0.0-1579053457",
@@ -71,6 +61,7 @@ func SyncFromNode(user User) {
 	log.Println("accountInfo Result=", accInfo)
 
 	user.SetGold(int(accInfo.Coins.AmountOf("loudcoin").Int64()))
+	user.SetPylonAmount(int(accInfo.Coins.AmountOf("pylon").Int64()))
 	log.Println("SyncFromNode gold=", accInfo.Coins.AmountOf("loudcoin").Int64())
 
 	rawItems, _ := pylonSDK.ListItemsViaCLI(accInfo.Address.String())
@@ -161,10 +152,16 @@ func InitPylonAccount(username string) {
 	addr := pylonSDK.GetAccountAddr(username, GetTestingT())
 	accBytes, err := pylonSDK.RunPylonsCli([]string{"query", "account", addr}, "")
 	log.Println("query account for", addr, "result", string(accBytes), err)
-	if err != nil { // account does not exist
-		GetInitialPylons(addr)
-		log.Println("ran command for new account on remote chain and waiting for next block ...", addr)
-		pylonSDK.WaitForNextBlock()
+	if err != nil {
+		log.Println("err.Error()", err.Error())
+		if strings.Contains(string(accBytes), "dial tcp [::1]:26657: connect: connection refused") { // Daemon is off
+			log.Println("Daemon refused to connect, please check daemon is running!")
+			os.Exit(3)
+		} else { // account does not exist
+			GetInitialPylons(addr)
+			log.Println("ran command for new account on remote chain and waiting for next block ...", addr)
+			pylonSDK.WaitForNextBlock()
+		}
 	} else {
 		log.Println("using existing account on remote chain", addr)
 	}
@@ -210,8 +207,7 @@ func ProcessTxResult(user User, txhash string) (handlers.ExecuteRecipeSerialize,
 }
 
 func GetTestingT() *testing.T {
-	orgT := originT.T{}
-	newT := testing.NewT(&orgT)
+	newT := testing.NewT(nil)
 	t := &newT
 	return t
 }
