@@ -316,7 +316,7 @@ func (screen *GameScreen) renderUserCommands() {
 	case SELECT_UPGRADE_ITEM:
 		userUpgradeItems := screen.user.UpgradableItems()
 		for idx, item := range userUpgradeItems {
-			infoLines = append(infoLines, fmt.Sprintf("%d) %s Lv%d", idx+1, localize(item.Name), item.Level))
+			infoLines = append(infoLines, fmt.Sprintf("%d) %s Lv%d ", idx+1, localize(item.Name), item.Level)+screen.drawProgressMeter(1, 1, 208, bgcolor, 1)+fmt.Sprintf(" %d", item.GetUpgradePrice()))
 		}
 		infoLines = append(infoLines, localize("C)ancel"))
 	case RESULT_BUY_FINISH:
@@ -520,6 +520,7 @@ func (screen *GameScreen) HandleInputKey(input termbox.Event) {
 	case "O": // GO ON
 		fallthrough
 	case "o":
+		screen.txFailReason = ""
 		screen.scrStatus = SHOW_LOCATION
 		screen.refreshed = false
 	case "U": // HUNT

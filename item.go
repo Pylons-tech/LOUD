@@ -24,3 +24,13 @@ func (item *Item) GetSellPrice() int {
 	}
 	return -1
 }
+
+func (item *Item) GetUpgradePrice() int {
+	switch item.Name {
+	case "Wooden sword":
+		return 250
+	case "Copper sword":
+		return 100
+	}
+	return -1
+}
