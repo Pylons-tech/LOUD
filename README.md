@@ -35,46 +35,53 @@ Since Pylons repos are private below command will be needed to run test correctl
 export GOPRIVATE="github.com/MikeSofaer"
 ```
 
-Fresh Local test
-
+### Fresh Local test
+Build game
+```
+make
+```
+Run daemon and rest-server
 ```
 pylonsd unsafe-reset-all
 pylonsd start
 pylonscli rest-server --chain-id pylonschain
+```
+Create eugen account by running
+```
+make ARGS="eugen local" run
+```
+Create cookbook and recipes by running
+```
 make fixture_tests
-make
-rm nonce.json
-./bin/loud
 ```
-
-Fresh Remote node test
-Search for below code
+Run game with name "michael"
 ```
-func SetupScreenAndEvents(world World) {
-	user := world.GetUser(
+make ARGS="michael local" run
 ```
-And change the username to "eugen"
+### Fresh Remote node test
+Build game
 ```
 make
-make run
 ```
-
-Check eugen account created correctly on node by running
+Create eugen account by running
+```
+make ARGS="eugen" run
+```
+After creating eugen account on remote, check eugen account created correctly on node by running
 ```
 pylonscli query account $(pylonscli keys show -a eugen) --node 35.223.7.2:26657
 ```
-
+Create recipes and cookbooks by running
+```
 make fixture_tests
-
-Check if all recipes are created by using
+```
+Check if cookbook and all recipes are created by using
 ```
 pylonscli query pylons list_recipe --node 35.223.7.2:26657
 ```
+If something went wrong, just create the remaining recipes by editing `scenario/loud.json`.
 
-If something went wrong, just create the remaining recipes.
-
-rm world.db
-rm nonce.json
-change username to "afti" or your name
-make
-make ARGS="eugen" run
+Run game with name "michael"
+```
+make ARGS="michael" run
+```

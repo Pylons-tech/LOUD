@@ -379,16 +379,28 @@ func (screen *GameScreen) renderUserSituation() {
 		desc = fmt.Sprintf("%s %s.\n%s", localize("wait upgrade process desc"), localize(screen.activeItem.Name), waitProcessEnd)
 	case RESULT_BUY_FINISH:
 		if screen.txFailReason != "" {
-			desc = screen.txFailReason
+			desc = "Buy Failed Reason: " + screen.txFailReason
 		} else {
 			desc = fmt.Sprintf("%s %s Lv%d.\n%s", localize("result buy finish desc"), localize(screen.activeItem.Name), screen.activeItem.Level, localize("use for hunting"))
 		}
 	case RESULT_HUNT_FINISH:
-		desc = fmt.Sprintf("%s %d.", localize("result hunt finish desc"), screen.txResult.Amount)
+		if screen.txFailReason != "" {
+			desc = "Hunt Failed Reason: " + screen.txFailReason
+		} else {
+			desc = fmt.Sprintf("%s %d.", localize("result hunt finish desc"), screen.txResult.Amount)
+		}
 	case RESULT_SELL_FINISH:
-		desc = fmt.Sprintf("%s %s Lv%d.", localize("result sell finish desc"), localize(screen.activeItem.Name), screen.activeItem.Level)
+		if screen.txFailReason != "" {
+			desc = "Sell Failed Reason: " + screen.txFailReason
+		} else {
+			desc = fmt.Sprintf("%s %s Lv%d.", localize("result sell finish desc"), localize(screen.activeItem.Name), screen.activeItem.Level)
+		}
 	case RESULT_UPGRADE_FINISH:
-		desc = fmt.Sprintf("%s: %s.", localize("result upgrade finish desc"), localize(screen.activeItem.Name))
+		if screen.txFailReason != "" {
+			desc = "Upgrade Failed Reason: " + screen.txFailReason
+		} else {
+			desc = fmt.Sprintf("%s: %s.", localize("result upgrade finish desc"), localize(screen.activeItem.Name))
+		}
 	}
 
 	basicLines := strings.Split(desc, "\n")
@@ -572,6 +584,9 @@ func (screen *GameScreen) HandleInputKey(input termbox.Event) {
 		switch screen.scrStatus {
 		case SELECT_BUY_ITEM:
 			screen.activeItem = GetToBuyItemFromKey(Key)
+			if len(screen.activeItem.Name) == 0 {
+				return
+			}
 			screen.scrStatus = WAIT_BUY_PROCESS
 			screen.refreshed = false
 			screen.Render()
@@ -597,42 +612,69 @@ func (screen *GameScreen) HandleInputKey(input termbox.Event) {
 			screen.refreshed = false
 			screen.Render()
 			log.Println("started sending request for hunting item")
-			txhash := Hunt(screen.user, Key)
+			txhash, err := Hunt(screen.user, Key)
 			log.Println("ended sending request for hunting item")
-			time.AfterFunc(1*time.Second, func() {
-				screen.txResult, screen.txFailReason = ProcessTxResult(screen.user, txhash)
+			if err != nil {
+				screen.txFailReason = err.Error()
 				screen.scrStatus = RESULT_HUNT_FINISH
 				screen.refreshed = false
 				screen.Render()
-			})
+			} else {
+				time.AfterFunc(1*time.Second, func() {
+					screen.txResult, screen.txFailReason = ProcessTxResult(screen.user, txhash)
+					screen.scrStatus = RESULT_HUNT_FINISH
+					screen.refreshed = false
+					screen.Render()
+				})
+			}
 		case SELECT_SELL_ITEM:
 			screen.activeItem = GetToSellItemFromKey(screen.user, Key)
+			if len(screen.activeItem.Name) == 0 {
+				return
+			}
 			screen.scrStatus = WAIT_SELL_PROCESS
 			screen.refreshed = false
 			screen.Render()
 			log.Println("started sending request for selling item")
-			txhash := Sell(screen.user, Key)
+			txhash, err := Sell(screen.user, Key)
 			log.Println("ended sending request for selling item")
-			time.AfterFunc(1*time.Second, func() {
-				screen.txResult, screen.txFailReason = ProcessTxResult(screen.user, txhash)
+			if err != nil {
+				screen.txFailReason = err.Error()
 				screen.scrStatus = RESULT_SELL_FINISH
 				screen.refreshed = false
 				screen.Render()
-			})
+			} else {
+				time.AfterFunc(1*time.Second, func() {
+					screen.txResult, screen.txFailReason = ProcessTxResult(screen.user, txhash)
+					screen.scrStatus = RESULT_SELL_FINISH
+					screen.refreshed = false
+					screen.Render()
+				})
+			}
 		case SELECT_UPGRADE_ITEM:
 			screen.activeItem = GetToUpgradeItemFromKey(screen.user, Key)
+			if len(screen.activeItem.Name) == 0 {
+				return
+			}
 			screen.scrStatus = WAIT_UPGRADE_PROCESS
 			screen.refreshed = false
 			screen.Render()
 			log.Println("started sending request for upgrading item")
-			txhash := Upgrade(screen.user, Key)
+			txhash, err := Upgrade(screen.user, Key)
 			log.Println("ended sending request for upgrading item")
-			time.AfterFunc(1*time.Second, func() {
-				screen.txResult, screen.txFailReason = ProcessTxResult(screen.user, txhash)
+			if err != nil {
+				screen.txFailReason = err.Error()
 				screen.scrStatus = RESULT_UPGRADE_FINISH
 				screen.refreshed = false
 				screen.Render()
-			})
+			} else {
+				time.AfterFunc(1*time.Second, func() {
+					screen.txResult, screen.txFailReason = ProcessTxResult(screen.user, txhash)
+					screen.scrStatus = RESULT_UPGRADE_FINISH
+					screen.refreshed = false
+					screen.Render()
+				})
+			}
 		}
 	}
 	screen.Render()

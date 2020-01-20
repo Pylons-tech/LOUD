@@ -46,12 +46,17 @@ var customNode string = "35.223.7.2:26657"
 var restEndpoint string = "http://35.238.123.59:80"
 
 // Local mode
-// var customNode string = "localhost:26657"
-// var restEndpoint string = "http://localhost:1317"
+var customNodeLocal string = "localhost:26657"
+var restEndpointLocal string = "http://localhost:1317"
 
 func init() {
-	log.Println("initing pylonSDK to customNode", customNode)
+	args := os.Args
+	if len(args) > 2 && args[2] == "local" {
+		customNode = customNodeLocal
+		restEndpoint = restEndpointLocal
+	}
 	pylonSDK.CLIOpts.CustomNode = customNode
+	log.Println("initing pylonSDK to customNode", customNode)
 }
 
 func SyncFromNode(user User) {
@@ -207,15 +212,21 @@ func ProcessTxResult(user User, txhash string) (handlers.ExecuteRecipeSerialize,
 }
 
 func GetTestingT() *testing.T {
-	newT := testing.NewT(nil)
+	orgT := originT.T{}
+	newT := testing.NewT(&orgT)
 	t := &newT
 	return t
 }
 
-func ExecuteRecipe(user User, rcpName string, itemIDs []string) string {
+func ExecuteRecipe(user User, rcpName string, itemIDs []string) (string, error) {
 	t := GetTestingT()
-
-	rcpID := RcpIDs[rcpName]
+	if len(rcpName) == 0 {
+		return "", errors.New("Recipe Name does not exist!")
+	}
+	rcpID, ok := RcpIDs[rcpName]
+	if !ok {
+		return "", errors.New("RecipeID does not exist for rcpName=" + rcpName)
+	}
 	addr := pylonSDK.GetAccountAddr(user.GetUserName(), nil)
 	sdkAddr, _ := sdk.AccAddressFromBech32(addr)
 	// execMsg := msgs.NewMsgExecuteRecipe(execType.RecipeID, execType.Sender, ItemIDs)
@@ -224,7 +235,7 @@ func ExecuteRecipe(user User, rcpName string, itemIDs []string) string {
 	txhash := pylonSDK.TestTxWithMsgWithNonce(t, execMsg, user.GetUserName(), false)
 	user.SetLastTransaction(txhash)
 	log.Println("ended sending transaction")
-	return txhash
+	return txhash, nil
 }
 
 func GetIndexFromString(key string) int {
@@ -255,13 +266,13 @@ func GetWeaponItemFromKey(user User, key string) Item {
 	items := user.InventoryItems()
 	useItem := Item{}
 	itemKey := GetIndexFromString(key)
-	if itemKey >= 0 {
+	if itemKey >= 0 && itemKey < len(items) {
 		useItem = items[itemKey]
 	}
 	return useItem
 }
 
-func Hunt(user User, key string) string {
+func Hunt(user User, key string) (string, error) {
 	rcpName := "LOUD's hunt without sword recipe"
 
 	useItem := GetWeaponItemFromKey(user, key)
@@ -296,7 +307,7 @@ func Hunt(user User, key string) string {
 func GetToBuyItemFromKey(key string) Item {
 	useItem := Item{}
 	itemKey := GetIndexFromString(key)
-	if itemKey >= 0 {
+	if itemKey >= 0 && itemKey < len(shopItems) {
 		useItem = shopItems[itemKey]
 	}
 	return useItem
@@ -322,20 +333,20 @@ func Buy(user User, key string) (string, error) {
 	default:
 		return "", errors.New("you are trying to buy something which is not in shop")
 	}
-	return ExecuteRecipe(user, rcpName, []string{}), nil
+	return ExecuteRecipe(user, rcpName, []string{})
 }
 
 func GetToSellItemFromKey(user User, key string) Item {
 	items := user.InventoryItems()
 	useItem := Item{}
 	itemKey := GetIndexFromString(key)
-	if itemKey >= 0 {
+	if itemKey >= 0 && itemKey < len(items) {
 		useItem = items[itemKey]
 	}
 	return useItem
 }
 
-func Sell(user User, key string) string {
+func Sell(user User, key string) (string, error) {
 	useItem := GetToSellItemFromKey(user, key)
 	itemIDs := []string{useItem.ID}
 
@@ -361,13 +372,13 @@ func GetToUpgradeItemFromKey(user User, key string) Item {
 	items := user.UpgradableItems()
 	useItem := Item{}
 	itemKey := GetIndexFromString(key)
-	if itemKey >= 0 {
+	if itemKey >= 0 && itemKey < len(items) {
 		useItem = items[itemKey]
 	}
 	return useItem
 }
 
-func Upgrade(user User, key string) string {
+func Upgrade(user User, key string) (string, error) {
 	useItem := GetToUpgradeItemFromKey(user, key)
 	itemIDs := []string{useItem.ID}
 	rcpName := ""
