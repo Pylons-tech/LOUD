@@ -302,7 +302,7 @@ func (screen *GameScreen) renderUserCommands() {
 	case SELECT_SELL_ITEM:
 		userItems := screen.user.InventoryItems()
 		for idx, item := range userItems {
-			infoLines = append(infoLines, fmt.Sprintf("%d) %s Lv%d", idx+1, localize(item.Name), item.Level))
+			infoLines = append(infoLines, fmt.Sprintf("%d) %s Lv%d  ", idx+1, localize(item.Name), item.Level)+screen.drawProgressMeter(1, 1, 208, bgcolor, 1)+fmt.Sprintf(" %d", item.GetSellPrice()))
 		}
 		infoLines = append(infoLines, localize("C)ancel"))
 	case SELECT_HUNT_ITEM:
