@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -158,7 +159,6 @@ func InitPylonAccount(username string) {
 		log.Println("created new account for", username, "and saved to ~/.pylons/"+username+".json")
 	}
 	addr := pylonSDK.GetAccountAddr(username, GetTestingT())
-	// pylonSDK.CLIOpts.CustomNode = customNode
 	accBytes, err := pylonSDK.RunPylonsCli([]string{"query", "account", addr}, "")
 	log.Println("query account for", addr, "result", string(accBytes), err)
 	if err != nil { // account does not exist
@@ -177,26 +177,36 @@ func InitPylonAccount(username string) {
 	log.Println("remove nonce file result", err)
 }
 
-func ProcessTxResult(user User, txhash string) handlers.ExecuteRecipeSerialize {
+func ProcessTxResult(user User, txhash string) (handlers.ExecuteRecipeSerialize, string) {
 	orgT := originT.T{}
 	newT := testing.NewT(&orgT)
 	t := &newT
 
-	txHandleResBytes, err := pylonSDK.WaitAndGetTxData(txhash, 3, t)
-	pylonSDK.ErrValidation(t, "error getting tx result bytes %+v", err)
-
-	fixtureSDK.CheckErrorOnTx(txhash, t)
 	resp := handlers.ExecuteRecipeResp{}
 	respOutput := handlers.ExecuteRecipeSerialize{}
+	txHandleResBytes, err := pylonSDK.WaitAndGetTxData(txhash, 3, t)
+	if err != nil {
+		errString := fmt.Sprintf("error getting tx result bytes %+v", err)
+		log.Println(errString)
+		return respOutput, errString
+	}
+	hmrErrMsg := fixtureSDK.GetHumanReadableErrorFromTxHash(txhash, t)
+	if len(hmrErrMsg) > 0 {
+		errString := fmt.Sprintf("txhash=%s hmrErrMsg=%s", txhash, hmrErrMsg)
+		log.Println(errString)
+		return respOutput, errString
+	}
 	err = pylonSDK.GetAminoCdc().UnmarshalJSON(txHandleResBytes, &resp)
 	if err != nil {
-		log.Println("failed to parse transaction result txhash=", txhash)
+		errString := fmt.Sprintf("failed to parse transaction result txhash=%s", txhash)
+		log.Println(errString)
+		return respOutput, errString
 	}
 
 	json.Unmarshal(resp.Output, &respOutput)
 	log.Println("ProcessTxResult::txResp", resp.Message, respOutput)
 	SyncFromNode(user)
-	return respOutput
+	return respOutput, ""
 }
 
 func GetTestingT() *testing.T {

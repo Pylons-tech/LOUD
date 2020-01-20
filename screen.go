@@ -12,7 +12,6 @@ import (
 	"time"
 	"unicode/utf8"
 
-	pylonSDK "github.com/MikeSofaer/pylons/cmd/test"
 	"github.com/MikeSofaer/pylons/x/pylons/handlers"
 	"github.com/ahmetb/go-cursor"
 	"github.com/gliderlabs/ssh"
@@ -575,9 +574,9 @@ func (screen *GameScreen) HandleInputKey(input termbox.Event) {
 			screen.scrStatus = WAIT_BUY_PROCESS
 			screen.refreshed = false
 			screen.Render()
-			log.Println("started buying item")
+			log.Println("started sending request for buying item")
 			txhash, err := Buy(screen.user, Key)
-			log.Println("ended buying item")
+			log.Println("ended sending request for buying item")
 			if err != nil {
 				screen.txFailReason = err.Error()
 				screen.scrStatus = RESULT_BUY_FINISH
@@ -585,8 +584,7 @@ func (screen *GameScreen) HandleInputKey(input termbox.Event) {
 				screen.Render()
 			} else {
 				time.AfterFunc(1*time.Second, func() {
-					pylonSDK.WaitForNextBlock()
-					screen.txResult = ProcessTxResult(screen.user, txhash)
+					screen.txResult, screen.txFailReason = ProcessTxResult(screen.user, txhash)
 					screen.scrStatus = RESULT_BUY_FINISH
 					screen.refreshed = false
 					screen.Render()
@@ -597,12 +595,11 @@ func (screen *GameScreen) HandleInputKey(input termbox.Event) {
 			screen.scrStatus = WAIT_HUNT_PROCESS
 			screen.refreshed = false
 			screen.Render()
-			log.Println("started hunting item")
+			log.Println("started sending request for hunting item")
 			txhash := Hunt(screen.user, Key)
-			log.Println("ended hunting item")
+			log.Println("ended sending request for hunting item")
 			time.AfterFunc(1*time.Second, func() {
-				pylonSDK.WaitForNextBlock()
-				screen.txResult = ProcessTxResult(screen.user, txhash)
+				screen.txResult, screen.txFailReason = ProcessTxResult(screen.user, txhash)
 				screen.scrStatus = RESULT_HUNT_FINISH
 				screen.refreshed = false
 				screen.Render()
@@ -612,12 +609,11 @@ func (screen *GameScreen) HandleInputKey(input termbox.Event) {
 			screen.scrStatus = WAIT_SELL_PROCESS
 			screen.refreshed = false
 			screen.Render()
-			log.Println("started selling item")
+			log.Println("started sending request for selling item")
 			txhash := Sell(screen.user, Key)
-			log.Println("ended selling item")
+			log.Println("ended sending request for selling item")
 			time.AfterFunc(1*time.Second, func() {
-				pylonSDK.WaitForNextBlock()
-				screen.txResult = ProcessTxResult(screen.user, txhash)
+				screen.txResult, screen.txFailReason = ProcessTxResult(screen.user, txhash)
 				screen.scrStatus = RESULT_SELL_FINISH
 				screen.refreshed = false
 				screen.Render()
@@ -627,12 +623,11 @@ func (screen *GameScreen) HandleInputKey(input termbox.Event) {
 			screen.scrStatus = WAIT_UPGRADE_PROCESS
 			screen.refreshed = false
 			screen.Render()
-			log.Println("started upgrading item")
+			log.Println("started sending request for upgrading item")
 			txhash := Upgrade(screen.user, Key)
-			log.Println("ended upgrading item")
+			log.Println("ended sending request for upgrading item")
 			time.AfterFunc(1*time.Second, func() {
-				pylonSDK.WaitForNextBlock()
-				screen.txResult = ProcessTxResult(screen.user, txhash)
+				screen.txResult, screen.txFailReason = ProcessTxResult(screen.user, txhash)
 				screen.scrStatus = RESULT_UPGRADE_FINISH
 				screen.refreshed = false
 				screen.Render()
