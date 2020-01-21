@@ -1,4 +1,8 @@
 {
+  "block height": {
+    "description": "",
+    "one": "Altura del bloque"
+  },
   "home": {
     "description": "",
     "one": "Bosque(F)\nTienda(S)\nAjust)es"

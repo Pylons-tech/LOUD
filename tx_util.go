@@ -319,6 +319,7 @@ func Buy(user User, key string) (string, error) {
 	case "Wooden sword":
 		if useItem.Level == 1 {
 			if useItem.Price > user.GetGold() {
+				// TODO should implement localize
 				return "", errors.New("You don't have enough funds to buy this item")
 			}
 			rcpName = "LOUD's Wooden sword lv1 buy recipe"
@@ -326,11 +327,13 @@ func Buy(user User, key string) (string, error) {
 	case "Copper sword":
 		if useItem.Level == 1 {
 			if useItem.Price > user.GetGold() {
+				// TODO should implement localize
 				return "", errors.New("You don't have enough funds to buy this item")
 			}
 			rcpName = "LOUD's Copper sword lv1 buy recipe"
 		}
 	default:
+		// TODO should implement localize
 		return "", errors.New("you are trying to buy something which is not in shop")
 	}
 	return ExecuteRecipe(user, rcpName, []string{})
@@ -385,10 +388,12 @@ func Upgrade(user User, key string) (string, error) {
 	switch useItem.Name {
 	case "Wooden sword":
 		if useItem.Level == 1 {
+			// TODO should implement price checker and add localize for that
 			rcpName = "LOUD's Wooden sword lv1 to lv2 upgrade recipe"
 		}
 	case "Copper sword":
 		if useItem.Level == 1 {
+			// TODO should implement price checker and add localize for that
 			rcpName = "LOUD's Copper sword lv1 to lv2 upgrade recipe"
 		}
 	}
