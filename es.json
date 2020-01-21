@@ -3,6 +3,38 @@
     "description": "",
     "one": "Altura del bloque"
   },
+  "buy failed reason": {
+    "description": "",
+    "one": "Razón de compra fallida"
+  },
+  "hunt failed reason": {
+    "description": "",
+    "one": "Razón fallida de caza"
+  },
+  "sell failed reason": {
+    "description": "",
+    "one": "Razón de venta fallida"
+  },
+  "upgrade failed reason": {
+    "description": "",
+    "one": "Motivo fallido de actualización"
+  },
+  "Recipe Name does not exist!": {
+    "description": "",
+    "one": "¡El nombre de la receta no existe!"
+  },
+  "You are trying to buy something which is not in shop": {
+    "description": "",
+    "one": "Estás intentando comprar algo que no está en la tienda"
+  },
+  "You don't have enough gold to buy this item": {
+    "description": "",
+    "one": "No tienes suficiente oro para comprar este artículo"
+  },
+  "You don't have enough gold to upgrade this item": {
+    "description": "",
+    "one": "No tienes suficiente oro para actualizar este artículo"
+  },
   "home": {
     "description": "",
     "one": "Bosque(F)\nTienda(S)\nAjust)es"
