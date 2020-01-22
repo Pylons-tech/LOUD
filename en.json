@@ -1,14 +1,38 @@
 {
+  "block height": {
+    "one": "Block Height"
+  },
+  "buy failed reason": {
+    "one": "Buy Failed Reason"
+  },
+  "hunt failed reason": {
+    "one": "Hunt Failed Reason"
+  },
+  "sell failed reason": {
+    "one": "Sell Failed Reason"
+  },
+  "upgrade failed reason": {
+    "one": "Upgrade Failed Reason"
+  },
+  "Recipe Name does not exist!": {
+    "one": "Recipe Name does not exist!"
+  },
+  "You are trying to buy something which is not in shop": {
+    "one": "You are trying to buy something which is not in shop"
+  },
+  "You don't have enough gold to buy this item": {
+    "one": "You don't have enough gold to buy this item"
+  },
+  "You don't have enough gold to upgrade this item": {
+    "one": "You don't have enough gold to upgrade this item"
+  },
   "home": {
-    "description": "",
     "one": "F)orest\nS)hop\nSet)tings"
   },
   "forest": {
-    "description": "",
     "one": "Hu)nt\nH)ome\nS)hop"
   },
   "shop": {
-    "description": "",
     "one": "B)uy Items\nSe)ll Items\nUp)grade Items\nH)ome\nF)orest"
   },
   "settings": {

@@ -97,11 +97,14 @@ func localize(key string) string {
 
 	loc := i18n.NewLocalizer(bundle, gameLanguage)
 
-	translate := loc.MustLocalize(
+	translate, err := loc.Localize(
 		&i18n.LocalizeConfig{
 			MessageID:   key,
 			PluralCount: 1,
 		})
+	if err != nil {
+		return key
+	}
 	return translate
 }
 
@@ -379,25 +382,25 @@ func (screen *GameScreen) renderUserSituation() {
 		desc = fmt.Sprintf("%s %s.\n%s", localize("wait upgrade process desc"), localize(screen.activeItem.Name), waitProcessEnd)
 	case RESULT_BUY_FINISH:
 		if screen.txFailReason != "" {
-			desc = "Buy Failed Reason: " + screen.txFailReason
+			desc = localize("buy failed reason") + ": " + localize(screen.txFailReason)
 		} else {
 			desc = fmt.Sprintf("%s %s Lv%d.\n%s", localize("result buy finish desc"), localize(screen.activeItem.Name), screen.activeItem.Level, localize("use for hunting"))
 		}
 	case RESULT_HUNT_FINISH:
 		if screen.txFailReason != "" {
-			desc = "Hunt Failed Reason: " + screen.txFailReason
+			desc = localize("hunt failed reason") + ": " + localize(screen.txFailReason)
 		} else {
 			desc = fmt.Sprintf("%s %d.", localize("result hunt finish desc"), screen.txResult.Amount)
 		}
 	case RESULT_SELL_FINISH:
 		if screen.txFailReason != "" {
-			desc = "Sell Failed Reason: " + screen.txFailReason
+			desc = localize("sell failed reason") + ": " + localize(screen.txFailReason)
 		} else {
 			desc = fmt.Sprintf("%s %s Lv%d.", localize("result sell finish desc"), localize(screen.activeItem.Name), screen.activeItem.Level)
 		}
 	case RESULT_UPGRADE_FINISH:
 		if screen.txFailReason != "" {
-			desc = "Upgrade Failed Reason: " + screen.txFailReason
+			desc = localize("upgrade failed reason") + ": " + localize(screen.txFailReason)
 		} else {
 			desc = fmt.Sprintf("%s: %s.", localize("result upgrade finish desc"), localize(screen.activeItem.Name))
 		}
@@ -469,7 +472,7 @@ func (screen *GameScreen) renderCharacterSheet() {
 	nodeLines := []string{
 		centerText(localize("pylons network status"), " ", width),
 		centerText(screen.user.GetLastTransaction(), " ", width),
-		centerText("Block Height: "+strconv.FormatInt(screen.blockHeight, 10), " ", width),
+		centerText(localize("block height")+": "+strconv.FormatInt(screen.blockHeight, 10), " ", width),
 		centerText(" ❦ ", "─", width),
 	}
 

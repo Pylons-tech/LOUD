@@ -229,7 +229,6 @@ func ExecuteRecipe(user User, rcpName string, itemIDs []string) (string, error) 
 	}
 	addr := pylonSDK.GetAccountAddr(user.GetUserName(), nil)
 	sdkAddr, _ := sdk.AccAddressFromBech32(addr)
-	// execMsg := msgs.NewMsgExecuteRecipe(execType.RecipeID, execType.Sender, ItemIDs)
 	execMsg := msgs.NewMsgExecuteRecipe(rcpID, sdkAddr, itemIDs)
 	log.Println("started sending transaction", user.GetUserName(), execMsg)
 	txhash := pylonSDK.TestTxWithMsgWithNonce(t, execMsg, user.GetUserName(), false)
@@ -318,20 +317,17 @@ func Buy(user User, key string) (string, error) {
 	switch useItem.Name {
 	case "Wooden sword":
 		if useItem.Level == 1 {
-			if useItem.Price > user.GetGold() {
-				return "", errors.New("You don't have enough funds to buy this item")
-			}
 			rcpName = "LOUD's Wooden sword lv1 buy recipe"
 		}
 	case "Copper sword":
 		if useItem.Level == 1 {
-			if useItem.Price > user.GetGold() {
-				return "", errors.New("You don't have enough funds to buy this item")
-			}
 			rcpName = "LOUD's Copper sword lv1 buy recipe"
 		}
 	default:
-		return "", errors.New("you are trying to buy something which is not in shop")
+		return "", errors.New("You are trying to buy something which is not in shop")
+	}
+	if useItem.Price > user.GetGold() {
+		return "", errors.New("You don't have enough gold to buy this item")
 	}
 	return ExecuteRecipe(user, rcpName, []string{})
 }
@@ -391,6 +387,9 @@ func Upgrade(user User, key string) (string, error) {
 		if useItem.Level == 1 {
 			rcpName = "LOUD's Copper sword lv1 to lv2 upgrade recipe"
 		}
+	}
+	if useItem.GetUpgradePrice() > user.GetGold() {
+		return "", errors.New("You don't have enough gold to upgrade this item")
 	}
 	return ExecuteRecipe(user, rcpName, itemIDs)
 }

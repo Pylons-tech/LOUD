@@ -1,14 +1,38 @@
 {
+  "block height": {
+    "one": "Altura del bloque"
+  },
+  "buy failed reason": {
+    "one": "Razón de compra fallida"
+  },
+  "hunt failed reason": {
+    "one": "Razón fallida de caza"
+  },
+  "sell failed reason": {
+    "one": "Razón de venta fallida"
+  },
+  "upgrade failed reason": {
+    "one": "Motivo fallido de actualización"
+  },
+  "Recipe Name does not exist!": {
+    "one": "¡El nombre de la receta no existe!"
+  },
+  "You are trying to buy something which is not in shop": {
+    "one": "Estás intentando comprar algo que no está en la tienda"
+  },
+  "You don't have enough gold to buy this item": {
+    "one": "No tienes suficiente oro para comprar este artículo"
+  },
+  "You don't have enough gold to upgrade this item": {
+    "one": "No tienes suficiente oro para actualizar este artículo"
+  },
   "home": {
-    "description": "",
     "one": "Bosque(F)\nTienda(S)\nAjust)es"
   },
   "forest": {
-    "description": "",
     "one": "Cazar(U)\nInicio(H)\nTienda(S)"
   },
   "shop": {
-    "description": "",
     "one": "Comprar(B) Artículos\nVender(E) Artículos\nMejorar(P) Artículos\nInicio(H)\nBosque(F)"
   },
   "settings": {
