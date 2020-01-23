@@ -6,6 +6,7 @@ const (
 	HOME UserLocation = iota
 	FOREST
 	SHOP
+	MARKET
 	SETTINGS
 )
 
