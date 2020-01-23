@@ -1,9 +1,9 @@
-module github.com/MikeSofaer/LOUD
+module github.com/Pylons-tech/LOUD
 
 go 1.13
 
 require (
-	github.com/MikeSofaer/pylons v0.0.0-20200117012212-de5be0076185
+	github.com/Pylons-tech/pylons v0.0.0-20200123112202-7ec72499ff90
 	github.com/ahmetb/go-cursor v0.0.0-20131010032410-8136607ea412
 	github.com/anmitsu/go-shlex v0.0.0-20161002113705-648efa622239
 	github.com/coreos/bbolt v1.3.3
@@ -37,12 +37,15 @@ require (
 	github.com/vmihailenco/msgpack v0.0.0-20190804092921-cd92a145e6d2
 	github.com/vmihailenco/tagparser v0.1.1
 	github.com/wayneashleyberry/terminal-dimensions v1.0.0
+	golang.org/x/lint v0.0.0-20190313153728-d0100b6bd8b3 // indirect
 	golang.org/x/net v0.0.0-20191209160850-c0dbc17a3553
 	golang.org/x/sys v0.0.0-20200102141924-c96a22e43c9c
 	golang.org/x/text v0.3.2
+	golang.org/x/tools v0.0.0-20190524140312-2c0ae7006135 // indirect
 	google.golang.org/appengine v1.6.5
 	google.golang.org/grpc v1.25.1 // indirect
 	gopkg.in/yaml.v2 v2.2.7 // indirect
+	honnef.co/go/tools v0.0.0-20190523083050-ea95bdfd59fc // indirect
 )
 
 replace golang.org/x/crypto => github.com/tendermint/crypto v0.0.0-20180820045704-3764759f34a5

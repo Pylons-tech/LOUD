@@ -3,8 +3,8 @@ package loudFixture
 import (
 	"testing"
 
-	pylonsFixture "github.com/MikeSofaer/pylons/cmd/fixtures_test"
-	pylonSDK "github.com/MikeSofaer/pylons/cmd/test"
+	pylonsFixture "github.com/Pylons-tech/pylons/cmd/fixtures_test"
+	pylonSDK "github.com/Pylons-tech/pylons/cmd/test"
 )
 
 func TestFixturesViaCLI(t *testing.T) {

@@ -15,12 +15,12 @@ import (
 
 	originT "testing"
 
-	fixtureSDK "github.com/MikeSofaer/pylons/cmd/fixtures_test"
-	testing "github.com/MikeSofaer/pylons/cmd/fixtures_test/evtesting"
-	pylonSDK "github.com/MikeSofaer/pylons/cmd/test"
-	"github.com/MikeSofaer/pylons/x/pylons/handlers"
-	"github.com/MikeSofaer/pylons/x/pylons/msgs"
-	"github.com/MikeSofaer/pylons/x/pylons/types"
+	fixtureSDK "github.com/Pylons-tech/pylons/cmd/fixtures_test"
+	testing "github.com/Pylons-tech/pylons/cmd/fixtures_test/evtesting"
+	pylonSDK "github.com/Pylons-tech/pylons/cmd/test"
+	"github.com/Pylons-tech/pylons/x/pylons/handlers"
+	"github.com/Pylons-tech/pylons/x/pylons/msgs"
+	"github.com/Pylons-tech/pylons/x/pylons/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
