@@ -38,18 +38,40 @@ type ScreenStatus int
 
 const (
 	SHOW_LOCATION ScreenStatus = iota
+	// in shop
 	SELECT_SELL_ITEM
 	WAIT_SELL_PROCESS
 	RESULT_SELL_FINISH
+
 	SELECT_BUY_ITEM
 	WAIT_BUY_PROCESS
 	RESULT_BUY_FINISH
-	SELECT_HUNT_ITEM
-	WAIT_HUNT_PROCESS
-	RESULT_HUNT_FINISH
+
 	SELECT_UPGRADE_ITEM
 	WAIT_UPGRADE_PROCESS
 	RESULT_UPGRADE_FINISH
+	// in forest
+	SELECT_HUNT_ITEM
+	WAIT_HUNT_PROCESS
+	RESULT_HUNT_FINISH
+	// in market
+	SELECT_MARKET // buy loud or sell loud
+
+	SHOW_LOUD_BUY_ORDERS                   // navigation using arrow and list should be sorted by price
+	CREATE_BUY_LOUD_ORDER_ENTER_LOUD_VALUE // enter value after switching enter mode
+	CREATE_BUY_LOUD_ORDER_ENTER_PYLON_VALUE
+	WAIT_BUY_LOUD_ORDER_CREATION
+	RESULT_BUY_LOUD_ORDER_CREATION
+	WAIT_FULFILL_BUY_LOUD_ORDER // after done go to show loud buy orders
+	RESULT_FULFILL_BUY_LOUD_ORDER
+
+	SHOW_LOUD_SELL_ORDERS
+	CREATE_SELL_LOUD_ORDER_ENTER_LOUD_VALUE
+	CREATE_SELL_LOUD_ORDER_ENTER_PYLON_VALUE
+	WAIT_SELL_LOUD_ORDER_CREATION
+	RESULT_SELL_LOUD_ORDER_CREATION
+	WAIT_FULFILL_SELL_LOUD_ORDER
+	RESULT_FULFILL_SELL_LOUD_ORDER
 )
 
 type GameScreen struct {
@@ -292,10 +314,19 @@ func (screen *GameScreen) renderUserCommands() {
 			HOME:     localize("home"),
 			FOREST:   localize("forest"),
 			SHOP:     localize("shop"),
+			MARKET:   localize("market"),
 			SETTINGS: localize("settings"),
 		}
 		cmdString := cmdMap[screen.user.GetLocation()]
 		infoLines = strings.Split(cmdString, "\n")
+	case SHOW_LOUD_BUY_ORDERS:
+		infoLines = append(infoLines, "B)uy")
+		infoLines = append(infoLines, "Create a buy o)rder")
+		infoLines = append(infoLines, "Go bac)k")
+	case SHOW_LOUD_SELL_ORDERS:
+		infoLines = append(infoLines, "Se)ll")
+		infoLines = append(infoLines, "Create sell o)rder")
+		infoLines = append(infoLines, "Go bac)k")
 	case SELECT_BUY_ITEM:
 		for idx, item := range shopItems {
 			infoLines = append(infoLines, fmt.Sprintf("%d) %s Lv%d  ", idx+1, localize(item.Name), item.Level)+screen.drawProgressMeter(1, 1, 208, bgcolor, 1)+fmt.Sprintf(" %d", item.Price))
@@ -321,6 +352,14 @@ func (screen *GameScreen) renderUserCommands() {
 			infoLines = append(infoLines, fmt.Sprintf("%d) %s Lv%d ", idx+1, localize(item.Name), item.Level)+screen.drawProgressMeter(1, 1, 208, bgcolor, 1)+fmt.Sprintf(" %d", item.GetUpgradePrice()))
 		}
 		infoLines = append(infoLines, localize("C)ancel"))
+	case RESULT_BUY_LOUD_ORDER_CREATION:
+		infoLines = append(infoLines, localize("Go) on"))
+	case RESULT_SELL_LOUD_ORDER_CREATION:
+		infoLines = append(infoLines, localize("Go) on"))
+	case RESULT_FULFILL_BUY_LOUD_ORDER:
+		infoLines = append(infoLines, localize("Go) on"))
+	case RESULT_FULFILL_SELL_LOUD_ORDER:
+		infoLines = append(infoLines, localize("Go) on"))
 	case RESULT_BUY_FINISH:
 		fallthrough
 	case RESULT_HUNT_FINISH:
@@ -357,9 +396,14 @@ func (screen *GameScreen) renderUserSituation() {
 			HOME:     localize("home desc"),
 			FOREST:   localize("forest desc"),
 			SHOP:     localize("shop desc"),
+			MARKET:   localize("market desc"),
 			SETTINGS: localize("settings desc"),
 		}
 		desc = locationDescMap[screen.user.GetLocation()]
+	case SHOW_LOUD_BUY_ORDERS:
+		desc = "TODO buy orders here"
+	case SHOW_LOUD_SELL_ORDERS:
+		desc = "TODO sell orders here"
 	case SELECT_BUY_ITEM:
 		desc = localize("select buy item desc")
 	case SELECT_SELL_ITEM:
@@ -368,6 +412,14 @@ func (screen *GameScreen) renderUserSituation() {
 		desc = localize("select hunt item desc")
 	case SELECT_UPGRADE_ITEM:
 		desc = localize("select upgrade item desc")
+	case WAIT_FULFILL_BUY_LOUD_ORDER:
+		desc = localize("you are now buying loud from pylon") // TODO should add values
+	case WAIT_FULFILL_SELL_LOUD_ORDER:
+		desc = localize("you are now selling loud for pylon") // TODO should add values
+	case WAIT_BUY_LOUD_ORDER_CREATION:
+		desc = localize("you are now waiting for loud buy order creation")
+	case WAIT_SELL_LOUD_ORDER_CREATION:
+		desc = localize("you are now waiting for loud sell order creation")
 	case WAIT_BUY_PROCESS:
 		desc = fmt.Sprintf("%s %s Lv%d.\n%s", localize("wait buy process desc"), localize(screen.activeItem.Name), screen.activeItem.Level, waitProcessEnd)
 	case WAIT_HUNT_PROCESS:
@@ -380,6 +432,14 @@ func (screen *GameScreen) renderUserSituation() {
 		desc = fmt.Sprintf("%s %s Lv%d.\n%s", localize("wait sell process desc"), localize(screen.activeItem.Name), screen.activeItem.Level, waitProcessEnd)
 	case WAIT_UPGRADE_PROCESS:
 		desc = fmt.Sprintf("%s %s.\n%s", localize("wait upgrade process desc"), localize(screen.activeItem.Name), waitProcessEnd)
+	case RESULT_BUY_LOUD_ORDER_CREATION:
+		desc = localize("loud buy order was successfully created")
+	case RESULT_SELL_LOUD_ORDER_CREATION:
+		desc = localize("loud sell order was successfully created")
+	case RESULT_FULFILL_BUY_LOUD_ORDER:
+		desc = localize("you have bought loud coin successfully from loud/pylon market")
+	case RESULT_FULFILL_SELL_LOUD_ORDER:
+		desc = localize("you have sold loud coin successfully from loud/pylon market")
 	case RESULT_BUY_FINISH:
 		if screen.txFailReason != "" {
 			desc = localize("buy failed reason") + ": " + localize(screen.txFailReason)
@@ -496,6 +556,7 @@ func (screen *GameScreen) UpdateBlockHeight(blockHeight int64) {
 func (screen *GameScreen) HandleInputKey(input termbox.Event) {
 	Key := string(input.Ch)
 	log.Println("Handling Key \"", Key, "\"")
+	// TODO should check current location, scrStatus and then after that check Key, rather than checking Key first
 	switch Key {
 	case "H": // HOME
 		fallthrough
@@ -511,6 +572,11 @@ func (screen *GameScreen) HandleInputKey(input termbox.Event) {
 		fallthrough
 	case "s":
 		screen.user.SetLocation(SHOP)
+		screen.refreshed = false
+	case "M": // MARKET
+		fallthrough
+	case "m":
+		screen.user.SetLocation(MARKET)
 		screen.refreshed = false
 	case "T": // SETTINGS
 		fallthrough
@@ -532,12 +598,36 @@ func (screen *GameScreen) HandleInputKey(input termbox.Event) {
 	case "c":
 		screen.scrStatus = SHOW_LOCATION
 		screen.refreshed = false
-	case "O": // GO ON
+	case "O": // GO ON, GO BACK, CREATE ORDER
 		fallthrough
 	case "o":
-		screen.txFailReason = ""
-		screen.scrStatus = SHOW_LOCATION
-		screen.refreshed = false
+		if screen.user.GetLocation() == MARKET {
+			if screen.scrStatus == SHOW_LOUD_BUY_ORDERS {
+				screen.scrStatus = WAIT_BUY_LOUD_ORDER_CREATION
+				screen.refreshed = false
+				time.AfterFunc(2*time.Second, func() {
+					screen.scrStatus = RESULT_BUY_LOUD_ORDER_CREATION
+					screen.refreshed = false
+					screen.Render()
+				})
+			} else if screen.scrStatus == SHOW_LOUD_SELL_ORDERS {
+				screen.scrStatus = WAIT_SELL_LOUD_ORDER_CREATION
+				screen.refreshed = false
+				time.AfterFunc(2*time.Second, func() {
+					screen.scrStatus = RESULT_SELL_LOUD_ORDER_CREATION
+					screen.refreshed = false
+					screen.Render()
+				})
+			} else {
+				screen.txFailReason = ""
+				screen.scrStatus = SHOW_LOCATION
+				screen.refreshed = false
+			}
+		} else {
+			screen.txFailReason = ""
+			screen.scrStatus = SHOW_LOCATION
+			screen.refreshed = false
+		}
 	case "U": // HUNT
 		fallthrough
 	case "u":
@@ -546,13 +636,43 @@ func (screen *GameScreen) HandleInputKey(input termbox.Event) {
 	case "B": // BUY
 		fallthrough
 	case "b": // BUY
-		screen.scrStatus = SELECT_BUY_ITEM
-		screen.refreshed = false
+		if screen.user.GetLocation() == SHOP {
+			screen.scrStatus = SELECT_BUY_ITEM
+			screen.refreshed = false
+		} else if screen.user.GetLocation() == MARKET {
+			if screen.scrStatus == SHOW_LOCATION {
+				screen.scrStatus = SHOW_LOUD_BUY_ORDERS
+				screen.refreshed = false
+			} else if screen.scrStatus == SHOW_LOUD_BUY_ORDERS {
+				screen.scrStatus = WAIT_FULFILL_BUY_LOUD_ORDER
+				screen.refreshed = false
+				time.AfterFunc(2*time.Second, func() {
+					screen.scrStatus = RESULT_FULFILL_BUY_LOUD_ORDER
+					screen.refreshed = false
+					screen.Render()
+				})
+			}
+		}
 	case "E": // SELL
 		fallthrough
 	case "e":
-		screen.scrStatus = SELECT_SELL_ITEM
-		screen.refreshed = false
+		if screen.user.GetLocation() == SHOP {
+			screen.scrStatus = SELECT_SELL_ITEM
+			screen.refreshed = false
+		} else if screen.user.GetLocation() == MARKET {
+			if screen.scrStatus == SHOW_LOCATION {
+				screen.scrStatus = SHOW_LOUD_SELL_ORDERS
+				screen.refreshed = false
+			} else if screen.scrStatus == SHOW_LOUD_SELL_ORDERS {
+				screen.scrStatus = WAIT_FULFILL_SELL_LOUD_ORDER
+				screen.refreshed = false
+				time.AfterFunc(2*time.Second, func() {
+					screen.scrStatus = RESULT_FULFILL_SELL_LOUD_ORDER
+					screen.refreshed = false
+					screen.Render()
+				})
+			}
+		}
 	case "P": // UPGRADE ITEM
 		fallthrough
 	case "p":

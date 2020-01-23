@@ -27,13 +27,16 @@
     "one": "You don't have enough gold to upgrade this item"
   },
   "home": {
-    "one": "F)orest\nS)hop\nSet)tings"
+    "one": "F)orest\nS)hop\nM)arket\nSet)tings"
   },
   "forest": {
-    "one": "Hu)nt\nH)ome\nS)hop"
+    "one": "Hu)nt\nH)ome\nS)hop\nM)arket"
   },
   "shop": {
-    "one": "B)uy Items\nSe)ll Items\nUp)grade Items\nH)ome\nF)orest"
+    "one": "B)uy Items\nSe)ll Items\nUp)grade Items\nH)ome\nF)orest\nM)arket"
+  },
+  "market": {
+    "one": "B)uy Loud Coin\nSe)ll Loud Coin\nF)orest\nS)hop\nH)ome"
   },
   "settings": {
     "one": "Language:\nEng)lish\nEspa)ñol\nH)ome"
@@ -67,6 +70,9 @@
   "shop desc": {
     "one": "You are now at a shop.\nIf you want you can buy or sell items here."
   },
+  "market desc": {
+    "one": "You are now at a marketplace.\nYou can buy or sell loud coin here."
+  }, 
   "settings desc": {
     "one": "Settings"
   },
@@ -81,6 +87,12 @@
   },
   "select upgrade item desc": {
     "one": "You are gonna upgrade %s.\nPlease select an item to upgrade."
+  },
+  "you are now buying loud from pylon": {
+    "one": "You are now buying loud coin from pylon."
+  },
+  "you are now selling loud for pylon": {
+    "one": "You are now selling loud coin for pylon."
   },
   "wait process to end": {
     "one": "Please wait for a moment to finish the process."
@@ -102,6 +114,24 @@
   },
   "result buy finish desc": {
     "one": "You have bought from the shop.\nPlease use it for hunting."
+  },
+  "you have bought loud coin successfully from loud/pylon market": {
+    "one": "You have bought loud coin successfully from loud/pylon market"
+  },
+  "you have sold loud coin successfully from loud/pylon market": {
+    "one": "You have sold loud coin successfully from loud/pylon market"
+  },
+  "you are now waiting for loud buy order creation": {
+    "one": "You are now waiting for loud buy order creation"
+  },
+  "you are now waiting for loud sell order creation": {
+    "one": "You are now waiting for loud sell order creation"
+  },
+  "loud buy order was successfully created": {
+    "one": "Loud buy order was successfully created."
+  },
+  "loud sell order was successfully created": {
+    "one": "Loud sell order was successfully created."
   },
   "use for hunting": {
     "one": "Please use it for hunting."
