@@ -1,7 +1,7 @@
 package main
 
 import (
-	loud "github.com/MikeSofaer/LOUD"
+	loud "github.com/Pylons-tech/LOUD"
 )
 
 func main() {

@@ -12,7 +12,7 @@ import (
 	"time"
 	"unicode/utf8"
 
-	"github.com/MikeSofaer/pylons/x/pylons/handlers"
+	"github.com/Pylons-tech/pylons/x/pylons/handlers"
 	"github.com/ahmetb/go-cursor"
 	"github.com/gliderlabs/ssh"
 	"github.com/mgutz/ansi"

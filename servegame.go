@@ -9,7 +9,7 @@ import (
 	"syscall"
 	"time"
 
-	pylonSDK "github.com/MikeSofaer/pylons/cmd/test"
+	pylonSDK "github.com/Pylons-tech/pylons/cmd/test"
 	"github.com/nsf/termbox-go"
 )
 

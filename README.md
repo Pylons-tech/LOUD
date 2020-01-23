@@ -32,7 +32,7 @@ Here GOPATH is configured as /Users/{username}/go
 Since Pylons repos are private below command will be needed to run test correctly.  
 
 ```
-export GOPRIVATE="github.com/MikeSofaer"
+export GOPRIVATE="github.com/Pylons-tech"
 ```
 
 ### Fresh Local test
