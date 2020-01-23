@@ -401,9 +401,23 @@ func (screen *GameScreen) renderUserSituation() {
 		}
 		desc = locationDescMap[screen.user.GetLocation()]
 	case SHOW_LOUD_BUY_ORDERS:
-		desc = "TODO buy orders here"
+		infoLines = append(infoLines, "╭────────────────────┬───────────────┬───────────────╮")
+		infoLines = append(infoLines, "│ LOUD price (pylon) │ Amount (loud) │ Total (pylon) │")
+		infoLines = append(infoLines, "├────────────────────┼───────────────┼───────────────┤")
+		infoLines = append(infoLines, "│         0.01       │    1000       │  10           │")
+		infoLines = append(infoLines, "│         0.02       │    100        │   2           │")
+		infoLines = append(infoLines, "│         0.03       │    1000       │  30           │")
+		infoLines = append(infoLines, "│         0.04       │    1000       │  40           │")
+		infoLines = append(infoLines, "╰────────────────────┴───────────────┴───────────────╯")
 	case SHOW_LOUD_SELL_ORDERS:
-		desc = "TODO sell orders here"
+		infoLines = append(infoLines, "╭────────────────────┬───────────────┬───────────────╮")
+		infoLines = append(infoLines, "│ LOUD price (pylon) │ Amount (loud) │ Total (pylon) │")
+		infoLines = append(infoLines, "├────────────────────┼───────────────┼───────────────┤")
+		infoLines = append(infoLines, "│         0.01       │    1000       │  10           │")
+		infoLines = append(infoLines, "│         0.02       │    100        │   2           │")
+		infoLines = append(infoLines, "│         0.03       │    1000       │  30           │")
+		infoLines = append(infoLines, "│         0.04       │    1000       │  40           │")
+		infoLines = append(infoLines, "╰────────────────────┴───────────────┴───────────────╯")
 	case SELECT_BUY_ITEM:
 		desc = localize("select buy item desc")
 	case SELECT_SELL_ITEM:
