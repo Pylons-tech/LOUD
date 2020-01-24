@@ -75,16 +75,20 @@ const (
 )
 
 type GameScreen struct {
-	world          World
-	user           User
-	screenSize     ssh.Window
-	activeItem     Item
-	blockHeight    int64
-	txFailReason   string
-	txResult       handlers.ExecuteRecipeSerialize
-	refreshed      bool
-	scrStatus      ScreenStatus
-	colorCodeCache map[string](func(string) string)
+	world           World
+	user            User
+	screenSize      ssh.Window
+	activeItem      Item
+	activeLine      int
+	pylonEnterValue string
+	loudEnterValue  string
+	inputText       string
+	blockHeight     int64
+	txFailReason    string
+	txResult        handlers.ExecuteRecipeSerialize
+	refreshed       bool
+	scrStatus       ScreenStatus
+	colorCodeCache  map[string](func(string) string)
 }
 
 const allowMouseInputAndHideCursor string = "\x1b[?1003h\x1b[?25l"
@@ -386,6 +390,15 @@ func (screen *GameScreen) renderUserCommands() {
 	}
 }
 
+func (screen *GameScreen) renderTradingTableLine(text1 string, text2 string, text3 string, isActiveLine bool) string {
+	calcText := "│" + centerText(text1, " ", 20) + "│" + centerText(text2, " ", 15) + "│" + centerText(text3, " ", 15) + "│"
+	if isActiveLine {
+		onColor := screen.colorFunc(fmt.Sprintf("%v:%v", 117, 232))
+		return onColor(calcText)
+	}
+	return calcText
+}
+
 func (screen *GameScreen) renderUserSituation() {
 	infoLines := []string{}
 	desc := ""
@@ -402,12 +415,49 @@ func (screen *GameScreen) renderUserSituation() {
 		desc = locationDescMap[screen.user.GetLocation()]
 	case SHOW_LOUD_BUY_ORDERS:
 		infoLines = append(infoLines, "╭────────────────────┬───────────────┬───────────────╮")
-		infoLines = append(infoLines, "│ LOUD price (pylon) │ Amount (loud) │ Total (pylon) │")
+		// infoLines = append(infoLines, "│ LOUD price (pylon) │ Amount (loud) │ Total (pylon) │")
+		infoLines = append(infoLines, screen.renderTradingTableLine("LOUD price (pylon)", "Amount (loud)", "Total (pylon)", false))
 		infoLines = append(infoLines, "├────────────────────┼───────────────┼───────────────┤")
-		infoLines = append(infoLines, "│         0.01       │    1000       │  10           │")
-		infoLines = append(infoLines, "│         0.02       │    100        │   2           │")
-		infoLines = append(infoLines, "│         0.03       │    1000       │  30           │")
-		infoLines = append(infoLines, "│         0.04       │    1000       │  40           │")
+		orders := []struct {
+			Price  string
+			Amount int
+			Total  int
+		}{
+			{"0.01", 1000, 10},
+			{"0.02", 100, 2},
+			{"0.03", 1000, 30},
+			{"0.04", 1000, 40},
+			{"0.01", 1000, 10},
+			{"0.02", 100, 2},
+			{"0.03", 1000, 30},
+			{"0.04", 1000, 40},
+			{"0.01", 1000, 10},
+			{"0.02", 100, 2},
+			{"0.03", 1000, 30},
+			{"0.04", 1000, 40},
+			{"0.01", 1000, 10},
+			{"0.02", 100, 2},
+			{"0.03", 1000, 30},
+			{"0.04", 1000, 40},
+			{"0.01", 1000, 10},
+			{"0.02", 100, 2},
+			{"0.03", 1000, 30},
+			{"0.04", 1000, 40},
+			{"0.01", 1000, 10},
+			{"0.02", 100, 2},
+			{"0.03", 1000, 30},
+			{"0.04", 1000, 40},
+		}
+		numLines := screen.screenSize.Height/2 - 7
+		activeLine := screen.activeLine
+		startLine := activeLine - numLines + 1
+		if startLine < 0 {
+			startLine = 0
+		}
+		endLine := startLine + numLines
+		for li, order := range orders[startLine:endLine] {
+			infoLines = append(infoLines, screen.renderTradingTableLine(order.Price, fmt.Sprintf("%d", order.Amount), fmt.Sprintf("%d", order.Total), startLine+li == activeLine))
+		}
 		infoLines = append(infoLines, "╰────────────────────┴───────────────┴───────────────╯")
 	case SHOW_LOUD_SELL_ORDERS:
 		infoLines = append(infoLines, "╭────────────────────┬───────────────┬───────────────╮")
@@ -500,6 +550,40 @@ func (screen *GameScreen) renderUserSituation() {
 	}
 }
 
+func (screen *GameScreen) InputActive() bool {
+	switch screen.scrStatus {
+	case CREATE_BUY_LOUD_ORDER_ENTER_LOUD_VALUE:
+		return true
+	case CREATE_BUY_LOUD_ORDER_ENTER_PYLON_VALUE:
+		return true
+	case CREATE_SELL_LOUD_ORDER_ENTER_LOUD_VALUE:
+		return true
+	case CREATE_SELL_LOUD_ORDER_ENTER_PYLON_VALUE:
+		return true
+	}
+	return false
+}
+
+func (screen *GameScreen) renderInputValue() {
+	inputWidth := uint32(screen.screenSize.Width/2) - 2
+	move := cursor.MoveTo(screen.screenSize.Height-1, 2)
+
+	fmtString := fmt.Sprintf("%%-%vs", inputWidth-7)
+
+	chatFunc := screen.colorFunc(fmt.Sprintf("231:%v", bgcolor))
+	chat := chatFunc("VALUE▶ ")
+
+	if screen.InputActive() {
+		chatFunc = screen.colorFunc(fmt.Sprintf("0+b:%v", bgcolor-1))
+	}
+
+	fixedChat := truncateLeft(screen.inputText, int(inputWidth-7))
+
+	inputText := fmt.Sprintf("%s%s%s", move, chat, chatFunc(fmt.Sprintf(fmtString, fixedChat)))
+
+	io.WriteString(os.Stdout, inputText)
+}
+
 func (screen *GameScreen) renderCharacterSheet() {
 	var HP uint64 = 10
 	var MaxHP uint64 = 10
@@ -570,247 +654,284 @@ func (screen *GameScreen) UpdateBlockHeight(blockHeight int64) {
 func (screen *GameScreen) HandleInputKey(input termbox.Event) {
 	Key := string(input.Ch)
 	log.Println("Handling Key \"", Key, "\"")
-	// TODO should check current location, scrStatus and then after that check Key, rather than checking Key first
-	switch Key {
-	case "H": // HOME
-		fallthrough
-	case "h":
-		screen.user.SetLocation(HOME)
-		screen.refreshed = false
-	case "F": // FOREST
-		fallthrough
-	case "f":
-		screen.user.SetLocation(FOREST)
-		screen.refreshed = false
-	case "S": // SHOP
-		fallthrough
-	case "s":
-		screen.user.SetLocation(SHOP)
-		screen.refreshed = false
-	case "M": // MARKET
-		fallthrough
-	case "m":
-		screen.user.SetLocation(MARKET)
-		screen.refreshed = false
-	case "T": // SETTINGS
-		fallthrough
-	case "t":
-		screen.user.SetLocation(SETTINGS)
-		screen.refreshed = false
-	case "G":
-		fallthrough
-	case "g":
-		gameLanguage = "en"
-		screen.refreshed = false
-	case "A":
-		fallthrough
-	case "a":
-		gameLanguage = "es"
-		screen.refreshed = false
-	case "C": // CANCEL
-		fallthrough
-	case "c":
-		screen.scrStatus = SHOW_LOCATION
-		screen.refreshed = false
-	case "O": // GO ON, GO BACK, CREATE ORDER
-		fallthrough
-	case "o":
-		if screen.user.GetLocation() == MARKET {
-			if screen.scrStatus == SHOW_LOUD_BUY_ORDERS {
+	if screen.InputActive() {
+		switch input.Key {
+		case termbox.KeyBackspace:
+			log.Println("Pressed Backspace")
+			screen.inputText = screen.inputText[:len(screen.inputText)-2]
+		case termbox.KeyEnter:
+			switch screen.scrStatus {
+			case CREATE_BUY_LOUD_ORDER_ENTER_LOUD_VALUE:
+				screen.scrStatus = CREATE_BUY_LOUD_ORDER_ENTER_PYLON_VALUE
+				screen.inputText = ""
+			case CREATE_BUY_LOUD_ORDER_ENTER_PYLON_VALUE:
 				screen.scrStatus = WAIT_BUY_LOUD_ORDER_CREATION
-				screen.refreshed = false
+				screen.inputText = ""
 				time.AfterFunc(2*time.Second, func() {
 					screen.scrStatus = RESULT_BUY_LOUD_ORDER_CREATION
 					screen.refreshed = false
 					screen.Render()
 				})
-			} else if screen.scrStatus == SHOW_LOUD_SELL_ORDERS {
+			case CREATE_SELL_LOUD_ORDER_ENTER_LOUD_VALUE:
+				screen.scrStatus = CREATE_SELL_LOUD_ORDER_ENTER_PYLON_VALUE
+				screen.inputText = ""
+			case CREATE_SELL_LOUD_ORDER_ENTER_PYLON_VALUE:
 				screen.scrStatus = WAIT_SELL_LOUD_ORDER_CREATION
-				screen.refreshed = false
+				screen.inputText = ""
 				time.AfterFunc(2*time.Second, func() {
 					screen.scrStatus = RESULT_SELL_LOUD_ORDER_CREATION
 					screen.refreshed = false
 					screen.Render()
 				})
+			}
+		default:
+			screen.inputText += Key
+		}
+		screen.refreshed = false
+		log.Println("inputText= \"", screen.inputText, "\"")
+	} else {
+		// TODO should check current location, scrStatus and then after that check Key, rather than checking Key first
+		switch input.Key {
+		case termbox.KeyArrowLeft:
+		case termbox.KeyArrowRight:
+		case termbox.KeyArrowUp:
+			if screen.activeLine > 0 {
+				screen.activeLine -= 1
+			}
+		case termbox.KeyArrowDown:
+			screen.activeLine += 1
+		}
+		switch Key {
+		case "H": // HOME
+			fallthrough
+		case "h":
+			screen.user.SetLocation(HOME)
+			screen.refreshed = false
+		case "F": // FOREST
+			fallthrough
+		case "f":
+			screen.user.SetLocation(FOREST)
+			screen.refreshed = false
+		case "S": // SHOP
+			fallthrough
+		case "s":
+			screen.user.SetLocation(SHOP)
+			screen.refreshed = false
+		case "M": // MARKET
+			fallthrough
+		case "m":
+			screen.user.SetLocation(MARKET)
+			screen.refreshed = false
+		case "T": // SETTINGS
+			fallthrough
+		case "t":
+			screen.user.SetLocation(SETTINGS)
+			screen.refreshed = false
+		case "G":
+			fallthrough
+		case "g":
+			gameLanguage = "en"
+			screen.refreshed = false
+		case "A":
+			fallthrough
+		case "a":
+			gameLanguage = "es"
+			screen.refreshed = false
+		case "C": // CANCEL
+			fallthrough
+		case "c":
+			screen.scrStatus = SHOW_LOCATION
+			screen.refreshed = false
+		case "O": // GO ON, GO BACK, CREATE ORDER
+			fallthrough
+		case "o":
+			if screen.user.GetLocation() == MARKET {
+				if screen.scrStatus == SHOW_LOUD_BUY_ORDERS {
+					screen.scrStatus = CREATE_BUY_LOUD_ORDER_ENTER_LOUD_VALUE
+					screen.refreshed = false
+				} else if screen.scrStatus == SHOW_LOUD_SELL_ORDERS {
+					screen.scrStatus = CREATE_SELL_LOUD_ORDER_ENTER_LOUD_VALUE
+					screen.refreshed = false
+				} else {
+					screen.txFailReason = ""
+					screen.scrStatus = SHOW_LOCATION
+					screen.refreshed = false
+				}
 			} else {
 				screen.txFailReason = ""
 				screen.scrStatus = SHOW_LOCATION
 				screen.refreshed = false
 			}
-		} else {
-			screen.txFailReason = ""
-			screen.scrStatus = SHOW_LOCATION
+		case "U": // HUNT
+			fallthrough
+		case "u":
+			screen.scrStatus = SELECT_HUNT_ITEM
 			screen.refreshed = false
-		}
-	case "U": // HUNT
-		fallthrough
-	case "u":
-		screen.scrStatus = SELECT_HUNT_ITEM
-		screen.refreshed = false
-	case "B": // BUY
-		fallthrough
-	case "b": // BUY
-		if screen.user.GetLocation() == SHOP {
-			screen.scrStatus = SELECT_BUY_ITEM
-			screen.refreshed = false
-		} else if screen.user.GetLocation() == MARKET {
-			if screen.scrStatus == SHOW_LOCATION {
-				screen.scrStatus = SHOW_LOUD_BUY_ORDERS
+		case "B": // BUY
+			fallthrough
+		case "b": // BUY
+			if screen.user.GetLocation() == SHOP {
+				screen.scrStatus = SELECT_BUY_ITEM
 				screen.refreshed = false
-			} else if screen.scrStatus == SHOW_LOUD_BUY_ORDERS {
-				screen.scrStatus = WAIT_FULFILL_BUY_LOUD_ORDER
-				screen.refreshed = false
-				time.AfterFunc(2*time.Second, func() {
-					screen.scrStatus = RESULT_FULFILL_BUY_LOUD_ORDER
+			} else if screen.user.GetLocation() == MARKET {
+				if screen.scrStatus == SHOW_LOCATION {
+					screen.scrStatus = SHOW_LOUD_BUY_ORDERS
 					screen.refreshed = false
-					screen.Render()
-				})
-			}
-		}
-	case "E": // SELL
-		fallthrough
-	case "e":
-		if screen.user.GetLocation() == SHOP {
-			screen.scrStatus = SELECT_SELL_ITEM
-			screen.refreshed = false
-		} else if screen.user.GetLocation() == MARKET {
-			if screen.scrStatus == SHOW_LOCATION {
-				screen.scrStatus = SHOW_LOUD_SELL_ORDERS
-				screen.refreshed = false
-			} else if screen.scrStatus == SHOW_LOUD_SELL_ORDERS {
-				screen.scrStatus = WAIT_FULFILL_SELL_LOUD_ORDER
-				screen.refreshed = false
-				time.AfterFunc(2*time.Second, func() {
-					screen.scrStatus = RESULT_FULFILL_SELL_LOUD_ORDER
+				} else if screen.scrStatus == SHOW_LOUD_BUY_ORDERS {
+					screen.scrStatus = WAIT_FULFILL_BUY_LOUD_ORDER
 					screen.refreshed = false
-					screen.Render()
-				})
+					time.AfterFunc(2*time.Second, func() {
+						screen.scrStatus = RESULT_FULFILL_BUY_LOUD_ORDER
+						screen.refreshed = false
+						screen.Render()
+					})
+				}
 			}
-		}
-	case "P": // UPGRADE ITEM
-		fallthrough
-	case "p":
-		screen.scrStatus = SELECT_UPGRADE_ITEM
-		screen.refreshed = false
-	case "N": // Go hunt with no weapon
-		fallthrough
-	case "n":
-		fallthrough
-	case "I":
-		fallthrough
-	case "i":
-		fallthrough
-	case "1": // SELECT 1st item
-		fallthrough
-	case "2": // SELECT 2nd item
-		fallthrough
-	case "3": // SELECT 3rd item
-		fallthrough
-	case "4": // SELECT 4th item
-		fallthrough
-	case "5": // SELECT 5rd item
-		fallthrough
-	case "6": // SELECT 6rd item
-		fallthrough
-	case "7": // SELECT 7rd item
-		fallthrough
-	case "8": // SELECT 8rd item
-		fallthrough
-	case "9": // SELECT 9rd item
-		screen.refreshed = false
-		switch screen.scrStatus {
-		case SELECT_BUY_ITEM:
-			screen.activeItem = GetToBuyItemFromKey(Key)
-			if len(screen.activeItem.Name) == 0 {
-				return
+		case "E": // SELL
+			fallthrough
+		case "e":
+			if screen.user.GetLocation() == SHOP {
+				screen.scrStatus = SELECT_SELL_ITEM
+				screen.refreshed = false
+			} else if screen.user.GetLocation() == MARKET {
+				if screen.scrStatus == SHOW_LOCATION {
+					screen.scrStatus = SHOW_LOUD_SELL_ORDERS
+					screen.refreshed = false
+				} else if screen.scrStatus == SHOW_LOUD_SELL_ORDERS {
+					screen.scrStatus = WAIT_FULFILL_SELL_LOUD_ORDER
+					screen.refreshed = false
+					time.AfterFunc(2*time.Second, func() {
+						screen.scrStatus = RESULT_FULFILL_SELL_LOUD_ORDER
+						screen.refreshed = false
+						screen.Render()
+					})
+				}
 			}
-			screen.scrStatus = WAIT_BUY_PROCESS
+		case "P": // UPGRADE ITEM
+			fallthrough
+		case "p":
+			screen.scrStatus = SELECT_UPGRADE_ITEM
 			screen.refreshed = false
-			screen.Render()
-			log.Println("started sending request for buying item")
-			txhash, err := Buy(screen.user, Key)
-			log.Println("ended sending request for buying item")
-			if err != nil {
-				screen.txFailReason = err.Error()
-				screen.scrStatus = RESULT_BUY_FINISH
+		case "N": // Go hunt with no weapon
+			fallthrough
+		case "n":
+			fallthrough
+		case "I":
+			fallthrough
+		case "i":
+			fallthrough
+		case "1": // SELECT 1st item
+			fallthrough
+		case "2": // SELECT 2nd item
+			fallthrough
+		case "3": // SELECT 3rd item
+			fallthrough
+		case "4": // SELECT 4th item
+			fallthrough
+		case "5": // SELECT 5rd item
+			fallthrough
+		case "6": // SELECT 6rd item
+			fallthrough
+		case "7": // SELECT 7rd item
+			fallthrough
+		case "8": // SELECT 8rd item
+			fallthrough
+		case "9": // SELECT 9rd item
+			screen.refreshed = false
+			switch screen.scrStatus {
+			case SELECT_BUY_ITEM:
+				screen.activeItem = GetToBuyItemFromKey(Key)
+				if len(screen.activeItem.Name) == 0 {
+					return
+				}
+				screen.scrStatus = WAIT_BUY_PROCESS
 				screen.refreshed = false
 				screen.Render()
-			} else {
-				time.AfterFunc(1*time.Second, func() {
-					screen.txResult, screen.txFailReason = ProcessTxResult(screen.user, txhash)
+				log.Println("started sending request for buying item")
+				txhash, err := Buy(screen.user, Key)
+				log.Println("ended sending request for buying item")
+				if err != nil {
+					screen.txFailReason = err.Error()
 					screen.scrStatus = RESULT_BUY_FINISH
 					screen.refreshed = false
 					screen.Render()
-				})
-			}
-		case SELECT_HUNT_ITEM:
-			screen.activeItem = GetWeaponItemFromKey(screen.user, Key)
-			screen.scrStatus = WAIT_HUNT_PROCESS
-			screen.refreshed = false
-			screen.Render()
-			log.Println("started sending request for hunting item")
-			txhash, err := Hunt(screen.user, Key)
-			log.Println("ended sending request for hunting item")
-			if err != nil {
-				screen.txFailReason = err.Error()
-				screen.scrStatus = RESULT_HUNT_FINISH
+				} else {
+					time.AfterFunc(1*time.Second, func() {
+						screen.txResult, screen.txFailReason = ProcessTxResult(screen.user, txhash)
+						screen.scrStatus = RESULT_BUY_FINISH
+						screen.refreshed = false
+						screen.Render()
+					})
+				}
+			case SELECT_HUNT_ITEM:
+				screen.activeItem = GetWeaponItemFromKey(screen.user, Key)
+				screen.scrStatus = WAIT_HUNT_PROCESS
 				screen.refreshed = false
 				screen.Render()
-			} else {
-				time.AfterFunc(1*time.Second, func() {
-					screen.txResult, screen.txFailReason = ProcessTxResult(screen.user, txhash)
+				log.Println("started sending request for hunting item")
+				txhash, err := Hunt(screen.user, Key)
+				log.Println("ended sending request for hunting item")
+				if err != nil {
+					screen.txFailReason = err.Error()
 					screen.scrStatus = RESULT_HUNT_FINISH
 					screen.refreshed = false
 					screen.Render()
-				})
-			}
-		case SELECT_SELL_ITEM:
-			screen.activeItem = GetToSellItemFromKey(screen.user, Key)
-			if len(screen.activeItem.Name) == 0 {
-				return
-			}
-			screen.scrStatus = WAIT_SELL_PROCESS
-			screen.refreshed = false
-			screen.Render()
-			log.Println("started sending request for selling item")
-			txhash, err := Sell(screen.user, Key)
-			log.Println("ended sending request for selling item")
-			if err != nil {
-				screen.txFailReason = err.Error()
-				screen.scrStatus = RESULT_SELL_FINISH
+				} else {
+					time.AfterFunc(1*time.Second, func() {
+						screen.txResult, screen.txFailReason = ProcessTxResult(screen.user, txhash)
+						screen.scrStatus = RESULT_HUNT_FINISH
+						screen.refreshed = false
+						screen.Render()
+					})
+				}
+			case SELECT_SELL_ITEM:
+				screen.activeItem = GetToSellItemFromKey(screen.user, Key)
+				if len(screen.activeItem.Name) == 0 {
+					return
+				}
+				screen.scrStatus = WAIT_SELL_PROCESS
 				screen.refreshed = false
 				screen.Render()
-			} else {
-				time.AfterFunc(1*time.Second, func() {
-					screen.txResult, screen.txFailReason = ProcessTxResult(screen.user, txhash)
+				log.Println("started sending request for selling item")
+				txhash, err := Sell(screen.user, Key)
+				log.Println("ended sending request for selling item")
+				if err != nil {
+					screen.txFailReason = err.Error()
 					screen.scrStatus = RESULT_SELL_FINISH
 					screen.refreshed = false
 					screen.Render()
-				})
-			}
-		case SELECT_UPGRADE_ITEM:
-			screen.activeItem = GetToUpgradeItemFromKey(screen.user, Key)
-			if len(screen.activeItem.Name) == 0 {
-				return
-			}
-			screen.scrStatus = WAIT_UPGRADE_PROCESS
-			screen.refreshed = false
-			screen.Render()
-			log.Println("started sending request for upgrading item")
-			txhash, err := Upgrade(screen.user, Key)
-			log.Println("ended sending request for upgrading item")
-			if err != nil {
-				screen.txFailReason = err.Error()
-				screen.scrStatus = RESULT_UPGRADE_FINISH
+				} else {
+					time.AfterFunc(1*time.Second, func() {
+						screen.txResult, screen.txFailReason = ProcessTxResult(screen.user, txhash)
+						screen.scrStatus = RESULT_SELL_FINISH
+						screen.refreshed = false
+						screen.Render()
+					})
+				}
+			case SELECT_UPGRADE_ITEM:
+				screen.activeItem = GetToUpgradeItemFromKey(screen.user, Key)
+				if len(screen.activeItem.Name) == 0 {
+					return
+				}
+				screen.scrStatus = WAIT_UPGRADE_PROCESS
 				screen.refreshed = false
 				screen.Render()
-			} else {
-				time.AfterFunc(1*time.Second, func() {
-					screen.txResult, screen.txFailReason = ProcessTxResult(screen.user, txhash)
+				log.Println("started sending request for upgrading item")
+				txhash, err := Upgrade(screen.user, Key)
+				log.Println("ended sending request for upgrading item")
+				if err != nil {
+					screen.txFailReason = err.Error()
 					screen.scrStatus = RESULT_UPGRADE_FINISH
 					screen.refreshed = false
 					screen.Render()
-				})
+				} else {
+					time.AfterFunc(1*time.Second, func() {
+						screen.txResult, screen.txFailReason = ProcessTxResult(screen.user, txhash)
+						screen.scrStatus = RESULT_UPGRADE_FINISH
+						screen.refreshed = false
+						screen.Render()
+					})
+				}
 			}
 		}
 	}
@@ -845,6 +966,7 @@ func (screen *GameScreen) Render() {
 	screen.renderUserCommands()
 	screen.renderUserSituation()
 	screen.renderCharacterSheet()
+	screen.renderInputValue()
 }
 
 func (screen *GameScreen) Reset() {
