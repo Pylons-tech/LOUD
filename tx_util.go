@@ -393,3 +393,11 @@ func Upgrade(user User, key string) (string, error) {
 	}
 	return ExecuteRecipe(user, rcpName, itemIDs)
 }
+
+func CreateSellLoudOrder(loudEnterValue string, pylonEnterValue string) {
+
+}
+
+func CreateBuyLoudOrder(loudEnterValue string, pylonEnterValue string) {
+
+}

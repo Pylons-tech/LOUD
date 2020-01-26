@@ -413,6 +413,15 @@ func (screen *GameScreen) renderUserSituation() {
 			SETTINGS: localize("settings desc"),
 		}
 		desc = locationDescMap[screen.user.GetLocation()]
+	case CREATE_BUY_LOUD_ORDER_ENTER_PYLON_VALUE:
+		desc = "Please enter pylon amount to use (should be integer value)" // TODO should add localize
+	case CREATE_SELL_LOUD_ORDER_ENTER_PYLON_VALUE:
+		desc = "Please enter pylon amount to get (should be integer value)" // TODO should add localize
+	case CREATE_BUY_LOUD_ORDER_ENTER_LOUD_VALUE:
+		desc = "Please enter loud amount to buy (should be integer value)" // TODO should add localize
+	case CREATE_SELL_LOUD_ORDER_ENTER_LOUD_VALUE:
+		desc = "Please enter loud amount to sell (should be integer value)" // TODO should add localize
+
 	case SHOW_LOUD_BUY_ORDERS:
 		infoLines = append(infoLines, "╭────────────────────┬───────────────┬───────────────╮")
 		// infoLines = append(infoLines, "│ LOUD price (pylon) │ Amount (loud) │ Total (pylon) │")
@@ -461,12 +470,49 @@ func (screen *GameScreen) renderUserSituation() {
 		infoLines = append(infoLines, "╰────────────────────┴───────────────┴───────────────╯")
 	case SHOW_LOUD_SELL_ORDERS:
 		infoLines = append(infoLines, "╭────────────────────┬───────────────┬───────────────╮")
-		infoLines = append(infoLines, "│ LOUD price (pylon) │ Amount (loud) │ Total (pylon) │")
+		// infoLines = append(infoLines, "│ LOUD price (pylon) │ Amount (loud) │ Total (pylon) │")
+		infoLines = append(infoLines, screen.renderTradingTableLine("LOUD price (pylon)", "Amount (loud)", "Total (pylon)", false))
 		infoLines = append(infoLines, "├────────────────────┼───────────────┼───────────────┤")
-		infoLines = append(infoLines, "│         0.01       │    1000       │  10           │")
-		infoLines = append(infoLines, "│         0.02       │    100        │   2           │")
-		infoLines = append(infoLines, "│         0.03       │    1000       │  30           │")
-		infoLines = append(infoLines, "│         0.04       │    1000       │  40           │")
+		orders := []struct {
+			Price  string
+			Amount int
+			Total  int
+		}{
+			{"0.01", 1000, 10},
+			{"0.02", 100, 2},
+			{"0.03", 1000, 30},
+			{"0.04", 1000, 40},
+			{"0.01", 1000, 10},
+			{"0.02", 100, 2},
+			{"0.03", 1000, 30},
+			{"0.04", 1000, 40},
+			{"0.01", 1000, 10},
+			{"0.02", 100, 2},
+			{"0.03", 1000, 30},
+			{"0.04", 1000, 40},
+			{"0.01", 1000, 10},
+			{"0.02", 100, 2},
+			{"0.03", 1000, 30},
+			{"0.04", 1000, 40},
+			{"0.01", 1000, 10},
+			{"0.02", 100, 2},
+			{"0.03", 1000, 30},
+			{"0.04", 1000, 40},
+			{"0.01", 1000, 10},
+			{"0.02", 100, 2},
+			{"0.03", 1000, 30},
+			{"0.04", 1000, 40},
+		}
+		numLines := screen.screenSize.Height/2 - 7
+		activeLine := screen.activeLine
+		startLine := activeLine - numLines + 1
+		if startLine < 0 {
+			startLine = 0
+		}
+		endLine := startLine + numLines
+		for li, order := range orders[startLine:endLine] {
+			infoLines = append(infoLines, screen.renderTradingTableLine(order.Price, fmt.Sprintf("%d", order.Amount), fmt.Sprintf("%d", order.Total), startLine+li == activeLine))
+		}
 		infoLines = append(infoLines, "╰────────────────────┴───────────────┴───────────────╯")
 	case SELECT_BUY_ITEM:
 		desc = localize("select buy item desc")
@@ -481,9 +527,9 @@ func (screen *GameScreen) renderUserSituation() {
 	case WAIT_FULFILL_SELL_LOUD_ORDER:
 		desc = localize("you are now selling loud for pylon") // TODO should add values
 	case WAIT_BUY_LOUD_ORDER_CREATION:
-		desc = localize("you are now waiting for loud buy order creation")
+		desc = localize("you are now waiting for loud buy order creation") + "\n" + fmt.Sprintf("Sell %s loud for %s pylon", screen.loudEnterValue, screen.pylonEnterValue) // TODO should update localize
 	case WAIT_SELL_LOUD_ORDER_CREATION:
-		desc = localize("you are now waiting for loud sell order creation")
+		desc = localize("you are now waiting for loud sell order creation") + "\n" + fmt.Sprintf("Buy %s loud from %s pylon", screen.loudEnterValue, screen.pylonEnterValue) // TODO should update localize
 	case WAIT_BUY_PROCESS:
 		desc = fmt.Sprintf("%s %s Lv%d.\n%s", localize("wait buy process desc"), localize(screen.activeItem.Name), screen.activeItem.Level, waitProcessEnd)
 	case WAIT_HUNT_PROCESS:
@@ -665,10 +711,13 @@ func (screen *GameScreen) HandleInputKey(input termbox.Event) {
 			switch screen.scrStatus {
 			case CREATE_BUY_LOUD_ORDER_ENTER_LOUD_VALUE:
 				screen.scrStatus = CREATE_BUY_LOUD_ORDER_ENTER_PYLON_VALUE
+				screen.loudEnterValue = screen.inputText
 				screen.inputText = ""
 			case CREATE_BUY_LOUD_ORDER_ENTER_PYLON_VALUE:
 				screen.scrStatus = WAIT_BUY_LOUD_ORDER_CREATION
+				screen.pylonEnterValue = screen.inputText
 				screen.inputText = ""
+				CreateBuyLoudOrder(screen.loudEnterValue, screen.pylonEnterValue)
 				time.AfterFunc(2*time.Second, func() {
 					screen.scrStatus = RESULT_BUY_LOUD_ORDER_CREATION
 					screen.refreshed = false
@@ -676,10 +725,13 @@ func (screen *GameScreen) HandleInputKey(input termbox.Event) {
 				})
 			case CREATE_SELL_LOUD_ORDER_ENTER_LOUD_VALUE:
 				screen.scrStatus = CREATE_SELL_LOUD_ORDER_ENTER_PYLON_VALUE
+				screen.loudEnterValue = screen.inputText
 				screen.inputText = ""
 			case CREATE_SELL_LOUD_ORDER_ENTER_PYLON_VALUE:
 				screen.scrStatus = WAIT_SELL_LOUD_ORDER_CREATION
+				screen.pylonEnterValue = screen.inputText
 				screen.inputText = ""
+				CreateSellLoudOrder(screen.loudEnterValue, screen.pylonEnterValue)
 				time.AfterFunc(2*time.Second, func() {
 					screen.scrStatus = RESULT_SELL_LOUD_ORDER_CREATION
 					screen.refreshed = false
