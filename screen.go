@@ -656,9 +656,11 @@ func (screen *GameScreen) HandleInputKey(input termbox.Event) {
 	log.Println("Handling Key \"", Key, "\"")
 	if screen.InputActive() {
 		switch input.Key {
+		case termbox.KeyBackspace2:
+			fallthrough
 		case termbox.KeyBackspace:
 			log.Println("Pressed Backspace")
-			screen.inputText = screen.inputText[:len(screen.inputText)-2]
+			screen.inputText = screen.inputText[:len(screen.inputText)-1]
 		case termbox.KeyEnter:
 			switch screen.scrStatus {
 			case CREATE_BUY_LOUD_ORDER_ENTER_LOUD_VALUE:
