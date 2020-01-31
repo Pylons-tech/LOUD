@@ -85,7 +85,7 @@ type GameScreen struct {
 	inputText       string
 	blockHeight     int64
 	txFailReason    string
-	txResult        handlers.ExecuteRecipeSerialize
+	txResult        []byte
 	refreshed       bool
 	scrStatus       ScreenStatus
 	colorCodeCache  map[string](func(string) string)
@@ -100,7 +100,7 @@ const bgcolor = 232
 
 var gameLanguage string = "en"
 
-var shopItems []Item = []Item{
+var shopItems = []Item{
 	Item{
 		ID:    "001",
 		Name:  "Wooden sword",
@@ -114,6 +114,17 @@ var shopItems []Item = []Item{
 		Price: 250,
 	},
 }
+
+type Order struct {
+	ID     string
+	Price  string
+	Amount int
+	Total  int
+}
+
+var buyOrders = []Order{}
+
+var sellOrders = []Order{}
 
 func localize(key string) string {
 	bundle := i18n.NewBundle(language.English)
@@ -324,11 +335,11 @@ func (screen *GameScreen) renderUserCommands() {
 		cmdString := cmdMap[screen.user.GetLocation()]
 		infoLines = strings.Split(cmdString, "\n")
 	case SHOW_LOUD_BUY_ORDERS:
-		infoLines = append(infoLines, "B)uy")
+		infoLines = append(infoLines, "B)uy( ↵ )")
 		infoLines = append(infoLines, "Create a buy o)rder")
 		infoLines = append(infoLines, "Go bac)k")
 	case SHOW_LOUD_SELL_ORDERS:
-		infoLines = append(infoLines, "Se)ll")
+		infoLines = append(infoLines, "Se)ll( ↵ )")
 		infoLines = append(infoLines, "Create sell o)rder")
 		infoLines = append(infoLines, "Go bac)k")
 	case SELECT_BUY_ITEM:
@@ -427,44 +438,20 @@ func (screen *GameScreen) renderUserSituation() {
 		// infoLines = append(infoLines, "│ LOUD price (pylon) │ Amount (loud) │ Total (pylon) │")
 		infoLines = append(infoLines, screen.renderTradingTableLine("LOUD price (pylon)", "Amount (loud)", "Total (pylon)", false))
 		infoLines = append(infoLines, "├────────────────────┼───────────────┼───────────────┤")
-		orders := []struct {
-			Price  string
-			Amount int
-			Total  int
-		}{
-			{"0.01", 1000, 10},
-			{"0.02", 100, 2},
-			{"0.03", 1000, 30},
-			{"0.04", 1000, 40},
-			{"0.01", 1000, 10},
-			{"0.02", 100, 2},
-			{"0.03", 1000, 30},
-			{"0.04", 1000, 40},
-			{"0.01", 1000, 10},
-			{"0.02", 100, 2},
-			{"0.03", 1000, 30},
-			{"0.04", 1000, 40},
-			{"0.01", 1000, 10},
-			{"0.02", 100, 2},
-			{"0.03", 1000, 30},
-			{"0.04", 1000, 40},
-			{"0.01", 1000, 10},
-			{"0.02", 100, 2},
-			{"0.03", 1000, 30},
-			{"0.04", 1000, 40},
-			{"0.01", 1000, 10},
-			{"0.02", 100, 2},
-			{"0.03", 1000, 30},
-			{"0.04", 1000, 40},
-		}
 		numLines := screen.screenSize.Height/2 - 7
+		if screen.activeLine >= len(buyOrders) {
+			screen.activeLine = len(buyOrders) - 1
+		}
 		activeLine := screen.activeLine
 		startLine := activeLine - numLines + 1
 		if startLine < 0 {
 			startLine = 0
 		}
 		endLine := startLine + numLines
-		for li, order := range orders[startLine:endLine] {
+		if endLine > len(buyOrders) {
+			endLine = len(buyOrders)
+		}
+		for li, order := range buyOrders[startLine:endLine] {
 			infoLines = append(infoLines, screen.renderTradingTableLine(order.Price, fmt.Sprintf("%d", order.Amount), fmt.Sprintf("%d", order.Total), startLine+li == activeLine))
 		}
 		infoLines = append(infoLines, "╰────────────────────┴───────────────┴───────────────╯")
@@ -473,44 +460,22 @@ func (screen *GameScreen) renderUserSituation() {
 		// infoLines = append(infoLines, "│ LOUD price (pylon) │ Amount (loud) │ Total (pylon) │")
 		infoLines = append(infoLines, screen.renderTradingTableLine("LOUD price (pylon)", "Amount (loud)", "Total (pylon)", false))
 		infoLines = append(infoLines, "├────────────────────┼───────────────┼───────────────┤")
-		orders := []struct {
-			Price  string
-			Amount int
-			Total  int
-		}{
-			{"0.01", 1000, 10},
-			{"0.02", 100, 2},
-			{"0.03", 1000, 30},
-			{"0.04", 1000, 40},
-			{"0.01", 1000, 10},
-			{"0.02", 100, 2},
-			{"0.03", 1000, 30},
-			{"0.04", 1000, 40},
-			{"0.01", 1000, 10},
-			{"0.02", 100, 2},
-			{"0.03", 1000, 30},
-			{"0.04", 1000, 40},
-			{"0.01", 1000, 10},
-			{"0.02", 100, 2},
-			{"0.03", 1000, 30},
-			{"0.04", 1000, 40},
-			{"0.01", 1000, 10},
-			{"0.02", 100, 2},
-			{"0.03", 1000, 30},
-			{"0.04", 1000, 40},
-			{"0.01", 1000, 10},
-			{"0.02", 100, 2},
-			{"0.03", 1000, 30},
-			{"0.04", 1000, 40},
-		}
+
 		numLines := screen.screenSize.Height/2 - 7
+
+		if screen.activeLine >= len(sellOrders) {
+			screen.activeLine = len(sellOrders) - 1
+		}
 		activeLine := screen.activeLine
 		startLine := activeLine - numLines + 1
 		if startLine < 0 {
 			startLine = 0
 		}
 		endLine := startLine + numLines
-		for li, order := range orders[startLine:endLine] {
+		if endLine > len(sellOrders) {
+			endLine = len(sellOrders)
+		}
+		for li, order := range sellOrders[startLine:endLine] {
 			infoLines = append(infoLines, screen.renderTradingTableLine(order.Price, fmt.Sprintf("%d", order.Amount), fmt.Sprintf("%d", order.Total), startLine+li == activeLine))
 		}
 		infoLines = append(infoLines, "╰────────────────────┴───────────────┴───────────────╯")
@@ -543,13 +508,29 @@ func (screen *GameScreen) renderUserSituation() {
 	case WAIT_UPGRADE_PROCESS:
 		desc = fmt.Sprintf("%s %s.\n%s", localize("wait upgrade process desc"), localize(screen.activeItem.Name), waitProcessEnd)
 	case RESULT_BUY_LOUD_ORDER_CREATION:
-		desc = localize("loud buy order was successfully created")
+		if screen.txFailReason != "" {
+			desc = localize("loud buy order creation fail reason") + ": " + localize(screen.txFailReason)
+		} else {
+			desc = localize("loud buy order was successfully created")
+		}
 	case RESULT_SELL_LOUD_ORDER_CREATION:
-		desc = localize("loud sell order was successfully created")
+		if screen.txFailReason != "" {
+			desc = localize("sell buy order creation fail reason") + ": " + localize(screen.txFailReason)
+		} else {
+			desc = localize("loud sell order was successfully created")
+		}
 	case RESULT_FULFILL_BUY_LOUD_ORDER:
-		desc = localize("you have bought loud coin successfully from loud/pylon market")
+		if screen.txFailReason != "" {
+			desc = localize("buy loud failed reason") + ": " + localize(screen.txFailReason)
+		} else {
+			desc = localize("you have bought loud coin successfully from loud/pylon market")
+		}
 	case RESULT_FULFILL_SELL_LOUD_ORDER:
-		desc = localize("you have sold loud coin successfully from loud/pylon market")
+		if screen.txFailReason != "" {
+			desc = localize("sell loud failed reason") + ": " + localize(screen.txFailReason)
+		} else {
+			desc = localize("you have sold loud coin successfully from loud/pylon market")
+		}
 	case RESULT_BUY_FINISH:
 		if screen.txFailReason != "" {
 			desc = localize("buy failed reason") + ": " + localize(screen.txFailReason)
@@ -560,7 +541,9 @@ func (screen *GameScreen) renderUserSituation() {
 		if screen.txFailReason != "" {
 			desc = localize("hunt failed reason") + ": " + localize(screen.txFailReason)
 		} else {
-			desc = fmt.Sprintf("%s %d.", localize("result hunt finish desc"), screen.txResult.Amount)
+			respOutput := handlers.ExecuteRecipeSerialize{}
+			json.Unmarshal(screen.txResult, &respOutput)
+			desc = fmt.Sprintf("%s %d.", localize("result hunt finish desc"), respOutput.Amount)
 		}
 	case RESULT_SELL_FINISH:
 		if screen.txFailReason != "" {
@@ -697,6 +680,62 @@ func (screen *GameScreen) UpdateBlockHeight(blockHeight int64) {
 	screen.Render()
 }
 
+func (screen *GameScreen) RunSelectedLoudBuyTrade() {
+	if len(buyOrders) <= screen.activeLine {
+		screen.txFailReason = localize("you have selected higher index then the number of buy orders")
+		screen.scrStatus = RESULT_FULFILL_BUY_LOUD_ORDER
+		screen.refreshed = false
+		screen.Render()
+	} else {
+		screen.scrStatus = WAIT_FULFILL_BUY_LOUD_ORDER
+		screen.refreshed = false
+		txhash, err := FulfillTrade(screen.user, buyOrders[screen.activeLine].ID)
+
+		log.Println("ended sending request for creating buy loud order")
+		if err != nil {
+			screen.txFailReason = err.Error()
+			screen.scrStatus = RESULT_FULFILL_BUY_LOUD_ORDER
+			screen.refreshed = false
+			screen.Render()
+		} else {
+			time.AfterFunc(2*time.Second, func() {
+				screen.txResult, screen.txFailReason = ProcessTxResult(screen.user, txhash)
+				screen.scrStatus = RESULT_FULFILL_BUY_LOUD_ORDER
+				screen.refreshed = false
+				screen.Render()
+			})
+		}
+	}
+}
+
+func (screen *GameScreen) RunSelectedLoudSellTrade() {
+	if len(sellOrders) <= screen.activeLine {
+		screen.txFailReason = localize("you have selected higher index then the number of sell orders")
+		screen.scrStatus = RESULT_FULFILL_SELL_LOUD_ORDER
+		screen.refreshed = false
+		screen.Render()
+	} else {
+		screen.scrStatus = WAIT_FULFILL_SELL_LOUD_ORDER
+		screen.refreshed = false
+		txhash, err := FulfillTrade(screen.user, sellOrders[screen.activeLine].ID)
+
+		log.Println("ended sending request for creating sell loud order")
+		if err != nil {
+			screen.txFailReason = err.Error()
+			screen.scrStatus = RESULT_FULFILL_SELL_LOUD_ORDER
+			screen.refreshed = false
+			screen.Render()
+		} else {
+			time.AfterFunc(2*time.Second, func() {
+				screen.txResult, screen.txFailReason = ProcessTxResult(screen.user, txhash)
+				screen.scrStatus = RESULT_FULFILL_SELL_LOUD_ORDER
+				screen.refreshed = false
+				screen.Render()
+			})
+		}
+	}
+}
+
 func (screen *GameScreen) HandleInputKey(input termbox.Event) {
 	Key := string(input.Ch)
 	log.Println("Handling Key \"", Key, "\"")
@@ -717,12 +756,21 @@ func (screen *GameScreen) HandleInputKey(input termbox.Event) {
 				screen.scrStatus = WAIT_BUY_LOUD_ORDER_CREATION
 				screen.pylonEnterValue = screen.inputText
 				screen.inputText = ""
-				CreateBuyLoudOrder(screen.loudEnterValue, screen.pylonEnterValue)
-				time.AfterFunc(2*time.Second, func() {
+				txhash, err := CreateBuyLoudOrder(screen.user, screen.loudEnterValue, screen.pylonEnterValue)
+				log.Println("ended sending request for creating buy loud order")
+				if err != nil {
+					screen.txFailReason = err.Error()
 					screen.scrStatus = RESULT_BUY_LOUD_ORDER_CREATION
 					screen.refreshed = false
 					screen.Render()
-				})
+				} else {
+					time.AfterFunc(2*time.Second, func() {
+						screen.txResult, screen.txFailReason = ProcessTxResult(screen.user, txhash)
+						screen.scrStatus = RESULT_BUY_LOUD_ORDER_CREATION
+						screen.refreshed = false
+						screen.Render()
+					})
+				}
 			case CREATE_SELL_LOUD_ORDER_ENTER_LOUD_VALUE:
 				screen.scrStatus = CREATE_SELL_LOUD_ORDER_ENTER_PYLON_VALUE
 				screen.loudEnterValue = screen.inputText
@@ -731,12 +779,22 @@ func (screen *GameScreen) HandleInputKey(input termbox.Event) {
 				screen.scrStatus = WAIT_SELL_LOUD_ORDER_CREATION
 				screen.pylonEnterValue = screen.inputText
 				screen.inputText = ""
-				CreateSellLoudOrder(screen.loudEnterValue, screen.pylonEnterValue)
-				time.AfterFunc(2*time.Second, func() {
+				txhash, err := CreateSellLoudOrder(screen.user, screen.loudEnterValue, screen.pylonEnterValue)
+
+				log.Println("ended sending request for creating buy loud order")
+				if err != nil {
+					screen.txFailReason = err.Error()
 					screen.scrStatus = RESULT_SELL_LOUD_ORDER_CREATION
 					screen.refreshed = false
 					screen.Render()
-				})
+				} else {
+					time.AfterFunc(2*time.Second, func() {
+						screen.txResult, screen.txFailReason = ProcessTxResult(screen.user, txhash)
+						screen.scrStatus = RESULT_SELL_LOUD_ORDER_CREATION
+						screen.refreshed = false
+						screen.Render()
+					})
+				}
 			}
 		default:
 			screen.inputText += Key
@@ -755,6 +813,17 @@ func (screen *GameScreen) HandleInputKey(input termbox.Event) {
 		case termbox.KeyArrowDown:
 			screen.activeLine += 1
 		}
+		if input.Key == termbox.KeyEnter {
+			if screen.user.GetLocation() == MARKET {
+				switch screen.scrStatus {
+				case SHOW_LOUD_BUY_ORDERS:
+					screen.RunSelectedLoudBuyTrade()
+				case SHOW_LOUD_SELL_ORDERS:
+					screen.RunSelectedLoudSellTrade()
+				}
+			}
+		}
+
 		switch Key {
 		case "H": // HOME
 			fallthrough
@@ -800,17 +869,24 @@ func (screen *GameScreen) HandleInputKey(input termbox.Event) {
 			fallthrough
 		case "o":
 			if screen.user.GetLocation() == MARKET {
-				if screen.scrStatus == SHOW_LOUD_BUY_ORDERS {
+				switch screen.scrStatus {
+				case SHOW_LOUD_BUY_ORDERS:
 					screen.scrStatus = CREATE_BUY_LOUD_ORDER_ENTER_LOUD_VALUE
-					screen.refreshed = false
-				} else if screen.scrStatus == SHOW_LOUD_SELL_ORDERS {
+				case SHOW_LOUD_SELL_ORDERS:
 					screen.scrStatus = CREATE_SELL_LOUD_ORDER_ENTER_LOUD_VALUE
-					screen.refreshed = false
-				} else {
-					screen.txFailReason = ""
+				case RESULT_BUY_LOUD_ORDER_CREATION:
+					fallthrough
+				case RESULT_FULFILL_BUY_LOUD_ORDER:
+					screen.scrStatus = SHOW_LOUD_BUY_ORDERS
+				case RESULT_SELL_LOUD_ORDER_CREATION:
+					fallthrough
+				case RESULT_FULFILL_SELL_LOUD_ORDER:
+					screen.scrStatus = SHOW_LOUD_SELL_ORDERS
+				default:
 					screen.scrStatus = SHOW_LOCATION
-					screen.refreshed = false
 				}
+				screen.txFailReason = ""
+				screen.refreshed = false
 			} else {
 				screen.txFailReason = ""
 				screen.scrStatus = SHOW_LOCATION
@@ -832,13 +908,7 @@ func (screen *GameScreen) HandleInputKey(input termbox.Event) {
 					screen.scrStatus = SHOW_LOUD_BUY_ORDERS
 					screen.refreshed = false
 				} else if screen.scrStatus == SHOW_LOUD_BUY_ORDERS {
-					screen.scrStatus = WAIT_FULFILL_BUY_LOUD_ORDER
-					screen.refreshed = false
-					time.AfterFunc(2*time.Second, func() {
-						screen.scrStatus = RESULT_FULFILL_BUY_LOUD_ORDER
-						screen.refreshed = false
-						screen.Render()
-					})
+					screen.RunSelectedLoudBuyTrade()
 				}
 			}
 		case "E": // SELL
@@ -852,13 +922,7 @@ func (screen *GameScreen) HandleInputKey(input termbox.Event) {
 					screen.scrStatus = SHOW_LOUD_SELL_ORDERS
 					screen.refreshed = false
 				} else if screen.scrStatus == SHOW_LOUD_SELL_ORDERS {
-					screen.scrStatus = WAIT_FULFILL_SELL_LOUD_ORDER
-					screen.refreshed = false
-					time.AfterFunc(2*time.Second, func() {
-						screen.scrStatus = RESULT_FULFILL_SELL_LOUD_ORDER
-						screen.refreshed = false
-						screen.Render()
-					})
+					screen.RunSelectedLoudSellTrade()
 				}
 			}
 		case "P": // UPGRADE ITEM

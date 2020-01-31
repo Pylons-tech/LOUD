@@ -11,11 +11,11 @@ import (
 	"os"
 	"os/user"
 	"path/filepath"
+	"strconv"
 	"strings"
 
 	originT "testing"
 
-	fixtureSDK "github.com/Pylons-tech/pylons/cmd/fixtures_test"
 	testing "github.com/Pylons-tech/pylons/cmd/fixtures_test/evtesting"
 	pylonSDK "github.com/Pylons-tech/pylons/cmd/test"
 	"github.com/Pylons-tech/pylons/x/pylons/handlers"
@@ -82,6 +82,38 @@ func SyncFromNode(user User) {
 	}
 	user.SetItems(items)
 	log.Println("SyncFromNode items=", items)
+
+	nBuyOrders := []Order{}
+	nSellOrders := []Order{}
+	rawTrades, _ := pylonSDK.ListTradeViaCLI("")
+	for _, tradeItem := range rawTrades {
+		if tradeItem.Completed == false && len(tradeItem.CoinInputs) > 0 {
+			inputCoin := tradeItem.CoinInputs[0].Coin
+			if inputCoin == "loudcoin" { // loud sell trade
+				pylonAmount := tradeItem.CoinOutputs.AmountOf("pylon").Int64()
+				loudAmount := tradeItem.CoinInputs[0].Count
+				nSellOrders = append(nSellOrders, Order{
+					ID:     tradeItem.ID,
+					Amount: int(loudAmount),
+					Total:  int(pylonAmount),
+					Price:  fmt.Sprintf("%.4f", float64(pylonAmount)/float64(loudAmount)),
+				})
+			} else { // loud buy trade
+				loudAmount := tradeItem.CoinOutputs.AmountOf("loudcoin").Int64()
+				pylonAmount := tradeItem.CoinInputs[0].Count
+				nBuyOrders = append(nBuyOrders, Order{
+					ID:     tradeItem.ID,
+					Amount: int(loudAmount),
+					Total:  int(pylonAmount),
+					Price:  fmt.Sprintf("%.4f", float64(pylonAmount)/float64(loudAmount)),
+				})
+			}
+		}
+	}
+	buyOrders = nBuyOrders
+	sellOrders = nSellOrders
+	log.Println("SyncFromNode buyOrders=", nBuyOrders)
+	log.Println("SyncFromNode sellOrders=", sellOrders)
 }
 
 func GetInitialPylons(addr string) {
@@ -179,36 +211,34 @@ func InitPylonAccount(username string) {
 	log.Println("remove nonce file result", err)
 }
 
-func ProcessTxResult(user User, txhash string) (handlers.ExecuteRecipeSerialize, string) {
+func ProcessTxResult(user User, txhash string) ([]byte, string) {
 	orgT := originT.T{}
 	newT := testing.NewT(&orgT)
 	t := &newT
 
 	resp := handlers.ExecuteRecipeResp{}
-	respOutput := handlers.ExecuteRecipeSerialize{}
 	txHandleResBytes, err := pylonSDK.WaitAndGetTxData(txhash, 3, t)
 	if err != nil {
 		errString := fmt.Sprintf("error getting tx result bytes %+v", err)
 		log.Println(errString)
-		return respOutput, errString
+		return []byte{}, errString
 	}
-	hmrErrMsg := fixtureSDK.GetHumanReadableErrorFromTxHash(txhash, t)
+	hmrErrMsg := pylonSDK.GetHumanReadableErrorFromTxHash(txhash, t)
 	if len(hmrErrMsg) > 0 {
 		errString := fmt.Sprintf("txhash=%s hmrErrMsg=%s", txhash, hmrErrMsg)
 		log.Println(errString)
-		return respOutput, errString
+		return []byte{}, errString
 	}
 	err = pylonSDK.GetAminoCdc().UnmarshalJSON(txHandleResBytes, &resp)
 	if err != nil {
 		errString := fmt.Sprintf("failed to parse transaction result txhash=%s", txhash)
 		log.Println(errString)
-		return respOutput, errString
+		return []byte{}, errString
 	}
 
-	json.Unmarshal(resp.Output, &respOutput)
-	log.Println("ProcessTxResult::txResp", resp.Message, respOutput)
+	log.Println("ProcessTxResult::txResp", resp.Message, string(resp.Output))
 	SyncFromNode(user)
-	return respOutput, ""
+	return resp.Output, ""
 }
 
 func GetTestingT() *testing.T {
@@ -394,10 +424,81 @@ func Upgrade(user User, key string) (string, error) {
 	return ExecuteRecipe(user, rcpName, itemIDs)
 }
 
-func CreateSellLoudOrder(loudEnterValue string, pylonEnterValue string) {
+func CreateSellLoudOrder(user User, loudEnterValue string, pylonEnterValue string) (string, error) {
+	t := GetTestingT()
+	loudValue, err := strconv.Atoi(loudEnterValue)
+	if err != nil {
+		return "", err
+	}
+	pylonValue, err := strconv.Atoi(pylonEnterValue)
+	if err != nil {
+		return "", err
+	}
 
+	eugenAddr := pylonSDK.GetAccountAddr(user.GetUserName(), nil)
+	sdkAddr, err := sdk.AccAddressFromBech32(eugenAddr)
+
+	inputCoinList := types.GenCoinInputList("loudcoin", int64(loudValue))
+
+	outputCoins := sdk.Coins{sdk.NewInt64Coin("pylon", int64(pylonValue))}
+	extraInfo := "created by loud game"
+
+	createTrdMsg := msgs.NewMsgCreateTrade(
+		inputCoinList,
+		nil,
+		outputCoins,
+		nil,
+		extraInfo,
+		sdkAddr)
+	log.Println("started sending transaction", user.GetUserName(), createTrdMsg)
+	txhash := pylonSDK.TestTxWithMsgWithNonce(t, createTrdMsg, user.GetUserName(), false)
+	user.SetLastTransaction(txhash)
+	log.Println("ended sending transaction")
+	return txhash, nil
 }
 
-func CreateBuyLoudOrder(loudEnterValue string, pylonEnterValue string) {
+func CreateBuyLoudOrder(user User, loudEnterValue string, pylonEnterValue string) (string, error) {
+	t := GetTestingT()
+	loudValue, err := strconv.Atoi(loudEnterValue)
+	if err != nil {
+		return "", err
+	}
+	pylonValue, err := strconv.Atoi(pylonEnterValue)
+	if err != nil {
+		return "", err
+	}
 
+	eugenAddr := pylonSDK.GetAccountAddr(user.GetUserName(), nil)
+	sdkAddr, _ := sdk.AccAddressFromBech32(eugenAddr)
+
+	inputCoinList := types.GenCoinInputList("pylon", int64(pylonValue))
+
+	outputCoins := sdk.Coins{sdk.NewInt64Coin("loudcoin", int64(loudValue))}
+	extraInfo := "created by loud game"
+
+	createTrdMsg := msgs.NewMsgCreateTrade(
+		inputCoinList,
+		nil,
+		outputCoins,
+		nil,
+		extraInfo,
+		sdkAddr)
+	log.Println("started sending transaction", user.GetUserName(), createTrdMsg)
+	txhash := pylonSDK.TestTxWithMsgWithNonce(t, createTrdMsg, user.GetUserName(), false)
+	user.SetLastTransaction(txhash)
+	log.Println("ended sending transaction")
+	return txhash, nil
+}
+
+func FulfillTrade(user User, tradeID string) (string, error) {
+	t := GetTestingT()
+	eugenAddr := pylonSDK.GetAccountAddr(user.GetUserName(), nil)
+	sdkAddr, _ := sdk.AccAddressFromBech32(eugenAddr)
+	ffTrdMsg := msgs.NewMsgFulfillTrade(tradeID, sdkAddr, []string{})
+
+	log.Println("started sending transaction", user.GetUserName(), ffTrdMsg)
+	txhash := pylonSDK.TestTxWithMsgWithNonce(t, ffTrdMsg, user.GetUserName(), false)
+	user.SetLastTransaction(txhash)
+	log.Println("ended sending transaction")
+	return txhash, nil
 }
