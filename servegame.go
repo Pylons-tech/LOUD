@@ -13,19 +13,13 @@ import (
 	"github.com/nsf/termbox-go"
 )
 
-func SetupLoggingFile() {
-	f, err := os.OpenFile("loud.log", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
-	if err != nil {
-		log.Fatalf("error opening file: %v", err)
-	}
-	defer f.Close()
+func SetupLoggingFile(f *os.File) {
 	log.Println("Starting to save log into file")
 	log.SetOutput(f)
-
 	log.Println("Starting")
 }
 
-func SetupScreenAndEvents(world World) {
+func SetupScreenAndEvents(world World, logFile *os.File) {
 	args := os.Args
 	username := ""
 	log.Println("args SetupScreenAndEvents", args)
@@ -37,7 +31,7 @@ func SetupScreenAndEvents(world World) {
 	}
 	user := world.GetUser(username)
 
-	SetupLoggingFile()
+	SetupLoggingFile(logFile)
 
 	screen := NewScreen(world, user)
 
@@ -102,11 +96,11 @@ eventloop:
 }
 
 // ServeGame runs the main game loop.
-func ServeGame() {
+func ServeGame(logFile *os.File) {
 	rand.Seed(time.Now().Unix())
 
 	world := LoadWorldFromDB("./world.db")
 	defer world.Close()
 
-	SetupScreenAndEvents(world)
+	SetupScreenAndEvents(world, logFile)
 }
