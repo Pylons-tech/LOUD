@@ -39,6 +39,7 @@ type GameScreen struct {
 	user            User
 	screenSize      ssh.Window
 	activeItem      Item
+	lastInput       termbox.Event
 	activeLine      int
 	pylonEnterValue string
 	loudEnterValue  string

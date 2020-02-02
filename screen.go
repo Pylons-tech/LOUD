@@ -145,7 +145,14 @@ func (screen *GameScreen) renderUserSituation() {
 		if len(screen.activeItem.Name) > 0 {
 			desc = fmt.Sprintf("%s %s Lv%d.\n%s", localize("wait hunt process desc"), localize(screen.activeItem.Name), screen.activeItem.Level, waitProcessEnd)
 		} else {
-			desc = fmt.Sprintf("%s\n%s", localize("hunting without weapon"), waitProcessEnd)
+			switch string(screen.lastInput.Ch) {
+			case "I":
+				fallthrough
+			case "i":
+				desc = fmt.Sprintf("%s\n%s", localize("Getting initial gold from pylon"), waitProcessEnd)
+			default:
+				desc = fmt.Sprintf("%s\n%s", localize("hunting without weapon"), waitProcessEnd)
+			}
 		}
 	case WAIT_SELL_PROCESS:
 		desc = fmt.Sprintf("%s %s Lv%d.\n%s", localize("wait sell process desc"), localize(screen.activeItem.Name), screen.activeItem.Level, waitProcessEnd)
@@ -187,7 +194,14 @@ func (screen *GameScreen) renderUserSituation() {
 		} else {
 			respOutput := handlers.ExecuteRecipeSerialize{}
 			json.Unmarshal(screen.txResult, &respOutput)
-			desc = fmt.Sprintf("%s %d.", localize("result hunt finish desc"), respOutput.Amount)
+			switch string(screen.lastInput.Ch) {
+			case "I":
+				fallthrough
+			case "i":
+				desc = fmt.Sprintf("%s %d.", localize("Got initial gold from pylons. Amount is"), respOutput.Amount)
+			default:
+				desc = fmt.Sprintf("%s %d.", localize("result hunt finish desc"), respOutput.Amount)
+			}
 		}
 	case RESULT_SELL_FINISH:
 		if screen.txFailReason != "" {
