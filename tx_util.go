@@ -15,7 +15,7 @@ import (
 	"strconv"
 	"strings"
 
-	originT "testing"
+	// originT "testing"
 
 	testing "github.com/Pylons-tech/pylons/cmd/fixtures_test/evtesting"
 	pylonSDK "github.com/Pylons-tech/pylons/cmd/test"
@@ -222,9 +222,7 @@ func InitPylonAccount(username string) {
 }
 
 func ProcessTxResult(user User, txhash string) ([]byte, string) {
-	orgT := originT.T{}
-	newT := testing.NewT(&orgT)
-	t := &newT
+	t := GetTestingT()
 
 	resp := handlers.ExecuteRecipeResp{}
 	txHandleResBytes, err := pylonSDK.WaitAndGetTxData(txhash, 3, t)
@@ -252,8 +250,9 @@ func ProcessTxResult(user User, txhash string) ([]byte, string) {
 }
 
 func GetTestingT() *testing.T {
-	orgT := originT.T{}
-	newT := testing.NewT(&orgT)
+	// orgT := originT.T{}
+	// newT := testing.NewT(&orgT)
+	newT := testing.NewT(nil)
 	t := &newT
 	return t
 }
