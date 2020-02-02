@@ -7,6 +7,21 @@ type Item struct {
 	Price int
 }
 
+var shopItems = []Item{
+	Item{
+		ID:    "001",
+		Name:  "Wooden sword",
+		Level: 1,
+		Price: 100,
+	},
+	Item{
+		ID:    "002",
+		Name:  "Copper sword",
+		Level: 1,
+		Price: 250,
+	},
+}
+
 func (item *Item) GetSellPrice() int {
 	switch item.Name {
 	case "Wooden sword":
