@@ -2,6 +2,7 @@ package loud
 
 import (
 	"bytes"
+	"sort"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -96,7 +97,7 @@ func SyncFromNode(user User) {
 					ID:     tradeItem.ID,
 					Amount: int(loudAmount),
 					Total:  int(pylonAmount),
-					Price:  fmt.Sprintf("%.4f", float64(pylonAmount)/float64(loudAmount)),
+					Price:  float64(pylonAmount)/float64(loudAmount),
 				})
 			} else { // loud buy trade
 				loudAmount := tradeItem.CoinOutputs.AmountOf("loudcoin").Int64()
@@ -105,11 +106,17 @@ func SyncFromNode(user User) {
 					ID:     tradeItem.ID,
 					Amount: int(loudAmount),
 					Total:  int(pylonAmount),
-					Price:  fmt.Sprintf("%.4f", float64(pylonAmount)/float64(loudAmount)),
+					Price:  float64(pylonAmount)/float64(loudAmount),
 				})
 			}
 		}
 	}
+	sort.SliceStable(nBuyOrders, func(i, j int) bool {
+		return nBuyOrders[i].Price < nBuyOrders[j].Price
+	})
+	sort.SliceStable(nSellOrders, func(i, j int) bool {
+		return nSellOrders[i].Price > nSellOrders[j].Price
+	})
 	buyOrders = nBuyOrders
 	sellOrders = nSellOrders
 	log.Println("SyncFromNode buyOrders=", nBuyOrders)

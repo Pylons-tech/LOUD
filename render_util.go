@@ -168,7 +168,7 @@ func (screen *GameScreen) renderOrderTable(orders []Order) []string {
 		endLine = len(orders)
 	}
 	for li, order := range orders[startLine:endLine] {
-		infoLines = append(infoLines, screen.renderOrderTableLine(order.Price, fmt.Sprintf("%d", order.Amount), fmt.Sprintf("%d", order.Total), startLine+li == activeLine))
+		infoLines = append(infoLines, screen.renderOrderTableLine(fmt.Sprintf("%.4f", order.Price), fmt.Sprintf("%d", order.Amount), fmt.Sprintf("%d", order.Total), startLine+li == activeLine))
 	}
 	infoLines = append(infoLines, "╰────────────────────┴───────────────┴───────────────╯")
 	return infoLines
