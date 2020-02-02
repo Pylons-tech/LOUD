@@ -8,6 +8,7 @@ import (
 )
 
 func (screen *GameScreen) HandleInputKey(input termbox.Event) {
+	screen.lastInput = input
 	Key := string(input.Ch)
 	log.Println("Handling Key \"", Key, "\"")
 	if screen.InputActive() {
