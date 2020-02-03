@@ -15,8 +15,6 @@ import (
 	"strconv"
 	"strings"
 
-	// originT "testing"
-
 	testing "github.com/Pylons-tech/pylons/cmd/fixtures_test/evtesting"
 	pylonSDK "github.com/Pylons-tech/pylons/cmd/test"
 	"github.com/Pylons-tech/pylons/x/pylons/handlers"

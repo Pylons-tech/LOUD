@@ -41,6 +41,7 @@ type GameScreen struct {
 	activeItem      Item
 	lastInput       termbox.Event
 	activeLine      int
+	activeOrder     Order
 	pylonEnterValue string
 	loudEnterValue  string
 	inputText       string
@@ -121,6 +122,36 @@ func (screen *GameScreen) UpdateBlockHeight(blockHeight int64) {
 	screen.blockHeight = blockHeight
 	screen.refreshed = false
 	screen.Render()
+}
+
+func (screen *GameScreen) pylonIcon() string {
+	return screen.drawProgressMeter(1, 1, 117, bgcolor, 1)
+}
+
+func (screen *GameScreen) loudIcon() string {
+	return screen.drawProgressMeter(1, 1, 208, bgcolor, 1)
+}
+
+func (screen *GameScreen) buyLoudDesc(loudValue interface{}, pylonValue interface{}) string {
+	var desc = ""
+	desc += "\n"
+	desc += screen.pylonIcon()
+	desc += fmt.Sprintf("%v", pylonValue)
+	desc += "\n  ↓\n"
+	desc += screen.loudIcon()
+	desc += fmt.Sprintf("%v", loudValue)
+	return desc
+}
+
+func (screen *GameScreen) sellLoudDesc(loudValue interface{}, pylonValue interface{}) string {
+	var desc = ""
+	desc += "\n"
+	desc += screen.loudIcon()
+	desc += fmt.Sprintf("%v", loudValue)
+	desc += "\n  ↓\n"
+	desc += screen.pylonIcon()
+	desc += fmt.Sprintf("%v", pylonValue)
+	return desc
 }
 
 func (screen *GameScreen) redrawBorders() {
