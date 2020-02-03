@@ -28,6 +28,7 @@ func (screen *GameScreen) HandleInputKey(input termbox.Event) {
 				screen.scrStatus = WAIT_BUY_LOUD_ORDER_CREATION
 				screen.pylonEnterValue = screen.inputText
 				screen.inputText = ""
+				screen.Render()
 				txhash, err := CreateBuyLoudOrder(screen.user, screen.loudEnterValue, screen.pylonEnterValue)
 				log.Println("ended sending request for creating buy loud order")
 				if err != nil {
@@ -51,6 +52,7 @@ func (screen *GameScreen) HandleInputKey(input termbox.Event) {
 				screen.scrStatus = WAIT_SELL_LOUD_ORDER_CREATION
 				screen.pylonEnterValue = screen.inputText
 				screen.inputText = ""
+				screen.Render()
 				txhash, err := CreateSellLoudOrder(screen.user, screen.loudEnterValue, screen.pylonEnterValue)
 
 				log.Println("ended sending request for creating buy loud order")
