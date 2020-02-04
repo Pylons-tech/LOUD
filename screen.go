@@ -30,10 +30,22 @@ func (screen *GameScreen) renderUserCommands() {
 		cmdString := cmdMap[screen.user.GetLocation()]
 		infoLines = strings.Split(cmdString, "\n")
 	case SHOW_LOUD_BUY_ORDERS:
+		infoLines = append(infoLines, "white     ➝ other's order")
+		infoLines = append(infoLines, screen.blueBoldFont()("bluebold")+"  ➝ selected order")
+		infoLines = append(infoLines, screen.brownBoldFont()("brownbold")+" ➝ my order + selected")
+		infoLines = append(infoLines, screen.brownFont()("brown")+"     ➝ my order")
+		infoLines = append(infoLines, "\n")
+
 		infoLines = append(infoLines, "B)uy( ↵ )")
 		infoLines = append(infoLines, "Create a buy o)rder")
 		infoLines = append(infoLines, "Go bac)k")
 	case SHOW_LOUD_SELL_ORDERS:
+		infoLines = append(infoLines, "white     ➝ other's order")
+		infoLines = append(infoLines, screen.blueBoldFont()("bluebold")+"  ➝ selected order")
+		infoLines = append(infoLines, screen.brownBoldFont()("brownbold")+" ➝ my order + selected")
+		infoLines = append(infoLines, screen.brownFont()("brown")+"     ➝ my order")
+		infoLines = append(infoLines, "\n")
+
 		infoLines = append(infoLines, "Se)ll( ↵ )")
 		infoLines = append(infoLines, "Create sell o)rder")
 		infoLines = append(infoLines, "Go bac)k")
@@ -418,4 +430,3 @@ func (screen *GameScreen) Render() {
 	screen.renderCharacterSheet()
 	screen.renderInputValue()
 }
-

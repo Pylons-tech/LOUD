@@ -2,7 +2,6 @@ package loud
 
 import (
 	"bytes"
-	"sort"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -12,6 +11,7 @@ import (
 	"os"
 	"os/user"
 	"path/filepath"
+	"sort"
 	"strconv"
 	"strings"
 
@@ -63,6 +63,7 @@ func init() {
 func SyncFromNode(user User) {
 	log.Println("SyncFromNode username=", user.GetUserName())
 	log.Println("SyncFromNode username=", pylonSDK.GetAccountAddr(user.GetUserName(), GetTestingT()))
+	accAddr := pylonSDK.GetAccountAddr(user.GetUserName(), GetTestingT())
 	accInfo := pylonSDK.GetAccountInfoFromName(user.GetUserName(), GetTestingT())
 	log.Println("accountInfo Result=", accInfo)
 
@@ -94,19 +95,21 @@ func SyncFromNode(user User) {
 				pylonAmount := tradeItem.CoinOutputs.AmountOf("pylon").Int64()
 				loudAmount := tradeItem.CoinInputs[0].Count
 				nSellOrders = append(nSellOrders, Order{
-					ID:     tradeItem.ID,
-					Amount: int(loudAmount),
-					Total:  int(pylonAmount),
-					Price:  float64(pylonAmount)/float64(loudAmount),
+					ID:        tradeItem.ID,
+					Amount:    int(loudAmount),
+					Total:     int(pylonAmount),
+					Price:     float64(pylonAmount) / float64(loudAmount),
+					IsMyOrder: tradeItem.Sender.String() == accAddr,
 				})
 			} else { // loud buy trade
 				loudAmount := tradeItem.CoinOutputs.AmountOf("loudcoin").Int64()
 				pylonAmount := tradeItem.CoinInputs[0].Count
 				nBuyOrders = append(nBuyOrders, Order{
-					ID:     tradeItem.ID,
-					Amount: int(loudAmount),
-					Total:  int(pylonAmount),
-					Price:  float64(pylonAmount)/float64(loudAmount),
+					ID:        tradeItem.ID,
+					Amount:    int(loudAmount),
+					Total:     int(pylonAmount),
+					Price:     float64(pylonAmount) / float64(loudAmount),
+					IsMyOrder: tradeItem.Sender.String() == accAddr,
 				})
 			}
 		}

@@ -52,7 +52,6 @@ type GameScreen struct {
 	colorCodeCache  map[string](func(string) string)
 }
 
-
 const (
 	SHOW_LOCATION ScreenStatus = iota
 	// in shop
@@ -90,7 +89,6 @@ const (
 	WAIT_FULFILL_SELL_LOUD_ORDER
 	RESULT_FULFILL_SELL_LOUD_ORDER
 )
-
 
 // NewScreen manages the window rendering for game
 func NewScreen(world World, user User) Screen {
@@ -140,10 +138,28 @@ func (screen *GameScreen) redrawBorders() {
 	screen.drawHorizontalLine(1, screen.screenSize.Height-2, screen.screenSize.Width/2-3)
 }
 
-func (screen *GameScreen) renderOrderTableLine(text1 string, text2 string, text3 string, isActiveLine bool) string {
+func (screen *GameScreen) blueBoldFont() func(string) string {
+	return screen.colorFunc(fmt.Sprintf("%v+bh:%v", 117, 232))
+}
+
+func (screen *GameScreen) brownBoldFont() func(string) string {
+	return screen.colorFunc(fmt.Sprintf("%v+bh:%v", 181, 232))
+}
+
+func (screen *GameScreen) brownFont() func(string) string {
+	return screen.colorFunc(fmt.Sprintf("%v:%v", 181, 232))
+}
+
+func (screen *GameScreen) renderOrderTableLine(text1 string, text2 string, text3 string, isActiveLine bool, isDisabledLine bool) string {
 	calcText := "│" + centerText(text1, " ", 20) + "│" + centerText(text2, " ", 15) + "│" + centerText(text3, " ", 15) + "│"
-	if isActiveLine {
-		onColor := screen.colorFunc(fmt.Sprintf("%v:%v", 117, 232))
+	if isActiveLine && isDisabledLine {
+		onColor := screen.brownBoldFont()
+		return onColor(calcText)
+	} else if isActiveLine {
+		onColor := screen.blueBoldFont()
+		return onColor(calcText)
+	} else if isDisabledLine {
+		onColor := screen.brownFont()
 		return onColor(calcText)
 	}
 	return calcText
@@ -153,7 +169,7 @@ func (screen *GameScreen) renderOrderTable(orders []Order) []string {
 	infoLines := []string{}
 	infoLines = append(infoLines, "╭────────────────────┬───────────────┬───────────────╮")
 	// infoLines = append(infoLines, "│ LOUD price (pylon) │ Amount (loud) │ Total (pylon) │")
-	infoLines = append(infoLines, screen.renderOrderTableLine("LOUD price (pylon)", "Amount (loud)", "Total (pylon)", false))
+	infoLines = append(infoLines, screen.renderOrderTableLine("LOUD price (pylon)", "Amount (loud)", "Total (pylon)", false, false))
 	infoLines = append(infoLines, "├────────────────────┼───────────────┼───────────────┤")
 	numLines := screen.screenSize.Height/2 - 7
 	if screen.activeLine >= len(orders) {
@@ -169,7 +185,16 @@ func (screen *GameScreen) renderOrderTable(orders []Order) []string {
 		endLine = len(orders)
 	}
 	for li, order := range orders[startLine:endLine] {
-		infoLines = append(infoLines, screen.renderOrderTableLine(fmt.Sprintf("%.4f", order.Price), fmt.Sprintf("%d", order.Amount), fmt.Sprintf("%d", order.Total), startLine+li == activeLine))
+		infoLines = append(
+			infoLines,
+			screen.renderOrderTableLine(
+				fmt.Sprintf("%.4f", order.Price),
+				fmt.Sprintf("%d", order.Amount),
+				fmt.Sprintf("%d", order.Total),
+				startLine+li == activeLine,
+				order.IsMyOrder,
+			),
+		)
 	}
 	infoLines = append(infoLines, "╰────────────────────┴───────────────┴───────────────╯")
 	return infoLines
