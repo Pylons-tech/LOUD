@@ -24,6 +24,7 @@ const bgcolor = 232
 
 // Screen represents a UI screen.
 type Screen interface {
+	SetDaemonFetchingFlag(bool)
 	SaveGame()
 	UpdateBlockHeight(int64)
 	SetScreenSize(int, int)
@@ -35,22 +36,23 @@ type Screen interface {
 type ScreenStatus int
 
 type GameScreen struct {
-	world           World
-	user            User
-	screenSize      ssh.Window
-	activeItem      Item
-	lastInput       termbox.Event
-	activeLine      int
-	activeOrder     Order
-	pylonEnterValue string
-	loudEnterValue  string
-	inputText       string
-	blockHeight     int64
-	txFailReason    string
-	txResult        []byte
-	refreshed       bool
-	scrStatus       ScreenStatus
-	colorCodeCache  map[string](func(string) string)
+	world                  World
+	user                   User
+	screenSize             ssh.Window
+	activeItem             Item
+	lastInput              termbox.Event
+	activeLine             int
+	activeOrder            Order
+	pylonEnterValue        string
+	loudEnterValue         string
+	inputText              string
+	refreshingDaemonStatus bool
+	blockHeight            int64
+	txFailReason           string
+	txResult               []byte
+	refreshed              bool
+	scrStatus              ScreenStatus
+	colorCodeCache         map[string](func(string) string)
 }
 
 const (
@@ -118,6 +120,10 @@ func (screen *GameScreen) SaveGame() {
 	screen.user.Save()
 }
 
+func (screen *GameScreen) SetDaemonFetchingFlag(flag bool) {
+	screen.refreshingDaemonStatus = flag
+}
+
 func (screen *GameScreen) UpdateBlockHeight(blockHeight int64) {
 	screen.blockHeight = blockHeight
 	screen.refreshed = false
@@ -152,6 +158,16 @@ func (screen *GameScreen) sellLoudDesc(loudValue interface{}, pylonValue interfa
 	desc += screen.pylonIcon()
 	desc += fmt.Sprintf("%v", pylonValue)
 	return desc
+}
+
+func (screen *GameScreen) tradeTableColorDesc() []string {
+	var infoLines = []string{}
+	infoLines = append(infoLines, "white     ➝ other's order")
+	infoLines = append(infoLines, screen.blueBoldFont()("bluebold")+"  ➝ selected order")
+	infoLines = append(infoLines, screen.brownBoldFont()("brownbold")+" ➝ my order + selected")
+	infoLines = append(infoLines, screen.brownFont()("brown")+"     ➝ my order")
+	infoLines = append(infoLines, "\n")
+	return infoLines
 }
 
 func (screen *GameScreen) redrawBorders() {

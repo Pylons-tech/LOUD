@@ -8,6 +8,7 @@ import (
 	"os/signal"
 	"syscall"
 	"time"
+
 	"github.com/nsf/termbox-go"
 
 	pylonSDK "github.com/Pylons-tech/pylons/cmd/test"
@@ -82,6 +83,8 @@ eventloop:
 			continue
 		case <-daemonStatusRefreshTick:
 			go func() {
+				screen.SetDaemonFetchingFlag(true)
+				screen.Render()
 				ds, err := pylonSDK.GetDaemonStatus()
 				if err != nil {
 					log.Println("couldn't get daemon status", err)
@@ -91,6 +94,7 @@ eventloop:
 				}
 			}()
 		case ds := <-daemonFetchResult:
+			screen.SetDaemonFetchingFlag(false)
 			screen.UpdateBlockHeight(ds.SyncInfo.LatestBlockHeight)
 		case <-terminalCloseSignal:
 			screen.Reset()
