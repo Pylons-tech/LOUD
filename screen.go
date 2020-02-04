@@ -268,19 +268,19 @@ func (screen *GameScreen) InputActive() bool {
 }
 
 func (screen *GameScreen) renderInputValue() {
-	inputWidth := uint32(screen.screenSize.Width/2) - 2
+	inputBoxWidth := uint32(screen.screenSize.Width/2) - 2
+	inputWidth := inputBoxWidth - 9
 	move := cursor.MoveTo(screen.screenSize.Height-1, 2)
 
-	fmtString := fmt.Sprintf("%%-%vs", inputWidth-7)
-
 	chatFunc := screen.colorFunc(fmt.Sprintf("231:%v", bgcolor))
-	chat := chatFunc("VALUE▶ ")
+	chat := chatFunc("INPUT▶ ")
+	fmtString := fmt.Sprintf("%%-%vs", inputWidth)
 
 	if screen.InputActive() {
 		chatFunc = screen.colorFunc(fmt.Sprintf("0+b:%v", bgcolor-1))
 	}
 
-	fixedChat := truncateLeft(screen.inputText, int(inputWidth-7))
+	fixedChat := truncateLeft(screen.inputText, int(inputWidth))
 
 	inputText := fmt.Sprintf("%s%s%s", move, chat, chatFunc(fmt.Sprintf(fmtString, fixedChat)))
 

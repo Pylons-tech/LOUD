@@ -2,6 +2,7 @@ package loud
 
 import (
 	"log"
+	"strconv"
 	"time"
 
 	"github.com/nsf/termbox-go"
@@ -18,6 +19,8 @@ func (screen *GameScreen) HandleInputKey(input termbox.Event) {
 		case termbox.KeyBackspace:
 			log.Println("Pressed Backspace")
 			screen.inputText = screen.inputText[:len(screen.inputText)-1]
+			screen.Render()
+			return
 		case termbox.KeyEnter:
 			switch screen.scrStatus {
 			case CREATE_BUY_LOUD_ORDER_ENTER_LOUD_VALUE:
@@ -71,10 +74,13 @@ func (screen *GameScreen) HandleInputKey(input termbox.Event) {
 				}
 			}
 		default:
-			screen.inputText += Key
+			if _, err := strconv.Atoi(Key); err == nil {
+				screen.inputText += Key
+				screen.Render()
+			}
+			return
 		}
 		screen.refreshed = false
-		log.Println("inputText= \"", screen.inputText, "\"")
 	} else {
 		// TODO should check current location, scrStatus and then after that check Key, rather than checking Key first
 		switch input.Key {
