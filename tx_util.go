@@ -248,8 +248,6 @@ func ProcessTxResult(user User, txhash string) ([]byte, string) {
 }
 
 func GetTestingT() *testing.T {
-	// orgT := originT.T{}
-	// newT := testing.NewT(&orgT)
 	newT := testing.NewT(nil)
 	t := &newT
 	return t

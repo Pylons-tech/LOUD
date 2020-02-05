@@ -5,6 +5,7 @@ import (
 	"io"
 	"math"
 	"os"
+	"strings"
 	"unicode/utf8"
 
 	"github.com/ahmetb/go-cursor"
@@ -130,6 +131,11 @@ func (screen *GameScreen) UpdateBlockHeight(blockHeight int64) {
 	screen.Render()
 }
 
+func (screen *GameScreen) SetInputTextAndRender(text string) {
+	screen.inputText = text
+	screen.Render()
+}
+
 func (screen *GameScreen) pylonIcon() string {
 	return screen.drawProgressMeter(1, 1, 117, bgcolor, 1)
 }
@@ -139,24 +145,26 @@ func (screen *GameScreen) loudIcon() string {
 }
 
 func (screen *GameScreen) buyLoudDesc(loudValue interface{}, pylonValue interface{}) string {
-	var desc = ""
-	desc += "\n"
-	desc += screen.pylonIcon()
-	desc += fmt.Sprintf("%v", pylonValue)
-	desc += "\n  ↓\n"
-	desc += screen.loudIcon()
-	desc += fmt.Sprintf("%v", loudValue)
+	var desc = strings.Join([]string{
+		"\n",
+		screen.pylonIcon(),
+		fmt.Sprintf("%v", pylonValue),
+		"\n  ↓\n",
+		screen.loudIcon(),
+		fmt.Sprintf("%v", loudValue),
+	}, "")
 	return desc
 }
 
 func (screen *GameScreen) sellLoudDesc(loudValue interface{}, pylonValue interface{}) string {
-	var desc = ""
-	desc += "\n"
-	desc += screen.loudIcon()
-	desc += fmt.Sprintf("%v", loudValue)
-	desc += "\n  ↓\n"
-	desc += screen.pylonIcon()
-	desc += fmt.Sprintf("%v", pylonValue)
+	var desc = strings.Join([]string{
+		"\n",
+		screen.loudIcon(),
+		fmt.Sprintf("%v", loudValue),
+		"\n  ↓\n",
+		screen.pylonIcon(),
+		fmt.Sprintf("%v", pylonValue),
+	}, "")
 	return desc
 }
 

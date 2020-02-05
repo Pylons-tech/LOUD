@@ -18,8 +18,7 @@ func (screen *GameScreen) HandleInputKey(input termbox.Event) {
 			fallthrough
 		case termbox.KeyBackspace:
 			log.Println("Pressed Backspace")
-			screen.inputText = screen.inputText[:len(screen.inputText)-1]
-			screen.Render()
+			screen.SetInputTextAndRender(screen.inputText[:len(screen.inputText)-1])
 			return
 		case termbox.KeyEnter:
 			switch screen.scrStatus {
@@ -30,8 +29,7 @@ func (screen *GameScreen) HandleInputKey(input termbox.Event) {
 			case CREATE_BUY_LOUD_ORDER_ENTER_PYLON_VALUE:
 				screen.scrStatus = WAIT_BUY_LOUD_ORDER_CREATION
 				screen.pylonEnterValue = screen.inputText
-				screen.inputText = ""
-				screen.Render()
+				screen.SetInputTextAndRender("")
 				txhash, err := CreateBuyLoudOrder(screen.user, screen.loudEnterValue, screen.pylonEnterValue)
 				log.Println("ended sending request for creating buy loud order")
 				if err != nil {
@@ -54,8 +52,7 @@ func (screen *GameScreen) HandleInputKey(input termbox.Event) {
 			case CREATE_SELL_LOUD_ORDER_ENTER_PYLON_VALUE:
 				screen.scrStatus = WAIT_SELL_LOUD_ORDER_CREATION
 				screen.pylonEnterValue = screen.inputText
-				screen.inputText = ""
-				screen.Render()
+				screen.SetInputTextAndRender("")
 				txhash, err := CreateSellLoudOrder(screen.user, screen.loudEnterValue, screen.pylonEnterValue)
 
 				log.Println("ended sending request for creating buy loud order")
@@ -75,8 +72,8 @@ func (screen *GameScreen) HandleInputKey(input termbox.Event) {
 			}
 		default:
 			if _, err := strconv.Atoi(Key); err == nil {
-				screen.inputText += Key
-				screen.Render()
+				// If user entered number, just use it
+				screen.SetInputTextAndRender(screen.inputText + Key)
 			}
 			return
 		}

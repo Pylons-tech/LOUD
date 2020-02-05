@@ -356,6 +356,7 @@ func (screen *GameScreen) renderCharacterSheet() {
 
 func (screen *GameScreen) RunSelectedLoudBuyTrade() {
 	if len(buyOrders) <= screen.activeLine || screen.activeLine < 0 {
+		// when activeLine is not refering to real order but when it is refering to nil order
 		screen.txFailReason = localize("you haven't selected any buy order")
 		screen.scrStatus = RESULT_FULFILL_BUY_LOUD_ORDER
 		screen.refreshed = false
