@@ -50,7 +50,7 @@ var restEndpointLocal string = "http://localhost:1317"
 
 func init() {
 	args := os.Args
-	if len(args) > 2 && args[2] == "local" {
+	if len(args) > 2 && args[2] == "locald" {
 		customNode = customNodeLocal
 		restEndpoint = restEndpointLocal
 	}
@@ -112,9 +112,11 @@ func SyncFromNode(user User) {
 			}
 		}
 	}
+	// Sort and show by low price buy orders
 	sort.SliceStable(nBuyOrders, func(i, j int) bool {
 		return nBuyOrders[i].Price < nBuyOrders[j].Price
 	})
+	// Sort and show by high price sell orders
 	sort.SliceStable(nSellOrders, func(i, j int) bool {
 		return nSellOrders[i].Price > nSellOrders[j].Price
 	})

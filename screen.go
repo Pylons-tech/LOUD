@@ -366,22 +366,24 @@ func (screen *GameScreen) RunSelectedLoudBuyTrade() {
 		screen.activeOrder = buyOrders[screen.activeLine]
 		screen.refreshed = false
 		screen.Render()
-		txhash, err := FulfillTrade(screen.user, buyOrders[screen.activeLine].ID)
+		go func() {
+			txhash, err := FulfillTrade(screen.user, buyOrders[screen.activeLine].ID)
 
-		log.Println("ended sending request for creating buy loud order")
-		if err != nil {
-			screen.txFailReason = err.Error()
-			screen.scrStatus = RESULT_FULFILL_BUY_LOUD_ORDER
-			screen.refreshed = false
-			screen.Render()
-		} else {
-			time.AfterFunc(2*time.Second, func() {
-				screen.txResult, screen.txFailReason = ProcessTxResult(screen.user, txhash)
+			log.Println("ended sending request for creating buy loud order")
+			if err != nil {
+				screen.txFailReason = err.Error()
 				screen.scrStatus = RESULT_FULFILL_BUY_LOUD_ORDER
 				screen.refreshed = false
 				screen.Render()
-			})
-		}
+			} else {
+				time.AfterFunc(2*time.Second, func() {
+					screen.txResult, screen.txFailReason = ProcessTxResult(screen.user, txhash)
+					screen.scrStatus = RESULT_FULFILL_BUY_LOUD_ORDER
+					screen.refreshed = false
+					screen.Render()
+				})
+			}
+		}()
 	}
 }
 
@@ -396,22 +398,24 @@ func (screen *GameScreen) RunSelectedLoudSellTrade() {
 		screen.activeOrder = sellOrders[screen.activeLine]
 		screen.refreshed = false
 		screen.Render()
-		txhash, err := FulfillTrade(screen.user, sellOrders[screen.activeLine].ID)
-
-		log.Println("ended sending request for creating sell loud order")
-		if err != nil {
-			screen.txFailReason = err.Error()
-			screen.scrStatus = RESULT_FULFILL_SELL_LOUD_ORDER
-			screen.refreshed = false
-			screen.Render()
-		} else {
-			time.AfterFunc(2*time.Second, func() {
-				screen.txResult, screen.txFailReason = ProcessTxResult(screen.user, txhash)
+		go func() {
+			log.Println("started sending request for creating sell loud order")
+			txhash, err := FulfillTrade(screen.user, sellOrders[screen.activeLine].ID)
+			log.Println("ended sending request for creating sell loud order")
+			if err != nil {
+				screen.txFailReason = err.Error()
 				screen.scrStatus = RESULT_FULFILL_SELL_LOUD_ORDER
 				screen.refreshed = false
 				screen.Render()
-			})
-		}
+			} else {
+				time.AfterFunc(2*time.Second, func() {
+					screen.txResult, screen.txFailReason = ProcessTxResult(screen.user, txhash)
+					screen.scrStatus = RESULT_FULFILL_SELL_LOUD_ORDER
+					screen.refreshed = false
+					screen.Render()
+				})
+			}
+		}()
 	}
 }
 
