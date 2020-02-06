@@ -268,5 +268,41 @@
                 "recipes": ["LOUD's Wooden sword lv1 to lv2 upgrade recipe"]
             }
         }
+    },
+    {
+        "ID": "CREATE_PYLON_LOUD_TRADE",        
+        "runAfter": {
+            "precondition": ["CREATE_LOUD_COOKBOOK"],
+            "blockWait": 0
+        },
+        "action": "create_trade",
+        "paramsRef": "./trades/trade_pylon_loud.json",
+        "output": {
+            "txResult": {
+                "status": "Success"
+            },
+            "property": {
+                "owner": "eugen",
+                "trades": ["pylon to loud trading"]
+            }
+        }
+    },
+    {
+        "ID": "CREATE_LOUD_PYLON_TRADE",        
+        "runAfter": {
+            "precondition": ["CREATE_LOUD_COOKBOOK"],
+            "blockWait": 0
+        },
+        "action": "create_trade",
+        "paramsRef": "./trades/trade_loud_pylon.json",
+        "output": {
+            "txResult": {
+                "status": "Success"
+            },
+            "property": {
+                "owner": "eugen",
+                "trades": ["loud to pylon trading"]
+            }
+        }
     }
 ]
