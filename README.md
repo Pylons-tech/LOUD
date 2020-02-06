@@ -48,15 +48,15 @@ pylonscli rest-server --chain-id pylonschain
 ```
 Create eugen account by running
 ```
-make ARGS="eugen local" run
+make ARGS="eugen locald" run
 ```
 Create cookbook and recipes by running
 ```
-make fixture_tests
+make fixture_tests ARGS="-locald"
 ```
 Run game with name "michael"
 ```
-make ARGS="michael local" run
+make ARGS="michael locald" run
 ```
 ### Fresh Remote node test
 Build game
@@ -73,7 +73,7 @@ pylonscli query account $(pylonscli keys show -a eugen) --node 35.223.7.2:26657
 ```
 Create recipes and cookbooks by running
 ```
-make fixture_tests
+make fixture_tests ARGS="-runserial"
 ```
 Check if cookbook and all recipes are created by using
 ```

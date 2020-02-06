@@ -15,8 +15,6 @@ import (
 	"strconv"
 	"strings"
 
-	originT "testing"
-
 	testing "github.com/Pylons-tech/pylons/cmd/fixtures_test/evtesting"
 	pylonSDK "github.com/Pylons-tech/pylons/cmd/test"
 	"github.com/Pylons-tech/pylons/x/pylons/handlers"
@@ -52,7 +50,7 @@ var restEndpointLocal string = "http://localhost:1317"
 
 func init() {
 	args := os.Args
-	if len(args) > 2 && args[2] == "local" {
+	if len(args) > 2 && args[2] == "locald" {
 		customNode = customNodeLocal
 		restEndpoint = restEndpointLocal
 	}
@@ -114,9 +112,11 @@ func SyncFromNode(user User) {
 			}
 		}
 	}
+	// Sort and show by low price buy orders
 	sort.SliceStable(nBuyOrders, func(i, j int) bool {
 		return nBuyOrders[i].Price < nBuyOrders[j].Price
 	})
+	// Sort and show by high price sell orders
 	sort.SliceStable(nSellOrders, func(i, j int) bool {
 		return nSellOrders[i].Price > nSellOrders[j].Price
 	})
@@ -222,9 +222,7 @@ func InitPylonAccount(username string) {
 }
 
 func ProcessTxResult(user User, txhash string) ([]byte, string) {
-	orgT := originT.T{}
-	newT := testing.NewT(&orgT)
-	t := &newT
+	t := GetTestingT()
 
 	resp := handlers.ExecuteRecipeResp{}
 	txHandleResBytes, err := pylonSDK.WaitAndGetTxData(txhash, 3, t)
@@ -252,8 +250,7 @@ func ProcessTxResult(user User, txhash string) ([]byte, string) {
 }
 
 func GetTestingT() *testing.T {
-	orgT := originT.T{}
-	newT := testing.NewT(&orgT)
+	newT := testing.NewT(nil)
 	t := &newT
 	return t
 }

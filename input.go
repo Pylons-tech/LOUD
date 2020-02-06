@@ -2,6 +2,7 @@ package loud
 
 import (
 	"log"
+	"strconv"
 	"time"
 
 	"github.com/nsf/termbox-go"
@@ -17,7 +18,8 @@ func (screen *GameScreen) HandleInputKey(input termbox.Event) {
 			fallthrough
 		case termbox.KeyBackspace:
 			log.Println("Pressed Backspace")
-			screen.inputText = screen.inputText[:len(screen.inputText)-1]
+			screen.SetInputTextAndRender(screen.inputText[:len(screen.inputText)-1])
+			return
 		case termbox.KeyEnter:
 			switch screen.scrStatus {
 			case CREATE_BUY_LOUD_ORDER_ENTER_LOUD_VALUE:
@@ -27,7 +29,7 @@ func (screen *GameScreen) HandleInputKey(input termbox.Event) {
 			case CREATE_BUY_LOUD_ORDER_ENTER_PYLON_VALUE:
 				screen.scrStatus = WAIT_BUY_LOUD_ORDER_CREATION
 				screen.pylonEnterValue = screen.inputText
-				screen.inputText = ""
+				screen.SetInputTextAndRender("")
 				txhash, err := CreateBuyLoudOrder(screen.user, screen.loudEnterValue, screen.pylonEnterValue)
 				log.Println("ended sending request for creating buy loud order")
 				if err != nil {
@@ -50,7 +52,7 @@ func (screen *GameScreen) HandleInputKey(input termbox.Event) {
 			case CREATE_SELL_LOUD_ORDER_ENTER_PYLON_VALUE:
 				screen.scrStatus = WAIT_SELL_LOUD_ORDER_CREATION
 				screen.pylonEnterValue = screen.inputText
-				screen.inputText = ""
+				screen.SetInputTextAndRender("")
 				txhash, err := CreateSellLoudOrder(screen.user, screen.loudEnterValue, screen.pylonEnterValue)
 
 				log.Println("ended sending request for creating buy loud order")
@@ -69,10 +71,13 @@ func (screen *GameScreen) HandleInputKey(input termbox.Event) {
 				}
 			}
 		default:
-			screen.inputText += Key
+			if _, err := strconv.Atoi(Key); err == nil {
+				// If user entered number, just use it
+				screen.SetInputTextAndRender(screen.inputText + Key)
+			}
+			return
 		}
 		screen.refreshed = false
-		log.Println("inputText= \"", screen.inputText, "\"")
 	} else {
 		// TODO should check current location, scrStatus and then after that check Key, rather than checking Key first
 		switch input.Key {
@@ -238,42 +243,46 @@ func (screen *GameScreen) HandleInputKey(input termbox.Event) {
 				screen.refreshed = false
 				screen.Render()
 				log.Println("started sending request for buying item")
-				txhash, err := Buy(screen.user, Key)
-				log.Println("ended sending request for buying item")
-				if err != nil {
-					screen.txFailReason = err.Error()
-					screen.scrStatus = RESULT_BUY_FINISH
-					screen.refreshed = false
-					screen.Render()
-				} else {
-					time.AfterFunc(1*time.Second, func() {
-						screen.txResult, screen.txFailReason = ProcessTxResult(screen.user, txhash)
+				go func() {
+					txhash, err := Buy(screen.user, Key)
+					log.Println("ended sending request for buying item")
+					if err != nil {
+						screen.txFailReason = err.Error()
 						screen.scrStatus = RESULT_BUY_FINISH
 						screen.refreshed = false
 						screen.Render()
-					})
-				}
+					} else {
+						time.AfterFunc(1*time.Second, func() {
+							screen.txResult, screen.txFailReason = ProcessTxResult(screen.user, txhash)
+							screen.scrStatus = RESULT_BUY_FINISH
+							screen.refreshed = false
+							screen.Render()
+						})
+					}
+				}()
 			case SELECT_HUNT_ITEM:
 				screen.activeItem = GetWeaponItemFromKey(screen.user, Key)
 				screen.scrStatus = WAIT_HUNT_PROCESS
 				screen.refreshed = false
 				screen.Render()
 				log.Println("started sending request for hunting item")
-				txhash, err := Hunt(screen.user, Key)
-				log.Println("ended sending request for hunting item")
-				if err != nil {
-					screen.txFailReason = err.Error()
-					screen.scrStatus = RESULT_HUNT_FINISH
-					screen.refreshed = false
-					screen.Render()
-				} else {
-					time.AfterFunc(1*time.Second, func() {
-						screen.txResult, screen.txFailReason = ProcessTxResult(screen.user, txhash)
+				go func() {
+					txhash, err := Hunt(screen.user, Key)
+					log.Println("ended sending request for hunting item")
+					if err != nil {
+						screen.txFailReason = err.Error()
 						screen.scrStatus = RESULT_HUNT_FINISH
 						screen.refreshed = false
 						screen.Render()
-					})
-				}
+					} else {
+						time.AfterFunc(1*time.Second, func() {
+							screen.txResult, screen.txFailReason = ProcessTxResult(screen.user, txhash)
+							screen.scrStatus = RESULT_HUNT_FINISH
+							screen.refreshed = false
+							screen.Render()
+						})
+					}
+				}()
 			case SELECT_SELL_ITEM:
 				screen.activeItem = GetToSellItemFromKey(screen.user, Key)
 				if len(screen.activeItem.Name) == 0 {
@@ -283,21 +292,23 @@ func (screen *GameScreen) HandleInputKey(input termbox.Event) {
 				screen.refreshed = false
 				screen.Render()
 				log.Println("started sending request for selling item")
-				txhash, err := Sell(screen.user, Key)
-				log.Println("ended sending request for selling item")
-				if err != nil {
-					screen.txFailReason = err.Error()
-					screen.scrStatus = RESULT_SELL_FINISH
-					screen.refreshed = false
-					screen.Render()
-				} else {
-					time.AfterFunc(1*time.Second, func() {
-						screen.txResult, screen.txFailReason = ProcessTxResult(screen.user, txhash)
+				go func() {
+					txhash, err := Sell(screen.user, Key)
+					log.Println("ended sending request for selling item")
+					if err != nil {
+						screen.txFailReason = err.Error()
 						screen.scrStatus = RESULT_SELL_FINISH
 						screen.refreshed = false
 						screen.Render()
-					})
-				}
+					} else {
+						time.AfterFunc(1*time.Second, func() {
+							screen.txResult, screen.txFailReason = ProcessTxResult(screen.user, txhash)
+							screen.scrStatus = RESULT_SELL_FINISH
+							screen.refreshed = false
+							screen.Render()
+						})
+					}
+				}()
 			case SELECT_UPGRADE_ITEM:
 				screen.activeItem = GetToUpgradeItemFromKey(screen.user, Key)
 				if len(screen.activeItem.Name) == 0 {
@@ -307,21 +318,23 @@ func (screen *GameScreen) HandleInputKey(input termbox.Event) {
 				screen.refreshed = false
 				screen.Render()
 				log.Println("started sending request for upgrading item")
-				txhash, err := Upgrade(screen.user, Key)
-				log.Println("ended sending request for upgrading item")
-				if err != nil {
-					screen.txFailReason = err.Error()
-					screen.scrStatus = RESULT_UPGRADE_FINISH
-					screen.refreshed = false
-					screen.Render()
-				} else {
-					time.AfterFunc(1*time.Second, func() {
-						screen.txResult, screen.txFailReason = ProcessTxResult(screen.user, txhash)
+				go func() {
+					txhash, err := Upgrade(screen.user, Key)
+					log.Println("ended sending request for upgrading item")
+					if err != nil {
+						screen.txFailReason = err.Error()
 						screen.scrStatus = RESULT_UPGRADE_FINISH
 						screen.refreshed = false
 						screen.Render()
-					})
-				}
+					} else {
+						time.AfterFunc(1*time.Second, func() {
+							screen.txResult, screen.txFailReason = ProcessTxResult(screen.user, txhash)
+							screen.scrStatus = RESULT_UPGRADE_FINISH
+							screen.refreshed = false
+							screen.Render()
+						})
+					}
+				}()
 			}
 		}
 	}

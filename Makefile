@@ -20,4 +20,4 @@ run:
 
 fixture_tests:
 	rm ./test/nonce.json || true
-	go test -v ./test/
+	go test -v ./test/ ${ARGS}

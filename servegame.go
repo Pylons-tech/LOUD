@@ -9,8 +9,10 @@ import (
 	"syscall"
 	"time"
 
-	pylonSDK "github.com/Pylons-tech/pylons/cmd/test"
 	"github.com/nsf/termbox-go"
+
+	pylonSDK "github.com/Pylons-tech/pylons/cmd/test"
+	ctypes "github.com/tendermint/tendermint/rpc/core/types"
 )
 
 func SetupLoggingFile(f *os.File) {
@@ -39,16 +41,12 @@ func SetupScreenAndEvents(world World, logFile *os.File) {
 	log.Println(logMessage)
 
 	tick := time.Tick(50 * time.Millisecond)
-	daemonStatusTick := time.Tick(10 * time.Second)
+	daemonStatusRefreshTick := time.Tick(10 * time.Second)
+	daemonFetchResult := make(chan *ctypes.ResultStatus)
 
 	// Setup terminal close handler
-	c := make(chan os.Signal, 2)
-	signal.Notify(c, os.Interrupt, syscall.SIGTERM)
-	go func() {
-		<-c
-		screen.Reset()
-		os.Exit(0)
-	}()
+	terminalCloseSignal := make(chan os.Signal, 2)
+	signal.Notify(terminalCloseSignal, os.Interrupt, syscall.SIGTERM)
 
 	err := termbox.Init()
 	if err != nil {
@@ -83,14 +81,24 @@ eventloop:
 		case <-tick:
 			screen.Render()
 			continue
-		case <-daemonStatusTick:
-			ds, err := pylonSDK.GetDaemonStatus()
-			if err != nil {
-				log.Println("couldn't get daemon status", err)
-			} else {
-				log.Println("success getting daemon status", err)
-				screen.UpdateBlockHeight(ds.SyncInfo.LatestBlockHeight)
-			}
+		case <-daemonStatusRefreshTick:
+			go func() {
+				screen.SetDaemonFetchingFlag(true)
+				screen.Render()
+				ds, err := pylonSDK.GetDaemonStatus()
+				if err != nil {
+					log.Println("couldn't get daemon status", err)
+				} else {
+					log.Println("success getting daemon status", err)
+					daemonFetchResult <- ds
+				}
+			}()
+		case ds := <-daemonFetchResult:
+			screen.SetDaemonFetchingFlag(false)
+			screen.UpdateBlockHeight(ds.SyncInfo.LatestBlockHeight)
+		case <-terminalCloseSignal:
+			screen.Reset()
+			os.Exit(0)
 		}
 	}
 }
