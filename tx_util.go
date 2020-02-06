@@ -221,16 +221,25 @@ func InitPylonAccount(username string) {
 	log.Println("remove nonce file result", err)
 }
 
+func LogFullTxResultByHash(txhash string) {
+	output, err := pylonSDK.RunPylonsCli([]string{"query", "tx", txhash}, "")
+
+	log.Println("txhash=", txhash, "txoutput=", string(output), "queryerr=", err)
+}
+
 func ProcessTxResult(user User, txhash string) ([]byte, string) {
 	t := GetTestingT()
 
 	resp := handlers.ExecuteRecipeResp{}
+
 	txHandleResBytes, err := pylonSDK.WaitAndGetTxData(txhash, 3, t)
 	if err != nil {
 		errString := fmt.Sprintf("error getting tx result bytes %+v", err)
 		log.Println(errString)
+		LogFullTxResultByHash(txhash)
 		return []byte{}, errString
 	}
+	LogFullTxResultByHash(txhash)
 	hmrErrMsg := pylonSDK.GetHumanReadableErrorFromTxHash(txhash, t)
 	if len(hmrErrMsg) > 0 {
 		errString := fmt.Sprintf("txhash=%s hmrErrMsg=%s", txhash, hmrErrMsg)
