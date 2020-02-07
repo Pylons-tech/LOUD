@@ -48,7 +48,7 @@ pylonscli rest-server --chain-id pylonschain
 ```
 Create eugen account by running
 ```
-make ARGS="eugen locald" run
+make ARGS="eugen -locald" run
 ```
 Create cookbook and recipes by running
 ```
@@ -56,7 +56,11 @@ make fixture_tests ARGS="-locald"
 ```
 Run game with name "michael"
 ```
-make ARGS="michael locald" run
+make ARGS="michael -locald" run
+```
+Run game with name "michael" and use rest endpoint for tx send
+```
+make ARGS="michael -locald -userest" run
 ```
 ### Fresh Remote node test
 Build game
@@ -84,4 +88,9 @@ If something went wrong, just create the remaining recipes by editing `scenario/
 Run game with name "michael"
 ```
 make ARGS="michael" run
+```
+
+Run game with rest endpoint with name "michael"
+```
+make ARGS="michael -userest" run
 ```

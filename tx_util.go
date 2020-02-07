@@ -48,14 +48,32 @@ var restEndpoint string = "http://35.238.123.59:80"
 var customNodeLocal string = "localhost:26657"
 var restEndpointLocal string = "http://localhost:1317"
 
+var useRestTx bool = false
+var useLocalDm bool = false
+
 func init() {
 	args := os.Args
-	if len(args) > 2 && args[2] == "locald" {
+
+	if len(args) > 1 {
+		for _, arg := range args[2:len(args)] {
+			switch arg {
+			case "-locald":
+				useLocalDm = true
+			case "-userest":
+				useRestTx = true
+			}
+		}
+	}
+	if useLocalDm {
 		customNode = customNodeLocal
 		restEndpoint = restEndpointLocal
 	}
+
 	pylonSDK.CLIOpts.CustomNode = customNode
-	log.Println("initing pylonSDK to customNode", customNode)
+	if useRestTx {
+		pylonSDK.CLIOpts.RestEndpoint = restEndpoint
+	}
+	log.Println("initing pylonSDK to customNode", customNode, "useRestTx=", useRestTx)
 }
 
 func SyncFromNode(user User) {
@@ -126,8 +144,21 @@ func SyncFromNode(user User) {
 	log.Println("SyncFromNode sellOrders=", sellOrders)
 }
 
-func GetInitialPylons(addr string) {
+func GetExtraPylons(user User) (string, error) {
+	t := GetTestingT()
+	username := user.GetUserName()
+	addr := pylonSDK.GetAccountAddr(username, t)
+	sdkAddr, err := sdk.AccAddressFromBech32(addr)
+	log.Println("sdkAddr, err := sdk.AccAddressFromBech32(addr)", sdkAddr, err)
+	extraPylonsMsg := msgs.NewMsgGetPylons(types.PremiumTier.Fee, sdkAddr)
+	txhash := pylonSDK.TestTxWithMsgWithNonce(t, extraPylonsMsg, username, false)
+	user.SetLastTransaction(txhash)
+	log.Println("ended sending transaction")
+	return txhash, nil
+}
 
+func GetInitialPylons(username string) (string, error) {
+	addr := pylonSDK.GetAccountAddr(username, GetTestingT())
 	sdkAddr, err := sdk.AccAddressFromBech32(addr)
 	log.Println("sdkAddr, err := sdk.AccAddressFromBech32(addr)", sdkAddr, err)
 
@@ -149,6 +180,9 @@ func GetInitialPylons(addr string) {
 		"--account-number", "0",
 	}
 	signedTx, err := pylonSDK.RunPylonsCli(txSignArgs, "11111111\n")
+	if err != nil {
+		return "", err
+	}
 
 	postBodyJSON := make(map[string]interface{})
 	json.Unmarshal(signedTx, &postBodyJSON)
@@ -160,18 +194,19 @@ func GetInitialPylons(addr string) {
 	log.Println("postBody", string(postBody))
 
 	if err != nil {
-		log.Fatalln(err)
+		return "", err
 	}
 	resp, err := http.Post(restEndpoint+"/txs", "application/json", bytes.NewBuffer(postBody))
 	if err != nil {
-		log.Fatalln(err)
+		return "", err
 	}
 
-	var result map[string]interface{}
+	var result map[string]string
 
 	json.NewDecoder(resp.Body).Decode(&result)
 	defer resp.Body.Close()
 	log.Println("get_pylons_api_response", result)
+	return result["txhash"], nil
 }
 
 func InitPylonAccount(username string) {
@@ -205,7 +240,10 @@ func InitPylonAccount(username string) {
 			log.Println("Daemon refused to connect, please check daemon is running!")
 			os.Exit(3)
 		} else { // account does not exist
-			GetInitialPylons(addr)
+			txhash, err := GetInitialPylons(username)
+			if err != nil {
+				log.Fatalln("txhash, err := GetInitialPylons", txhash, err)
+			}
 			log.Println("ran command for new account on remote chain and waiting for next block ...", addr)
 			pylonSDK.WaitForNextBlock()
 		}
@@ -246,16 +284,17 @@ func ProcessTxResult(user User, txhash string) ([]byte, string) {
 		log.Println(errString)
 		return []byte{}, errString
 	}
+	SyncFromNode(user)
+
 	err = pylonSDK.GetAminoCdc().UnmarshalJSON(txHandleResBytes, &resp)
 	if err != nil {
-		errString := fmt.Sprintf("failed to parse transaction result txhash=%s", txhash)
+		errString := fmt.Sprintf("failed to parse transaction result; maybe this is get_pylons? txhash=%s", txhash)
 		log.Println(errString)
-		return []byte{}, errString
+		return []byte{}, ""
+	} else {
+		log.Println("ProcessTxResult::txResp", resp.Message, string(resp.Output))
+		return resp.Output, ""
 	}
-
-	log.Println("ProcessTxResult::txResp", resp.Message, string(resp.Output))
-	SyncFromNode(user)
-	return resp.Output, ""
 }
 
 func GetTestingT() *testing.T {

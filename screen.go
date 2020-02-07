@@ -59,6 +59,7 @@ func (screen *GameScreen) renderUserCommands() {
 			infoLines = append(infoLines, fmt.Sprintf("%d) %s Lv%d", idx+1, localize(item.Name), item.Level))
 		}
 		infoLines = append(infoLines, localize("Get I)nitial Coin"))
+		infoLines = append(infoLines, localize("Get Initial Py)lon"))
 		infoLines = append(infoLines, localize("C)ancel"))
 	case SELECT_UPGRADE_ITEM:
 		userUpgradeItems := screen.user.UpgradableItems()
@@ -77,6 +78,8 @@ func (screen *GameScreen) renderUserCommands() {
 	case RESULT_BUY_FINISH:
 		fallthrough
 	case RESULT_HUNT_FINISH:
+		fallthrough
+	case RESULT_GET_PYLONS:
 		fallthrough
 	case RESULT_SELL_FINISH:
 		fallthrough
@@ -164,6 +167,8 @@ func (screen *GameScreen) renderUserSituation() {
 				desc = fmt.Sprintf("%s\n%s", localize("hunting without weapon"), waitProcessEnd)
 			}
 		}
+	case WAIT_GET_PYLONS:
+		desc = localize("You are waiting for getting pylons process")
 	case WAIT_SELL_PROCESS:
 		desc = fmt.Sprintf("%s %s Lv%d.\n%s", localize("wait sell process desc"), localize(screen.activeItem.Name), screen.activeItem.Level, waitProcessEnd)
 	case WAIT_UPGRADE_PROCESS:
@@ -218,6 +223,12 @@ func (screen *GameScreen) renderUserSituation() {
 			default:
 				desc = fmt.Sprintf("%s %d.", localize("result hunt finish desc"), respOutput.Amount)
 			}
+		}
+	case RESULT_GET_PYLONS:
+		if screen.txFailReason != "" {
+			desc = localize("get pylon failed reason") + ": " + localize(screen.txFailReason)
+		} else {
+			desc = fmt.Sprintf("You got extra pylons for loud game")
 		}
 	case RESULT_SELL_FINISH:
 		if screen.txFailReason != "" {

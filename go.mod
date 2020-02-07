@@ -3,7 +3,7 @@ module github.com/Pylons-tech/LOUD
 go 1.13
 
 require (
-	github.com/Pylons-tech/pylons v0.0.0-20200131022807-d966c0229bca
+	github.com/Pylons-tech/pylons v0.0.0-20200207011603-c44ee6fe40a2
 	github.com/ahmetb/go-cursor v0.0.0-20131010032410-8136607ea412
 	github.com/anmitsu/go-shlex v0.0.0-20161002113705-648efa622239
 	github.com/coreos/bbolt v1.3.3
