@@ -207,6 +207,30 @@ func (screen *GameScreen) HandleInputKey(input termbox.Event) {
 		case "p":
 			screen.scrStatus = SELECT_UPGRADE_ITEM
 			screen.refreshed = false
+		case "Y":
+			fallthrough
+		case "y":
+			screen.scrStatus = WAIT_GET_PYLONS
+			screen.refreshed = false
+			screen.Render()
+			log.Println("started sending request for getting extra pylons")
+			go func() {
+				txhash, err := GetExtraPylons(screen.user)
+				log.Println("ended sending request for getting extra pylons")
+				if err != nil {
+					screen.txFailReason = err.Error()
+					screen.scrStatus = RESULT_GET_PYLONS
+					screen.refreshed = false
+					screen.Render()
+				} else {
+					time.AfterFunc(1*time.Second, func() {
+						screen.txResult, screen.txFailReason = ProcessTxResult(screen.user, txhash)
+						screen.scrStatus = RESULT_GET_PYLONS
+						screen.refreshed = false
+						screen.Render()
+					})
+				}
+			}()
 		case "N": // Go hunt with no weapon
 			fallthrough
 		case "n":

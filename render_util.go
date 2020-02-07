@@ -74,6 +74,9 @@ const (
 	SELECT_HUNT_ITEM
 	WAIT_HUNT_PROCESS
 	RESULT_HUNT_FINISH
+	WAIT_GET_PYLONS
+	RESULT_GET_PYLONS
+
 	// in market
 	SELECT_MARKET // buy loud or sell loud
 
