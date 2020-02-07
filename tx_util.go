@@ -54,12 +54,14 @@ var useLocalDm bool = false
 func init() {
 	args := os.Args
 
-	for _, arg := range args[2:len(args)] {
-		switch arg {
-		case "-locald":
-			useLocalDm = true
-		case "-userest":
-			useRestTx = true
+	if len(args) > 1 {
+		for _, arg := range args[2:len(args)] {
+			switch arg {
+			case "-locald":
+				useLocalDm = true
+			case "-userest":
+				useRestTx = true
+			}
 		}
 	}
 	if useLocalDm {
