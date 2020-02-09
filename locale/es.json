@@ -27,7 +27,7 @@
     "one": "No tienes suficiente oro para actualizar este artículo"
   },
   "home": {
-    "one": "Bosque(F)\nTienda(S)\nM)ercado\nAjust)es"
+    "one": "Bosque(F)\nTienda(S)\nM)ercado\nAjust)es\nD)evelop"
   },
   "forest": {
     "one": "Cazar(U)\nInicio(H)\nTienda(S)\nM)ercado"
@@ -40,6 +40,9 @@
   },
   "settings": {
     "one": "Idioma:\nEng)lish\nEspa)ñol\nInicio(H)"
+  },
+  "develop": {
+    "one": "Create cookbook(j)\nSwitch user(z)\nH)ome\nS)hop\nM)arket\nSet)tings"
   },
   "Wooden sword": {
     "one": "Espada de Madera",
@@ -75,6 +78,9 @@
   },
   "settings desc": {
     "one": "Ajustes"
+  },
+  "develop desc": {
+    "one": "You are now testing things for development. Please enter commands you want to try"
   },
   "select buy item desc": {
     "one": "Vas a comprar un artículo.\nPor favor selecciona un artículo a comprar."

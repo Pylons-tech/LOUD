@@ -8,6 +8,7 @@ const (
 	SHOP
 	MARKET
 	SETTINGS
+	DEVELOP
 )
 
 // User represents an active user in the system.

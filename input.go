@@ -1,6 +1,7 @@
 package loud
 
 import (
+	"fmt"
 	"log"
 	"strconv"
 	"time"
@@ -11,7 +12,7 @@ import (
 func (screen *GameScreen) HandleInputKey(input termbox.Event) {
 	screen.lastInput = input
 	Key := string(input.Ch)
-	log.Println("Handling Key \"", Key, "\"")
+	log.Println("Handling Key \"", Key, "\"", input.Ch)
 	if screen.InputActive() {
 		switch input.Key {
 		case termbox.KeyBackspace2:
@@ -102,6 +103,49 @@ func (screen *GameScreen) HandleInputKey(input termbox.Event) {
 		}
 
 		switch Key {
+		case "j":
+			fallthrough
+		case "J": // Create cookbook
+			screen.scrStatus = WAIT_CREATE_COOKBOOK
+			screen.refreshed = false
+			screen.Render()
+			go func() {
+				txhash, err := CreateCookbook(screen.user)
+				log.Println("ended sending request for creating cookbook")
+				if err != nil {
+					screen.txFailReason = err.Error()
+					screen.scrStatus = RESULT_CREATE_COOKBOOK
+					screen.refreshed = false
+					screen.Render()
+				} else {
+					time.AfterFunc(1*time.Second, func() {
+						screen.txResult, screen.txFailReason = ProcessTxResult(screen.user, txhash)
+						screen.scrStatus = RESULT_CREATE_COOKBOOK
+						screen.refreshed = false
+						screen.Render()
+					})
+				}
+			}()
+		case "Z":
+			fallthrough
+		case "z": // Switch user
+			screen.scrStatus = WAIT_SWITCH_USER
+			screen.refreshed = false
+			screen.Render()
+			go func() {
+				newUser := screen.world.GetUser(fmt.Sprintf("%d", time.Now().Unix()))
+				screen.SwitchUser(newUser)
+				time.AfterFunc(1*time.Second, func() {
+					screen.scrStatus = RESULT_SWITCH_USER
+					screen.refreshed = false
+					screen.Render()
+				})
+			}()
+		case "D": // DEVELOP
+			fallthrough
+		case "d":
+			screen.user.SetLocation(DEVELOP)
+			screen.refreshed = false
 		case "H": // HOME
 			fallthrough
 		case "h":

@@ -14,6 +14,7 @@ import (
 	"sort"
 	"strconv"
 	"strings"
+	"time"
 
 	testing "github.com/Pylons-tech/pylons/cmd/fixtures_test/evtesting"
 	pylonSDK "github.com/Pylons-tech/pylons/cmd/test"
@@ -50,6 +51,8 @@ var restEndpointLocal string = "http://localhost:1317"
 
 var useRestTx bool = false
 var useLocalDm bool = false
+var automateInput bool = false
+var automateRunCnt int = 0
 
 func init() {
 	args := os.Args
@@ -61,6 +64,8 @@ func init() {
 				useLocalDm = true
 			case "-userest":
 				useRestTx = true
+			case "-automate":
+				automateInput = true
 			}
 		}
 	}
@@ -152,6 +157,30 @@ func GetExtraPylons(user User) (string, error) {
 	log.Println("sdkAddr, err := sdk.AccAddressFromBech32(addr)", sdkAddr, err)
 	extraPylonsMsg := msgs.NewMsgGetPylons(types.PremiumTier.Fee, sdkAddr)
 	txhash := pylonSDK.TestTxWithMsgWithNonce(t, extraPylonsMsg, username, false)
+	user.SetLastTransaction(txhash)
+	log.Println("ended sending transaction")
+	return txhash, nil
+}
+
+func CreateCookbook(user User) (string, error) {
+	t := GetTestingT()
+	username := user.GetUserName()
+	addr := pylonSDK.GetAccountAddr(username, t)
+	sdkAddr, err := sdk.AccAddressFromBech32(addr)
+	log.Println("sdkAddr, err := sdk.AccAddressFromBech32(addr)", sdkAddr, err)
+
+	ccbMsg := msgs.NewMsgCreateCookbook(
+		"tst_cookbook_name",                  // cbType.Name,
+		fmt.Sprintf("%d", time.Now().Unix()), // cbType.ID,
+		"addghjkllsdfdggdgjkkk",              // cbType.Description,
+		"asdfasdfasdf",                       // cbType.Developer,
+		"1.0.0",                              // cbType.Version,
+		"a@example.com",                      // cbType.SupportEmail,
+		0,                                    // cbType.Level,
+		5,                                    // cbType.CostPerBlock,
+		sdkAddr,                              // cbType.Sender,
+	)
+	txhash := pylonSDK.TestTxWithMsgWithNonce(t, ccbMsg, username, false)
 	user.SetLastTransaction(txhash)
 	log.Println("ended sending transaction")
 	return txhash, nil
