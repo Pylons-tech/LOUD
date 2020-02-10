@@ -26,6 +26,7 @@ func (screen *GameScreen) renderUserCommands() {
 			SHOP:     localize("shop"),
 			MARKET:   localize("market"),
 			SETTINGS: localize("settings"),
+			DEVELOP:  localize("develop"),
 		}
 		cmdString := cmdMap[screen.user.GetLocation()]
 		infoLines = strings.Split(cmdString, "\n")
@@ -68,20 +69,24 @@ func (screen *GameScreen) renderUserCommands() {
 		}
 		infoLines = append(infoLines, localize("C)ancel"))
 	case RESULT_BUY_LOUD_ORDER_CREATION:
-		infoLines = append(infoLines, localize("Go) on"))
+		fallthrough
 	case RESULT_SELL_LOUD_ORDER_CREATION:
-		infoLines = append(infoLines, localize("Go) on"))
+		fallthrough
 	case RESULT_FULFILL_BUY_LOUD_ORDER:
-		infoLines = append(infoLines, localize("Go) on"))
+		fallthrough
 	case RESULT_FULFILL_SELL_LOUD_ORDER:
-		infoLines = append(infoLines, localize("Go) on"))
+		fallthrough
 	case RESULT_BUY_FINISH:
 		fallthrough
 	case RESULT_HUNT_FINISH:
 		fallthrough
 	case RESULT_GET_PYLONS:
 		fallthrough
+	case RESULT_CREATE_COOKBOOK:
+		fallthrough
 	case RESULT_SELL_FINISH:
+		fallthrough
+	case RESULT_SWITCH_USER:
 		fallthrough
 	case RESULT_UPGRADE_FINISH:
 		infoLines = append(infoLines, localize("Go) on"))
@@ -115,6 +120,7 @@ func (screen *GameScreen) renderUserSituation() {
 			SHOP:     localize("shop desc"),
 			MARKET:   localize("market desc"),
 			SETTINGS: localize("settings desc"),
+			DEVELOP:  localize("develop desc"),
 		}
 		desc = locationDescMap[screen.user.GetLocation()]
 	case CREATE_BUY_LOUD_ORDER_ENTER_PYLON_VALUE:
@@ -169,6 +175,10 @@ func (screen *GameScreen) renderUserSituation() {
 		}
 	case WAIT_GET_PYLONS:
 		desc = localize("You are waiting for getting pylons process")
+	case WAIT_SWITCH_USER:
+		desc = localize("You are waiting for switching to new user")
+	case WAIT_CREATE_COOKBOOK:
+		desc = localize("You are waiting for creating cookbook")
 	case WAIT_SELL_PROCESS:
 		desc = fmt.Sprintf("%s %s Lv%d.\n%s", localize("wait sell process desc"), localize(screen.activeItem.Name), screen.activeItem.Level, waitProcessEnd)
 	case WAIT_UPGRADE_PROCESS:
@@ -229,6 +239,18 @@ func (screen *GameScreen) renderUserSituation() {
 			desc = localize("get pylon failed reason") + ": " + localize(screen.txFailReason)
 		} else {
 			desc = fmt.Sprintf("You got extra pylons for loud game")
+		}
+	case RESULT_SWITCH_USER:
+		if screen.txFailReason != "" {
+			desc = localize("switch user fail reason") + ": " + localize(screen.txFailReason)
+		} else {
+			desc = fmt.Sprintf("You switched user to %s", screen.user.GetUserName())
+		}
+	case RESULT_CREATE_COOKBOOK:
+		if screen.txFailReason != "" {
+			desc = localize("create cookbook failed reason") + ": " + localize(screen.txFailReason)
+		} else {
+			desc = fmt.Sprintf("You created a new cookbook for a new game build")
 		}
 	case RESULT_SELL_FINISH:
 		if screen.txFailReason != "" {

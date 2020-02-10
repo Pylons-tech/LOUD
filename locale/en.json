@@ -27,7 +27,7 @@
     "one": "You don't have enough gold to upgrade this item"
   },
   "home": {
-    "one": "F)orest\nS)hop\nM)arket\nSet)tings"
+    "one": "F)orest\nS)hop\nM)arket\nSet)tings\nD)evelop"
   },
   "forest": {
     "one": "Hu)nt\nH)ome\nS)hop\nM)arket"
@@ -40,6 +40,9 @@
   },
   "settings": {
     "one": "Language:\nEng)lish\nEspa)ñol\nH)ome"
+  },
+  "develop": {
+    "one": "Create cookbook(j)\nSwitch user(z)\nH)ome\nS)hop\nM)arket\nSet)tings"
   },
   "Wooden sword": {
     "one": "Wooden sword",
@@ -75,6 +78,9 @@
   }, 
   "settings desc": {
     "one": "Settings"
+  },
+  "develop desc": {
+    "one": "You are now testing things for development. Please enter commands you want to try"
   },
   "select buy item desc": {
     "one": "You are gonna buy an item.\nPlease select an item to buy."

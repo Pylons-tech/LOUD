@@ -30,6 +30,9 @@ type Screen interface {
 	UpdateBlockHeight(int64)
 	SetScreenSize(int, int)
 	HandleInputKey(termbox.Event)
+	GetScreenStatus() ScreenStatus
+	SetScreenStatus(ScreenStatus)
+	GetTxFailReason() string
 	Render()
 	Reset()
 }
@@ -77,6 +80,12 @@ const (
 	WAIT_GET_PYLONS
 	RESULT_GET_PYLONS
 
+	// in develop
+	WAIT_CREATE_COOKBOOK
+	RESULT_CREATE_COOKBOOK
+	WAIT_SWITCH_USER
+	RESULT_SWITCH_USER
+
 	// in market
 	SELECT_MARKET // buy loud or sell loud
 
@@ -114,6 +123,22 @@ func NewScreen(world World, user User) Screen {
 		colorCodeCache: make(map[string](func(string) string))}
 
 	return &screen
+}
+
+func (screen *GameScreen) SwitchUser(newUser User) {
+	screen.user = newUser
+}
+
+func (screen *GameScreen) GetTxFailReason() string {
+	return screen.txFailReason
+}
+
+func (screen *GameScreen) GetScreenStatus() ScreenStatus {
+	return screen.scrStatus
+}
+
+func (screen *GameScreen) SetScreenStatus(newStatus ScreenStatus) {
+	screen.scrStatus = newStatus
 }
 
 func (screen *GameScreen) Reset() {
