@@ -18,6 +18,60 @@
         }
     },
     {
+        "ID": "GET_COPPER_SWORD_LV1",        
+        "runAfter": {
+            "precondition": ["CREATE_LOUD_COOKBOOK"],
+            "blockWait": 0
+        },
+        "action": "fiat_item",
+        "paramsRef": "./items/copper_sword_lv1.json",
+        "output": {
+            "txResult": {
+                "status": "Success"
+            },
+            "property": {
+                "owner": "eugen",
+                "items": [
+                    {
+                        "stringKeys": [],
+                        "stringValues": { "Name": "Copper sword" },
+                        "dblKeys": [],
+                        "dblValues": {},
+                        "longKeys": [],
+                        "longValues": {}
+                    }
+                ]
+            }
+        }
+    },
+    {
+        "ID": "GET_WOODEN_SWORD_LV1",        
+        "runAfter": {
+            "precondition": ["CREATE_LOUD_COOKBOOK"],
+            "blockWait": 0
+        },
+        "action": "fiat_item",
+        "paramsRef": "./items/wooden_sword_lv1.json",
+        "output": {
+            "txResult": {
+                "status": "Success"
+            },
+            "property": {
+                "owner": "eugen",
+                "items": [
+                    {
+                        "stringKeys": [],
+                        "stringValues": { "Name": "Wooden sword" },
+                        "dblKeys": [],
+                        "dblValues": {},
+                        "longKeys": [],
+                        "longValues": {}
+                    }
+                ]
+            }
+        }
+    },
+    {
         "ID": "CREATE_GET_INITIAL_COIN_RECIPE",
         "runAfter": {
             "precondition": ["CREATE_LOUD_COOKBOOK"],
@@ -302,6 +356,42 @@
             "property": {
                 "owner": "eugen",
                 "trades": ["loud to pylon trading"]
+            }
+        }
+    },
+    {
+        "ID": "CREATE_PYLON_SWORD_TRADE",        
+        "runAfter": {
+            "precondition": ["CREATE_LOUD_COOKBOOK", "GET_WOODEN_SWORD_LV1"],
+            "blockWait": 0
+        },
+        "action": "create_trade",
+        "paramsRef": "./trades/trade_pylon_sword.json",
+        "output": {
+            "txResult": {
+                "status": "Success"
+            },
+            "property": {
+                "owner": "eugen",
+                "trades": ["pylon to sword trading"]
+            }
+        }
+    },
+    {
+        "ID": "CREATE_SWORD_PYLON_TRADE",        
+        "runAfter": {
+            "precondition": ["CREATE_LOUD_COOKBOOK"],
+            "blockWait": 0
+        },
+        "action": "create_trade",
+        "paramsRef": "./trades/trade_sword_pylon.json",
+        "output": {
+            "txResult": {
+                "status": "Success"
+            },
+            "property": {
+                "owner": "eugen",
+                "trades": ["sword to pylon trading"]
             }
         }
     }

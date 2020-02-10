@@ -1,0 +1,14 @@
+{
+    "CoinInputs":[],
+    "ItemInputRefs": [
+        "./trades/item_input/copper_sword_lv1.json"
+    ],
+    "CoinOutputs": [{
+        "denom":"eugencoin",
+        "amount": "200"
+    }],
+    "ItemOutputNames": [],
+    "ExtraInfo":"sword to pylon trading",
+    "Sender":"eugen",
+    "CookbookName": "tradecookbook"
+}

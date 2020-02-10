@@ -1,0 +1,9 @@
+{
+    "Doubles":null,
+    "Longs": [
+        { "Key": "level", "Value": "1" }
+    ],
+    "Strings":[
+        { "Key":"Name", "Value":"Copper sword" }
+    ]
+}
