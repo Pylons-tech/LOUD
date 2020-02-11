@@ -33,8 +33,8 @@ func (screen *GameScreen) HandleInputKeyMarketEntryPoint(input termbox.Event) {
 	tarStusMap := map[string]ScreenStatus{
 		"1": SHOW_LOUD_BUY_ORDERS,
 		"2": SHOW_LOUD_SELL_ORDERS,
-		"3": SHOW_SWORD_PYLON_ORDERS,
-		"4": SHOW_PYLON_SWORD_ORDERS,
+		"3": SHOW_PYLON_SWORD_ORDERS,
+		"4": SHOW_SWORD_PYLON_ORDERS,
 	}
 
 	if newStus, ok := tarStusMap[Key]; ok {
@@ -207,6 +207,10 @@ func (screen *GameScreen) HandleInputKey(input termbox.Event) {
 					screen.RunSelectedLoudBuyTrade()
 				case SHOW_LOUD_SELL_ORDERS:
 					screen.RunSelectedLoudSellTrade()
+				case SHOW_PYLON_SWORD_ORDERS:
+					screen.RunSelectedSwordBuyOrder()
+				case SHOW_SWORD_PYLON_ORDERS:
+					screen.RunSelectedSwordSellOrder()
 				}
 			}
 		}
