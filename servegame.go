@@ -94,15 +94,15 @@ eventloop:
 					os.Exit(1)
 				}
 				screen.HandleInputKey(termbox.Event{
-					Ch: 122, // " z " 122 Switch user
+					Ch: 122, // "z" 122 Switch user
 				})
 			case RESULT_GET_PYLONS:
 				screen.HandleInputKey(termbox.Event{
-					Ch: 106, // " j " 106 Create cookbook
+					Ch: 106, // "j" 106 Create cookbook
 				})
 			case RESULT_SWITCH_USER:
 				screen.HandleInputKey(termbox.Event{
-					Ch: 121, // " y " 121 get initial pylons
+					Ch: 121, // "y" 121 get initial pylons
 				})
 				automateRunCnt += 1
 				log.Printf("Running %dth automation task", automateRunCnt)

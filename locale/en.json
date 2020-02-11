@@ -27,22 +27,40 @@
     "one": "You don't have enough gold to upgrade this item"
   },
   "home": {
-    "one": "F)orest\nS)hop\nM)arket\nSet)tings\nD)evelop"
+    "one": " "
   },
   "forest": {
-    "one": "Hu)nt\nH)ome\nS)hop\nM)arket"
+    "one": "1) Hunt\n"
   },
   "shop": {
-    "one": "B)uy Items\nSe)ll Items\nUp)grade Items\nH)ome\nF)orest\nM)arket"
+    "one": "1) Buy Items\n2) Sell Items\n3) Upgrade Items\n"
   },
   "market": {
-    "one": "B)uy Loud Coin\nSe)ll Loud Coin\nF)orest\nS)hop\nH)ome"
+    "one": "1) Buy Loud Coin\n2) Sell Loud Coin\n3) Buy items market\n4) Sell Items market\n"
   },
   "settings": {
-    "one": "Language:\nEng)lish\nEspa)ñol\nH)ome"
+    "one": "Language:\n1) English\n2) Español\n"
   },
   "develop": {
-    "one": "Create cookbook(j)\nSwitch user(z)\nH)ome\nS)hop\nM)arket\nSet)tings"
+    "one": "Create cookbook(j)\nSwitch user(z)\nGet initial py)lons\n"
+  },
+  "go to home": {
+    "one": "H)ome"
+  },
+  "go to forest": {
+    "one": "F)orest"
+  },
+  "go to shop": {
+    "one": "S)hop"
+  },
+  "go to market": {
+    "one": "M)arket"
+  },
+  "go to settings": {
+    "one": "Set)tings"
+  },
+  "go to develop": {
+    "one": "D)evelop"
   },
   "Wooden sword": {
     "one": "Wooden sword",
@@ -74,7 +92,7 @@
     "one": "You are now at a shop.\nIf you want you can buy or sell items here."
   },
   "market desc": {
-    "one": "You are now at a marketplace.\nYou can buy or sell loud coin here."
+    "one": "You are now at a marketplace.\nYou can do trading here for coin and items."
   }, 
   "settings desc": {
     "one": "Settings"

@@ -4,15 +4,124 @@ import (
 	"fmt"
 	"log"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/nsf/termbox-go"
 )
 
+func (screen *GameScreen) HandleInputKeyLocationSwitch(input termbox.Event) {
+	Key := strings.ToUpper(string(input.Ch))
+
+	tarLctMap := map[string]UserLocation{
+		"F": FOREST,
+		"S": SHOP,
+		"H": HOME,
+		"T": SETTINGS,
+		"M": MARKET,
+		"D": DEVELOP,
+	}
+
+	if newStus, ok := tarLctMap[Key]; ok {
+		screen.user.SetLocation(newStus)
+		screen.refreshed = false
+	}
+}
+func (screen *GameScreen) HandleInputKeyMarketEntryPoint(input termbox.Event) {
+	Key := string(input.Ch)
+
+	tarStusMap := map[string]ScreenStatus{
+		"1": SHOW_LOUD_BUY_ORDERS,
+		"2": SHOW_LOUD_SELL_ORDERS,
+		"3": SHOW_SWORD_PYLON_ORDERS,
+		"4": SHOW_PYLON_SWORD_ORDERS,
+	}
+
+	if newStus, ok := tarStusMap[Key]; ok {
+		screen.scrStatus = newStus
+		screen.refreshed = false
+	} else {
+		screen.HandleInputKeyLocationSwitch(input)
+	}
+}
+
+func (screen *GameScreen) HandleInputKeySettingsEntryPoint(input termbox.Event) {
+	Key := string(input.Ch)
+
+	tarLangMap := map[string]string{
+		"1": "en",
+		"2": "es",
+	}
+
+	if newLang, ok := tarLangMap[Key]; ok {
+		gameLanguage = newLang
+		screen.refreshed = false
+	} else {
+		screen.HandleInputKeyLocationSwitch(input)
+	}
+}
+
+func (screen *GameScreen) HandleInputKeyForestEntryPoint(input termbox.Event) {
+	Key := strings.ToUpper(string(input.Ch))
+
+	tarStusMap := map[string]ScreenStatus{
+		"1": SELECT_HUNT_ITEM,
+	}
+
+	if newStus, ok := tarStusMap[Key]; ok {
+		screen.scrStatus = newStus
+		screen.refreshed = false
+	} else {
+		screen.HandleInputKeyLocationSwitch(input)
+	}
+}
+
+func (screen *GameScreen) HandleInputKeyShopEntryPoint(input termbox.Event) {
+	Key := strings.ToUpper(string(input.Ch))
+
+	tarStusMap := map[string]ScreenStatus{
+		"1": SELECT_BUY_ITEM,
+		"2": SELECT_SELL_ITEM,
+		"3": SELECT_UPGRADE_ITEM,
+	}
+
+	if newStus, ok := tarStusMap[Key]; ok {
+		screen.scrStatus = newStus
+		screen.refreshed = false
+	} else {
+		screen.HandleInputKeyLocationSwitch(input)
+	}
+}
+
 func (screen *GameScreen) HandleInputKey(input termbox.Event) {
 	screen.lastInput = input
-	Key := string(input.Ch)
+	Key := strings.ToUpper(string(input.Ch))
 	log.Println("Handling Key \"", Key, "\"", input.Ch)
+	if screen.user.GetLocation() == MARKET {
+		switch screen.scrStatus {
+		case SHOW_LOCATION:
+			screen.HandleInputKeyMarketEntryPoint(input)
+			return
+		}
+	} else if screen.user.GetLocation() == SETTINGS {
+		switch screen.scrStatus {
+		case SHOW_LOCATION:
+			screen.HandleInputKeySettingsEntryPoint(input)
+			return
+		}
+	} else if screen.user.GetLocation() == FOREST {
+		switch screen.scrStatus {
+		case SHOW_LOCATION:
+			screen.HandleInputKeyForestEntryPoint(input)
+			return
+		}
+	} else if screen.user.GetLocation() == SHOP {
+		switch screen.scrStatus {
+		case SHOW_LOCATION:
+			screen.HandleInputKeyShopEntryPoint(input)
+			return
+		}
+	}
 	if screen.InputActive() {
 		switch input.Key {
 		case termbox.KeyBackspace2:
@@ -103,8 +212,6 @@ func (screen *GameScreen) HandleInputKey(input termbox.Event) {
 		}
 
 		switch Key {
-		case "j":
-			fallthrough
 		case "J": // Create cookbook
 			screen.scrStatus = WAIT_CREATE_COOKBOOK
 			screen.refreshed = false
@@ -126,69 +233,42 @@ func (screen *GameScreen) HandleInputKey(input termbox.Event) {
 					})
 				}
 			}()
-		case "Z":
-			fallthrough
-		case "z": // Switch user
+		case "Z": // Switch user
 			screen.scrStatus = WAIT_SWITCH_USER
 			screen.refreshed = false
 			screen.Render()
 			go func() {
 				newUser := screen.world.GetUser(fmt.Sprintf("%d", time.Now().Unix()))
-				screen.SwitchUser(newUser)
-				time.AfterFunc(1*time.Second, func() {
-					screen.scrStatus = RESULT_SWITCH_USER
-					screen.refreshed = false
-					screen.Render()
-				})
+				orgLocation := screen.user.GetLocation()
+				screen.SwitchUser(newUser)           // this is moving user back to home
+				screen.user.SetLocation(orgLocation) // set the user back to original location
+
+				screen.scrStatus = RESULT_SWITCH_USER
+				screen.refreshed = false
+				screen.Render()
 			}()
-		case "D": // DEVELOP
-			fallthrough
-		case "d":
-			screen.user.SetLocation(DEVELOP)
-			screen.refreshed = false
 		case "H": // HOME
-			fallthrough
-		case "h":
 			screen.user.SetLocation(HOME)
 			screen.refreshed = false
 		case "F": // FOREST
-			fallthrough
-		case "f":
 			screen.user.SetLocation(FOREST)
 			screen.refreshed = false
 		case "S": // SHOP
-			fallthrough
-		case "s":
 			screen.user.SetLocation(SHOP)
 			screen.refreshed = false
 		case "M": // MARKET
-			fallthrough
-		case "m":
 			screen.user.SetLocation(MARKET)
 			screen.refreshed = false
 		case "T": // SETTINGS
-			fallthrough
-		case "t":
 			screen.user.SetLocation(SETTINGS)
 			screen.refreshed = false
-		case "G":
-			fallthrough
-		case "g":
-			gameLanguage = "en"
-			screen.refreshed = false
-		case "A":
-			fallthrough
-		case "a":
-			gameLanguage = "es"
+		case "D": // DEVELOP
+			screen.user.SetLocation(DEVELOP)
 			screen.refreshed = false
 		case "C": // CANCEL
-			fallthrough
-		case "c":
 			screen.scrStatus = SHOW_LOCATION
 			screen.refreshed = false
 		case "O": // GO ON, GO BACK, CREATE ORDER
-			fallthrough
-		case "o":
 			if screen.user.GetLocation() == MARKET {
 				switch screen.scrStatus {
 				case SHOW_LOUD_BUY_ORDERS:
@@ -213,47 +293,7 @@ func (screen *GameScreen) HandleInputKey(input termbox.Event) {
 				screen.scrStatus = SHOW_LOCATION
 				screen.refreshed = false
 			}
-		case "U": // HUNT
-			fallthrough
-		case "u":
-			screen.scrStatus = SELECT_HUNT_ITEM
-			screen.refreshed = false
-		case "B": // BUY
-			fallthrough
-		case "b": // BUY
-			if screen.user.GetLocation() == SHOP {
-				screen.scrStatus = SELECT_BUY_ITEM
-				screen.refreshed = false
-			} else if screen.user.GetLocation() == MARKET {
-				if screen.scrStatus == SHOW_LOCATION {
-					screen.scrStatus = SHOW_LOUD_BUY_ORDERS
-					screen.refreshed = false
-				} else if screen.scrStatus == SHOW_LOUD_BUY_ORDERS {
-					screen.RunSelectedLoudBuyTrade()
-				}
-			}
-		case "E": // SELL
-			fallthrough
-		case "e":
-			if screen.user.GetLocation() == SHOP {
-				screen.scrStatus = SELECT_SELL_ITEM
-				screen.refreshed = false
-			} else if screen.user.GetLocation() == MARKET {
-				if screen.scrStatus == SHOW_LOCATION {
-					screen.scrStatus = SHOW_LOUD_SELL_ORDERS
-					screen.refreshed = false
-				} else if screen.scrStatus == SHOW_LOUD_SELL_ORDERS {
-					screen.RunSelectedLoudSellTrade()
-				}
-			}
-		case "P": // UPGRADE ITEM
-			fallthrough
-		case "p":
-			screen.scrStatus = SELECT_UPGRADE_ITEM
-			screen.refreshed = false
-		case "Y":
-			fallthrough
-		case "y":
+		case "Y": // get initial pylons
 			screen.scrStatus = WAIT_GET_PYLONS
 			screen.refreshed = false
 			screen.Render()
@@ -277,11 +317,7 @@ func (screen *GameScreen) HandleInputKey(input termbox.Event) {
 			}()
 		case "N": // Go hunt with no weapon
 			fallthrough
-		case "n":
-			fallthrough
 		case "I":
-			fallthrough
-		case "i":
 			fallthrough
 		case "1": // SELECT 1st item
 			fallthrough

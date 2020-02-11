@@ -21,19 +21,24 @@ func (screen *GameScreen) renderUserCommands() {
 	switch screen.scrStatus {
 	case SHOW_LOCATION:
 		cmdMap := map[UserLocation]string{
-			HOME:     localize("home"),
-			FOREST:   localize("forest"),
-			SHOP:     localize("shop"),
-			MARKET:   localize("market"),
-			SETTINGS: localize("settings"),
-			DEVELOP:  localize("develop"),
+			HOME:     "home",
+			FOREST:   "forest",
+			SHOP:     "shop",
+			MARKET:   "market",
+			SETTINGS: "settings",
+			DEVELOP:  "develop",
 		}
-		cmdString := cmdMap[screen.user.GetLocation()]
+		cmdString := localize(cmdMap[screen.user.GetLocation()])
 		infoLines = strings.Split(cmdString, "\n")
+		for _, loc := range []UserLocation{HOME, FOREST, SHOP, MARKET, SETTINGS, DEVELOP} {
+			if loc != screen.user.GetLocation() {
+				infoLines = append(infoLines, localize("go to "+cmdMap[loc]))
+			}
+		}
 	case SHOW_LOUD_BUY_ORDERS:
 		infoLines = append(infoLines, screen.tradeTableColorDesc()...)
 
-		infoLines = append(infoLines, "B)uy( ↵ )")
+		infoLines = append(infoLines, "Buy( ↵ )")
 		infoLines = append(infoLines, "Create a buy o)rder")
 		infoLines = append(infoLines, "Go bac)k")
 	case SHOW_LOUD_SELL_ORDERS:
