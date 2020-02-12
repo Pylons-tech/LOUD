@@ -22,7 +22,24 @@ var shopItems = []Item{
 	},
 }
 
-var worldItems = []Item{}
+var worldItems = []Item{
+	Item{
+		Name:  "Wooden sword",
+		Level: 1,
+	},
+	Item{
+		Name:  "Wooden sword",
+		Level: 2,
+	},
+	Item{
+		Name:  "Copper sword",
+		Level: 1,
+	},
+	Item{
+		Name:  "Copper sword",
+		Level: 2,
+	},
+}
 
 func (item *Item) GetSellPrice() int {
 	switch item.Name {

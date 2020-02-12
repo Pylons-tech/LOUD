@@ -31,52 +31,30 @@ func (screen *GameScreen) renderUserCommands() {
 		}
 	case SHOW_LOUD_BUY_ORDERS:
 		infoLines = append(infoLines, screen.tradeTableColorDesc()...)
-
 		infoLines = append(infoLines, "Buy( ↵ )")
 		infoLines = append(infoLines, "Create a buy o)rder")
 		infoLines = append(infoLines, "Go bac)k")
 	case SHOW_LOUD_SELL_ORDERS:
 		infoLines = append(infoLines, screen.tradeTableColorDesc()...)
-
 		infoLines = append(infoLines, "Sell( ↵ )")
 		infoLines = append(infoLines, "Create sell o)rder")
 		infoLines = append(infoLines, "Go bac)k")
-	case SHOW_PYLON_SWORD_ORDERS:
+	case SHOW_BUY_SWORD_ORDERS:
 		infoLines = append(infoLines, screen.tradeTableColorDesc()...)
-
 		infoLines = append(infoLines, "Buy( ↵ )")
 		infoLines = append(infoLines, "Create buy o)rder")
 		infoLines = append(infoLines, "Go bac)k")
-	case CREATE_SWORD_PYLON_ORDER_SELECT_SWORD:
-		// TODO:
-	case CREATE_SWORD_PYLON_ORDER_ENTER_PYLON_VALUE:
-		// TODO:
-	case WAIT_SWORD_PYLON_ORDER_CREATION:
-		// TODO:
-	case RESULT_SWORD_PYLON_ORDER_CREATION:
-		// TODO:
-	case WAIT_FULFILL_SWORD_PYLON_ORDER:
-		// TODO:
-	case RESULT_FULFILL_SWORD_PYLON_ORDER:
-		// TODO:
-	case SHOW_SWORD_PYLON_ORDERS:
+	case SHOW_SELL_SWORD_ORDERS:
 		infoLines = append(infoLines, screen.tradeTableColorDesc()...)
-
 		infoLines = append(infoLines, "Sell( ↵ )")
 		infoLines = append(infoLines, "Create sell o)rder")
 		infoLines = append(infoLines, "Go bac)k")
-	case CREATE_PYLON_SWORD_ORDER_SELECT_SWORD:
-		// TODO:
-	case CREATE_PYLON_SWORD_ORDER_ENTER_PYLON_VALUE:
-		// TODO:
-	case WAIT_PYLON_SWORD_ORDER_CREATION:
-		// TODO:
-	case RESULT_PYLON_SWORD_ORDER_CREATION:
-		// TODO:
-	case WAIT_FULFILL_PYLON_SWORD_ORDER:
-		// TODO:
-	case RESULT_FULFILL_PYLON_SWORD_ORDER:
-		// TODO:
+
+	case CREATE_SELL_SWORD_ORDER_SELECT_SWORD:
+		fallthrough
+	case CREATE_BUY_SWORD_ORDER_SELECT_SWORD:
+		infoLines = append(infoLines, "Select ( ↵ )")
+		infoLines = append(infoLines, "Go bac)k")
 	case SELECT_BUY_ITEM:
 		for idx, item := range shopItems {
 			infoLines = append(infoLines, fmt.Sprintf("%d) %s Lv%d  ", idx+1, localize(item.Name), item.Level)+screen.loudIcon()+fmt.Sprintf(" %d", item.Price))
@@ -103,7 +81,23 @@ func (screen *GameScreen) renderUserCommands() {
 			infoLines = append(infoLines, fmt.Sprintf("%d) %s Lv%d ", idx+1, localize(item.Name), item.Level)+screen.loudIcon()+fmt.Sprintf(" %d", item.GetUpgradePrice()))
 		}
 		infoLines = append(infoLines, localize("C)ancel"))
+	case CREATE_SELL_LOUD_ORDER_ENTER_LOUD_VALUE:
+		fallthrough
+	case CREATE_SELL_LOUD_ORDER_ENTER_PYLON_VALUE:
+		fallthrough
+	case CREATE_BUY_LOUD_ORDER_ENTER_LOUD_VALUE:
+		fallthrough
+	case CREATE_BUY_LOUD_ORDER_ENTER_PYLON_VALUE:
+		fallthrough
+	case CREATE_SELL_SWORD_ORDER_ENTER_PYLON_VALUE:
+		fallthrough
+	case CREATE_BUY_SWORD_ORDER_ENTER_PYLON_VALUE:
+		infoLines = append(infoLines, "Finish Enter ( ↵ )")
 	case RESULT_BUY_LOUD_ORDER_CREATION:
+		fallthrough
+	case RESULT_SELL_SWORD_ORDER_CREATION:
+		fallthrough
+	case RESULT_BUY_SWORD_ORDER_CREATION:
 		fallthrough
 	case RESULT_SELL_LOUD_ORDER_CREATION:
 		fallthrough

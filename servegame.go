@@ -118,6 +118,7 @@ eventloop:
 					log.Println("success getting daemon status", err)
 					daemonFetchResult <- ds
 				}
+				screen.Resync()
 			}()
 		case ds := <-daemonFetchResult:
 			screen.SetDaemonFetchingFlag(false)

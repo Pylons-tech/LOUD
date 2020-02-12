@@ -83,7 +83,7 @@ func init() {
 
 func SyncFromNode(user User) {
 	log.Println("SyncFromNode username=", user.GetUserName())
-	log.Println("SyncFromNode username=", pylonSDK.GetAccountAddr(user.GetUserName(), GetTestingT()))
+	log.Println("SyncFromNode userinfo=", pylonSDK.GetAccountAddr(user.GetUserName(), GetTestingT()))
 	accAddr := pylonSDK.GetAccountAddr(user.GetUserName(), GetTestingT())
 	accInfo := pylonSDK.GetAccountInfoFromName(user.GetUserName(), GetTestingT())
 	log.Println("accountInfo Result=", accInfo)
@@ -94,7 +94,6 @@ func SyncFromNode(user User) {
 
 	rawItems, _ := pylonSDK.ListItemsViaCLI(accInfo.Address.String())
 	myItems := []Item{}
-	nWorldItems := []Item{}
 	for _, rawItem := range rawItems {
 		Level, _ := rawItem.FindLong("level")
 		Name, _ := rawItem.FindString("Name")
@@ -103,16 +102,10 @@ func SyncFromNode(user User) {
 			Name:  Name,
 			ID:    rawItem.ID,
 		}
-		if rawItem.Sender.String() == accAddr {
-			myItems = append(myItems, item)
-		} else {
-			nWorldItems = append(nWorldItems, item)
-		}
+		myItems = append(myItems, item)
 	}
 	user.SetItems(myItems)
-	worldItems = nWorldItems
 	log.Println("SyncFromNode myItems=", myItems)
-	log.Println("SyncFromNode nWorldItems=", nWorldItems)
 
 	nBuyOrders := []Order{}
 	nSellOrders := []Order{}
@@ -120,8 +113,11 @@ func SyncFromNode(user User) {
 	nSellSwordOrders := []ItemOrder{}
 	rawTrades, _ := pylonSDK.ListTradeViaCLI("")
 	for _, tradeItem := range rawTrades {
-		if tradeItem.Completed == false && len(tradeItem.CoinInputs) > 0 {
-			inputCoin := tradeItem.CoinInputs[0].Coin
+		if tradeItem.Completed == false {
+			inputCoin := ""
+			if len(tradeItem.CoinInputs) > 0 {
+				inputCoin = tradeItem.CoinInputs[0].Coin
+			}
 			loudOutputAmount := tradeItem.CoinOutputs.AmountOf("loudcoin").Int64()
 			pylonOutputAmount := tradeItem.CoinOutputs.AmountOf("pylon").Int64()
 			itemInputLen := len(tradeItem.ItemInputs)
@@ -158,7 +154,7 @@ func SyncFromNode(user User) {
 				})
 			} else if itemOutputLen > 0 { // pylon -> sword trade
 				inputPylonAmount := tradeItem.CoinInputs[0].Count
-				level, _ := tradeItem.ItemOutputs[0].FindLong("Level")
+				level, _ := tradeItem.ItemOutputs[0].FindLong("level")
 				name, _ := tradeItem.ItemOutputs[0].FindString("Name")
 				tItem := Item{
 					ID:    tradeItem.ItemOutputs[0].ID,
@@ -621,7 +617,7 @@ func GetItemInputsFromActiveItem(activeItem Item) types.ItemInputList {
 	ii := types.ItemInput{
 		Doubles: nil,
 		Longs: types.LongInputParamList{
-			types.LongInputParam{"Level", activeItem.Level, activeItem.Level},
+			types.LongInputParam{"level", activeItem.Level, activeItem.Level},
 		},
 		Strings: types.StringInputParamList{
 			types.StringInputParam{"Name", activeItem.Name},
@@ -631,8 +627,8 @@ func GetItemInputsFromActiveItem(activeItem Item) types.ItemInputList {
 	return itemInputs
 }
 
-func CreateSwordPylonOrder(user User, activeItem Item, pylonEnterValue string) (string, error) {
-
+func CreateBuySwordOrder(user User, activeItem Item, pylonEnterValue string) (string, error) {
+// trade creator will get sword from pylon
 	t := GetTestingT()
 
 	itemInputs := GetItemInputsFromActiveItem(activeItem)
@@ -646,7 +642,7 @@ func CreateSwordPylonOrder(user User, activeItem Item, pylonEnterValue string) (
 	sdkAddr, err := sdk.AccAddressFromBech32(eugenAddr)
 
 	outputCoins := sdk.Coins{sdk.NewInt64Coin("pylon", int64(pylonValue))}
-	extraInfo := "created by loud game"
+	extraInfo := "sword buy order created by loud game"
 
 	createTrdMsg := msgs.NewMsgCreateTrade(
 		nil,
@@ -669,7 +665,8 @@ func GetItemOutputFromActiveItem(activeItem Item) (types.ItemList, error) {
 	return itemOutputs, err
 }
 
-func CreatePylonSwordOrder(user User, activeItem Item, pylonEnterValue string) (string, error) {
+func CreateSellSwordOrder(user User, activeItem Item, pylonEnterValue string) (string, error) {
+// trade creator will get pylon from sword
 	t := GetTestingT()
 
 	pylonValue, err := strconv.Atoi(pylonEnterValue)
@@ -686,7 +683,7 @@ func CreatePylonSwordOrder(user User, activeItem Item, pylonEnterValue string) (
 		return "", err
 	}
 
-	extraInfo := "created by loud game"
+	extraInfo := "sword sell order created by loud game"
 
 	createTrdMsg := msgs.NewMsgCreateTrade(
 		inputCoinList,

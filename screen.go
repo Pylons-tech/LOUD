@@ -36,6 +36,7 @@ type Screen interface {
 	GetScreenStatus() ScreenStatus
 	SetScreenStatus(ScreenStatus)
 	GetTxFailReason() string
+	Resync()
 	Render()
 	Reset()
 }
@@ -109,21 +110,21 @@ const (
 	WAIT_FULFILL_SELL_LOUD_ORDER
 	RESULT_FULFILL_SELL_LOUD_ORDER
 
-	SHOW_SWORD_PYLON_ORDERS
-	CREATE_SWORD_PYLON_ORDER_SELECT_SWORD
-	CREATE_SWORD_PYLON_ORDER_ENTER_PYLON_VALUE
-	WAIT_SWORD_PYLON_ORDER_CREATION
-	RESULT_SWORD_PYLON_ORDER_CREATION
-	WAIT_FULFILL_SWORD_PYLON_ORDER
-	RESULT_FULFILL_SWORD_PYLON_ORDER
+	SHOW_SELL_SWORD_ORDERS
+	CREATE_SELL_SWORD_ORDER_SELECT_SWORD
+	CREATE_SELL_SWORD_ORDER_ENTER_PYLON_VALUE
+	WAIT_SELL_SWORD_ORDER_CREATION
+	RESULT_SELL_SWORD_ORDER_CREATION
+	WAIT_FULFILL_SELL_SWORD_ORDER
+	RESULT_FULFILL_SELL_SWORD_ORDER
 
-	SHOW_PYLON_SWORD_ORDERS
-	CREATE_PYLON_SWORD_ORDER_SELECT_SWORD
-	CREATE_PYLON_SWORD_ORDER_ENTER_PYLON_VALUE
-	WAIT_PYLON_SWORD_ORDER_CREATION
-	RESULT_PYLON_SWORD_ORDER_CREATION
-	WAIT_FULFILL_PYLON_SWORD_ORDER
-	RESULT_FULFILL_PYLON_SWORD_ORDER
+	SHOW_BUY_SWORD_ORDERS
+	CREATE_BUY_SWORD_ORDER_SELECT_SWORD
+	CREATE_BUY_SWORD_ORDER_ENTER_PYLON_VALUE
+	WAIT_BUY_SWORD_ORDER_CREATION
+	RESULT_BUY_SWORD_ORDER_CREATION
+	WAIT_FULFILL_BUY_SWORD_ORDER
+	RESULT_FULFILL_BUY_SWORD_ORDER
 )
 
 // NewScreen manages the window rendering for game
@@ -147,6 +148,10 @@ func NewScreen(world World, user User) Screen {
 
 func (screen *GameScreen) SwitchUser(newUser User) {
 	screen.user = newUser
+}
+
+func (screen *GameScreen) Resync() {
+	SyncFromNode(screen.user)
 }
 
 func (screen *GameScreen) GetTxFailReason() string {
@@ -563,9 +568,9 @@ func (screen *GameScreen) InputActive() bool {
 		return true
 	case CREATE_SELL_LOUD_ORDER_ENTER_PYLON_VALUE:
 		return true
-	case CREATE_SWORD_PYLON_ORDER_ENTER_PYLON_VALUE:
+	case CREATE_SELL_SWORD_ORDER_ENTER_PYLON_VALUE:
 		return true
-	case CREATE_PYLON_SWORD_ORDER_ENTER_PYLON_VALUE:
+	case CREATE_BUY_SWORD_ORDER_ENTER_PYLON_VALUE:
 		return true
 	}
 	return false
@@ -726,11 +731,11 @@ func (screen *GameScreen) RunSelectedLoudSellTrade() {
 func (screen *GameScreen) RunSelectedSwordBuyOrder() {
 	if len(swordBuyOrders) <= screen.activeLine || screen.activeLine < 0 {
 		screen.txFailReason = localize("you haven't selected any buy item order")
-		screen.scrStatus = RESULT_FULFILL_PYLON_SWORD_ORDER
+		screen.scrStatus = RESULT_FULFILL_BUY_SWORD_ORDER
 		screen.refreshed = false
 		screen.Render()
 	} else {
-		screen.scrStatus = WAIT_FULFILL_PYLON_SWORD_ORDER
+		screen.scrStatus = WAIT_FULFILL_BUY_SWORD_ORDER
 		screen.activeItemOrder = swordBuyOrders[screen.activeLine]
 		screen.refreshed = false
 		screen.Render()
@@ -740,13 +745,13 @@ func (screen *GameScreen) RunSelectedSwordBuyOrder() {
 			log.Println("ended sending request for creating buying item order")
 			if err != nil {
 				screen.txFailReason = err.Error()
-				screen.scrStatus = RESULT_FULFILL_PYLON_SWORD_ORDER
+				screen.scrStatus = RESULT_FULFILL_BUY_SWORD_ORDER
 				screen.refreshed = false
 				screen.Render()
 			} else {
 				time.AfterFunc(2*time.Second, func() {
 					screen.txResult, screen.txFailReason = ProcessTxResult(screen.user, txhash)
-					screen.scrStatus = RESULT_FULFILL_PYLON_SWORD_ORDER
+					screen.scrStatus = RESULT_FULFILL_BUY_SWORD_ORDER
 					screen.refreshed = false
 					screen.Render()
 				})
@@ -758,11 +763,11 @@ func (screen *GameScreen) RunSelectedSwordBuyOrder() {
 func (screen *GameScreen) RunSelectedSwordSellOrder() {
 	if len(swordSellOrders) <= screen.activeLine || screen.activeLine < 0 {
 		screen.txFailReason = localize("you haven't selected any sell item order")
-		screen.scrStatus = RESULT_FULFILL_SWORD_PYLON_ORDER
+		screen.scrStatus = RESULT_FULFILL_SELL_SWORD_ORDER
 		screen.refreshed = false
 		screen.Render()
 	} else {
-		screen.scrStatus = WAIT_FULFILL_SWORD_PYLON_ORDER
+		screen.scrStatus = WAIT_FULFILL_SELL_SWORD_ORDER
 		screen.activeItemOrder = swordSellOrders[screen.activeLine]
 		screen.refreshed = false
 		screen.Render()
@@ -772,13 +777,13 @@ func (screen *GameScreen) RunSelectedSwordSellOrder() {
 			log.Println("ended sending request for creating selling item order")
 			if err != nil {
 				screen.txFailReason = err.Error()
-				screen.scrStatus = RESULT_FULFILL_SWORD_PYLON_ORDER
+				screen.scrStatus = RESULT_FULFILL_SELL_SWORD_ORDER
 				screen.refreshed = false
 				screen.Render()
 			} else {
 				time.AfterFunc(2*time.Second, func() {
 					screen.txResult, screen.txFailReason = ProcessTxResult(screen.user, txhash)
-					screen.scrStatus = RESULT_FULFILL_SWORD_PYLON_ORDER
+					screen.scrStatus = RESULT_FULFILL_SELL_SWORD_ORDER
 					screen.refreshed = false
 					screen.Render()
 				})
