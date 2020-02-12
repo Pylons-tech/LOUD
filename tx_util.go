@@ -93,44 +93,83 @@ func SyncFromNode(user User) {
 	log.Println("SyncFromNode gold=", accInfo.Coins.AmountOf("loudcoin").Int64())
 
 	rawItems, _ := pylonSDK.ListItemsViaCLI(accInfo.Address.String())
-	items := []Item{}
+	myItems := []Item{}
+	nWorldItems := []Item{}
 	for _, rawItem := range rawItems {
 		Level, _ := rawItem.FindLong("level")
 		Name, _ := rawItem.FindString("Name")
-		items = append(items, Item{
+		item := Item{
 			Level: Level,
 			Name:  Name,
 			ID:    rawItem.ID,
-		})
+		}
+		if rawItem.Sender.String() == accAddr {
+			myItems = append(myItems, item)
+		} else {
+			nWorldItems = append(nWorldItems, item)
+		}
 	}
-	user.SetItems(items)
-	log.Println("SyncFromNode items=", items)
+	user.SetItems(myItems)
+	worldItems = nWorldItems
+	log.Println("SyncFromNode myItems=", myItems)
+	log.Println("SyncFromNode nWorldItems=", nWorldItems)
 
 	nBuyOrders := []Order{}
 	nSellOrders := []Order{}
+	nBuySwordOrders := []ItemOrder{}
+	nSellSwordOrders := []ItemOrder{}
 	rawTrades, _ := pylonSDK.ListTradeViaCLI("")
 	for _, tradeItem := range rawTrades {
 		if tradeItem.Completed == false && len(tradeItem.CoinInputs) > 0 {
 			inputCoin := tradeItem.CoinInputs[0].Coin
+			loudOutputAmount := tradeItem.CoinOutputs.AmountOf("loudcoin").Int64()
+			pylonOutputAmount := tradeItem.CoinOutputs.AmountOf("pylon").Int64()
+			itemInputLen := len(tradeItem.ItemInputs)
+			itemOutputLen := len(tradeItem.ItemOutputs)
+			isMyOrder := tradeItem.Sender.String() == accAddr
 			if inputCoin == "loudcoin" { // loud sell trade
-				pylonAmount := tradeItem.CoinOutputs.AmountOf("pylon").Int64()
 				loudAmount := tradeItem.CoinInputs[0].Count
 				nSellOrders = append(nSellOrders, Order{
 					ID:        tradeItem.ID,
 					Amount:    int(loudAmount),
-					Total:     int(pylonAmount),
-					Price:     float64(pylonAmount) / float64(loudAmount),
-					IsMyOrder: tradeItem.Sender.String() == accAddr,
+					Total:     int(pylonOutputAmount),
+					Price:     float64(pylonOutputAmount) / float64(loudAmount),
+					IsMyOrder: isMyOrder,
 				})
-			} else { // loud buy trade
-				loudAmount := tradeItem.CoinOutputs.AmountOf("loudcoin").Int64()
-				pylonAmount := tradeItem.CoinInputs[0].Count
+			} else if loudOutputAmount > 0 { // loud buy trade
+				inputPylonAmount := tradeItem.CoinInputs[0].Count
 				nBuyOrders = append(nBuyOrders, Order{
 					ID:        tradeItem.ID,
-					Amount:    int(loudAmount),
-					Total:     int(pylonAmount),
-					Price:     float64(pylonAmount) / float64(loudAmount),
-					IsMyOrder: tradeItem.Sender.String() == accAddr,
+					Amount:    int(loudOutputAmount),
+					Total:     int(inputPylonAmount),
+					Price:     float64(inputPylonAmount) / float64(loudOutputAmount),
+					IsMyOrder: isMyOrder,
+				})
+			} else if itemInputLen > 0 { // sword -> pylon trade
+				tItem := Item{
+					Level: tradeItem.ItemInputs[0].Longs[0].MinValue, // Level
+					Name:  tradeItem.ItemInputs[0].Strings[0].Value,
+				}
+				nSellSwordOrders = append(nSellSwordOrders, ItemOrder{
+					ID:        tradeItem.ID,
+					TItem:     tItem,
+					Price:     int(pylonOutputAmount),
+					IsMyOrder: isMyOrder,
+				})
+			} else if itemOutputLen > 0 { // pylon -> sword trade
+				inputPylonAmount := tradeItem.CoinInputs[0].Count
+				level, _ := tradeItem.ItemOutputs[0].FindLong("Level")
+				name, _ := tradeItem.ItemOutputs[0].FindString("Name")
+				tItem := Item{
+					ID:    tradeItem.ItemOutputs[0].ID,
+					Level: level,
+					Name:  name,
+				}
+				nBuySwordOrders = append(nBuySwordOrders, ItemOrder{
+					ID:        tradeItem.ID,
+					TItem:     tItem,
+					Price:     int(inputPylonAmount),
+					IsMyOrder: isMyOrder,
 				})
 			}
 		}
@@ -145,6 +184,8 @@ func SyncFromNode(user User) {
 	})
 	buyOrders = nBuyOrders
 	sellOrders = nSellOrders
+	swordBuyOrders = nBuySwordOrders
+	swordSellOrders = nSellSwordOrders
 	log.Println("SyncFromNode buyOrders=", nBuyOrders)
 	log.Println("SyncFromNode sellOrders=", sellOrders)
 }
@@ -162,7 +203,7 @@ func GetExtraPylons(user User) (string, error) {
 	return txhash, nil
 }
 
-func CreateCookbook(user User) (string, error) {
+func CreateCookbook(user User) (string, error) { // This is for afti develop mode automation test is only using
 	t := GetTestingT()
 	username := user.GetUserName()
 	addr := pylonSDK.GetAccountAddr(username, t)
@@ -565,6 +606,93 @@ func CreateBuyLoudOrder(user User, loudEnterValue string, pylonEnterValue string
 		nil,
 		outputCoins,
 		nil,
+		extraInfo,
+		sdkAddr)
+	log.Println("started sending transaction", user.GetUserName(), createTrdMsg)
+	txhash := pylonSDK.TestTxWithMsgWithNonce(t, createTrdMsg, user.GetUserName(), false)
+	user.SetLastTransaction(txhash)
+	log.Println("ended sending transaction")
+	return txhash, nil
+}
+
+func GetItemInputsFromActiveItem(activeItem Item) types.ItemInputList {
+	var itemInputs types.ItemInputList
+
+	ii := types.ItemInput{
+		Doubles: nil,
+		Longs: types.LongInputParamList{
+			types.LongInputParam{"Level", activeItem.Level, activeItem.Level},
+		},
+		Strings: types.StringInputParamList{
+			types.StringInputParam{"Name", activeItem.Name},
+		},
+	}
+	itemInputs = append(itemInputs, ii)
+	return itemInputs
+}
+
+func CreateSwordPylonOrder(user User, activeItem Item, pylonEnterValue string) (string, error) {
+
+	t := GetTestingT()
+
+	itemInputs := GetItemInputsFromActiveItem(activeItem)
+
+	pylonValue, err := strconv.Atoi(pylonEnterValue)
+	if err != nil {
+		return "", err
+	}
+
+	eugenAddr := pylonSDK.GetAccountAddr(user.GetUserName(), nil)
+	sdkAddr, err := sdk.AccAddressFromBech32(eugenAddr)
+
+	outputCoins := sdk.Coins{sdk.NewInt64Coin("pylon", int64(pylonValue))}
+	extraInfo := "created by loud game"
+
+	createTrdMsg := msgs.NewMsgCreateTrade(
+		nil,
+		itemInputs,
+		outputCoins,
+		nil,
+		extraInfo,
+		sdkAddr)
+	log.Println("started sending transaction", user.GetUserName(), createTrdMsg)
+	txhash := pylonSDK.TestTxWithMsgWithNonce(t, createTrdMsg, user.GetUserName(), false)
+	user.SetLastTransaction(txhash)
+	log.Println("ended sending transaction")
+	return txhash, nil
+}
+
+func GetItemOutputFromActiveItem(activeItem Item) (types.ItemList, error) {
+	var itemOutputs types.ItemList
+	io, err := pylonSDK.GetItemByGUID(activeItem.ID)
+	itemOutputs = append(itemOutputs, io)
+	return itemOutputs, err
+}
+
+func CreatePylonSwordOrder(user User, activeItem Item, pylonEnterValue string) (string, error) {
+	t := GetTestingT()
+
+	pylonValue, err := strconv.Atoi(pylonEnterValue)
+	if err != nil {
+		return "", err
+	}
+
+	eugenAddr := pylonSDK.GetAccountAddr(user.GetUserName(), nil)
+	sdkAddr, _ := sdk.AccAddressFromBech32(eugenAddr)
+
+	inputCoinList := types.GenCoinInputList("pylon", int64(pylonValue))
+	itemOutputList, err := GetItemOutputFromActiveItem(activeItem)
+	if err != nil {
+		return "", err
+	}
+
+	extraInfo := "created by loud game"
+
+	createTrdMsg := msgs.NewMsgCreateTrade(
+		inputCoinList,
+		nil,
+		nil,
+		itemOutputList,
 		extraInfo,
 		sdkAddr)
 	log.Println("started sending transaction", user.GetUserName(), createTrdMsg)

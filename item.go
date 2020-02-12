@@ -22,6 +22,8 @@ var shopItems = []Item{
 	},
 }
 
+var worldItems = []Item{}
+
 func (item *Item) GetSellPrice() int {
 	switch item.Name {
 	case "Wooden sword":

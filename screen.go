@@ -352,6 +352,47 @@ func (screen *GameScreen) renderItemOrderTable(orders []ItemOrder) []string {
 	return infoLines
 }
 
+func (screen *GameScreen) renderItemTableLine(text1 string, isActiveLine bool) string {
+	calcText := "│" + centerText(text1, " ", 52) + "│"
+	if isActiveLine {
+		onColor := screen.blueBoldFont()
+		return onColor(calcText)
+	}
+	return calcText
+}
+
+func (screen *GameScreen) renderItemTable(items []Item) []string {
+	infoLines := []string{}
+	infoLines = append(infoLines, "╭────────────────────────────────────────────────────╮")
+	// infoLines = append(infoLines, "│ Item                            │")
+	infoLines = append(infoLines, screen.renderItemTableLine("Item", false))
+	infoLines = append(infoLines, "├────────────────────────────────────────────────────┤")
+	numLines := screen.screenSize.Height/2 - 7
+	if screen.activeLine >= len(items) {
+		screen.activeLine = len(items) - 1
+	}
+	activeLine := screen.activeLine
+	startLine := activeLine - numLines + 1
+	if startLine < 0 {
+		startLine = 0
+	}
+	endLine := startLine + numLines
+	if endLine > len(items) {
+		endLine = len(items)
+	}
+	for li, item := range items[startLine:endLine] {
+		infoLines = append(
+			infoLines,
+			screen.renderItemTableLine(
+				fmt.Sprintf("%s Lv%d  ", localize(item.Name), item.Level),
+				startLine+li == activeLine,
+			),
+		)
+	}
+	infoLines = append(infoLines, "╰────────────────────────────────────────────────────╯")
+	return infoLines
+}
+
 func (screen *GameScreen) drawVerticalLine(x, y, height int) {
 	color := ansi.ColorCode(fmt.Sprintf("255:%v", bgcolor))
 	for i := 1; i < height; i++ {
@@ -521,6 +562,10 @@ func (screen *GameScreen) InputActive() bool {
 	case CREATE_SELL_LOUD_ORDER_ENTER_LOUD_VALUE:
 		return true
 	case CREATE_SELL_LOUD_ORDER_ENTER_PYLON_VALUE:
+		return true
+	case CREATE_SWORD_PYLON_ORDER_ENTER_PYLON_VALUE:
+		return true
+	case CREATE_PYLON_SWORD_ORDER_ENTER_PYLON_VALUE:
 		return true
 	}
 	return false

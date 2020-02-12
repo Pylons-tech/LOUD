@@ -45,7 +45,7 @@ func (screen *GameScreen) renderUserCommands() {
 		infoLines = append(infoLines, screen.tradeTableColorDesc()...)
 
 		infoLines = append(infoLines, "Buy( ↵ )")
-		infoLines = append(infoLines, "Create sell o)rder")
+		infoLines = append(infoLines, "Create buy o)rder")
 		infoLines = append(infoLines, "Go bac)k")
 	case CREATE_SWORD_PYLON_ORDER_SELECT_SWORD:
 		// TODO:

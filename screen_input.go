@@ -179,7 +179,46 @@ func (screen *GameScreen) HandleInputKey(input termbox.Event) {
 						screen.Render()
 					})
 				}
+			case CREATE_SWORD_PYLON_ORDER_ENTER_PYLON_VALUE:
+				screen.scrStatus = WAIT_SWORD_PYLON_ORDER_CREATION
+				screen.pylonEnterValue = screen.inputText
+				screen.SetInputTextAndRender("")
+				txhash, err := CreateSwordPylonOrder(screen.user, screen.activeItem, screen.pylonEnterValue)
+				log.Println("ended sending request for creating sword -> pylon order")
+				if err != nil {
+					screen.txFailReason = err.Error()
+					screen.scrStatus = RESULT_SWORD_PYLON_ORDER_CREATION
+					screen.refreshed = false
+					screen.Render()
+				} else {
+					time.AfterFunc(2*time.Second, func() {
+						screen.txResult, screen.txFailReason = ProcessTxResult(screen.user, txhash)
+						screen.scrStatus = RESULT_SWORD_PYLON_ORDER_CREATION
+						screen.refreshed = false
+						screen.Render()
+					})
+				}
+			case CREATE_PYLON_SWORD_ORDER_ENTER_PYLON_VALUE:
+				screen.scrStatus = WAIT_PYLON_SWORD_ORDER_CREATION
+				screen.pylonEnterValue = screen.inputText
+				screen.SetInputTextAndRender("")
+				txhash, err := CreatePylonSwordOrder(screen.user, screen.activeItem, screen.pylonEnterValue)
+				log.Println("ended sending request for creating sword -> pylon order")
+				if err != nil {
+					screen.txFailReason = err.Error()
+					screen.scrStatus = RESULT_SWORD_PYLON_ORDER_CREATION
+					screen.refreshed = false
+					screen.Render()
+				} else {
+					time.AfterFunc(2*time.Second, func() {
+						screen.txResult, screen.txFailReason = ProcessTxResult(screen.user, txhash)
+						screen.scrStatus = RESULT_SWORD_PYLON_ORDER_CREATION
+						screen.refreshed = false
+						screen.Render()
+					})
+				}
 			}
+
 		default:
 			if _, err := strconv.Atoi(Key); err == nil {
 				// If user entered number, just use it
@@ -211,6 +250,23 @@ func (screen *GameScreen) HandleInputKey(input termbox.Event) {
 					screen.RunSelectedSwordBuyOrder()
 				case SHOW_SWORD_PYLON_ORDERS:
 					screen.RunSelectedSwordSellOrder()
+				case CREATE_SWORD_PYLON_ORDER_SELECT_SWORD:
+					userItems := screen.user.InventoryItems()
+					if len(userItems) <= screen.activeLine || screen.activeLine < 0 {
+						return
+					}
+					screen.activeItem = userItems[screen.activeLine]
+					screen.scrStatus = CREATE_SWORD_PYLON_ORDER_ENTER_PYLON_VALUE
+					screen.inputText = ""
+					screen.refreshed = false
+				case CREATE_PYLON_SWORD_ORDER_SELECT_SWORD:
+					if len(worldItems) <= screen.activeLine || screen.activeLine < 0 {
+						return
+					}
+					screen.activeItem = worldItems[screen.activeLine]
+					screen.scrStatus = CREATE_PYLON_SWORD_ORDER_ENTER_PYLON_VALUE
+					screen.inputText = ""
+					screen.refreshed = false
 				}
 			}
 		}
@@ -287,6 +343,18 @@ func (screen *GameScreen) HandleInputKey(input termbox.Event) {
 					fallthrough
 				case RESULT_FULFILL_SELL_LOUD_ORDER:
 					screen.scrStatus = SHOW_LOUD_SELL_ORDERS
+				case SHOW_SWORD_PYLON_ORDERS:
+					screen.scrStatus = CREATE_SWORD_PYLON_ORDER_SELECT_SWORD
+				case RESULT_SWORD_PYLON_ORDER_CREATION:
+					fallthrough
+				case RESULT_FULFILL_SWORD_PYLON_ORDER:
+					screen.scrStatus = SHOW_SWORD_PYLON_ORDERS
+				case SHOW_PYLON_SWORD_ORDERS:
+					screen.scrStatus = CREATE_PYLON_SWORD_ORDER_SELECT_SWORD
+				case RESULT_PYLON_SWORD_ORDER_CREATION:
+					fallthrough
+				case RESULT_FULFILL_PYLON_SWORD_ORDER:
+					screen.scrStatus = SHOW_PYLON_SWORD_ORDERS
 				default:
 					screen.scrStatus = SHOW_LOCATION
 				}

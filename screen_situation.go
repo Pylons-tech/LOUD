@@ -95,7 +95,7 @@ func (screen *GameScreen) renderUserSituation() {
 		}
 	case RESULT_SELL_LOUD_ORDER_CREATION:
 		if screen.txFailReason != "" {
-			desc = localize("sell buy order creation fail reason") + ": " + localize(screen.txFailReason)
+			desc = localize("loud sell order creation fail reason") + ": " + localize(screen.txFailReason)
 		} else {
 			desc = localize("loud sell order was successfully created")
 			desc += screen.sellLoudDesc(screen.loudEnterValue, screen.pylonEnterValue)
@@ -170,31 +170,59 @@ func (screen *GameScreen) renderUserSituation() {
 	case SHOW_PYLON_SWORD_ORDERS:
 		infoLines = screen.renderItemOrderTable(swordBuyOrders)
 	case CREATE_SWORD_PYLON_ORDER_SELECT_SWORD:
-		// TODO:
+		infoLines = screen.renderItemTable(screen.user.InventoryItems())
 	case CREATE_SWORD_PYLON_ORDER_ENTER_PYLON_VALUE:
-		// TODO:
+		desc = "Please enter pylon amount to use (should be integer value)" // TODO should add localize
 	case WAIT_SWORD_PYLON_ORDER_CREATION:
-		// TODO:
+		desc = localize("you are now waiting for sword sell order creation")
+		// TODO: should visualize item to pylon desc += screen.sellLoudDesc(screen.loudEnterValue, screen.pylonEnterValue)
 	case RESULT_SWORD_PYLON_ORDER_CREATION:
-		// TODO:
+		if screen.txFailReason != "" {
+			desc = localize("sword sell order creation fail reason") + ": " + localize(screen.txFailReason)
+		} else {
+			desc = localize("sword sell order was successfully created")
+			// TODO: should visualize item to pylon desc += screen.sellLoudDesc(screen.loudEnterValue, screen.pylonEnterValue)
+		}
 	case WAIT_FULFILL_SWORD_PYLON_ORDER:
-		// TODO:
+		order := screen.activeItemOrder
+		desc = localize("you are now selling sword ") + fmt.Sprintf(" at %d.\n", order.Price)
+		// TODO: should visualize item to pylon desc += screen.sellLoudDesc(screen.loudEnterValue, screen.pylonEnterValue)
 	case RESULT_FULFILL_SWORD_PYLON_ORDER:
-		// TODO:
+		if screen.txFailReason != "" {
+			desc = localize("sell sword failed reason") + ": " + localize(screen.txFailReason)
+		} else {
+			order := screen.activeItemOrder
+			desc = localize("you have sold sword successfully from sword/pylon market") + fmt.Sprintf(" at %d.\n", order.Price)
+			// TODO: should visualize item to pylon desc += screen.sellLoudDesc(order.Amount, order.Total)
+		}
 	case SHOW_SWORD_PYLON_ORDERS:
 		infoLines = screen.renderItemOrderTable(swordSellOrders)
 	case CREATE_PYLON_SWORD_ORDER_SELECT_SWORD:
-		// TODO:
+		infoLines = screen.renderItemTable(worldItems)
 	case CREATE_PYLON_SWORD_ORDER_ENTER_PYLON_VALUE:
-		// TODO:
+		desc = "Please enter pylon amount to use (should be integer value)" // TODO should add localize
 	case WAIT_PYLON_SWORD_ORDER_CREATION:
-		// TODO:
+		desc = localize("you are now waiting for sword buy order creation")
+		// TODO: should visualize item to pylon desc += screen.sellLoudDesc(screen.loudEnterValue, screen.pylonEnterValue)
 	case RESULT_PYLON_SWORD_ORDER_CREATION:
-		// TODO:
+		if screen.txFailReason != "" {
+			desc = localize("sword buy order creation fail reason") + ": " + localize(screen.txFailReason)
+		} else {
+			desc = localize("sword buy order was successfully created")
+			// TODO: should visualize item to pylon desc += screen.sellLoudDesc(screen.loudEnterValue, screen.pylonEnterValue)
+		}
 	case WAIT_FULFILL_PYLON_SWORD_ORDER:
-		// TODO:
+		order := screen.activeItemOrder
+		desc = localize("you are now buying sword ") + fmt.Sprintf(" at %d.\n", order.Price)
+		// TODO: should visualize item to pylon desc += screen.sellLoudDesc(screen.loudEnterValue, screen.pylonEnterValue)
 	case RESULT_FULFILL_PYLON_SWORD_ORDER:
-		// TODO:
+		if screen.txFailReason != "" {
+			desc = localize("buy sword failed reason") + ": " + localize(screen.txFailReason)
+		} else {
+			order := screen.activeItemOrder
+			desc = localize("you have bought sword successfully from sword/pylon market") + fmt.Sprintf(" at %d.\n", order.Price)
+			// TODO: should visualize item to pylon desc += screen.sellLoudDesc(order.Amount, order.Total)
+		}
 	}
 
 	basicLines := strings.Split(desc, "\n")
