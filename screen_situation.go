@@ -26,19 +26,19 @@ func (screen *GameScreen) renderUserSituation() {
 			DEVELOP:  localize("develop desc"),
 		}
 		desc = locationDescMap[screen.user.GetLocation()]
-	case CREATE_BUY_LOUD_ORDER_ENTER_PYLON_VALUE:
+	case CREATE_BUY_LOUD_REQUEST_ENTER_PYLON_VALUE:
 		desc = "Please enter pylon amount to use (should be integer value)" // TODO should add localize
-	case CREATE_SELL_LOUD_ORDER_ENTER_PYLON_VALUE:
+	case CREATE_SELL_LOUD_REQUEST_ENTER_PYLON_VALUE:
 		desc = "Please enter pylon amount to get (should be integer value)" // TODO should add localize
-	case CREATE_BUY_LOUD_ORDER_ENTER_LOUD_VALUE:
+	case CREATE_BUY_LOUD_REQUEST_ENTER_LOUD_VALUE:
 		desc = "Please enter loud amount to buy (should be integer value)" // TODO should add localize
-	case CREATE_SELL_LOUD_ORDER_ENTER_LOUD_VALUE:
+	case CREATE_SELL_LOUD_REQUEST_ENTER_LOUD_VALUE:
 		desc = "Please enter loud amount to sell (should be integer value)" // TODO should add localize
 
-	case SHOW_LOUD_BUY_ORDERS:
-		infoLines = screen.renderOrderTable(buyOrders)
-	case SHOW_LOUD_SELL_ORDERS:
-		infoLines = screen.renderOrderTable(sellOrders)
+	case SHOW_LOUD_BUY_REQUESTS:
+		infoLines = screen.renderTradeRequestTable(buyTradeRequests)
+	case SHOW_LOUD_SELL_REQUESTS:
+		infoLines = screen.renderTradeRequestTable(sellTradeRequests)
 	case SELECT_BUY_ITEM:
 		desc = localize("select buy item desc")
 	case SELECT_SELL_ITEM:
@@ -47,19 +47,11 @@ func (screen *GameScreen) renderUserSituation() {
 		desc = localize("select hunt item desc")
 	case SELECT_UPGRADE_ITEM:
 		desc = localize("select upgrade item desc")
-	case WAIT_FULFILL_BUY_LOUD_ORDER:
-		order := screen.activeOrder
-		desc = localize("you are now buying loud from pylon") + fmt.Sprintf(" at %.4f.\n", order.Price)
-		desc += screen.buyLoudDesc(order.Amount, order.Total)
-	case WAIT_FULFILL_SELL_LOUD_ORDER:
-		order := screen.activeOrder
-		desc = localize("you are now selling loud for pylon") + fmt.Sprintf(" at %.4f.\n", order.Price)
-		desc += screen.sellLoudDesc(order.Amount, order.Total)
-	case WAIT_BUY_LOUD_ORDER_CREATION:
-		desc = localize("you are now waiting for loud buy order creation")
+	case WAIT_BUY_LOUD_REQUEST_CREATION:
+		desc = localize("you are now waiting for loud buy request creation")
 		desc += screen.buyLoudDesc(screen.loudEnterValue, screen.pylonEnterValue)
-	case WAIT_SELL_LOUD_ORDER_CREATION:
-		desc = localize("you are now waiting for loud sell order creation")
+	case WAIT_SELL_LOUD_REQUEST_CREATION:
+		desc = localize("you are now waiting for loud sell request creation")
 		desc += screen.sellLoudDesc(screen.loudEnterValue, screen.pylonEnterValue)
 	case WAIT_BUY_PROCESS:
 		desc = fmt.Sprintf("%s %s Lv%d.\n%s", localize("wait buy process desc"), localize(screen.activeItem.Name), screen.activeItem.Level, waitProcessEnd)
@@ -86,35 +78,19 @@ func (screen *GameScreen) renderUserSituation() {
 		desc = fmt.Sprintf("%s %s Lv%d.\n%s", localize("wait sell process desc"), localize(screen.activeItem.Name), screen.activeItem.Level, waitProcessEnd)
 	case WAIT_UPGRADE_PROCESS:
 		desc = fmt.Sprintf("%s %s.\n%s", localize("wait upgrade process desc"), localize(screen.activeItem.Name), waitProcessEnd)
-	case RESULT_BUY_LOUD_ORDER_CREATION:
+	case RESULT_BUY_LOUD_REQUEST_CREATION:
 		if screen.txFailReason != "" {
-			desc = localize("loud buy order creation fail reason") + ": " + localize(screen.txFailReason)
+			desc = localize("loud buy request creation fail reason") + ": " + localize(screen.txFailReason)
 		} else {
-			desc = localize("loud buy order was successfully created")
+			desc = localize("loud buy request was successfully created")
 			desc += screen.buyLoudDesc(screen.loudEnterValue, screen.pylonEnterValue)
 		}
-	case RESULT_SELL_LOUD_ORDER_CREATION:
+	case RESULT_SELL_LOUD_REQUEST_CREATION:
 		if screen.txFailReason != "" {
-			desc = localize("loud sell order creation fail reason") + ": " + localize(screen.txFailReason)
+			desc = localize("loud sell request creation fail reason") + ": " + localize(screen.txFailReason)
 		} else {
-			desc = localize("loud sell order was successfully created")
+			desc = localize("loud sell request was successfully created")
 			desc += screen.sellLoudDesc(screen.loudEnterValue, screen.pylonEnterValue)
-		}
-	case RESULT_FULFILL_BUY_LOUD_ORDER:
-		if screen.txFailReason != "" {
-			desc = localize("buy loud failed reason") + ": " + localize(screen.txFailReason)
-		} else {
-			order := screen.activeOrder
-			desc = localize("you have bought loud coin successfully from loud/pylon market") + fmt.Sprintf(" at %.4f.\n", order.Price)
-			desc += screen.buyLoudDesc(order.Amount, order.Total)
-		}
-	case RESULT_FULFILL_SELL_LOUD_ORDER:
-		if screen.txFailReason != "" {
-			desc = localize("sell loud failed reason") + ": " + localize(screen.txFailReason)
-		} else {
-			order := screen.activeOrder
-			desc = localize("you have sold loud coin successfully from loud/pylon market") + fmt.Sprintf(" at %.4f.\n", order.Price)
-			desc += screen.sellLoudDesc(order.Amount, order.Total)
 		}
 	case RESULT_BUY_FINISH:
 		if screen.txFailReason != "" {
@@ -167,61 +143,86 @@ func (screen *GameScreen) renderUserSituation() {
 		} else {
 			desc = fmt.Sprintf("%s: %s.", localize("result upgrade finish desc"), localize(screen.activeItem.Name))
 		}
-	case SHOW_BUY_SWORD_ORDERS:
-		infoLines = screen.renderItemOrderTable(swordBuyOrders)
-	case CREATE_SELL_SWORD_ORDER_SELECT_SWORD:
+	case SHOW_BUY_SWORD_REQUESTS:
+		infoLines = screen.renderItemTradeRequestTable(swordBuyTradeRequests)
+	case CREATE_SELL_SWORD_REQUEST_SELECT_SWORD:
 		infoLines = screen.renderItemTable(screen.user.InventoryItems())
-	case CREATE_SELL_SWORD_ORDER_ENTER_PYLON_VALUE:
+	case CREATE_SELL_SWORD_REQUEST_ENTER_PYLON_VALUE:
 		desc = "Please enter pylon amount to use (should be integer value)" // TODO should add localize
-	case WAIT_SELL_SWORD_ORDER_CREATION:
-		desc = localize("you are now waiting for sword sell order creation")
-		// TODO: should visualize item to pylon desc += screen.sellLoudDesc(screen.loudEnterValue, screen.pylonEnterValue)
-	case RESULT_SELL_SWORD_ORDER_CREATION:
+	case WAIT_SELL_SWORD_REQUEST_CREATION:
+		desc = localize("you are now waiting for sword sell request creation")
+		desc += screen.sellSwordDesc(screen.activeItem, screen.pylonEnterValue)
+	case RESULT_SELL_SWORD_REQUEST_CREATION:
 		if screen.txFailReason != "" {
-			desc = localize("sword sell order creation fail reason") + ": " + localize(screen.txFailReason)
+			desc = localize("sword sell request creation fail reason") + ": " + localize(screen.txFailReason)
 		} else {
-			desc = localize("sword sell order was successfully created")
-			// TODO: should visualize item to pylon desc += screen.sellLoudDesc(screen.loudEnterValue, screen.pylonEnterValue)
+			desc = localize("sword sell request was successfully created")
+			desc += screen.sellSwordDesc(screen.activeItem, screen.pylonEnterValue)
 		}
-	case WAIT_FULFILL_SELL_SWORD_ORDER:
-		order := screen.activeItemOrder
-		desc = localize("you are now selling sword ") + fmt.Sprintf(" at %d.\n", order.Price)
-		// TODO: should visualize item to pylon desc += screen.sellLoudDesc(screen.loudEnterValue, screen.pylonEnterValue)
-	case RESULT_FULFILL_SELL_SWORD_ORDER:
-		if screen.txFailReason != "" {
-			desc = localize("sell sword failed reason") + ": " + localize(screen.txFailReason)
-		} else {
-			order := screen.activeItemOrder
-			desc = localize("you have sold sword successfully from sword/pylon market") + fmt.Sprintf(" at %d.\n", order.Price)
-			// TODO: should visualize item to pylon desc += screen.sellLoudDesc(order.Amount, order.Total)
-		}
-	case SHOW_SELL_SWORD_ORDERS:
-		infoLines = screen.renderItemOrderTable(swordSellOrders)
-	case CREATE_BUY_SWORD_ORDER_SELECT_SWORD:
+	case SHOW_SELL_SWORD_REQUESTS:
+		infoLines = screen.renderItemTradeRequestTable(swordSellTradeRequests)
+	case CREATE_BUY_SWORD_REQUEST_SELECT_SWORD:
 		infoLines = screen.renderItemTable(worldItems)
-	case CREATE_BUY_SWORD_ORDER_ENTER_PYLON_VALUE:
+	case CREATE_BUY_SWORD_REQUEST_ENTER_PYLON_VALUE:
 		desc = "Please enter pylon amount to use (should be integer value)" // TODO should add localize
-	case WAIT_BUY_SWORD_ORDER_CREATION:
-		desc = localize("you are now waiting for sword buy order creation")
-		// TODO: should visualize item to pylon desc += screen.sellLoudDesc(screen.loudEnterValue, screen.pylonEnterValue)
-	case RESULT_BUY_SWORD_ORDER_CREATION:
+	case WAIT_BUY_SWORD_REQUEST_CREATION:
+		desc = localize("you are now waiting for sword buy request creation")
+		desc += screen.buySwordDesc(screen.activeItem, screen.pylonEnterValue)
+	case RESULT_BUY_SWORD_REQUEST_CREATION:
 		if screen.txFailReason != "" {
-			desc = localize("sword buy order creation fail reason") + ": " + localize(screen.txFailReason)
+			desc = localize("sword buy request creation fail reason") + ": " + localize(screen.txFailReason)
 		} else {
-			desc = localize("sword buy order was successfully created")
-			// TODO: should visualize item to pylon desc += screen.sellLoudDesc(screen.loudEnterValue, screen.pylonEnterValue)
+			desc = localize("sword buy request was successfully created")
+			desc += screen.buySwordDesc(screen.activeItem, screen.pylonEnterValue)
 		}
-	case WAIT_FULFILL_BUY_SWORD_ORDER:
-		order := screen.activeItemOrder
-		desc = localize("you are now buying sword ") + fmt.Sprintf(" at %d.\n", order.Price)
-		// TODO: should visualize item to pylon desc += screen.sellLoudDesc(screen.loudEnterValue, screen.pylonEnterValue)
-	case RESULT_FULFILL_BUY_SWORD_ORDER:
+	// For FULFILL trades, msg should be reversed, since user is opposite
+	case WAIT_FULFILL_BUY_LOUD_REQUEST:
+		request := screen.activeTradeRequest
+		desc = localize("you are now selling loud for pylon") + fmt.Sprintf(" at %.4f.\n", request.Price)
+		desc += screen.sellLoudDesc(request.Amount, request.Total)
+	case WAIT_FULFILL_SELL_LOUD_REQUEST:
+		request := screen.activeTradeRequest
+		desc = localize("you are now buying loud from pylon") + fmt.Sprintf(" at %.4f.\n", request.Price)
+		desc += screen.buyLoudDesc(request.Amount, request.Total)
+	case RESULT_FULFILL_BUY_LOUD_REQUEST:
+		if screen.txFailReason != "" {
+			desc = localize("sell loud failed reason") + ": " + localize(screen.txFailReason)
+		} else {
+			request := screen.activeTradeRequest
+			desc = localize("you have sold loud coin successfully from loud/pylon market") + fmt.Sprintf(" at %.4f.\n", request.Price)
+			desc += screen.sellLoudDesc(request.Amount, request.Total)
+		}
+	case RESULT_FULFILL_SELL_LOUD_REQUEST:
+		if screen.txFailReason != "" {
+			desc = localize("buy loud failed reason") + ": " + localize(screen.txFailReason)
+		} else {
+			request := screen.activeTradeRequest
+			desc = localize("you have bought loud coin successfully from loud/pylon market") + fmt.Sprintf(" at %.4f.\n", request.Price)
+			desc += screen.buyLoudDesc(request.Amount, request.Total)
+		}
+	case WAIT_FULFILL_SELL_SWORD_REQUEST:
+		request := screen.activeItemTradeRequest
+		desc = localize("you are now buying sword ") + fmt.Sprintf(" at %d.\n", request.Price)
+		desc += screen.buySwordDesc(request.TItem, fmt.Sprintf("%d", request.Price))
+	case WAIT_FULFILL_BUY_SWORD_REQUEST:
+		request := screen.activeItemTradeRequest
+		desc = localize("you are now selling sword ") + fmt.Sprintf(" at %d.\n", request.Price)
+		desc += screen.sellSwordDesc(request.TItem, fmt.Sprintf("%d", request.Price))
+	case RESULT_FULFILL_SELL_SWORD_REQUEST:
 		if screen.txFailReason != "" {
 			desc = localize("buy sword failed reason") + ": " + localize(screen.txFailReason)
 		} else {
-			order := screen.activeItemOrder
-			desc = localize("you have bought sword successfully from sword/pylon market") + fmt.Sprintf(" at %d.\n", order.Price)
-			// TODO: should visualize item to pylon desc += screen.sellLoudDesc(order.Amount, order.Total)
+			request := screen.activeItemTradeRequest
+			desc = localize("you have bought sword successfully from sword/pylon market") + fmt.Sprintf(" at %d.\n", request.Price)
+			desc += screen.buySwordDesc(request.TItem, fmt.Sprintf("%d", request.Price))
+		}
+	case RESULT_FULFILL_BUY_SWORD_REQUEST:
+		if screen.txFailReason != "" {
+			desc = localize("sell sword failed reason") + ": " + localize(screen.txFailReason)
+		} else {
+			request := screen.activeItemTradeRequest
+			desc = localize("you have sold sword successfully from sword/pylon market") + fmt.Sprintf(" at %d.\n", request.Price)
+			desc += screen.sellSwordDesc(request.TItem, fmt.Sprintf("%d", request.Price))
 		}
 	}
 

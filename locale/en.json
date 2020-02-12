@@ -36,7 +36,7 @@
     "one": "1) Buy Items\n2) Sell Items\n3) Upgrade Items\n"
   },
   "market": {
-    "one": "1) Buy Loud Coin\n2) Sell Loud Coin\n3) Buy items market\n4) Sell Items market\n"
+    "one": "1) Sell Loud from orderbook / Create an order to buy Loud\n2) Buy Loud from orderbook / Create an order to Sell Loud\n3) Sell sword from orderbook / Create an order to buy sword\n4) Buy sword from orderbook / Create an order to sell sword\n"
   },
   "settings": {
     "one": "Language:\n1) English\n2) Español\n"
@@ -145,17 +145,17 @@
   "you have sold loud coin successfully from loud/pylon market": {
     "one": "You have sold loud coin successfully from loud/pylon market"
   },
-  "you are now waiting for loud buy order creation": {
-    "one": "You are now waiting for loud buy order creation"
+  "you are now waiting for loud buy request creation": {
+    "one": "You are now waiting for loud buy request creation"
   },
-  "you are now waiting for loud sell order creation": {
-    "one": "You are now waiting for loud sell order creation"
+  "you are now waiting for loud sell request creation": {
+    "one": "You are now waiting for loud sell request creation"
   },
-  "loud buy order was successfully created": {
-    "one": "Loud buy order was successfully created."
+  "loud buy request was successfully created": {
+    "one": "Loud buy request was successfully created."
   },
-  "loud sell order was successfully created": {
-    "one": "Loud sell order was successfully created."
+  "loud sell request was successfully created": {
+    "one": "Loud sell request was successfully created."
   },
   "use for hunting": {
     "one": "Please use it for hunting."

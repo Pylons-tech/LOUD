@@ -50,8 +50,8 @@ type GameScreen struct {
 	activeItem             Item
 	lastInput              termbox.Event
 	activeLine             int
-	activeOrder            Order
-	activeItemOrder        ItemOrder
+	activeTradeRequest            TradeRequest
+	activeItemTradeRequest        ItemTradeRequest
 	pylonEnterValue        string
 	loudEnterValue         string
 	inputText              string
@@ -94,37 +94,37 @@ const (
 	// in market
 	SELECT_MARKET // buy loud or sell loud
 
-	SHOW_LOUD_BUY_ORDERS                   // navigation using arrow and list should be sorted by price
-	CREATE_BUY_LOUD_ORDER_ENTER_LOUD_VALUE // enter value after switching enter mode
-	CREATE_BUY_LOUD_ORDER_ENTER_PYLON_VALUE
-	WAIT_BUY_LOUD_ORDER_CREATION
-	RESULT_BUY_LOUD_ORDER_CREATION
-	WAIT_FULFILL_BUY_LOUD_ORDER // after done go to show loud buy orders
-	RESULT_FULFILL_BUY_LOUD_ORDER
+	SHOW_LOUD_BUY_REQUESTS                   // navigation using arrow and list should be sorted by price
+	CREATE_BUY_LOUD_REQUEST_ENTER_LOUD_VALUE // enter value after switching enter mode
+	CREATE_BUY_LOUD_REQUEST_ENTER_PYLON_VALUE
+	WAIT_BUY_LOUD_REQUEST_CREATION
+	RESULT_BUY_LOUD_REQUEST_CREATION
+	WAIT_FULFILL_BUY_LOUD_REQUEST // after done go to show loud buy requests
+	RESULT_FULFILL_BUY_LOUD_REQUEST
 
-	SHOW_LOUD_SELL_ORDERS
-	CREATE_SELL_LOUD_ORDER_ENTER_LOUD_VALUE
-	CREATE_SELL_LOUD_ORDER_ENTER_PYLON_VALUE
-	WAIT_SELL_LOUD_ORDER_CREATION
-	RESULT_SELL_LOUD_ORDER_CREATION
-	WAIT_FULFILL_SELL_LOUD_ORDER
-	RESULT_FULFILL_SELL_LOUD_ORDER
+	SHOW_LOUD_SELL_REQUESTS
+	CREATE_SELL_LOUD_REQUEST_ENTER_LOUD_VALUE
+	CREATE_SELL_LOUD_REQUEST_ENTER_PYLON_VALUE
+	WAIT_SELL_LOUD_REQUEST_CREATION
+	RESULT_SELL_LOUD_REQUEST_CREATION
+	WAIT_FULFILL_SELL_LOUD_REQUEST
+	RESULT_FULFILL_SELL_LOUD_REQUEST
 
-	SHOW_SELL_SWORD_ORDERS
-	CREATE_SELL_SWORD_ORDER_SELECT_SWORD
-	CREATE_SELL_SWORD_ORDER_ENTER_PYLON_VALUE
-	WAIT_SELL_SWORD_ORDER_CREATION
-	RESULT_SELL_SWORD_ORDER_CREATION
-	WAIT_FULFILL_SELL_SWORD_ORDER
-	RESULT_FULFILL_SELL_SWORD_ORDER
+	SHOW_SELL_SWORD_REQUESTS
+	CREATE_SELL_SWORD_REQUEST_SELECT_SWORD
+	CREATE_SELL_SWORD_REQUEST_ENTER_PYLON_VALUE
+	WAIT_SELL_SWORD_REQUEST_CREATION
+	RESULT_SELL_SWORD_REQUEST_CREATION
+	WAIT_FULFILL_SELL_SWORD_REQUEST
+	RESULT_FULFILL_SELL_SWORD_REQUEST
 
-	SHOW_BUY_SWORD_ORDERS
-	CREATE_BUY_SWORD_ORDER_SELECT_SWORD
-	CREATE_BUY_SWORD_ORDER_ENTER_PYLON_VALUE
-	WAIT_BUY_SWORD_ORDER_CREATION
-	RESULT_BUY_SWORD_ORDER_CREATION
-	WAIT_FULFILL_BUY_SWORD_ORDER
-	RESULT_FULFILL_BUY_SWORD_ORDER
+	SHOW_BUY_SWORD_REQUESTS
+	CREATE_BUY_SWORD_REQUEST_SELECT_SWORD
+	CREATE_BUY_SWORD_REQUEST_ENTER_PYLON_VALUE
+	WAIT_BUY_SWORD_REQUEST_CREATION
+	RESULT_BUY_SWORD_REQUEST_CREATION
+	WAIT_FULFILL_BUY_SWORD_REQUEST
+	RESULT_FULFILL_BUY_SWORD_REQUEST
 )
 
 // NewScreen manages the window rendering for game
@@ -221,17 +221,39 @@ func (screen *GameScreen) sellLoudDesc(loudValue interface{}, pylonValue interfa
 	return desc
 }
 
+func (screen *GameScreen) buySwordDesc(activeItem Item, pylonValue interface{}) string {
+	var desc = strings.Join([]string{
+		"\n",
+		screen.pylonIcon(),
+		fmt.Sprintf("%v", pylonValue),
+		"\n  ↓\n",
+		fmt.Sprintf("%s Lv%d", activeItem.Name, activeItem.Level),
+	}, "")
+	return desc
+}
+
+func (screen *GameScreen) sellSwordDesc(activeItem Item, pylonValue interface{}) string {
+	var desc = strings.Join([]string{
+		"\n",
+		fmt.Sprintf("%s Lv%d", activeItem.Name, activeItem.Level),
+		"\n  ↓\n",
+		screen.pylonIcon(),
+		fmt.Sprintf("%v", pylonValue),
+	}, "")
+	return desc
+}
+
 func (screen *GameScreen) tradeTableColorDesc() []string {
 	var infoLines = []string{}
-	infoLines = append(infoLines, "white     ➝ other's order")
-	infoLines = append(infoLines, screen.blueBoldFont()("bluebold")+"  ➝ selected order")
-	infoLines = append(infoLines, screen.brownBoldFont()("brownbold")+" ➝ my order + selected")
-	infoLines = append(infoLines, screen.brownFont()("brown")+"     ➝ my order")
+	infoLines = append(infoLines, "white     ➝ other's request")
+	infoLines = append(infoLines, screen.blueBoldFont()("bluebold")+"  ➝ selected request")
+	infoLines = append(infoLines, screen.brownBoldFont()("brownbold")+" ➝ my request + selected")
+	infoLines = append(infoLines, screen.brownFont()("brown")+"     ➝ my request")
 	infoLines = append(infoLines, "\n")
 	return infoLines
 }
 
-func (screen *GameScreen) redrawBorders() {
+func (screen *GameScreen) redrawBrequests() {
 	io.WriteString(os.Stdout, ansi.ColorCode(fmt.Sprintf("255:%v", bgcolor)))
 	screen.drawBox(1, 1, screen.screenSize.Width-1, screen.screenSize.Height-1)
 	screen.drawVerticalLine(screen.screenSize.Width/2-2, 1, screen.screenSize.Height)
@@ -258,7 +280,7 @@ func (screen *GameScreen) brownFont() func(string) string {
 	return screen.colorFunc(fmt.Sprintf("%v:%v", 181, 232))
 }
 
-func (screen *GameScreen) renderOrderTableLine(text1 string, text2 string, text3 string, isActiveLine bool, isDisabledLine bool) string {
+func (screen *GameScreen) renderTradeRequestTableLine(text1 string, text2 string, text3 string, isActiveLine bool, isDisabledLine bool) string {
 	calcText := "│" + centerText(text1, " ", 20) + "│" + centerText(text2, " ", 15) + "│" + centerText(text3, " ", 15) + "│"
 	if isActiveLine && isDisabledLine {
 		onColor := screen.brownBoldFont()
@@ -273,15 +295,15 @@ func (screen *GameScreen) renderOrderTableLine(text1 string, text2 string, text3
 	return calcText
 }
 
-func (screen *GameScreen) renderOrderTable(orders []Order) []string {
+func (screen *GameScreen) renderTradeRequestTable(requests []TradeRequest) []string {
 	infoLines := []string{}
 	infoLines = append(infoLines, "╭────────────────────┬───────────────┬───────────────╮")
 	// infoLines = append(infoLines, "│ LOUD price (pylon) │ Amount (loud) │ Total (pylon) │")
-	infoLines = append(infoLines, screen.renderOrderTableLine("LOUD price (pylon)", "Amount (loud)", "Total (pylon)", false, false))
+	infoLines = append(infoLines, screen.renderTradeRequestTableLine("LOUD price (pylon)", "Amount (loud)", "Total (pylon)", false, false))
 	infoLines = append(infoLines, "├────────────────────┼───────────────┼───────────────┤")
 	numLines := screen.screenSize.Height/2 - 7
-	if screen.activeLine >= len(orders) {
-		screen.activeLine = len(orders) - 1
+	if screen.activeLine >= len(requests) {
+		screen.activeLine = len(requests) - 1
 	}
 	activeLine := screen.activeLine
 	startLine := activeLine - numLines + 1
@@ -289,18 +311,18 @@ func (screen *GameScreen) renderOrderTable(orders []Order) []string {
 		startLine = 0
 	}
 	endLine := startLine + numLines
-	if endLine > len(orders) {
-		endLine = len(orders)
+	if endLine > len(requests) {
+		endLine = len(requests)
 	}
-	for li, order := range orders[startLine:endLine] {
+	for li, request := range requests[startLine:endLine] {
 		infoLines = append(
 			infoLines,
-			screen.renderOrderTableLine(
-				fmt.Sprintf("%.4f", order.Price),
-				fmt.Sprintf("%d", order.Amount),
-				fmt.Sprintf("%d", order.Total),
+			screen.renderTradeRequestTableLine(
+				fmt.Sprintf("%.4f", request.Price),
+				fmt.Sprintf("%d", request.Amount),
+				fmt.Sprintf("%d", request.Total),
 				startLine+li == activeLine,
-				order.IsMyOrder,
+				request.IsMyTradeRequest,
 			),
 		)
 	}
@@ -308,7 +330,7 @@ func (screen *GameScreen) renderOrderTable(orders []Order) []string {
 	return infoLines
 }
 
-func (screen *GameScreen) renderItemOrderTableLine(text1 string, text2 string, isActiveLine bool, isDisabledLine bool) string {
+func (screen *GameScreen) renderItemTradeRequestTableLine(text1 string, text2 string, isActiveLine bool, isDisabledLine bool) string {
 	calcText := "│" + centerText(text1, " ", 36) + "│" + centerText(text2, " ", 15) + "│"
 	if isActiveLine && isDisabledLine {
 		onColor := screen.brownBoldFont()
@@ -323,15 +345,15 @@ func (screen *GameScreen) renderItemOrderTableLine(text1 string, text2 string, i
 	return calcText
 }
 
-func (screen *GameScreen) renderItemOrderTable(orders []ItemOrder) []string {
+func (screen *GameScreen) renderItemTradeRequestTable(requests []ItemTradeRequest) []string {
 	infoLines := []string{}
 	infoLines = append(infoLines, "╭────────────────────────────────────┬───────────────╮")
 	// infoLines = append(infoLines, "│ Item                │ Price (pylon) │")
-	infoLines = append(infoLines, screen.renderItemOrderTableLine("Item", "Price (pylon)", false, false))
+	infoLines = append(infoLines, screen.renderItemTradeRequestTableLine("Item", "Price (pylon)", false, false))
 	infoLines = append(infoLines, "├────────────────────────────────────┼───────────────┤")
 	numLines := screen.screenSize.Height/2 - 7
-	if screen.activeLine >= len(orders) {
-		screen.activeLine = len(orders) - 1
+	if screen.activeLine >= len(requests) {
+		screen.activeLine = len(requests) - 1
 	}
 	activeLine := screen.activeLine
 	startLine := activeLine - numLines + 1
@@ -339,17 +361,17 @@ func (screen *GameScreen) renderItemOrderTable(orders []ItemOrder) []string {
 		startLine = 0
 	}
 	endLine := startLine + numLines
-	if endLine > len(orders) {
-		endLine = len(orders)
+	if endLine > len(requests) {
+		endLine = len(requests)
 	}
-	for li, order := range orders[startLine:endLine] {
+	for li, request := range requests[startLine:endLine] {
 		infoLines = append(
 			infoLines,
-			screen.renderItemOrderTableLine(
-				fmt.Sprintf("%s Lv%d  ", localize(order.TItem.Name), order.TItem.Level),
-				fmt.Sprintf("%d", order.Price),
+			screen.renderItemTradeRequestTableLine(
+				fmt.Sprintf("%s Lv%d  ", localize(request.TItem.Name), request.TItem.Level),
+				fmt.Sprintf("%d", request.Price),
 				startLine+li == activeLine,
-				order.IsMyOrder,
+				request.IsMyTradeRequest,
 			),
 		)
 	}
@@ -560,17 +582,17 @@ func centerText(message, pad string, width int) string {
 
 func (screen *GameScreen) InputActive() bool {
 	switch screen.scrStatus {
-	case CREATE_BUY_LOUD_ORDER_ENTER_LOUD_VALUE:
+	case CREATE_BUY_LOUD_REQUEST_ENTER_LOUD_VALUE:
 		return true
-	case CREATE_BUY_LOUD_ORDER_ENTER_PYLON_VALUE:
+	case CREATE_BUY_LOUD_REQUEST_ENTER_PYLON_VALUE:
 		return true
-	case CREATE_SELL_LOUD_ORDER_ENTER_LOUD_VALUE:
+	case CREATE_SELL_LOUD_REQUEST_ENTER_LOUD_VALUE:
 		return true
-	case CREATE_SELL_LOUD_ORDER_ENTER_PYLON_VALUE:
+	case CREATE_SELL_LOUD_REQUEST_ENTER_PYLON_VALUE:
 		return true
-	case CREATE_SELL_SWORD_ORDER_ENTER_PYLON_VALUE:
+	case CREATE_SELL_SWORD_REQUEST_ENTER_PYLON_VALUE:
 		return true
-	case CREATE_BUY_SWORD_ORDER_ENTER_PYLON_VALUE:
+	case CREATE_BUY_SWORD_REQUEST_ENTER_PYLON_VALUE:
 		return true
 	}
 	return false
@@ -664,30 +686,30 @@ func (screen *GameScreen) renderCharacterSheet() {
 }
 
 func (screen *GameScreen) RunSelectedLoudBuyTrade() {
-	if len(buyOrders) <= screen.activeLine || screen.activeLine < 0 {
-		// when activeLine is not refering to real order but when it is refering to nil order
-		screen.txFailReason = localize("you haven't selected any buy order")
-		screen.scrStatus = RESULT_FULFILL_BUY_LOUD_ORDER
+	if len(buyTradeRequests) <= screen.activeLine || screen.activeLine < 0 {
+		// when activeLine is not refering to real request but when it is refering to nil request
+		screen.txFailReason = localize("you haven't selected any buy request")
+		screen.scrStatus = RESULT_FULFILL_BUY_LOUD_REQUEST
 		screen.refreshed = false
 		screen.Render()
 	} else {
-		screen.scrStatus = WAIT_FULFILL_BUY_LOUD_ORDER
-		screen.activeOrder = buyOrders[screen.activeLine]
+		screen.scrStatus = WAIT_FULFILL_BUY_LOUD_REQUEST
+		screen.activeTradeRequest = buyTradeRequests[screen.activeLine]
 		screen.refreshed = false
 		screen.Render()
 		go func() {
-			txhash, err := FulfillTrade(screen.user, buyOrders[screen.activeLine].ID)
+			txhash, err := FulfillTrade(screen.user, buyTradeRequests[screen.activeLine].ID)
 
-			log.Println("ended sending request for creating buy loud order")
+			log.Println("ended sending request for creating buy loud request")
 			if err != nil {
 				screen.txFailReason = err.Error()
-				screen.scrStatus = RESULT_FULFILL_BUY_LOUD_ORDER
+				screen.scrStatus = RESULT_FULFILL_BUY_LOUD_REQUEST
 				screen.refreshed = false
 				screen.Render()
 			} else {
 				time.AfterFunc(2*time.Second, func() {
 					screen.txResult, screen.txFailReason = ProcessTxResult(screen.user, txhash)
-					screen.scrStatus = RESULT_FULFILL_BUY_LOUD_ORDER
+					screen.scrStatus = RESULT_FULFILL_BUY_LOUD_REQUEST
 					screen.refreshed = false
 					screen.Render()
 				})
@@ -697,29 +719,29 @@ func (screen *GameScreen) RunSelectedLoudBuyTrade() {
 }
 
 func (screen *GameScreen) RunSelectedLoudSellTrade() {
-	if len(sellOrders) <= screen.activeLine || screen.activeLine < 0 {
-		screen.txFailReason = localize("you haven't selected any sell order")
-		screen.scrStatus = RESULT_FULFILL_SELL_LOUD_ORDER
+	if len(sellTradeRequests) <= screen.activeLine || screen.activeLine < 0 {
+		screen.txFailReason = localize("you haven't selected any sell request")
+		screen.scrStatus = RESULT_FULFILL_SELL_LOUD_REQUEST
 		screen.refreshed = false
 		screen.Render()
 	} else {
-		screen.scrStatus = WAIT_FULFILL_SELL_LOUD_ORDER
-		screen.activeOrder = sellOrders[screen.activeLine]
+		screen.scrStatus = WAIT_FULFILL_SELL_LOUD_REQUEST
+		screen.activeTradeRequest = sellTradeRequests[screen.activeLine]
 		screen.refreshed = false
 		screen.Render()
 		go func() {
-			log.Println("started sending request for creating sell loud order")
-			txhash, err := FulfillTrade(screen.user, sellOrders[screen.activeLine].ID)
-			log.Println("ended sending request for creating sell loud order")
+			log.Println("started sending request for creating sell loud request")
+			txhash, err := FulfillTrade(screen.user, sellTradeRequests[screen.activeLine].ID)
+			log.Println("ended sending request for creating sell loud request")
 			if err != nil {
 				screen.txFailReason = err.Error()
-				screen.scrStatus = RESULT_FULFILL_SELL_LOUD_ORDER
+				screen.scrStatus = RESULT_FULFILL_SELL_LOUD_REQUEST
 				screen.refreshed = false
 				screen.Render()
 			} else {
 				time.AfterFunc(2*time.Second, func() {
 					screen.txResult, screen.txFailReason = ProcessTxResult(screen.user, txhash)
-					screen.scrStatus = RESULT_FULFILL_SELL_LOUD_ORDER
+					screen.scrStatus = RESULT_FULFILL_SELL_LOUD_REQUEST
 					screen.refreshed = false
 					screen.Render()
 				})
@@ -728,30 +750,30 @@ func (screen *GameScreen) RunSelectedLoudSellTrade() {
 	}
 }
 
-func (screen *GameScreen) RunSelectedSwordBuyOrder() {
-	if len(swordBuyOrders) <= screen.activeLine || screen.activeLine < 0 {
-		screen.txFailReason = localize("you haven't selected any buy item order")
-		screen.scrStatus = RESULT_FULFILL_BUY_SWORD_ORDER
+func (screen *GameScreen) RunSelectedSwordBuyTradeRequest() {
+	if len(swordBuyTradeRequests) <= screen.activeLine || screen.activeLine < 0 {
+		screen.txFailReason = localize("you haven't selected any buy item request")
+		screen.scrStatus = RESULT_FULFILL_BUY_SWORD_REQUEST
 		screen.refreshed = false
 		screen.Render()
 	} else {
-		screen.scrStatus = WAIT_FULFILL_BUY_SWORD_ORDER
-		screen.activeItemOrder = swordBuyOrders[screen.activeLine]
+		screen.scrStatus = WAIT_FULFILL_BUY_SWORD_REQUEST
+		screen.activeItemTradeRequest = swordBuyTradeRequests[screen.activeLine]
 		screen.refreshed = false
 		screen.Render()
 		go func() {
-			log.Println("started sending request for creating buying item order")
-			txhash, err := FulfillTrade(screen.user, swordBuyOrders[screen.activeLine].ID)
-			log.Println("ended sending request for creating buying item order")
+			log.Println("started sending request for creating buying item request")
+			txhash, err := FulfillTrade(screen.user, swordBuyTradeRequests[screen.activeLine].ID)
+			log.Println("ended sending request for creating buying item request")
 			if err != nil {
 				screen.txFailReason = err.Error()
-				screen.scrStatus = RESULT_FULFILL_BUY_SWORD_ORDER
+				screen.scrStatus = RESULT_FULFILL_BUY_SWORD_REQUEST
 				screen.refreshed = false
 				screen.Render()
 			} else {
 				time.AfterFunc(2*time.Second, func() {
 					screen.txResult, screen.txFailReason = ProcessTxResult(screen.user, txhash)
-					screen.scrStatus = RESULT_FULFILL_BUY_SWORD_ORDER
+					screen.scrStatus = RESULT_FULFILL_BUY_SWORD_REQUEST
 					screen.refreshed = false
 					screen.Render()
 				})
@@ -760,30 +782,30 @@ func (screen *GameScreen) RunSelectedSwordBuyOrder() {
 	}
 }
 
-func (screen *GameScreen) RunSelectedSwordSellOrder() {
-	if len(swordSellOrders) <= screen.activeLine || screen.activeLine < 0 {
-		screen.txFailReason = localize("you haven't selected any sell item order")
-		screen.scrStatus = RESULT_FULFILL_SELL_SWORD_ORDER
+func (screen *GameScreen) RunSelectedSwordSellTradeRequest() {
+	if len(swordSellTradeRequests) <= screen.activeLine || screen.activeLine < 0 {
+		screen.txFailReason = localize("you haven't selected any sell item request")
+		screen.scrStatus = RESULT_FULFILL_SELL_SWORD_REQUEST
 		screen.refreshed = false
 		screen.Render()
 	} else {
-		screen.scrStatus = WAIT_FULFILL_SELL_SWORD_ORDER
-		screen.activeItemOrder = swordSellOrders[screen.activeLine]
+		screen.scrStatus = WAIT_FULFILL_SELL_SWORD_REQUEST
+		screen.activeItemTradeRequest = swordSellTradeRequests[screen.activeLine]
 		screen.refreshed = false
 		screen.Render()
 		go func() {
-			log.Println("started sending request for creating selling item order")
-			txhash, err := FulfillTrade(screen.user, swordSellOrders[screen.activeLine].ID)
-			log.Println("ended sending request for creating selling item order")
+			log.Println("started sending request for creating selling item request")
+			txhash, err := FulfillTrade(screen.user, swordSellTradeRequests[screen.activeLine].ID)
+			log.Println("ended sending request for creating selling item request")
 			if err != nil {
 				screen.txFailReason = err.Error()
-				screen.scrStatus = RESULT_FULFILL_SELL_SWORD_ORDER
+				screen.scrStatus = RESULT_FULFILL_SELL_SWORD_REQUEST
 				screen.refreshed = false
 				screen.Render()
 			} else {
 				time.AfterFunc(2*time.Second, func() {
 					screen.txResult, screen.txFailReason = ProcessTxResult(screen.user, txhash)
-					screen.scrStatus = RESULT_FULFILL_SELL_SWORD_ORDER
+					screen.scrStatus = RESULT_FULFILL_SELL_SWORD_REQUEST
 					screen.refreshed = false
 					screen.Render()
 				})
@@ -813,7 +835,7 @@ func (screen *GameScreen) Render() {
 	if !screen.refreshed {
 		clear := cursor.ClearEntireScreen() + allowMouseInputAndHideCursor
 		io.WriteString(os.Stdout, clear)
-		screen.redrawBorders()
+		screen.redrawBrequests()
 		screen.refreshed = true
 	}
 

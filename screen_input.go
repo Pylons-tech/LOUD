@@ -31,10 +31,10 @@ func (screen *GameScreen) HandleInputKeyMarketEntryPoint(input termbox.Event) {
 	Key := string(input.Ch)
 
 	tarStusMap := map[string]ScreenStatus{
-		"1": SHOW_LOUD_BUY_ORDERS,
-		"2": SHOW_LOUD_SELL_ORDERS,
-		"3": SHOW_BUY_SWORD_ORDERS,
-		"4": SHOW_SELL_SWORD_ORDERS,
+		"1": SHOW_LOUD_BUY_REQUESTS,
+		"2": SHOW_LOUD_SELL_REQUESTS,
+		"3": SHOW_BUY_SWORD_REQUESTS,
+		"4": SHOW_SELL_SWORD_REQUESTS,
 	}
 
 	if newStus, ok := tarStusMap[Key]; ok {
@@ -132,87 +132,87 @@ func (screen *GameScreen) HandleInputKey(input termbox.Event) {
 			return
 		case termbox.KeyEnter:
 			switch screen.scrStatus {
-			case CREATE_BUY_LOUD_ORDER_ENTER_LOUD_VALUE:
-				screen.scrStatus = CREATE_BUY_LOUD_ORDER_ENTER_PYLON_VALUE
+			case CREATE_BUY_LOUD_REQUEST_ENTER_LOUD_VALUE:
+				screen.scrStatus = CREATE_BUY_LOUD_REQUEST_ENTER_PYLON_VALUE
 				screen.loudEnterValue = screen.inputText
 				screen.inputText = ""
-			case CREATE_BUY_LOUD_ORDER_ENTER_PYLON_VALUE:
-				screen.scrStatus = WAIT_BUY_LOUD_ORDER_CREATION
+			case CREATE_BUY_LOUD_REQUEST_ENTER_PYLON_VALUE:
+				screen.scrStatus = WAIT_BUY_LOUD_REQUEST_CREATION
 				screen.pylonEnterValue = screen.inputText
 				screen.SetInputTextAndRender("")
-				txhash, err := CreateBuyLoudOrder(screen.user, screen.loudEnterValue, screen.pylonEnterValue)
-				log.Println("ended sending request for creating buy loud order")
+				txhash, err := CreateBuyLoudTradeRequest(screen.user, screen.loudEnterValue, screen.pylonEnterValue)
+				log.Println("ended sending request for creating buy loud request")
 				if err != nil {
 					screen.txFailReason = err.Error()
-					screen.scrStatus = RESULT_BUY_LOUD_ORDER_CREATION
+					screen.scrStatus = RESULT_BUY_LOUD_REQUEST_CREATION
 					screen.refreshed = false
 					screen.Render()
 				} else {
 					time.AfterFunc(2*time.Second, func() {
 						screen.txResult, screen.txFailReason = ProcessTxResult(screen.user, txhash)
-						screen.scrStatus = RESULT_BUY_LOUD_ORDER_CREATION
+						screen.scrStatus = RESULT_BUY_LOUD_REQUEST_CREATION
 						screen.refreshed = false
 						screen.Render()
 					})
 				}
-			case CREATE_SELL_LOUD_ORDER_ENTER_LOUD_VALUE:
-				screen.scrStatus = CREATE_SELL_LOUD_ORDER_ENTER_PYLON_VALUE
+			case CREATE_SELL_LOUD_REQUEST_ENTER_LOUD_VALUE:
+				screen.scrStatus = CREATE_SELL_LOUD_REQUEST_ENTER_PYLON_VALUE
 				screen.loudEnterValue = screen.inputText
 				screen.inputText = ""
-			case CREATE_SELL_LOUD_ORDER_ENTER_PYLON_VALUE:
-				screen.scrStatus = WAIT_SELL_LOUD_ORDER_CREATION
+			case CREATE_SELL_LOUD_REQUEST_ENTER_PYLON_VALUE:
+				screen.scrStatus = WAIT_SELL_LOUD_REQUEST_CREATION
 				screen.pylonEnterValue = screen.inputText
 				screen.SetInputTextAndRender("")
-				txhash, err := CreateSellLoudOrder(screen.user, screen.loudEnterValue, screen.pylonEnterValue)
+				txhash, err := CreateSellLoudTradeRequest(screen.user, screen.loudEnterValue, screen.pylonEnterValue)
 
-				log.Println("ended sending request for creating buy loud order")
+				log.Println("ended sending request for creating buy loud request")
 				if err != nil {
 					screen.txFailReason = err.Error()
-					screen.scrStatus = RESULT_SELL_LOUD_ORDER_CREATION
+					screen.scrStatus = RESULT_SELL_LOUD_REQUEST_CREATION
 					screen.refreshed = false
 					screen.Render()
 				} else {
 					time.AfterFunc(2*time.Second, func() {
 						screen.txResult, screen.txFailReason = ProcessTxResult(screen.user, txhash)
-						screen.scrStatus = RESULT_SELL_LOUD_ORDER_CREATION
+						screen.scrStatus = RESULT_SELL_LOUD_REQUEST_CREATION
 						screen.refreshed = false
 						screen.Render()
 					})
 				}
-			case CREATE_SELL_SWORD_ORDER_ENTER_PYLON_VALUE:
-				screen.scrStatus = WAIT_SELL_SWORD_ORDER_CREATION
+			case CREATE_SELL_SWORD_REQUEST_ENTER_PYLON_VALUE:
+				screen.scrStatus = WAIT_SELL_SWORD_REQUEST_CREATION
 				screen.pylonEnterValue = screen.inputText
 				screen.SetInputTextAndRender("")
-				txhash, err := CreateSellSwordOrder(screen.user, screen.activeItem, screen.pylonEnterValue)
-				log.Println("ended sending request for creating sword -> pylon order")
+				txhash, err := CreateSellSwordTradeRequest(screen.user, screen.activeItem, screen.pylonEnterValue)
+				log.Println("ended sending request for creating sword -> pylon request")
 				if err != nil {
 					screen.txFailReason = err.Error()
-					screen.scrStatus = RESULT_SELL_SWORD_ORDER_CREATION
+					screen.scrStatus = RESULT_SELL_SWORD_REQUEST_CREATION
 					screen.refreshed = false
 					screen.Render()
 				} else {
 					time.AfterFunc(2*time.Second, func() {
 						screen.txResult, screen.txFailReason = ProcessTxResult(screen.user, txhash)
-						screen.scrStatus = RESULT_SELL_SWORD_ORDER_CREATION
+						screen.scrStatus = RESULT_SELL_SWORD_REQUEST_CREATION
 						screen.refreshed = false
 						screen.Render()
 					})
 				}
-			case CREATE_BUY_SWORD_ORDER_ENTER_PYLON_VALUE:
-				screen.scrStatus = WAIT_BUY_SWORD_ORDER_CREATION
+			case CREATE_BUY_SWORD_REQUEST_ENTER_PYLON_VALUE:
+				screen.scrStatus = WAIT_BUY_SWORD_REQUEST_CREATION
 				screen.pylonEnterValue = screen.inputText
 				screen.SetInputTextAndRender("")
-				txhash, err := CreateBuySwordOrder(screen.user, screen.activeItem, screen.pylonEnterValue)
-				log.Println("ended sending request for creating sword -> pylon order")
+				txhash, err := CreateBuySwordTradeRequest(screen.user, screen.activeItem, screen.pylonEnterValue)
+				log.Println("ended sending request for creating sword -> pylon request")
 				if err != nil {
 					screen.txFailReason = err.Error()
-					screen.scrStatus = RESULT_BUY_SWORD_ORDER_CREATION
+					screen.scrStatus = RESULT_BUY_SWORD_REQUEST_CREATION
 					screen.refreshed = false
 					screen.Render()
 				} else {
 					time.AfterFunc(2*time.Second, func() {
 						screen.txResult, screen.txFailReason = ProcessTxResult(screen.user, txhash)
-						screen.scrStatus = RESULT_BUY_SWORD_ORDER_CREATION
+						screen.scrStatus = RESULT_BUY_SWORD_REQUEST_CREATION
 						screen.refreshed = false
 						screen.Render()
 					})
@@ -242,29 +242,29 @@ func (screen *GameScreen) HandleInputKey(input termbox.Event) {
 		if input.Key == termbox.KeyEnter {
 			if screen.user.GetLocation() == MARKET {
 				switch screen.scrStatus {
-				case SHOW_LOUD_BUY_ORDERS:
+				case SHOW_LOUD_BUY_REQUESTS:
 					screen.RunSelectedLoudBuyTrade()
-				case SHOW_LOUD_SELL_ORDERS:
+				case SHOW_LOUD_SELL_REQUESTS:
 					screen.RunSelectedLoudSellTrade()
-				case SHOW_BUY_SWORD_ORDERS:
-					screen.RunSelectedSwordBuyOrder()
-				case SHOW_SELL_SWORD_ORDERS:
-					screen.RunSelectedSwordSellOrder()
-				case CREATE_SELL_SWORD_ORDER_SELECT_SWORD:
+				case SHOW_BUY_SWORD_REQUESTS:
+					screen.RunSelectedSwordBuyTradeRequest()
+				case SHOW_SELL_SWORD_REQUESTS:
+					screen.RunSelectedSwordSellTradeRequest()
+				case CREATE_SELL_SWORD_REQUEST_SELECT_SWORD:
 					userItems := screen.user.InventoryItems()
 					if len(userItems) <= screen.activeLine || screen.activeLine < 0 {
 						return
 					}
 					screen.activeItem = userItems[screen.activeLine]
-					screen.scrStatus = CREATE_SELL_SWORD_ORDER_ENTER_PYLON_VALUE
+					screen.scrStatus = CREATE_SELL_SWORD_REQUEST_ENTER_PYLON_VALUE
 					screen.inputText = ""
 					screen.refreshed = false
-				case CREATE_BUY_SWORD_ORDER_SELECT_SWORD:
+				case CREATE_BUY_SWORD_REQUEST_SELECT_SWORD:
 					if len(worldItems) <= screen.activeLine || screen.activeLine < 0 {
 						return
 					}
 					screen.activeItem = worldItems[screen.activeLine]
-					screen.scrStatus = CREATE_BUY_SWORD_ORDER_ENTER_PYLON_VALUE
+					screen.scrStatus = CREATE_BUY_SWORD_REQUEST_ENTER_PYLON_VALUE
 					screen.inputText = ""
 					screen.refreshed = false
 				}
@@ -328,33 +328,33 @@ func (screen *GameScreen) HandleInputKey(input termbox.Event) {
 		case "C": // CANCEL
 			screen.scrStatus = SHOW_LOCATION
 			screen.refreshed = false
-		case "O": // GO ON, GO BACK, CREATE ORDER
+		case "O": // GO ON, GO BACK, CREATE REQUEST
 			if screen.user.GetLocation() == MARKET {
 				switch screen.scrStatus {
-				case SHOW_LOUD_BUY_ORDERS:
-					screen.scrStatus = CREATE_BUY_LOUD_ORDER_ENTER_LOUD_VALUE
-				case SHOW_LOUD_SELL_ORDERS:
-					screen.scrStatus = CREATE_SELL_LOUD_ORDER_ENTER_LOUD_VALUE
-				case RESULT_BUY_LOUD_ORDER_CREATION:
+				case SHOW_LOUD_BUY_REQUESTS:
+					screen.scrStatus = CREATE_BUY_LOUD_REQUEST_ENTER_LOUD_VALUE
+				case SHOW_LOUD_SELL_REQUESTS:
+					screen.scrStatus = CREATE_SELL_LOUD_REQUEST_ENTER_LOUD_VALUE
+				case RESULT_BUY_LOUD_REQUEST_CREATION:
 					fallthrough
-				case RESULT_FULFILL_BUY_LOUD_ORDER:
-					screen.scrStatus = SHOW_LOUD_BUY_ORDERS
-				case RESULT_SELL_LOUD_ORDER_CREATION:
+				case RESULT_FULFILL_BUY_LOUD_REQUEST:
+					screen.scrStatus = SHOW_LOUD_BUY_REQUESTS
+				case RESULT_SELL_LOUD_REQUEST_CREATION:
 					fallthrough
-				case RESULT_FULFILL_SELL_LOUD_ORDER:
-					screen.scrStatus = SHOW_LOUD_SELL_ORDERS
-				case SHOW_SELL_SWORD_ORDERS:
-					screen.scrStatus = CREATE_SELL_SWORD_ORDER_SELECT_SWORD
-				case RESULT_SELL_SWORD_ORDER_CREATION:
+				case RESULT_FULFILL_SELL_LOUD_REQUEST:
+					screen.scrStatus = SHOW_LOUD_SELL_REQUESTS
+				case SHOW_SELL_SWORD_REQUESTS:
+					screen.scrStatus = CREATE_SELL_SWORD_REQUEST_SELECT_SWORD
+				case RESULT_SELL_SWORD_REQUEST_CREATION:
 					fallthrough
-				case RESULT_FULFILL_SELL_SWORD_ORDER:
-					screen.scrStatus = SHOW_SELL_SWORD_ORDERS
-				case SHOW_BUY_SWORD_ORDERS:
-					screen.scrStatus = CREATE_BUY_SWORD_ORDER_SELECT_SWORD
-				case RESULT_BUY_SWORD_ORDER_CREATION:
+				case RESULT_FULFILL_SELL_SWORD_REQUEST:
+					screen.scrStatus = SHOW_SELL_SWORD_REQUESTS
+				case SHOW_BUY_SWORD_REQUESTS:
+					screen.scrStatus = CREATE_BUY_SWORD_REQUEST_SELECT_SWORD
+				case RESULT_BUY_SWORD_REQUEST_CREATION:
 					fallthrough
-				case RESULT_FULFILL_BUY_SWORD_ORDER:
-					screen.scrStatus = SHOW_BUY_SWORD_ORDERS
+				case RESULT_FULFILL_BUY_SWORD_REQUEST:
+					screen.scrStatus = SHOW_BUY_SWORD_REQUESTS
 				default:
 					screen.scrStatus = SHOW_LOCATION
 				}

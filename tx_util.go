@@ -107,10 +107,10 @@ func SyncFromNode(user User) {
 	user.SetItems(myItems)
 	log.Println("SyncFromNode myItems=", myItems)
 
-	nBuyOrders := []Order{}
-	nSellOrders := []Order{}
-	nBuySwordOrders := []ItemOrder{}
-	nSellSwordOrders := []ItemOrder{}
+	nBuyTradeRequests := []TradeRequest{}
+	nSellTradeRequests := []TradeRequest{}
+	nBuySwordTradeRequests := []ItemTradeRequest{}
+	nSellSwordTradeRequests := []ItemTradeRequest{}
 	rawTrades, _ := pylonSDK.ListTradeViaCLI("")
 	for _, tradeItem := range rawTrades {
 		if tradeItem.Completed == false {
@@ -122,35 +122,36 @@ func SyncFromNode(user User) {
 			pylonOutputAmount := tradeItem.CoinOutputs.AmountOf("pylon").Int64()
 			itemInputLen := len(tradeItem.ItemInputs)
 			itemOutputLen := len(tradeItem.ItemOutputs)
-			isMyOrder := tradeItem.Sender.String() == accAddr
+			isMyTradeRequest := tradeItem.Sender.String() == accAddr
 			if inputCoin == "loudcoin" { // loud sell trade
 				loudAmount := tradeItem.CoinInputs[0].Count
-				nSellOrders = append(nSellOrders, Order{
+
+				nBuyTradeRequests = append(nBuyTradeRequests, TradeRequest{
 					ID:        tradeItem.ID,
 					Amount:    int(loudAmount),
 					Total:     int(pylonOutputAmount),
 					Price:     float64(pylonOutputAmount) / float64(loudAmount),
-					IsMyOrder: isMyOrder,
+					IsMyTradeRequest: isMyTradeRequest,
 				})
 			} else if loudOutputAmount > 0 { // loud buy trade
 				inputPylonAmount := tradeItem.CoinInputs[0].Count
-				nBuyOrders = append(nBuyOrders, Order{
+				nSellTradeRequests = append(nSellTradeRequests, TradeRequest{
 					ID:        tradeItem.ID,
 					Amount:    int(loudOutputAmount),
 					Total:     int(inputPylonAmount),
 					Price:     float64(inputPylonAmount) / float64(loudOutputAmount),
-					IsMyOrder: isMyOrder,
+					IsMyTradeRequest: isMyTradeRequest,
 				})
 			} else if itemInputLen > 0 { // buy sword trade
 				tItem := Item{
 					Level: tradeItem.ItemInputs[0].Longs[0].MinValue, // Level
 					Name:  tradeItem.ItemInputs[0].Strings[0].Value,
 				}
-				nBuySwordOrders = append(nBuySwordOrders, ItemOrder{
+				nBuySwordTradeRequests = append(nBuySwordTradeRequests, ItemTradeRequest{
 					ID:        tradeItem.ID,
 					TItem:     tItem,
 					Price:     int(pylonOutputAmount),
-					IsMyOrder: isMyOrder,
+					IsMyTradeRequest: isMyTradeRequest,
 				})
 			} else if itemOutputLen > 0 { // sell sword trade
 				inputPylonAmount := tradeItem.CoinInputs[0].Count
@@ -161,29 +162,29 @@ func SyncFromNode(user User) {
 					Level: level,
 					Name:  name,
 				}
-				nSellSwordOrders = append(nSellSwordOrders, ItemOrder{
+				nSellSwordTradeRequests = append(nSellSwordTradeRequests, ItemTradeRequest{
 					ID:        tradeItem.ID,
 					TItem:     tItem,
 					Price:     int(inputPylonAmount),
-					IsMyOrder: isMyOrder,
+					IsMyTradeRequest: isMyTradeRequest,
 				})
 			}
 		}
 	}
-	// Sort and show by low price buy orders
-	sort.SliceStable(nBuyOrders, func(i, j int) bool {
-		return nBuyOrders[i].Price < nBuyOrders[j].Price
+	// Sort and show by low price buy requests
+	sort.SliceStable(nBuyTradeRequests, func(i, j int) bool {
+		return nBuyTradeRequests[i].Price < nBuyTradeRequests[j].Price
 	})
-	// Sort and show by high price sell orders
-	sort.SliceStable(nSellOrders, func(i, j int) bool {
-		return nSellOrders[i].Price > nSellOrders[j].Price
+	// Sort and show by high price sell requests
+	sort.SliceStable(nSellTradeRequests, func(i, j int) bool {
+		return nSellTradeRequests[i].Price > nSellTradeRequests[j].Price
 	})
-	buyOrders = nBuyOrders
-	sellOrders = nSellOrders
-	swordBuyOrders = nBuySwordOrders
-	swordSellOrders = nSellSwordOrders
-	log.Println("SyncFromNode buyOrders=", nBuyOrders)
-	log.Println("SyncFromNode sellOrders=", sellOrders)
+	buyTradeRequests = nBuyTradeRequests
+	sellTradeRequests = nSellTradeRequests
+	swordBuyTradeRequests = nBuySwordTradeRequests
+	swordSellTradeRequests = nSellSwordTradeRequests
+	log.Println("SyncFromNode buyTradeRequests=", nBuyTradeRequests)
+	log.Println("SyncFromNode sellTradeRequests=", sellTradeRequests)
 }
 
 func GetExtraPylons(user User) (string, error) {
@@ -545,7 +546,7 @@ func Upgrade(user User, key string) (string, error) {
 	return ExecuteRecipe(user, rcpName, itemIDs)
 }
 
-func CreateSellLoudOrder(user User, loudEnterValue string, pylonEnterValue string) (string, error) {
+func CreateBuyLoudTradeRequest(user User, loudEnterValue string, pylonEnterValue string) (string, error) {
 	t := GetTestingT()
 	loudValue, err := strconv.Atoi(loudEnterValue)
 	if err != nil {
@@ -578,7 +579,7 @@ func CreateSellLoudOrder(user User, loudEnterValue string, pylonEnterValue strin
 	return txhash, nil
 }
 
-func CreateBuyLoudOrder(user User, loudEnterValue string, pylonEnterValue string) (string, error) {
+func CreateSellLoudTradeRequest(user User, loudEnterValue string, pylonEnterValue string) (string, error) {
 	t := GetTestingT()
 	loudValue, err := strconv.Atoi(loudEnterValue)
 	if err != nil {
@@ -627,7 +628,7 @@ func GetItemInputsFromActiveItem(activeItem Item) types.ItemInputList {
 	return itemInputs
 }
 
-func CreateBuySwordOrder(user User, activeItem Item, pylonEnterValue string) (string, error) {
+func CreateBuySwordTradeRequest(user User, activeItem Item, pylonEnterValue string) (string, error) {
 // trade creator will get sword from pylon
 	t := GetTestingT()
 
@@ -642,7 +643,7 @@ func CreateBuySwordOrder(user User, activeItem Item, pylonEnterValue string) (st
 	sdkAddr, err := sdk.AccAddressFromBech32(eugenAddr)
 
 	outputCoins := sdk.Coins{sdk.NewInt64Coin("pylon", int64(pylonValue))}
-	extraInfo := "sword buy order created by loud game"
+	extraInfo := "sword buy request created by loud game"
 
 	createTrdMsg := msgs.NewMsgCreateTrade(
 		nil,
@@ -665,7 +666,7 @@ func GetItemOutputFromActiveItem(activeItem Item) (types.ItemList, error) {
 	return itemOutputs, err
 }
 
-func CreateSellSwordOrder(user User, activeItem Item, pylonEnterValue string) (string, error) {
+func CreateSellSwordTradeRequest(user User, activeItem Item, pylonEnterValue string) (string, error) {
 // trade creator will get pylon from sword
 	t := GetTestingT()
 
@@ -683,7 +684,7 @@ func CreateSellSwordOrder(user User, activeItem Item, pylonEnterValue string) (s
 		return "", err
 	}
 
-	extraInfo := "sword sell order created by loud game"
+	extraInfo := "sword sell request created by loud game"
 
 	createTrdMsg := msgs.NewMsgCreateTrade(
 		inputCoinList,
