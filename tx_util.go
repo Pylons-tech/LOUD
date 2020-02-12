@@ -141,18 +141,18 @@ func SyncFromNode(user User) {
 					Price:     float64(inputPylonAmount) / float64(loudOutputAmount),
 					IsMyOrder: isMyOrder,
 				})
-			} else if itemInputLen > 0 { // sword -> pylon trade
+			} else if itemInputLen > 0 { // buy sword trade
 				tItem := Item{
 					Level: tradeItem.ItemInputs[0].Longs[0].MinValue, // Level
 					Name:  tradeItem.ItemInputs[0].Strings[0].Value,
 				}
-				nSellSwordOrders = append(nSellSwordOrders, ItemOrder{
+				nBuySwordOrders = append(nBuySwordOrders, ItemOrder{
 					ID:        tradeItem.ID,
 					TItem:     tItem,
 					Price:     int(pylonOutputAmount),
 					IsMyOrder: isMyOrder,
 				})
-			} else if itemOutputLen > 0 { // pylon -> sword trade
+			} else if itemOutputLen > 0 { // sell sword trade
 				inputPylonAmount := tradeItem.CoinInputs[0].Count
 				level, _ := tradeItem.ItemOutputs[0].FindLong("level")
 				name, _ := tradeItem.ItemOutputs[0].FindString("Name")
@@ -161,7 +161,7 @@ func SyncFromNode(user User) {
 					Level: level,
 					Name:  name,
 				}
-				nBuySwordOrders = append(nBuySwordOrders, ItemOrder{
+				nSellSwordOrders = append(nSellSwordOrders, ItemOrder{
 					ID:        tradeItem.ID,
 					TItem:     tItem,
 					Price:     int(inputPylonAmount),
