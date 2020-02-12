@@ -183,7 +183,7 @@ func SyncFromNode(user User) {
 	sellTradeRequests = nSellTradeRequests
 	swordBuyTradeRequests = nBuySwordTradeRequests
 	swordSellTradeRequests = nSellSwordTradeRequests
-	log.Println("SyncFromNode buyTradeRequests=", nBuyTradeRequests)
+	log.Println("SyncFromNode buyTradeRequests=", buyTradeRequests)
 	log.Println("SyncFromNode sellTradeRequests=", sellTradeRequests)
 }
 
