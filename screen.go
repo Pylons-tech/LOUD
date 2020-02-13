@@ -115,8 +115,7 @@ func (screen *GameScreen) SetDaemonFetchingFlag(flag bool) {
 
 func (screen *GameScreen) UpdateBlockHeight(blockHeight int64) {
 	screen.blockHeight = blockHeight
-	screen.refreshed = false
-	screen.Render()
+	screen.FreshRender()
 }
 
 func (screen *GameScreen) SetInputTextAndRender(text string) {
@@ -625,13 +624,11 @@ func (screen *GameScreen) RunSelectedLoudBuyTrade() {
 		// when activeLine is not refering to real request but when it is refering to nil request
 		screen.txFailReason = localize("you haven't selected any buy request")
 		screen.scrStatus = RESULT_FULFILL_BUY_LOUD_REQUEST
-		screen.refreshed = false
-		screen.Render()
+		screen.FreshRender()
 	} else {
 		screen.scrStatus = WAIT_FULFILL_BUY_LOUD_REQUEST
 		screen.activeTradeRequest = buyTradeRequests[screen.activeLine]
-		screen.refreshed = false
-		screen.Render()
+		screen.FreshRender()
 		go func() {
 			txhash, err := FulfillTrade(screen.user, buyTradeRequests[screen.activeLine].ID)
 
@@ -639,14 +636,12 @@ func (screen *GameScreen) RunSelectedLoudBuyTrade() {
 			if err != nil {
 				screen.txFailReason = err.Error()
 				screen.scrStatus = RESULT_FULFILL_BUY_LOUD_REQUEST
-				screen.refreshed = false
-				screen.Render()
+				screen.FreshRender()
 			} else {
 				time.AfterFunc(2*time.Second, func() {
 					screen.txResult, screen.txFailReason = ProcessTxResult(screen.user, txhash)
 					screen.scrStatus = RESULT_FULFILL_BUY_LOUD_REQUEST
-					screen.refreshed = false
-					screen.Render()
+					screen.FreshRender()
 				})
 			}
 		}()
@@ -657,13 +652,11 @@ func (screen *GameScreen) RunSelectedLoudSellTrade() {
 	if len(sellTradeRequests) <= screen.activeLine || screen.activeLine < 0 {
 		screen.txFailReason = localize("you haven't selected any sell request")
 		screen.scrStatus = RESULT_FULFILL_SELL_LOUD_REQUEST
-		screen.refreshed = false
-		screen.Render()
+		screen.FreshRender()
 	} else {
 		screen.scrStatus = WAIT_FULFILL_SELL_LOUD_REQUEST
 		screen.activeTradeRequest = sellTradeRequests[screen.activeLine]
-		screen.refreshed = false
-		screen.Render()
+		screen.FreshRender()
 		go func() {
 			log.Println("started sending request for creating sell loud request")
 			txhash, err := FulfillTrade(screen.user, sellTradeRequests[screen.activeLine].ID)
@@ -671,14 +664,12 @@ func (screen *GameScreen) RunSelectedLoudSellTrade() {
 			if err != nil {
 				screen.txFailReason = err.Error()
 				screen.scrStatus = RESULT_FULFILL_SELL_LOUD_REQUEST
-				screen.refreshed = false
-				screen.Render()
+				screen.FreshRender()
 			} else {
 				time.AfterFunc(2*time.Second, func() {
 					screen.txResult, screen.txFailReason = ProcessTxResult(screen.user, txhash)
 					screen.scrStatus = RESULT_FULFILL_SELL_LOUD_REQUEST
-					screen.refreshed = false
-					screen.Render()
+					screen.FreshRender()
 				})
 			}
 		}()
@@ -689,13 +680,11 @@ func (screen *GameScreen) RunSelectedSwordBuyTradeRequest() {
 	if len(swordBuyTradeRequests) <= screen.activeLine || screen.activeLine < 0 {
 		screen.txFailReason = localize("you haven't selected any buy item request")
 		screen.scrStatus = RESULT_FULFILL_BUY_SWORD_REQUEST
-		screen.refreshed = false
-		screen.Render()
+		screen.FreshRender()
 	} else {
 		screen.scrStatus = WAIT_FULFILL_BUY_SWORD_REQUEST
 		screen.activeItemTradeRequest = swordBuyTradeRequests[screen.activeLine]
-		screen.refreshed = false
-		screen.Render()
+		screen.FreshRender()
 		go func() {
 			log.Println("started sending request for creating buying item request")
 			txhash, err := FulfillTrade(screen.user, swordBuyTradeRequests[screen.activeLine].ID)
@@ -703,14 +692,12 @@ func (screen *GameScreen) RunSelectedSwordBuyTradeRequest() {
 			if err != nil {
 				screen.txFailReason = err.Error()
 				screen.scrStatus = RESULT_FULFILL_BUY_SWORD_REQUEST
-				screen.refreshed = false
-				screen.Render()
+				screen.FreshRender()
 			} else {
 				time.AfterFunc(2*time.Second, func() {
 					screen.txResult, screen.txFailReason = ProcessTxResult(screen.user, txhash)
 					screen.scrStatus = RESULT_FULFILL_BUY_SWORD_REQUEST
-					screen.refreshed = false
-					screen.Render()
+					screen.FreshRender()
 				})
 			}
 		}()
@@ -721,13 +708,11 @@ func (screen *GameScreen) RunSelectedSwordSellTradeRequest() {
 	if len(swordSellTradeRequests) <= screen.activeLine || screen.activeLine < 0 {
 		screen.txFailReason = localize("you haven't selected any sell item request")
 		screen.scrStatus = RESULT_FULFILL_SELL_SWORD_REQUEST
-		screen.refreshed = false
-		screen.Render()
+		screen.FreshRender()
 	} else {
 		screen.scrStatus = WAIT_FULFILL_SELL_SWORD_REQUEST
 		screen.activeItemTradeRequest = swordSellTradeRequests[screen.activeLine]
-		screen.refreshed = false
-		screen.Render()
+		screen.FreshRender()
 		go func() {
 			log.Println("started sending request for creating selling item request")
 			txhash, err := FulfillTrade(screen.user, swordSellTradeRequests[screen.activeLine].ID)
@@ -735,18 +720,21 @@ func (screen *GameScreen) RunSelectedSwordSellTradeRequest() {
 			if err != nil {
 				screen.txFailReason = err.Error()
 				screen.scrStatus = RESULT_FULFILL_SELL_SWORD_REQUEST
-				screen.refreshed = false
-				screen.Render()
+				screen.FreshRender()
 			} else {
 				time.AfterFunc(2*time.Second, func() {
 					screen.txResult, screen.txFailReason = ProcessTxResult(screen.user, txhash)
 					screen.scrStatus = RESULT_FULFILL_SELL_SWORD_REQUEST
-					screen.refreshed = false
-					screen.Render()
+					screen.FreshRender()
 				})
 			}
 		}()
 	}
+}
+
+func (screen *GameScreen) FreshRender() {
+	screen.refreshed = false
+	screen.Render()
 }
 
 func (screen *GameScreen) Render() {

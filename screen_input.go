@@ -145,14 +145,12 @@ func (screen *GameScreen) HandleInputKey(input termbox.Event) {
 				if err != nil {
 					screen.txFailReason = err.Error()
 					screen.scrStatus = RESULT_BUY_LOUD_REQUEST_CREATION
-					screen.refreshed = false
-					screen.Render()
+					screen.FreshRender()
 				} else {
 					time.AfterFunc(2*time.Second, func() {
 						screen.txResult, screen.txFailReason = ProcessTxResult(screen.user, txhash)
 						screen.scrStatus = RESULT_BUY_LOUD_REQUEST_CREATION
-						screen.refreshed = false
-						screen.Render()
+						screen.FreshRender()
 					})
 				}
 			case CREATE_SELL_LOUD_REQUEST_ENTER_LOUD_VALUE:
@@ -169,14 +167,12 @@ func (screen *GameScreen) HandleInputKey(input termbox.Event) {
 				if err != nil {
 					screen.txFailReason = err.Error()
 					screen.scrStatus = RESULT_SELL_LOUD_REQUEST_CREATION
-					screen.refreshed = false
-					screen.Render()
+					screen.FreshRender()
 				} else {
 					time.AfterFunc(2*time.Second, func() {
 						screen.txResult, screen.txFailReason = ProcessTxResult(screen.user, txhash)
 						screen.scrStatus = RESULT_SELL_LOUD_REQUEST_CREATION
-						screen.refreshed = false
-						screen.Render()
+						screen.FreshRender()
 					})
 				}
 			case CREATE_SELL_SWORD_REQUEST_ENTER_PYLON_VALUE:
@@ -188,14 +184,12 @@ func (screen *GameScreen) HandleInputKey(input termbox.Event) {
 				if err != nil {
 					screen.txFailReason = err.Error()
 					screen.scrStatus = RESULT_SELL_SWORD_REQUEST_CREATION
-					screen.refreshed = false
-					screen.Render()
+					screen.FreshRender()
 				} else {
 					time.AfterFunc(2*time.Second, func() {
 						screen.txResult, screen.txFailReason = ProcessTxResult(screen.user, txhash)
 						screen.scrStatus = RESULT_SELL_SWORD_REQUEST_CREATION
-						screen.refreshed = false
-						screen.Render()
+						screen.FreshRender()
 					})
 				}
 			case CREATE_BUY_SWORD_REQUEST_ENTER_PYLON_VALUE:
@@ -207,14 +201,12 @@ func (screen *GameScreen) HandleInputKey(input termbox.Event) {
 				if err != nil {
 					screen.txFailReason = err.Error()
 					screen.scrStatus = RESULT_BUY_SWORD_REQUEST_CREATION
-					screen.refreshed = false
-					screen.Render()
+					screen.FreshRender()
 				} else {
 					time.AfterFunc(2*time.Second, func() {
 						screen.txResult, screen.txFailReason = ProcessTxResult(screen.user, txhash)
 						screen.scrStatus = RESULT_BUY_SWORD_REQUEST_CREATION
-						screen.refreshed = false
-						screen.Render()
+						screen.FreshRender()
 					})
 				}
 			}
@@ -274,29 +266,25 @@ func (screen *GameScreen) HandleInputKey(input termbox.Event) {
 		switch Key {
 		case "J": // Create cookbook
 			screen.scrStatus = WAIT_CREATE_COOKBOOK
-			screen.refreshed = false
-			screen.Render()
+			screen.FreshRender()
 			go func() {
 				txhash, err := CreateCookbook(screen.user)
 				log.Println("ended sending request for creating cookbook")
 				if err != nil {
 					screen.txFailReason = err.Error()
 					screen.scrStatus = RESULT_CREATE_COOKBOOK
-					screen.refreshed = false
-					screen.Render()
+					screen.FreshRender()
 				} else {
 					time.AfterFunc(1*time.Second, func() {
 						screen.txResult, screen.txFailReason = ProcessTxResult(screen.user, txhash)
 						screen.scrStatus = RESULT_CREATE_COOKBOOK
-						screen.refreshed = false
-						screen.Render()
+						screen.FreshRender()
 					})
 				}
 			}()
 		case "Z": // Switch user
 			screen.scrStatus = WAIT_SWITCH_USER
-			screen.refreshed = false
-			screen.Render()
+			screen.FreshRender()
 			go func() {
 				newUser := screen.world.GetUser(fmt.Sprintf("%d", time.Now().Unix()))
 				orgLocation := screen.user.GetLocation()
@@ -304,8 +292,7 @@ func (screen *GameScreen) HandleInputKey(input termbox.Event) {
 				screen.user.SetLocation(orgLocation) // set the user back to original location
 
 				screen.scrStatus = RESULT_SWITCH_USER
-				screen.refreshed = false
-				screen.Render()
+				screen.FreshRender()
 			}()
 		case "H": // HOME
 			screen.user.SetLocation(HOME)
@@ -367,8 +354,7 @@ func (screen *GameScreen) HandleInputKey(input termbox.Event) {
 			}
 		case "Y": // get initial pylons
 			screen.scrStatus = WAIT_GET_PYLONS
-			screen.refreshed = false
-			screen.Render()
+			screen.FreshRender()
 			log.Println("started sending request for getting extra pylons")
 			go func() {
 				txhash, err := GetExtraPylons(screen.user)
@@ -376,14 +362,12 @@ func (screen *GameScreen) HandleInputKey(input termbox.Event) {
 				if err != nil {
 					screen.txFailReason = err.Error()
 					screen.scrStatus = RESULT_GET_PYLONS
-					screen.refreshed = false
-					screen.Render()
+					screen.FreshRender()
 				} else {
 					time.AfterFunc(1*time.Second, func() {
 						screen.txResult, screen.txFailReason = ProcessTxResult(screen.user, txhash)
 						screen.scrStatus = RESULT_GET_PYLONS
-						screen.refreshed = false
-						screen.Render()
+						screen.FreshRender()
 					})
 				}
 			}()
@@ -416,8 +400,7 @@ func (screen *GameScreen) HandleInputKey(input termbox.Event) {
 					return
 				}
 				screen.scrStatus = WAIT_BUY_PROCESS
-				screen.refreshed = false
-				screen.Render()
+				screen.FreshRender()
 				log.Println("started sending request for buying item")
 				go func() {
 					txhash, err := Buy(screen.user, Key)
@@ -425,22 +408,19 @@ func (screen *GameScreen) HandleInputKey(input termbox.Event) {
 					if err != nil {
 						screen.txFailReason = err.Error()
 						screen.scrStatus = RESULT_BUY_FINISH
-						screen.refreshed = false
-						screen.Render()
+						screen.FreshRender()
 					} else {
 						time.AfterFunc(1*time.Second, func() {
 							screen.txResult, screen.txFailReason = ProcessTxResult(screen.user, txhash)
 							screen.scrStatus = RESULT_BUY_FINISH
-							screen.refreshed = false
-							screen.Render()
+							screen.FreshRender()
 						})
 					}
 				}()
 			case SELECT_HUNT_ITEM:
 				screen.activeItem = GetWeaponItemFromKey(screen.user, Key)
 				screen.scrStatus = WAIT_HUNT_PROCESS
-				screen.refreshed = false
-				screen.Render()
+				screen.FreshRender()
 				log.Println("started sending request for hunting item")
 				go func() {
 					txhash, err := Hunt(screen.user, Key)
@@ -448,14 +428,12 @@ func (screen *GameScreen) HandleInputKey(input termbox.Event) {
 					if err != nil {
 						screen.txFailReason = err.Error()
 						screen.scrStatus = RESULT_HUNT_FINISH
-						screen.refreshed = false
-						screen.Render()
+						screen.FreshRender()
 					} else {
 						time.AfterFunc(1*time.Second, func() {
 							screen.txResult, screen.txFailReason = ProcessTxResult(screen.user, txhash)
 							screen.scrStatus = RESULT_HUNT_FINISH
-							screen.refreshed = false
-							screen.Render()
+							screen.FreshRender()
 						})
 					}
 				}()
@@ -465,8 +443,7 @@ func (screen *GameScreen) HandleInputKey(input termbox.Event) {
 					return
 				}
 				screen.scrStatus = WAIT_SELL_PROCESS
-				screen.refreshed = false
-				screen.Render()
+				screen.FreshRender()
 				log.Println("started sending request for selling item")
 				go func() {
 					txhash, err := Sell(screen.user, Key)
@@ -474,14 +451,12 @@ func (screen *GameScreen) HandleInputKey(input termbox.Event) {
 					if err != nil {
 						screen.txFailReason = err.Error()
 						screen.scrStatus = RESULT_SELL_FINISH
-						screen.refreshed = false
-						screen.Render()
+						screen.FreshRender()
 					} else {
 						time.AfterFunc(1*time.Second, func() {
 							screen.txResult, screen.txFailReason = ProcessTxResult(screen.user, txhash)
 							screen.scrStatus = RESULT_SELL_FINISH
-							screen.refreshed = false
-							screen.Render()
+							screen.FreshRender()
 						})
 					}
 				}()
@@ -491,8 +466,7 @@ func (screen *GameScreen) HandleInputKey(input termbox.Event) {
 					return
 				}
 				screen.scrStatus = WAIT_UPGRADE_PROCESS
-				screen.refreshed = false
-				screen.Render()
+				screen.FreshRender()
 				log.Println("started sending request for upgrading item")
 				go func() {
 					txhash, err := Upgrade(screen.user, Key)
@@ -500,14 +474,12 @@ func (screen *GameScreen) HandleInputKey(input termbox.Event) {
 					if err != nil {
 						screen.txFailReason = err.Error()
 						screen.scrStatus = RESULT_UPGRADE_FINISH
-						screen.refreshed = false
-						screen.Render()
+						screen.FreshRender()
 					} else {
 						time.AfterFunc(1*time.Second, func() {
 							screen.txResult, screen.txFailReason = ProcessTxResult(screen.user, txhash)
 							screen.scrStatus = RESULT_UPGRADE_FINISH
-							screen.refreshed = false
-							screen.Render()
+							screen.FreshRender()
 						})
 					}
 				}()
