@@ -63,14 +63,14 @@ func Hunt(user User, key string) (string, error) {
 	}
 
 	switch useItem.Name {
-	case "Wooden sword":
+	case WOODEN_SWORD:
 		if useItem.Level == 1 {
 			rcpName = "LOUD's hunt with lv1 wooden sword recipe"
 		} else {
 			rcpName = "LOUD's hunt with lv2 wooden sword recipe"
 		}
 		itemIDs = []string{useItem.ID}
-	case "Copper sword":
+	case COPPER_SWORD:
 		if useItem.Level == 1 {
 			rcpName = "LOUD's hunt with lv1 copper sword recipe"
 		} else {
@@ -86,11 +86,11 @@ func Buy(user User, key string) (string, error) {
 	useItem := GetToBuyItemFromKey(key)
 	rcpName := ""
 	switch useItem.Name {
-	case "Wooden sword":
+	case WOODEN_SWORD:
 		if useItem.Level == 1 {
 			rcpName = "LOUD's Wooden sword lv1 buy recipe"
 		}
-	case "Copper sword":
+	case COPPER_SWORD:
 		if useItem.Level == 1 {
 			rcpName = "LOUD's Copper sword lv1 buy recipe"
 		}
@@ -109,13 +109,13 @@ func Sell(user User, key string) (string, error) {
 
 	rcpName := ""
 	switch useItem.Name {
-	case "Wooden sword":
+	case WOODEN_SWORD:
 		if useItem.Level == 1 {
 			rcpName = "LOUD's Lv1 wooden sword sell recipe"
 		} else {
 			rcpName = "LOUD's Lv2 wooden sword sell recipe"
 		}
-	case "Copper sword":
+	case COPPER_SWORD:
 		if useItem.Level == 1 {
 			rcpName = "LOUD's Lv1 copper sword sell recipe"
 		} else {
@@ -130,11 +130,11 @@ func Upgrade(user User, key string) (string, error) {
 	itemIDs := []string{useItem.ID}
 	rcpName := ""
 	switch useItem.Name {
-	case "Wooden sword":
+	case WOODEN_SWORD:
 		if useItem.Level == 1 {
 			rcpName = "LOUD's Wooden sword lv1 to lv2 upgrade recipe"
 		}
-	case "Copper sword":
+	case COPPER_SWORD:
 		if useItem.Level == 1 {
 			rcpName = "LOUD's Copper sword lv1 to lv2 upgrade recipe"
 		}

@@ -81,49 +81,12 @@ func (screen *GameScreen) renderUserCommands() {
 			infoLines = append(infoLines, fmt.Sprintf("%d) %s Lv%d ", idx+1, localize(item.Name), item.Level)+screen.loudIcon()+fmt.Sprintf(" %d", item.GetUpgradePrice()))
 		}
 		infoLines = append(infoLines, localize("C)ancel"))
-	case CREATE_SELL_LOUD_REQUEST_ENTER_LOUD_VALUE:
-		fallthrough
-	case CREATE_SELL_LOUD_REQUEST_ENTER_PYLON_VALUE:
-		fallthrough
-	case CREATE_BUY_LOUD_REQUEST_ENTER_LOUD_VALUE:
-		fallthrough
-	case CREATE_BUY_LOUD_REQUEST_ENTER_PYLON_VALUE:
-		fallthrough
-	case CREATE_SELL_SWORD_REQUEST_ENTER_PYLON_VALUE:
-		fallthrough
-	case CREATE_BUY_SWORD_REQUEST_ENTER_PYLON_VALUE:
-		infoLines = append(infoLines, "Finish Enter ( ↵ )")
-	case RESULT_BUY_LOUD_REQUEST_CREATION:
-		fallthrough
-	case RESULT_SELL_SWORD_REQUEST_CREATION:
-		fallthrough
-	case RESULT_BUY_SWORD_REQUEST_CREATION:
-		fallthrough
-	case RESULT_SELL_LOUD_REQUEST_CREATION:
-		fallthrough
-	case RESULT_FULFILL_BUY_SWORD_REQUEST:
-		fallthrough
-	case RESULT_FULFILL_SELL_SWORD_REQUEST:
-		fallthrough
-	case RESULT_FULFILL_BUY_LOUD_REQUEST:
-		fallthrough
-	case RESULT_FULFILL_SELL_LOUD_REQUEST:
-		fallthrough
-	case RESULT_BUY_FINISH:
-		fallthrough
-	case RESULT_HUNT_FINISH:
-		fallthrough
-	case RESULT_GET_PYLONS:
-		fallthrough
-	case RESULT_CREATE_COOKBOOK:
-		fallthrough
-	case RESULT_SELL_FINISH:
-		fallthrough
-	case RESULT_SWITCH_USER:
-		fallthrough
-	case RESULT_UPGRADE_FINISH:
-		infoLines = append(infoLines, localize("Go) on"))
 	default:
+		if strings.Contains(string(screen.scrStatus), "RESULT_") { // eg. RESULT_BUY_LOUD_REQUEST_CREATION
+			infoLines = append(infoLines, localize("Go) on"))
+		} else if strings.Contains(string(screen.scrStatus), "_VALUE") { // eg. CREATE_BUY_SWORD_REQUEST_ENTER_PYLON_VALUE
+			infoLines = append(infoLines, "Finish Enter ( ↵ )")
+		}
 	}
 
 	// box start point (x, y)

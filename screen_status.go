@@ -3,7 +3,7 @@ package loud
 type ScreenStatus string
 
 const (
-	SHOW_LOCATION ScreenStatus = "SHOW_LOCATION"
+	SHOW_LOCATION = "SHOW_LOCATION"
 	// in shop
 	SELECT_SELL_ITEM   = "SELECT_SELL_ITEM"
 	WAIT_SELL_PROCESS  = "WAIT_SELL_PROCESS"
