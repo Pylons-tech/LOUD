@@ -750,6 +750,9 @@ func (screen *GameScreen) RunSelectedSwordSellTradeRequest() {
 }
 
 func (screen *GameScreen) Render() {
+	if screen.scrStatus == "" {
+		screen.scrStatus = SHOW_LOCATION
+	}
 	var HP uint64 = 10
 
 	if screen.screenSize.Height < 20 || screen.screenSize.Width < 60 {
