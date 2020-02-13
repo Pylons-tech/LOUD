@@ -11,10 +11,7 @@ import (
 	"os"
 	"os/user"
 	"path/filepath"
-	"sort"
-	"strconv"
 	"strings"
-	"time"
 
 	testing "github.com/Pylons-tech/pylons/cmd/fixtures_test/evtesting"
 	pylonSDK "github.com/Pylons-tech/pylons/cmd/test"
@@ -79,149 +76,6 @@ func init() {
 		pylonSDK.CLIOpts.RestEndpoint = restEndpoint
 	}
 	log.Println("initing pylonSDK to customNode", customNode, "useRestTx=", useRestTx)
-}
-
-func SyncFromNode(user User) {
-	log.Println("SyncFromNode username=", user.GetUserName())
-	log.Println("SyncFromNode userinfo=", pylonSDK.GetAccountAddr(user.GetUserName(), GetTestingT()))
-	accAddr := pylonSDK.GetAccountAddr(user.GetUserName(), GetTestingT())
-	accInfo := pylonSDK.GetAccountInfoFromName(user.GetUserName(), GetTestingT())
-	log.Println("accountInfo Result=", accInfo)
-
-	user.SetGold(int(accInfo.Coins.AmountOf("loudcoin").Int64()))
-	user.SetPylonAmount(int(accInfo.Coins.AmountOf("pylon").Int64()))
-	log.Println("SyncFromNode gold=", accInfo.Coins.AmountOf("loudcoin").Int64())
-
-	rawItems, _ := pylonSDK.ListItemsViaCLI(accInfo.Address.String())
-	myItems := []Item{}
-	for _, rawItem := range rawItems {
-		Level, _ := rawItem.FindLong("level")
-		Name, _ := rawItem.FindString("Name")
-		item := Item{
-			Level: Level,
-			Name:  Name,
-			ID:    rawItem.ID,
-		}
-		myItems = append(myItems, item)
-	}
-	user.SetItems(myItems)
-	log.Println("SyncFromNode myItems=", myItems)
-
-	nBuyTradeRequests := []TradeRequest{}
-	nSellTradeRequests := []TradeRequest{}
-	nBuySwordTradeRequests := []ItemTradeRequest{}
-	nSellSwordTradeRequests := []ItemTradeRequest{}
-	rawTrades, _ := pylonSDK.ListTradeViaCLI("")
-	for _, tradeItem := range rawTrades {
-		if tradeItem.Completed == false {
-			inputCoin := ""
-			if len(tradeItem.CoinInputs) > 0 {
-				inputCoin = tradeItem.CoinInputs[0].Coin
-			}
-			loudOutputAmount := tradeItem.CoinOutputs.AmountOf("loudcoin").Int64()
-			pylonOutputAmount := tradeItem.CoinOutputs.AmountOf("pylon").Int64()
-			itemInputLen := len(tradeItem.ItemInputs)
-			itemOutputLen := len(tradeItem.ItemOutputs)
-			isMyTradeRequest := tradeItem.Sender.String() == accAddr
-			if inputCoin == "loudcoin" { // loud sell trade
-				loudAmount := tradeItem.CoinInputs[0].Count
-
-				nBuyTradeRequests = append(nBuyTradeRequests, TradeRequest{
-					ID:        tradeItem.ID,
-					Amount:    int(loudAmount),
-					Total:     int(pylonOutputAmount),
-					Price:     float64(pylonOutputAmount) / float64(loudAmount),
-					IsMyTradeRequest: isMyTradeRequest,
-				})
-			} else if loudOutputAmount > 0 { // loud buy trade
-				inputPylonAmount := tradeItem.CoinInputs[0].Count
-				nSellTradeRequests = append(nSellTradeRequests, TradeRequest{
-					ID:        tradeItem.ID,
-					Amount:    int(loudOutputAmount),
-					Total:     int(inputPylonAmount),
-					Price:     float64(inputPylonAmount) / float64(loudOutputAmount),
-					IsMyTradeRequest: isMyTradeRequest,
-				})
-			} else if itemInputLen > 0 { // buy sword trade
-				tItem := Item{
-					Level: tradeItem.ItemInputs[0].Longs[0].MinValue, // Level
-					Name:  tradeItem.ItemInputs[0].Strings[0].Value,
-				}
-				nBuySwordTradeRequests = append(nBuySwordTradeRequests, ItemTradeRequest{
-					ID:        tradeItem.ID,
-					TItem:     tItem,
-					Price:     int(pylonOutputAmount),
-					IsMyTradeRequest: isMyTradeRequest,
-				})
-			} else if itemOutputLen > 0 { // sell sword trade
-				inputPylonAmount := tradeItem.CoinInputs[0].Count
-				level, _ := tradeItem.ItemOutputs[0].FindLong("level")
-				name, _ := tradeItem.ItemOutputs[0].FindString("Name")
-				tItem := Item{
-					ID:    tradeItem.ItemOutputs[0].ID,
-					Level: level,
-					Name:  name,
-				}
-				nSellSwordTradeRequests = append(nSellSwordTradeRequests, ItemTradeRequest{
-					ID:        tradeItem.ID,
-					TItem:     tItem,
-					Price:     int(inputPylonAmount),
-					IsMyTradeRequest: isMyTradeRequest,
-				})
-			}
-		}
-	}
-	// Sort and show by low price buy requests
-	sort.SliceStable(nBuyTradeRequests, func(i, j int) bool {
-		return nBuyTradeRequests[i].Price < nBuyTradeRequests[j].Price
-	})
-	// Sort and show by high price sell requests
-	sort.SliceStable(nSellTradeRequests, func(i, j int) bool {
-		return nSellTradeRequests[i].Price > nSellTradeRequests[j].Price
-	})
-	buyTradeRequests = nBuyTradeRequests
-	sellTradeRequests = nSellTradeRequests
-	swordBuyTradeRequests = nBuySwordTradeRequests
-	swordSellTradeRequests = nSellSwordTradeRequests
-	log.Println("SyncFromNode buyTradeRequests=", buyTradeRequests)
-	log.Println("SyncFromNode sellTradeRequests=", sellTradeRequests)
-}
-
-func GetExtraPylons(user User) (string, error) {
-	t := GetTestingT()
-	username := user.GetUserName()
-	addr := pylonSDK.GetAccountAddr(username, t)
-	sdkAddr, err := sdk.AccAddressFromBech32(addr)
-	log.Println("sdkAddr, err := sdk.AccAddressFromBech32(addr)", sdkAddr, err)
-	extraPylonsMsg := msgs.NewMsgGetPylons(types.PremiumTier.Fee, sdkAddr)
-	txhash := pylonSDK.TestTxWithMsgWithNonce(t, extraPylonsMsg, username, false)
-	user.SetLastTransaction(txhash)
-	log.Println("ended sending transaction")
-	return txhash, nil
-}
-
-func CreateCookbook(user User) (string, error) { // This is for afti develop mode automation test is only using
-	t := GetTestingT()
-	username := user.GetUserName()
-	addr := pylonSDK.GetAccountAddr(username, t)
-	sdkAddr, err := sdk.AccAddressFromBech32(addr)
-	log.Println("sdkAddr, err := sdk.AccAddressFromBech32(addr)", sdkAddr, err)
-
-	ccbMsg := msgs.NewMsgCreateCookbook(
-		"tst_cookbook_name",                  // cbType.Name,
-		fmt.Sprintf("%d", time.Now().Unix()), // cbType.ID,
-		"addghjkllsdfdggdgjkkk",              // cbType.Description,
-		"asdfasdfasdf",                       // cbType.Developer,
-		"1.0.0",                              // cbType.Version,
-		"a@example.com",                      // cbType.SupportEmail,
-		0,                                    // cbType.Level,
-		5,                                    // cbType.CostPerBlock,
-		sdkAddr,                              // cbType.Sender,
-	)
-	txhash := pylonSDK.TestTxWithMsgWithNonce(t, ccbMsg, username, false)
-	user.SetLastTransaction(txhash)
-	log.Println("ended sending transaction")
-	return txhash, nil
 }
 
 func GetInitialPylons(username string) (string, error) {
@@ -423,38 +277,6 @@ func GetWeaponItemFromKey(user User, key string) Item {
 	return useItem
 }
 
-func Hunt(user User, key string) (string, error) {
-	rcpName := "LOUD's hunt without sword recipe"
-
-	useItem := GetWeaponItemFromKey(user, key)
-	itemIDs := []string{}
-	switch key {
-	case "I": // get initial coin
-		fallthrough
-	case "i":
-		rcpName = "LOUD's get initial coin recipe"
-	}
-
-	switch useItem.Name {
-	case "Wooden sword":
-		if useItem.Level == 1 {
-			rcpName = "LOUD's hunt with lv1 wooden sword recipe"
-		} else {
-			rcpName = "LOUD's hunt with lv2 wooden sword recipe"
-		}
-		itemIDs = []string{useItem.ID}
-	case "Copper sword":
-		if useItem.Level == 1 {
-			rcpName = "LOUD's hunt with lv1 copper sword recipe"
-		} else {
-			rcpName = "LOUD's hunt with lv2 copper sword recipe"
-		}
-		itemIDs = []string{useItem.ID}
-	}
-
-	return ExecuteRecipe(user, rcpName, itemIDs)
-}
-
 func GetToBuyItemFromKey(key string) Item {
 	useItem := Item{}
 	itemKey := GetIndexFromString(key)
@@ -462,26 +284,6 @@ func GetToBuyItemFromKey(key string) Item {
 		useItem = shopItems[itemKey]
 	}
 	return useItem
-}
-func Buy(user User, key string) (string, error) {
-	useItem := GetToBuyItemFromKey(key)
-	rcpName := ""
-	switch useItem.Name {
-	case "Wooden sword":
-		if useItem.Level == 1 {
-			rcpName = "LOUD's Wooden sword lv1 buy recipe"
-		}
-	case "Copper sword":
-		if useItem.Level == 1 {
-			rcpName = "LOUD's Copper sword lv1 buy recipe"
-		}
-	default:
-		return "", errors.New("You are trying to buy something which is not in shop")
-	}
-	if useItem.Price > user.GetGold() {
-		return "", errors.New("You don't have enough gold to buy this item")
-	}
-	return ExecuteRecipe(user, rcpName, []string{})
 }
 
 func GetToSellItemFromKey(user User, key string) Item {
@@ -494,28 +296,6 @@ func GetToSellItemFromKey(user User, key string) Item {
 	return useItem
 }
 
-func Sell(user User, key string) (string, error) {
-	useItem := GetToSellItemFromKey(user, key)
-	itemIDs := []string{useItem.ID}
-
-	rcpName := ""
-	switch useItem.Name {
-	case "Wooden sword":
-		if useItem.Level == 1 {
-			rcpName = "LOUD's Lv1 wooden sword sell recipe"
-		} else {
-			rcpName = "LOUD's Lv2 wooden sword sell recipe"
-		}
-	case "Copper sword":
-		if useItem.Level == 1 {
-			rcpName = "LOUD's Lv1 copper sword sell recipe"
-		} else {
-			rcpName = "LOUD's Lv2 copper sword sell recipe"
-		}
-	}
-	return ExecuteRecipe(user, rcpName, itemIDs)
-}
-
 func GetToUpgradeItemFromKey(user User, key string) Item {
 	items := user.UpgradableItems()
 	useItem := Item{}
@@ -524,92 +304,6 @@ func GetToUpgradeItemFromKey(user User, key string) Item {
 		useItem = items[itemKey]
 	}
 	return useItem
-}
-
-func Upgrade(user User, key string) (string, error) {
-	useItem := GetToUpgradeItemFromKey(user, key)
-	itemIDs := []string{useItem.ID}
-	rcpName := ""
-	switch useItem.Name {
-	case "Wooden sword":
-		if useItem.Level == 1 {
-			rcpName = "LOUD's Wooden sword lv1 to lv2 upgrade recipe"
-		}
-	case "Copper sword":
-		if useItem.Level == 1 {
-			rcpName = "LOUD's Copper sword lv1 to lv2 upgrade recipe"
-		}
-	}
-	if useItem.GetUpgradePrice() > user.GetGold() {
-		return "", errors.New("You don't have enough gold to upgrade this item")
-	}
-	return ExecuteRecipe(user, rcpName, itemIDs)
-}
-
-func CreateBuyLoudTradeRequest(user User, loudEnterValue string, pylonEnterValue string) (string, error) {
-	t := GetTestingT()
-	loudValue, err := strconv.Atoi(loudEnterValue)
-	if err != nil {
-		return "", err
-	}
-	pylonValue, err := strconv.Atoi(pylonEnterValue)
-	if err != nil {
-		return "", err
-	}
-
-	eugenAddr := pylonSDK.GetAccountAddr(user.GetUserName(), nil)
-	sdkAddr, err := sdk.AccAddressFromBech32(eugenAddr)
-
-	inputCoinList := types.GenCoinInputList("loudcoin", int64(loudValue))
-
-	outputCoins := sdk.Coins{sdk.NewInt64Coin("pylon", int64(pylonValue))}
-	extraInfo := "created by loud game"
-
-	createTrdMsg := msgs.NewMsgCreateTrade(
-		inputCoinList,
-		nil,
-		outputCoins,
-		nil,
-		extraInfo,
-		sdkAddr)
-	log.Println("started sending transaction", user.GetUserName(), createTrdMsg)
-	txhash := pylonSDK.TestTxWithMsgWithNonce(t, createTrdMsg, user.GetUserName(), false)
-	user.SetLastTransaction(txhash)
-	log.Println("ended sending transaction")
-	return txhash, nil
-}
-
-func CreateSellLoudTradeRequest(user User, loudEnterValue string, pylonEnterValue string) (string, error) {
-	t := GetTestingT()
-	loudValue, err := strconv.Atoi(loudEnterValue)
-	if err != nil {
-		return "", err
-	}
-	pylonValue, err := strconv.Atoi(pylonEnterValue)
-	if err != nil {
-		return "", err
-	}
-
-	eugenAddr := pylonSDK.GetAccountAddr(user.GetUserName(), nil)
-	sdkAddr, _ := sdk.AccAddressFromBech32(eugenAddr)
-
-	inputCoinList := types.GenCoinInputList("pylon", int64(pylonValue))
-
-	outputCoins := sdk.Coins{sdk.NewInt64Coin("loudcoin", int64(loudValue))}
-	extraInfo := "created by loud game"
-
-	createTrdMsg := msgs.NewMsgCreateTrade(
-		inputCoinList,
-		nil,
-		outputCoins,
-		nil,
-		extraInfo,
-		sdkAddr)
-	log.Println("started sending transaction", user.GetUserName(), createTrdMsg)
-	txhash := pylonSDK.TestTxWithMsgWithNonce(t, createTrdMsg, user.GetUserName(), false)
-	user.SetLastTransaction(txhash)
-	log.Println("ended sending transaction")
-	return txhash, nil
 }
 
 func GetItemInputsFromActiveItem(activeItem Item) types.ItemInputList {
@@ -628,87 +322,9 @@ func GetItemInputsFromActiveItem(activeItem Item) types.ItemInputList {
 	return itemInputs
 }
 
-func CreateBuySwordTradeRequest(user User, activeItem Item, pylonEnterValue string) (string, error) {
-// trade creator will get sword from pylon
-	t := GetTestingT()
-
-	itemInputs := GetItemInputsFromActiveItem(activeItem)
-
-	pylonValue, err := strconv.Atoi(pylonEnterValue)
-	if err != nil {
-		return "", err
-	}
-
-	eugenAddr := pylonSDK.GetAccountAddr(user.GetUserName(), nil)
-	sdkAddr, err := sdk.AccAddressFromBech32(eugenAddr)
-
-	outputCoins := sdk.Coins{sdk.NewInt64Coin("pylon", int64(pylonValue))}
-	extraInfo := "sword buy request created by loud game"
-
-	createTrdMsg := msgs.NewMsgCreateTrade(
-		nil,
-		itemInputs,
-		outputCoins,
-		nil,
-		extraInfo,
-		sdkAddr)
-	log.Println("started sending transaction", user.GetUserName(), createTrdMsg)
-	txhash := pylonSDK.TestTxWithMsgWithNonce(t, createTrdMsg, user.GetUserName(), false)
-	user.SetLastTransaction(txhash)
-	log.Println("ended sending transaction")
-	return txhash, nil
-}
-
 func GetItemOutputFromActiveItem(activeItem Item) (types.ItemList, error) {
 	var itemOutputs types.ItemList
 	io, err := pylonSDK.GetItemByGUID(activeItem.ID)
 	itemOutputs = append(itemOutputs, io)
 	return itemOutputs, err
-}
-
-func CreateSellSwordTradeRequest(user User, activeItem Item, pylonEnterValue string) (string, error) {
-// trade creator will get pylon from sword
-	t := GetTestingT()
-
-	pylonValue, err := strconv.Atoi(pylonEnterValue)
-	if err != nil {
-		return "", err
-	}
-
-	eugenAddr := pylonSDK.GetAccountAddr(user.GetUserName(), nil)
-	sdkAddr, _ := sdk.AccAddressFromBech32(eugenAddr)
-
-	inputCoinList := types.GenCoinInputList("pylon", int64(pylonValue))
-	itemOutputList, err := GetItemOutputFromActiveItem(activeItem)
-	if err != nil {
-		return "", err
-	}
-
-	extraInfo := "sword sell request created by loud game"
-
-	createTrdMsg := msgs.NewMsgCreateTrade(
-		inputCoinList,
-		nil,
-		nil,
-		itemOutputList,
-		extraInfo,
-		sdkAddr)
-	log.Println("started sending transaction", user.GetUserName(), createTrdMsg)
-	txhash := pylonSDK.TestTxWithMsgWithNonce(t, createTrdMsg, user.GetUserName(), false)
-	user.SetLastTransaction(txhash)
-	log.Println("ended sending transaction")
-	return txhash, nil
-}
-
-func FulfillTrade(user User, tradeID string) (string, error) {
-	t := GetTestingT()
-	eugenAddr := pylonSDK.GetAccountAddr(user.GetUserName(), nil)
-	sdkAddr, _ := sdk.AccAddressFromBech32(eugenAddr)
-	ffTrdMsg := msgs.NewMsgFulfillTrade(tradeID, sdkAddr, []string{})
-
-	log.Println("started sending transaction", user.GetUserName(), ffTrdMsg)
-	txhash := pylonSDK.TestTxWithMsgWithNonce(t, ffTrdMsg, user.GetUserName(), false)
-	user.SetLastTransaction(txhash)
-	log.Println("ended sending transaction")
-	return txhash, nil
 }
