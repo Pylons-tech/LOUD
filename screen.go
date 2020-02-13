@@ -41,8 +41,6 @@ type Screen interface {
 	Reset()
 }
 
-type ScreenStatus int
-
 type GameScreen struct {
 	world                  World
 	user                   User
@@ -50,8 +48,8 @@ type GameScreen struct {
 	activeItem             Item
 	lastInput              termbox.Event
 	activeLine             int
-	activeTradeRequest            TradeRequest
-	activeItemTradeRequest        ItemTradeRequest
+	activeTradeRequest     TradeRequest
+	activeItemTradeRequest ItemTradeRequest
 	pylonEnterValue        string
 	loudEnterValue         string
 	inputText              string
@@ -63,69 +61,6 @@ type GameScreen struct {
 	scrStatus              ScreenStatus
 	colorCodeCache         map[string](func(string) string)
 }
-
-const (
-	SHOW_LOCATION ScreenStatus = iota
-	// in shop
-	SELECT_SELL_ITEM
-	WAIT_SELL_PROCESS
-	RESULT_SELL_FINISH
-
-	SELECT_BUY_ITEM
-	WAIT_BUY_PROCESS
-	RESULT_BUY_FINISH
-
-	SELECT_UPGRADE_ITEM
-	WAIT_UPGRADE_PROCESS
-	RESULT_UPGRADE_FINISH
-	// in forest
-	SELECT_HUNT_ITEM
-	WAIT_HUNT_PROCESS
-	RESULT_HUNT_FINISH
-	WAIT_GET_PYLONS
-	RESULT_GET_PYLONS
-
-	// in develop
-	WAIT_CREATE_COOKBOOK
-	RESULT_CREATE_COOKBOOK
-	WAIT_SWITCH_USER
-	RESULT_SWITCH_USER
-
-	// in market
-	SELECT_MARKET // buy loud or sell loud
-
-	SHOW_LOUD_BUY_REQUESTS                   // navigation using arrow and list should be sorted by price
-	CREATE_BUY_LOUD_REQUEST_ENTER_LOUD_VALUE // enter value after switching enter mode
-	CREATE_BUY_LOUD_REQUEST_ENTER_PYLON_VALUE
-	WAIT_BUY_LOUD_REQUEST_CREATION
-	RESULT_BUY_LOUD_REQUEST_CREATION
-	WAIT_FULFILL_BUY_LOUD_REQUEST // after done go to show loud buy requests
-	RESULT_FULFILL_BUY_LOUD_REQUEST
-
-	SHOW_LOUD_SELL_REQUESTS
-	CREATE_SELL_LOUD_REQUEST_ENTER_LOUD_VALUE
-	CREATE_SELL_LOUD_REQUEST_ENTER_PYLON_VALUE
-	WAIT_SELL_LOUD_REQUEST_CREATION
-	RESULT_SELL_LOUD_REQUEST_CREATION
-	WAIT_FULFILL_SELL_LOUD_REQUEST
-	RESULT_FULFILL_SELL_LOUD_REQUEST
-
-	SHOW_SELL_SWORD_REQUESTS
-	CREATE_SELL_SWORD_REQUEST_SELECT_SWORD
-	CREATE_SELL_SWORD_REQUEST_ENTER_PYLON_VALUE
-	WAIT_SELL_SWORD_REQUEST_CREATION
-	RESULT_SELL_SWORD_REQUEST_CREATION
-	WAIT_FULFILL_SELL_SWORD_REQUEST
-	RESULT_FULFILL_SELL_SWORD_REQUEST
-
-	SHOW_BUY_SWORD_REQUESTS
-	CREATE_BUY_SWORD_REQUEST_SELECT_SWORD
-	CREATE_BUY_SWORD_REQUEST_ENTER_PYLON_VALUE
-	WAIT_BUY_SWORD_REQUEST_CREATION
-	RESULT_BUY_SWORD_REQUEST_CREATION
-	WAIT_FULFILL_BUY_SWORD_REQUEST
-	RESULT_FULFILL_BUY_SWORD_REQUEST
-)
 
 // NewScreen manages the window rendering for game
 func NewScreen(world World, user User) Screen {
