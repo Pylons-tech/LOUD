@@ -44,10 +44,33 @@ func SetupScreenAndEvents(world World, logFile *os.File) {
 	daemonStatusRefreshTick := time.Tick(10 * time.Second)
 	daemonFetchResult := make(chan *ctypes.ResultStatus)
 
-	var automateTick <-chan time.Time
 	if automateInput {
-		automateTick = time.Tick(3 * time.Second)
 		screen.SetScreenStatus(RESULT_SWITCH_USER)
+		time.AfterFunc(2*time.Second, func() {
+			for {
+				log.Println("<-automateTick")
+				switch screen.GetScreenStatus() {
+				case RESULT_CREATE_COOKBOOK:
+					if screen.GetTxFailReason() != "" {
+						os.Exit(1)
+					}
+					screen.HandleInputKey(termbox.Event{
+						Ch: 122, // "z" 122 Switch user
+					})
+				case RESULT_GET_PYLONS:
+					screen.HandleInputKey(termbox.Event{
+						Ch: 106, // "j" 106 Create cookbook
+					})
+				case RESULT_SWITCH_USER:
+					screen.HandleInputKey(termbox.Event{
+						Ch: 121, // "y" 121 get initial pylons
+					})
+					automateRunCnt += 1
+					log.Printf("Running %dth automation task", automateRunCnt)
+				}
+				time.Sleep(2 * time.Second)
+			}
+		})
 	}
 
 	// Setup terminal close handler
@@ -87,27 +110,6 @@ eventloop:
 		case <-tick:
 			screen.Render()
 			continue
-		case <-automateTick:
-			log.Println("<-automateTick")
-			switch screen.GetScreenStatus() {
-			case RESULT_CREATE_COOKBOOK:
-				if screen.GetTxFailReason() != "" {
-					os.Exit(1)
-				}
-				screen.HandleInputKey(termbox.Event{
-					Ch: 122, // "z" 122 Switch user
-				})
-			case RESULT_GET_PYLONS:
-				screen.HandleInputKey(termbox.Event{
-					Ch: 106, // "j" 106 Create cookbook
-				})
-			case RESULT_SWITCH_USER:
-				screen.HandleInputKey(termbox.Event{
-					Ch: 121, // "y" 121 get initial pylons
-				})
-				automateRunCnt += 1
-				log.Printf("Running %dth automation task", automateRunCnt)
-			}
 		case <-daemonStatusRefreshTick:
 			go func() {
 				screen.SetDaemonFetchingFlag(true)
