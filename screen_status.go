@@ -30,8 +30,6 @@ const (
 	RESULT_SWITCH_USER     = "RESULT_SWITCH_USER"
 
 	// in market
-	SELECT_MARKET = "SELECT_MARKET"
-
 	SHOW_LOUD_BUY_REQUESTS                    = "SHOW_LOUD_BUY_REQUESTS"                   // navigation using arrow and list should be sorted by price
 	CREATE_BUY_LOUD_REQUEST_ENTER_LOUD_VALUE  = "CREATE_BUY_LOUD_REQUEST_ENTER_LOUD_VALUE" // enter value after switching enter mode
 	CREATE_BUY_LOUD_REQUEST_ENTER_PYLON_VALUE = "CREATE_BUY_LOUD_REQUEST_ENTER_PYLON_VALUE"

@@ -31,30 +31,35 @@ func (screen *GameScreen) renderUserCommands() {
 		}
 	case SHOW_LOUD_BUY_REQUESTS:
 		infoLines = append(infoLines, screen.tradeTableColorDesc()...)
-		infoLines = append(infoLines, "Sell loud to fulfill selected request( ↵ )")
-		infoLines = append(infoLines, "Create an order to buy loud(o)")
-		infoLines = append(infoLines, "Go bac)k")
+		infoLines = append(infoLines,
+			"Sell loud to fulfill selected request( ↵ )",
+			"Create an order to buy loud(R)",
+			"Go bac)k( ⌫ )")
 	case SHOW_LOUD_SELL_REQUESTS:
 		infoLines = append(infoLines, screen.tradeTableColorDesc()...)
-		infoLines = append(infoLines, "Buy loud to fulfill selected request( ↵ )")
-		infoLines = append(infoLines, "Create an order to sell loud(o)")
-		infoLines = append(infoLines, "Go bac)k")
+		infoLines = append(infoLines,
+			"Buy loud to fulfill selected request( ↵ )",
+			"Create an order to sell loud(R)",
+			"Go bac)k( ⌫ )")
 	case SHOW_BUY_SWORD_REQUESTS:
 		infoLines = append(infoLines, screen.tradeTableColorDesc()...)
-		infoLines = append(infoLines, "Sell item to fulfill selected request( ↵ )")
-		infoLines = append(infoLines, "Create an order to buy item(o)")
-		infoLines = append(infoLines, "Go bac)k")
+		infoLines = append(infoLines,
+			"Sell item to fulfill selected request( ↵ )",
+			"Create an order to buy item(R)",
+			"Go bac)k( ⌫ )")
 	case SHOW_SELL_SWORD_REQUESTS:
 		infoLines = append(infoLines, screen.tradeTableColorDesc()...)
-		infoLines = append(infoLines, "Buy item to fulfill selected request( ↵ )")
-		infoLines = append(infoLines, "Create an order to sell item(o)")
-		infoLines = append(infoLines, "Go bac)k")
+		infoLines = append(infoLines,
+			"Buy item to fulfill selected request( ↵ )",
+			"Create an order to sell item(R)",
+			"Go bac)k( ⌫ )")
 
 	case CREATE_SELL_SWORD_REQUEST_SELECT_SWORD:
 		fallthrough
 	case CREATE_BUY_SWORD_REQUEST_SELECT_SWORD:
-		infoLines = append(infoLines, "Select ( ↵ )")
-		infoLines = append(infoLines, "Go bac)k")
+		infoLines = append(infoLines,
+			"Select ( ↵ )",
+			"Go bac)k( ⌫ )")
 	case SELECT_BUY_ITEM:
 		for idx, item := range shopItems {
 			infoLines = append(infoLines, fmt.Sprintf("%d) %s Lv%d  ", idx+1, localize(item.Name), item.Level)+screen.loudIcon()+fmt.Sprintf(" %d", item.Price))
@@ -72,9 +77,8 @@ func (screen *GameScreen) renderUserCommands() {
 		for idx, item := range userWeaponItems {
 			infoLines = append(infoLines, fmt.Sprintf("%d) %s Lv%d", idx+1, localize(item.Name), item.Level))
 		}
-		infoLines = append(infoLines, localize("Get I)nitial Coin"))
-		infoLines = append(infoLines, localize("Get Initial Py)lon"))
-		infoLines = append(infoLines, localize("C)ancel"))
+		infoLines = append(infoLines,
+			localize("C)ancel"))
 	case SELECT_UPGRADE_ITEM:
 		userUpgradeItems := screen.user.UpgradableItems()
 		for idx, item := range userUpgradeItems {
@@ -82,10 +86,12 @@ func (screen *GameScreen) renderUserCommands() {
 		}
 		infoLines = append(infoLines, localize("C)ancel"))
 	default:
-		if strings.Contains(string(screen.scrStatus), "RESULT_") { // eg. RESULT_BUY_LOUD_REQUEST_CREATION
-			infoLines = append(infoLines, localize("Go) on"))
-		} else if strings.Contains(string(screen.scrStatus), "_VALUE") { // eg. CREATE_BUY_SWORD_REQUEST_ENTER_PYLON_VALUE
-			infoLines = append(infoLines, "Finish Enter ( ↵ )")
+		if screen.IsResultScreen() { // eg. RESULT_BUY_LOUD_REQUEST_CREATION
+			infoLines = append(infoLines, localize("Go) on( ↵ )"))
+		} else if screen.InputActive() { // eg. CREATE_BUY_SWORD_REQUEST_ENTER_PYLON_VALUE
+			infoLines = append(infoLines,
+				localize("Finish Enter ( ↵ )"),
+				localize("Go bac)k( ⌫ )"))
 		}
 	}
 

@@ -93,6 +93,49 @@ func (screen *GameScreen) HandleInputKeyShopEntryPoint(input termbox.Event) {
 	}
 }
 
+func (screen *GameScreen) MoveToNextStep() {
+	nextMapper := map[ScreenStatus]ScreenStatus{
+		RESULT_HUNT_FINISH:                 SELECT_HUNT_ITEM,
+		RESULT_BUY_LOUD_REQUEST_CREATION:   SHOW_LOUD_BUY_REQUESTS,
+		RESULT_FULFILL_BUY_LOUD_REQUEST:    SHOW_LOUD_BUY_REQUESTS,
+		RESULT_SELL_LOUD_REQUEST_CREATION:  SHOW_LOUD_SELL_REQUESTS,
+		RESULT_FULFILL_SELL_LOUD_REQUEST:   SHOW_LOUD_SELL_REQUESTS,
+		RESULT_SELL_SWORD_REQUEST_CREATION: SHOW_SELL_SWORD_REQUESTS,
+		RESULT_FULFILL_SELL_SWORD_REQUEST:  SHOW_SELL_SWORD_REQUESTS,
+		RESULT_BUY_SWORD_REQUEST_CREATION:  SHOW_BUY_SWORD_REQUESTS,
+		RESULT_FULFILL_BUY_SWORD_REQUEST:   SHOW_BUY_SWORD_REQUESTS,
+		RESULT_BUY_FINISH:                  SELECT_BUY_ITEM,
+		RESULT_SELL_FINISH:                 SELECT_SELL_ITEM,
+		RESULT_UPGRADE_FINISH:              SELECT_UPGRADE_ITEM,
+	}
+	if nextStatus, ok := nextMapper[screen.scrStatus]; ok {
+		screen.scrStatus = nextStatus
+	} else {
+		screen.scrStatus = SHOW_LOCATION
+	}
+	screen.txFailReason = ""
+	screen.refreshed = false
+}
+
+func (screen *GameScreen) MoveToPrevStep() {
+	prevMapper := map[ScreenStatus]ScreenStatus{
+		CREATE_BUY_LOUD_REQUEST_ENTER_LOUD_VALUE:    SHOW_LOUD_BUY_REQUESTS,
+		CREATE_BUY_LOUD_REQUEST_ENTER_PYLON_VALUE:   CREATE_BUY_LOUD_REQUEST_ENTER_LOUD_VALUE,
+		CREATE_SELL_LOUD_REQUEST_ENTER_LOUD_VALUE:   SHOW_LOUD_SELL_REQUESTS,
+		CREATE_SELL_LOUD_REQUEST_ENTER_PYLON_VALUE:  CREATE_SELL_LOUD_REQUEST_ENTER_LOUD_VALUE,
+		CREATE_SELL_SWORD_REQUEST_SELECT_SWORD:      SHOW_SELL_SWORD_REQUESTS,
+		CREATE_SELL_SWORD_REQUEST_ENTER_PYLON_VALUE: CREATE_SELL_SWORD_REQUEST_SELECT_SWORD,
+		CREATE_BUY_SWORD_REQUEST_SELECT_SWORD:       SHOW_BUY_SWORD_REQUESTS,
+		CREATE_BUY_SWORD_REQUEST_ENTER_PYLON_VALUE:  CREATE_BUY_SWORD_REQUEST_SELECT_SWORD,
+	}
+	if nextStatus, ok := prevMapper[screen.scrStatus]; ok {
+		screen.scrStatus = nextStatus
+	} else {
+		screen.scrStatus = SHOW_LOCATION
+	}
+	screen.refreshed = false
+}
+
 func (screen *GameScreen) HandleInputKey(input termbox.Event) {
 	screen.lastInput = input
 	Key := strings.ToUpper(string(input.Ch))
@@ -251,8 +294,16 @@ func (screen *GameScreen) HandleInputKey(input termbox.Event) {
 					screen.scrStatus = CREATE_BUY_SWORD_REQUEST_ENTER_PYLON_VALUE
 					screen.inputText = ""
 					screen.refreshed = false
+				default:
+					screen.MoveToNextStep()
 				}
+			} else {
+				screen.MoveToNextStep()
 			}
+		}
+
+		if input.Key == termbox.KeyBackspace2 || input.Key == termbox.KeyBackspace {
+			screen.MoveToPrevStep()
 		}
 
 		switch Key {
@@ -298,46 +349,24 @@ func (screen *GameScreen) HandleInputKey(input termbox.Event) {
 		case "D": // DEVELOP
 			screen.user.SetLocation(DEVELOP)
 			screen.refreshed = false
-		case "C": // CANCEL
-			screen.scrStatus = SHOW_LOCATION
-			screen.refreshed = false
-		case "O": // GO ON, GO BACK, CREATE REQUEST
+		case "C": // CANCEL, GO BACK
+			screen.MoveToPrevStep()
+		case "R": // CREATE ORDER
 			if screen.user.GetLocation() == MARKET {
 				switch screen.scrStatus {
 				case SHOW_LOUD_BUY_REQUESTS:
 					screen.scrStatus = CREATE_BUY_LOUD_REQUEST_ENTER_LOUD_VALUE
 				case SHOW_LOUD_SELL_REQUESTS:
 					screen.scrStatus = CREATE_SELL_LOUD_REQUEST_ENTER_LOUD_VALUE
-				case RESULT_BUY_LOUD_REQUEST_CREATION:
-					fallthrough
-				case RESULT_FULFILL_BUY_LOUD_REQUEST:
-					screen.scrStatus = SHOW_LOUD_BUY_REQUESTS
-				case RESULT_SELL_LOUD_REQUEST_CREATION:
-					fallthrough
-				case RESULT_FULFILL_SELL_LOUD_REQUEST:
-					screen.scrStatus = SHOW_LOUD_SELL_REQUESTS
 				case SHOW_SELL_SWORD_REQUESTS:
 					screen.scrStatus = CREATE_SELL_SWORD_REQUEST_SELECT_SWORD
-				case RESULT_SELL_SWORD_REQUEST_CREATION:
-					fallthrough
-				case RESULT_FULFILL_SELL_SWORD_REQUEST:
-					screen.scrStatus = SHOW_SELL_SWORD_REQUESTS
 				case SHOW_BUY_SWORD_REQUESTS:
 					screen.scrStatus = CREATE_BUY_SWORD_REQUEST_SELECT_SWORD
-				case RESULT_BUY_SWORD_REQUEST_CREATION:
-					fallthrough
-				case RESULT_FULFILL_BUY_SWORD_REQUEST:
-					screen.scrStatus = SHOW_BUY_SWORD_REQUESTS
-				default:
-					screen.scrStatus = SHOW_LOCATION
 				}
-				screen.txFailReason = ""
-				screen.refreshed = false
-			} else {
-				screen.txFailReason = ""
-				screen.scrStatus = SHOW_LOCATION
 				screen.refreshed = false
 			}
+		case "O": // GO ON
+			screen.MoveToNextStep()
 		case "Y": // get initial pylons
 			screen.SetScreenStatusAndRefresh(WAIT_GET_PYLONS)
 			log.Println("started sending request for getting extra pylons")

@@ -88,6 +88,7 @@ eventloop:
 			screen.Render()
 			continue
 		case <-automateTick:
+			log.Println("<-automateTick")
 			switch screen.GetScreenStatus() {
 			case RESULT_CREATE_COOKBOOK:
 				if screen.GetTxFailReason() != "" {

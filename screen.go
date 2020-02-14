@@ -187,7 +187,7 @@ func (screen *GameScreen) tradeTableColorDesc() []string {
 	return infoLines
 }
 
-func (screen *GameScreen) redrawBrequests() {
+func (screen *GameScreen) redrawBorders() {
 	io.WriteString(os.Stdout, ansi.ColorCode(fmt.Sprintf("255:%v", bgcolor)))
 	screen.drawBox(1, 1, screen.screenSize.Width-1, screen.screenSize.Height-1)
 	screen.drawVerticalLine(screen.screenSize.Width/2-2, 1, screen.screenSize.Height)
@@ -465,55 +465,9 @@ func (screen *GameScreen) colorFunc(color string) func(string) string {
 	return screen.colorCodeCache[color]
 }
 
-func truncateRight(message string, width int) string {
-	if utf8.RuneCountInString(message) < width {
-		fmtString := fmt.Sprintf("%%-%vs", width)
-
-		return fmt.Sprintf(fmtString, message)
-	}
-	return string([]rune(message)[0:width-1]) + ellipsis
+func (screen *GameScreen) IsResultScreen() bool {
+	return strings.Contains(string(screen.scrStatus), "RESULT_")
 }
-
-func truncateLeft(message string, width int) string {
-	if utf8.RuneCountInString(message) < width {
-		fmtString := fmt.Sprintf("%%-%vs", width)
-
-		return fmt.Sprintf(fmtString, message)
-	}
-	strLen := utf8.RuneCountInString(message)
-	return ellipsis + string([]rune(message)[strLen-width:strLen-1])
-}
-
-func justifyRight(message string, width int) string {
-	if utf8.RuneCountInString(message) < width {
-		fmtString := fmt.Sprintf("%%%vs", width)
-
-		return fmt.Sprintf(fmtString, message)
-	}
-	strLen := utf8.RuneCountInString(message)
-	return ellipsis + string([]rune(message)[strLen-width:strLen-1])
-}
-
-func centerText(message, pad string, width int) string {
-	if utf8.RuneCountInString(message) > width {
-		return truncateRight(message, width)
-	}
-	leftover := width - utf8.RuneCountInString(message)
-	left := leftover / 2
-	right := leftover - left
-
-	if pad == "" {
-		pad = " "
-	}
-
-	leftString := ""
-	for utf8.RuneCountInString(leftString) <= left && utf8.RuneCountInString(leftString) <= right {
-		leftString += pad
-	}
-
-	return fmt.Sprintf("%s%s%s", string([]rune(leftString)[0:left]), message, string([]rune(leftString)[0:right]))
-}
-
 func (screen *GameScreen) InputActive() bool {
 	switch screen.scrStatus {
 	case CREATE_BUY_LOUD_REQUEST_ENTER_LOUD_VALUE:
@@ -751,7 +705,7 @@ func (screen *GameScreen) Render() {
 	if !screen.refreshed {
 		clear := cursor.ClearEntireScreen() + allowMouseInputAndHideCursor
 		io.WriteString(os.Stdout, clear)
-		screen.redrawBrequests()
+		screen.redrawBorders()
 		screen.refreshed = true
 	}
 

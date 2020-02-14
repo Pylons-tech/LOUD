@@ -42,7 +42,7 @@
     "one": "Language:\n1) English\n2) Español\n"
   },
   "develop": {
-    "one": "Create cookbook(j)\nSwitch user(z)\nGet initial py)lons\n"
+    "one": "Create cookbook(j)\nSwitch user(z)\nGet initial py)lons\nGet I)nitial Loud Coin"
   },
   "go to home": {
     "one": "H)ome"
@@ -110,7 +110,7 @@
     "one": "You are preparing for hunt.\nPlease select an item to carry."
   },
   "select upgrade item desc": {
-    "one": "You are gonna upgrade %s.\nPlease select an item to upgrade."
+    "one": "You are gonna upgrade an item.\nPlease select an item to upgrade."
   },
   "you are now buying loud from pylon": {
     "one": "You are now buying loud coin from pylon"
