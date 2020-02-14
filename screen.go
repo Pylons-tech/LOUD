@@ -1,300 +1,486 @@
 package loud
 
 import (
-	"encoding/json"
 	"fmt"
 	"io"
 	"log"
+	"math"
 	"os"
 	"strconv"
 	"strings"
 	"time"
 	"unicode/utf8"
 
-	"github.com/Pylons-tech/pylons/x/pylons/handlers"
 	"github.com/ahmetb/go-cursor"
+	"github.com/gliderlabs/ssh"
+	"github.com/mgutz/ansi"
+	"github.com/nsf/termbox-go"
+
+	terminal "github.com/wayneashleyberry/terminal-dimensions"
 )
 
-func (screen *GameScreen) renderUserCommands() {
+const allowMouseInputAndHideCursor string = "\x1b[?1003h\x1b[?25l"
+const resetScreen string = "\x1bc"
+const ellipsis = "…"
+const hpon = "◆"
+const hpoff = "◇"
+const bgcolor = 232
 
-	infoLines := []string{}
-	switch screen.scrStatus {
-	case SHOW_LOCATION:
-		cmdMap := map[UserLocation]string{
-			HOME:     localize("home"),
-			FOREST:   localize("forest"),
-			SHOP:     localize("shop"),
-			MARKET:   localize("market"),
-			SETTINGS: localize("settings"),
-			DEVELOP:  localize("develop"),
-		}
-		cmdString := cmdMap[screen.user.GetLocation()]
-		infoLines = strings.Split(cmdString, "\n")
-	case SHOW_LOUD_BUY_ORDERS:
-		infoLines = append(infoLines, screen.tradeTableColorDesc()...)
+// Screen represents a UI screen.
+type Screen interface {
+	SetDaemonFetchingFlag(bool)
+	SaveGame()
+	UpdateBlockHeight(int64)
+	SetScreenSize(int, int)
+	HandleInputKey(termbox.Event)
+	GetScreenStatus() ScreenStatus
+	SetScreenStatus(ScreenStatus)
+	GetTxFailReason() string
+	Resync()
+	Render()
+	Reset()
+}
 
-		infoLines = append(infoLines, "B)uy( ↵ )")
-		infoLines = append(infoLines, "Create a buy o)rder")
-		infoLines = append(infoLines, "Go bac)k")
-	case SHOW_LOUD_SELL_ORDERS:
-		infoLines = append(infoLines, screen.tradeTableColorDesc()...)
+type GameScreen struct {
+	world                  World
+	user                   User
+	screenSize             ssh.Window
+	activeItem             Item
+	lastInput              termbox.Event
+	activeLine             int
+	activeTradeRequest     TradeRequest
+	activeItemTradeRequest ItemTradeRequest
+	pylonEnterValue        string
+	loudEnterValue         string
+	inputText              string
+	refreshingDaemonStatus bool
+	blockHeight            int64
+	txFailReason           string
+	txResult               []byte
+	refreshed              bool
+	scrStatus              ScreenStatus
+	colorCodeCache         map[string](func(string) string)
+}
 
-		infoLines = append(infoLines, "Se)ll( ↵ )")
-		infoLines = append(infoLines, "Create sell o)rder")
-		infoLines = append(infoLines, "Go bac)k")
-	case SELECT_BUY_ITEM:
-		for idx, item := range shopItems {
-			infoLines = append(infoLines, fmt.Sprintf("%d) %s Lv%d  ", idx+1, localize(item.Name), item.Level)+screen.loudIcon()+fmt.Sprintf(" %d", item.Price))
-		}
-		infoLines = append(infoLines, localize("C)ancel"))
-	case SELECT_SELL_ITEM:
-		userItems := screen.user.InventoryItems()
-		for idx, item := range userItems {
-			infoLines = append(infoLines, fmt.Sprintf("%d) %s Lv%d  ", idx+1, localize(item.Name), item.Level)+screen.loudIcon()+fmt.Sprintf(" %d", item.GetSellPrice()))
-		}
-		infoLines = append(infoLines, localize("C)ancel"))
-	case SELECT_HUNT_ITEM:
-		userWeaponItems := screen.user.InventoryItems()
-		infoLines = append(infoLines, localize("N)o item"))
-		for idx, item := range userWeaponItems {
-			infoLines = append(infoLines, fmt.Sprintf("%d) %s Lv%d", idx+1, localize(item.Name), item.Level))
-		}
-		infoLines = append(infoLines, localize("Get I)nitial Coin"))
-		infoLines = append(infoLines, localize("Get Initial Py)lon"))
-		infoLines = append(infoLines, localize("C)ancel"))
-	case SELECT_UPGRADE_ITEM:
-		userUpgradeItems := screen.user.UpgradableItems()
-		for idx, item := range userUpgradeItems {
-			infoLines = append(infoLines, fmt.Sprintf("%d) %s Lv%d ", idx+1, localize(item.Name), item.Level)+screen.loudIcon()+fmt.Sprintf(" %d", item.GetUpgradePrice()))
-		}
-		infoLines = append(infoLines, localize("C)ancel"))
-	case RESULT_BUY_LOUD_ORDER_CREATION:
-		fallthrough
-	case RESULT_SELL_LOUD_ORDER_CREATION:
-		fallthrough
-	case RESULT_FULFILL_BUY_LOUD_ORDER:
-		fallthrough
-	case RESULT_FULFILL_SELL_LOUD_ORDER:
-		fallthrough
-	case RESULT_BUY_FINISH:
-		fallthrough
-	case RESULT_HUNT_FINISH:
-		fallthrough
-	case RESULT_GET_PYLONS:
-		fallthrough
-	case RESULT_CREATE_COOKBOOK:
-		fallthrough
-	case RESULT_SELL_FINISH:
-		fallthrough
-	case RESULT_SWITCH_USER:
-		fallthrough
-	case RESULT_UPGRADE_FINISH:
-		infoLines = append(infoLines, localize("Go) on"))
-	default:
+// NewScreen manages the window rendering for game
+func NewScreen(world World, user User) Screen {
+	width, _ := terminal.Width()
+	height, _ := terminal.Height()
+
+	window := ssh.Window{
+		Width:  int(width),
+		Height: int(height),
 	}
 
-	// box start point (x, y)
-	x := 2
-	y := screen.screenSize.Height/2 + 1
+	screen := GameScreen{
+		world:          world,
+		user:           user,
+		screenSize:     window,
+		colorCodeCache: make(map[string](func(string) string))}
 
-	bgcolor := uint64(bgcolor)
-	fmtFunc := screen.colorFunc(fmt.Sprintf("255:%v", bgcolor))
-	for index, line := range infoLines {
-		io.WriteString(os.Stdout, fmt.Sprintf("%s%s",
-			cursor.MoveTo(y+index, x), fmtFunc(line)))
-		if index+2 > int(screen.screenSize.Height) {
-			break
-		}
+	return &screen
+}
+
+func (screen *GameScreen) SwitchUser(newUser User) {
+	screen.user = newUser
+}
+
+func (screen *GameScreen) Resync() {
+	SyncFromNode(screen.user)
+}
+
+func (screen *GameScreen) GetTxFailReason() string {
+	return screen.txFailReason
+}
+
+func (screen *GameScreen) GetScreenStatus() ScreenStatus {
+	return screen.scrStatus
+}
+
+func (screen *GameScreen) SetScreenStatus(newStatus ScreenStatus) {
+	screen.scrStatus = newStatus
+}
+
+func (screen *GameScreen) Reset() {
+	io.WriteString(os.Stdout, fmt.Sprintf("%s👋\n", resetScreen))
+}
+
+func (screen *GameScreen) SaveGame() {
+	screen.user.Save()
+}
+
+func (screen *GameScreen) SetDaemonFetchingFlag(flag bool) {
+	screen.refreshingDaemonStatus = flag
+}
+
+func (screen *GameScreen) UpdateBlockHeight(blockHeight int64) {
+	screen.blockHeight = blockHeight
+	screen.FreshRender()
+}
+
+func (screen *GameScreen) SetInputTextAndRender(text string) {
+	screen.inputText = text
+	screen.Render()
+}
+
+func (screen *GameScreen) pylonIcon() string {
+	return screen.drawProgressMeter(1, 1, 117, bgcolor, 1)
+}
+
+func (screen *GameScreen) loudIcon() string {
+	return screen.drawProgressMeter(1, 1, 208, bgcolor, 1)
+}
+
+func (screen *GameScreen) buyLoudDesc(loudValue interface{}, pylonValue interface{}) string {
+	var desc = strings.Join([]string{
+		"\n",
+		screen.pylonIcon(),
+		fmt.Sprintf("%v", pylonValue),
+		"\n  ↓\n",
+		screen.loudIcon(),
+		fmt.Sprintf("%v", loudValue),
+	}, "")
+	return desc
+}
+
+func (screen *GameScreen) sellLoudDesc(loudValue interface{}, pylonValue interface{}) string {
+	var desc = strings.Join([]string{
+		"\n",
+		screen.loudIcon(),
+		fmt.Sprintf("%v", loudValue),
+		"\n  ↓\n",
+		screen.pylonIcon(),
+		fmt.Sprintf("%v", pylonValue),
+	}, "")
+	return desc
+}
+
+func (screen *GameScreen) buySwordDesc(activeItem Item, pylonValue interface{}) string {
+	var desc = strings.Join([]string{
+		"\n",
+		screen.pylonIcon(),
+		fmt.Sprintf("%v", pylonValue),
+		"\n  ↓\n",
+		fmt.Sprintf("%s Lv%d", activeItem.Name, activeItem.Level),
+	}, "")
+	return desc
+}
+
+func (screen *GameScreen) sellSwordDesc(activeItem Item, pylonValue interface{}) string {
+	var desc = strings.Join([]string{
+		"\n",
+		fmt.Sprintf("%s Lv%d", activeItem.Name, activeItem.Level),
+		"\n  ↓\n",
+		screen.pylonIcon(),
+		fmt.Sprintf("%v", pylonValue),
+	}, "")
+	return desc
+}
+
+func (screen *GameScreen) tradeTableColorDesc() []string {
+	var infoLines = []string{}
+	infoLines = append(infoLines, "white     ➝ other's request")
+	infoLines = append(infoLines, screen.blueBoldFont()("bluebold")+"  ➝ selected request")
+	infoLines = append(infoLines, screen.brownBoldFont()("brownbold")+" ➝ my request + selected")
+	infoLines = append(infoLines, screen.brownFont()("brown")+"     ➝ my request")
+	infoLines = append(infoLines, "\n")
+	return infoLines
+}
+
+func (screen *GameScreen) redrawBorders() {
+	io.WriteString(os.Stdout, ansi.ColorCode(fmt.Sprintf("255:%v", bgcolor)))
+	screen.drawBox(1, 1, screen.screenSize.Width-1, screen.screenSize.Height-1)
+	screen.drawVerticalLine(screen.screenSize.Width/2-2, 1, screen.screenSize.Height)
+
+	y := screen.screenSize.Height
+	if y < 20 {
+		y = 5
+	} else {
+		y = (y / 2) - 2
+	}
+	screen.drawHorizontalLine(1, y+2, screen.screenSize.Width/2-3)
+	screen.drawHorizontalLine(1, screen.screenSize.Height-2, screen.screenSize.Width/2-3)
+}
+
+func (screen *GameScreen) blueBoldFont() func(string) string {
+	return screen.colorFunc(fmt.Sprintf("%v+bh:%v", 117, 232))
+}
+
+func (screen *GameScreen) brownBoldFont() func(string) string {
+	return screen.colorFunc(fmt.Sprintf("%v+bh:%v", 181, 232))
+}
+
+func (screen *GameScreen) brownFont() func(string) string {
+	return screen.colorFunc(fmt.Sprintf("%v:%v", 181, 232))
+}
+
+func (screen *GameScreen) renderTradeRequestTableLine(text1 string, text2 string, text3 string, isActiveLine bool, isDisabledLine bool) string {
+	calcText := "│" + centerText(text1, " ", 20) + "│" + centerText(text2, " ", 15) + "│" + centerText(text3, " ", 15) + "│"
+	if isActiveLine && isDisabledLine {
+		onColor := screen.brownBoldFont()
+		return onColor(calcText)
+	} else if isActiveLine {
+		onColor := screen.blueBoldFont()
+		return onColor(calcText)
+	} else if isDisabledLine {
+		onColor := screen.brownFont()
+		return onColor(calcText)
+	}
+	return calcText
+}
+
+func (screen *GameScreen) renderTradeRequestTable(requests []TradeRequest) []string {
+	infoLines := []string{}
+	infoLines = append(infoLines, "╭────────────────────┬───────────────┬───────────────╮")
+	// infoLines = append(infoLines, "│ LOUD price (pylon) │ Amount (loud) │ Total (pylon) │")
+	infoLines = append(infoLines, screen.renderTradeRequestTableLine("LOUD price (pylon)", "Amount (loud)", "Total (pylon)", false, false))
+	infoLines = append(infoLines, "├────────────────────┼───────────────┼───────────────┤")
+	numLines := screen.screenSize.Height/2 - 7
+	if screen.activeLine >= len(requests) {
+		screen.activeLine = len(requests) - 1
+	}
+	activeLine := screen.activeLine
+	startLine := activeLine - numLines + 1
+	if startLine < 0 {
+		startLine = 0
+	}
+	endLine := startLine + numLines
+	if endLine > len(requests) {
+		endLine = len(requests)
+	}
+	for li, request := range requests[startLine:endLine] {
+		infoLines = append(
+			infoLines,
+			screen.renderTradeRequestTableLine(
+				fmt.Sprintf("%.4f", request.Price),
+				fmt.Sprintf("%d", request.Amount),
+				fmt.Sprintf("%d", request.Total),
+				startLine+li == activeLine,
+				request.IsMyTradeRequest,
+			),
+		)
+	}
+	infoLines = append(infoLines, "╰────────────────────┴───────────────┴───────────────╯")
+	return infoLines
+}
+
+func (screen *GameScreen) renderItemTradeRequestTableLine(text1 string, text2 string, isActiveLine bool, isDisabledLine bool) string {
+	calcText := "│" + centerText(text1, " ", 36) + "│" + centerText(text2, " ", 15) + "│"
+	if isActiveLine && isDisabledLine {
+		onColor := screen.brownBoldFont()
+		return onColor(calcText)
+	} else if isActiveLine {
+		onColor := screen.blueBoldFont()
+		return onColor(calcText)
+	} else if isDisabledLine {
+		onColor := screen.brownFont()
+		return onColor(calcText)
+	}
+	return calcText
+}
+
+func (screen *GameScreen) renderItemTradeRequestTable(requests []ItemTradeRequest) []string {
+	infoLines := []string{}
+	infoLines = append(infoLines, "╭────────────────────────────────────┬───────────────╮")
+	// infoLines = append(infoLines, "│ Item                │ Price (pylon) │")
+	infoLines = append(infoLines, screen.renderItemTradeRequestTableLine("Item", "Price (pylon)", false, false))
+	infoLines = append(infoLines, "├────────────────────────────────────┼───────────────┤")
+	numLines := screen.screenSize.Height/2 - 7
+	if screen.activeLine >= len(requests) {
+		screen.activeLine = len(requests) - 1
+	}
+	activeLine := screen.activeLine
+	startLine := activeLine - numLines + 1
+	if startLine < 0 {
+		startLine = 0
+	}
+	endLine := startLine + numLines
+	if endLine > len(requests) {
+		endLine = len(requests)
+	}
+	for li, request := range requests[startLine:endLine] {
+		infoLines = append(
+			infoLines,
+			screen.renderItemTradeRequestTableLine(
+				fmt.Sprintf("%s Lv%d  ", localize(request.TItem.Name), request.TItem.Level),
+				fmt.Sprintf("%d", request.Price),
+				startLine+li == activeLine,
+				request.IsMyTradeRequest,
+			),
+		)
+	}
+	infoLines = append(infoLines, "╰────────────────────────────────────┴───────────────╯")
+	return infoLines
+}
+
+func (screen *GameScreen) renderItemTableLine(text1 string, isActiveLine bool) string {
+	calcText := "│" + centerText(text1, " ", 52) + "│"
+	if isActiveLine {
+		onColor := screen.blueBoldFont()
+		return onColor(calcText)
+	}
+	return calcText
+}
+
+func (screen *GameScreen) renderItemTable(items []Item) []string {
+	infoLines := []string{}
+	infoLines = append(infoLines, "╭────────────────────────────────────────────────────╮")
+	// infoLines = append(infoLines, "│ Item                            │")
+	infoLines = append(infoLines, screen.renderItemTableLine("Item", false))
+	infoLines = append(infoLines, "├────────────────────────────────────────────────────┤")
+	numLines := screen.screenSize.Height/2 - 7
+	if screen.activeLine >= len(items) {
+		screen.activeLine = len(items) - 1
+	}
+	activeLine := screen.activeLine
+	startLine := activeLine - numLines + 1
+	if startLine < 0 {
+		startLine = 0
+	}
+	endLine := startLine + numLines
+	if endLine > len(items) {
+		endLine = len(items)
+	}
+	for li, item := range items[startLine:endLine] {
+		infoLines = append(
+			infoLines,
+			screen.renderItemTableLine(
+				fmt.Sprintf("%s Lv%d  ", localize(item.Name), item.Level),
+				startLine+li == activeLine,
+			),
+		)
+	}
+	infoLines = append(infoLines, "╰────────────────────────────────────────────────────╯")
+	return infoLines
+}
+
+func (screen *GameScreen) drawVerticalLine(x, y, height int) {
+	color := ansi.ColorCode(fmt.Sprintf("255:%v", bgcolor))
+	for i := 1; i < height; i++ {
+		io.WriteString(os.Stdout, fmt.Sprintf("%s%s│", cursor.MoveTo(y+i, x), color))
+	}
+
+	io.WriteString(os.Stdout, fmt.Sprintf("%s%s┬", cursor.MoveTo(y, x), color))
+	io.WriteString(os.Stdout, fmt.Sprintf("%s%s┴", cursor.MoveTo(y+height, x), color))
+}
+
+func (screen *GameScreen) drawHorizontalLine(x, y, width int) {
+	color := ansi.ColorCode(fmt.Sprintf("255:%v", bgcolor))
+	for i := 1; i < width; i++ {
+		io.WriteString(os.Stdout, fmt.Sprintf("%s%s─", cursor.MoveTo(y, x+i), color))
+	}
+
+	io.WriteString(os.Stdout, fmt.Sprintf("%s%s├", cursor.MoveTo(y, x), color))
+	io.WriteString(os.Stdout, fmt.Sprintf("%s%s┤", cursor.MoveTo(y, x+width), color))
+}
+
+func (screen *GameScreen) drawProgressMeter(min, max, fgcolor, bgcolor, width uint64) string {
+	var blink bool
+	if min > max {
+		min = max
+		blink = true
+	}
+	proportion := float64(float64(min) / float64(max))
+	if math.IsNaN(proportion) {
+		proportion = 0.0
+	} else if proportion < 0.05 {
+		blink = true
+	}
+	onWidth := uint64(float64(width) * proportion)
+	offWidth := uint64(float64(width) * (1.0 - proportion))
+
+	onColor := screen.colorFunc(fmt.Sprintf("%v:%v", fgcolor, bgcolor))
+	offColor := onColor
+
+	if blink {
+		onColor = screen.colorFunc(fmt.Sprintf("%v+B:%v", fgcolor, bgcolor))
+	}
+
+	if (onWidth + offWidth) > width {
+		onWidth = width
+		offWidth = 0
+	} else if (onWidth + offWidth) < width {
+		onWidth += width - (onWidth + offWidth)
+	}
+
+	on := ""
+	off := ""
+
+	for i := 0; i < int(onWidth); i++ {
+		on += hpon
+	}
+
+	for i := 0; i < int(offWidth); i++ {
+		off += hpoff
+	}
+
+	return onColor(on) + offColor(off)
+}
+
+func (screen *GameScreen) drawFill(x, y, width, height int) {
+	color := ansi.ColorCode(fmt.Sprintf("0:%v", bgcolor))
+
+	midString := fmt.Sprintf("%%s%%s%%%vs", (width))
+	for i := 0; i <= height; i++ {
+		io.WriteString(os.Stdout, fmt.Sprintf(midString, cursor.MoveTo(y+i, x), color, " "))
 	}
 }
 
-func (screen *GameScreen) renderUserSituation() {
-	infoLines := []string{}
-	desc := ""
-	waitProcessEnd := localize("wait process to end")
-	switch screen.scrStatus {
-	case SHOW_LOCATION:
-		locationDescMap := map[UserLocation]string{
-			HOME:     localize("home desc"),
-			FOREST:   localize("forest desc"),
-			SHOP:     localize("shop desc"),
-			MARKET:   localize("market desc"),
-			SETTINGS: localize("settings desc"),
-			DEVELOP:  localize("develop desc"),
-		}
-		desc = locationDescMap[screen.user.GetLocation()]
-	case CREATE_BUY_LOUD_ORDER_ENTER_PYLON_VALUE:
-		desc = "Please enter pylon amount to use (should be integer value)" // TODO should add localize
-	case CREATE_SELL_LOUD_ORDER_ENTER_PYLON_VALUE:
-		desc = "Please enter pylon amount to get (should be integer value)" // TODO should add localize
-	case CREATE_BUY_LOUD_ORDER_ENTER_LOUD_VALUE:
-		desc = "Please enter loud amount to buy (should be integer value)" // TODO should add localize
-	case CREATE_SELL_LOUD_ORDER_ENTER_LOUD_VALUE:
-		desc = "Please enter loud amount to sell (should be integer value)" // TODO should add localize
+func (screen *GameScreen) drawBox(x, y, width, height int) {
+	color := ansi.ColorCode(fmt.Sprintf("255:%v", bgcolor))
 
-	case SHOW_LOUD_BUY_ORDERS:
-		infoLines = screen.renderOrderTable(buyOrders)
-	case SHOW_LOUD_SELL_ORDERS:
-		infoLines = screen.renderOrderTable(sellOrders)
-	case SELECT_BUY_ITEM:
-		desc = localize("select buy item desc")
-	case SELECT_SELL_ITEM:
-		desc = localize("select sell item desc")
-	case SELECT_HUNT_ITEM:
-		desc = localize("select hunt item desc")
-	case SELECT_UPGRADE_ITEM:
-		desc = localize("select upgrade item desc")
-	case WAIT_FULFILL_BUY_LOUD_ORDER:
-		order := screen.activeOrder
-		desc = localize("you are now buying loud from pylon") + fmt.Sprintf(" at %.4f.\n", order.Price)
-		desc += screen.buyLoudDesc(order.Amount, order.Total)
-	case WAIT_FULFILL_SELL_LOUD_ORDER:
-		order := screen.activeOrder
-		desc = localize("you are now selling loud for pylon") + fmt.Sprintf(" at %.4f.\n", order.Price)
-		desc += screen.sellLoudDesc(order.Amount, order.Total)
-	case WAIT_BUY_LOUD_ORDER_CREATION:
-		desc = localize("you are now waiting for loud buy order creation")
-		desc += screen.buyLoudDesc(screen.loudEnterValue, screen.pylonEnterValue)
-	case WAIT_SELL_LOUD_ORDER_CREATION:
-		desc = localize("you are now waiting for loud sell order creation")
-		desc += screen.sellLoudDesc(screen.loudEnterValue, screen.pylonEnterValue)
-	case WAIT_BUY_PROCESS:
-		desc = fmt.Sprintf("%s %s Lv%d.\n%s", localize("wait buy process desc"), localize(screen.activeItem.Name), screen.activeItem.Level, waitProcessEnd)
-	case WAIT_HUNT_PROCESS:
-		if len(screen.activeItem.Name) > 0 {
-			desc = fmt.Sprintf("%s %s Lv%d.\n%s", localize("wait hunt process desc"), localize(screen.activeItem.Name), screen.activeItem.Level, waitProcessEnd)
-		} else {
-			switch string(screen.lastInput.Ch) {
-			case "I":
-				fallthrough
-			case "i":
-				desc = fmt.Sprintf("%s\n%s", localize("Getting initial gold from pylon"), waitProcessEnd)
-			default:
-				desc = fmt.Sprintf("%s\n%s", localize("hunting without weapon"), waitProcessEnd)
-			}
-		}
-	case WAIT_GET_PYLONS:
-		desc = localize("You are waiting for getting pylons process")
-	case WAIT_SWITCH_USER:
-		desc = localize("You are waiting for switching to new user")
-	case WAIT_CREATE_COOKBOOK:
-		desc = localize("You are waiting for creating cookbook")
-	case WAIT_SELL_PROCESS:
-		desc = fmt.Sprintf("%s %s Lv%d.\n%s", localize("wait sell process desc"), localize(screen.activeItem.Name), screen.activeItem.Level, waitProcessEnd)
-	case WAIT_UPGRADE_PROCESS:
-		desc = fmt.Sprintf("%s %s.\n%s", localize("wait upgrade process desc"), localize(screen.activeItem.Name), waitProcessEnd)
-	case RESULT_BUY_LOUD_ORDER_CREATION:
-		if screen.txFailReason != "" {
-			desc = localize("loud buy order creation fail reason") + ": " + localize(screen.txFailReason)
-		} else {
-			desc = localize("loud buy order was successfully created")
-			desc += screen.buyLoudDesc(screen.loudEnterValue, screen.pylonEnterValue)
-		}
-	case RESULT_SELL_LOUD_ORDER_CREATION:
-		if screen.txFailReason != "" {
-			desc = localize("sell buy order creation fail reason") + ": " + localize(screen.txFailReason)
-		} else {
-			desc = localize("loud sell order was successfully created")
-			desc += screen.sellLoudDesc(screen.loudEnterValue, screen.pylonEnterValue)
-		}
-	case RESULT_FULFILL_BUY_LOUD_ORDER:
-		if screen.txFailReason != "" {
-			desc = localize("buy loud failed reason") + ": " + localize(screen.txFailReason)
-		} else {
-			order := screen.activeOrder
-			desc = localize("you have bought loud coin successfully from loud/pylon market") + fmt.Sprintf(" at %.4f.\n", order.Price)
-			desc += screen.buyLoudDesc(order.Amount, order.Total)
-		}
-	case RESULT_FULFILL_SELL_LOUD_ORDER:
-		if screen.txFailReason != "" {
-			desc = localize("sell loud failed reason") + ": " + localize(screen.txFailReason)
-		} else {
-			order := screen.activeOrder
-			desc = localize("you have sold loud coin successfully from loud/pylon market") + fmt.Sprintf(" at %.4f.\n", order.Price)
-			desc += screen.sellLoudDesc(order.Amount, order.Total)
-		}
-	case RESULT_BUY_FINISH:
-		if screen.txFailReason != "" {
-			desc = localize("buy failed reason") + ": " + localize(screen.txFailReason)
-		} else {
-			desc = fmt.Sprintf("%s %s Lv%d.\n%s", localize("result buy finish desc"), localize(screen.activeItem.Name), screen.activeItem.Level, localize("use for hunting"))
-		}
-	case RESULT_HUNT_FINISH:
-		if screen.txFailReason != "" {
-			desc = localize("hunt failed reason") + ": " + localize(screen.txFailReason)
-		} else {
-			respOutput := handlers.ExecuteRecipeSerialize{}
-			json.Unmarshal(screen.txResult, &respOutput)
-			switch string(screen.lastInput.Ch) {
-			case "I":
-				fallthrough
-			case "i":
-				desc = fmt.Sprintf("%s %d.", localize("Got initial gold from pylons. Amount is"), respOutput.Amount)
-			default:
-				desc = fmt.Sprintf("%s %d.", localize("result hunt finish desc"), respOutput.Amount)
-			}
-		}
-	case RESULT_GET_PYLONS:
-		if screen.txFailReason != "" {
-			desc = localize("get pylon failed reason") + ": " + localize(screen.txFailReason)
-		} else {
-			desc = fmt.Sprintf("You got extra pylons for loud game")
-		}
-	case RESULT_SWITCH_USER:
-		if screen.txFailReason != "" {
-			desc = localize("switch user fail reason") + ": " + localize(screen.txFailReason)
-		} else {
-			desc = fmt.Sprintf("You switched user to %s", screen.user.GetUserName())
-		}
-	case RESULT_CREATE_COOKBOOK:
-		if screen.txFailReason != "" {
-			desc = localize("create cookbook failed reason") + ": " + localize(screen.txFailReason)
-		} else {
-			desc = fmt.Sprintf("You created a new cookbook for a new game build")
-		}
-	case RESULT_SELL_FINISH:
-		if screen.txFailReason != "" {
-			desc = localize("sell failed reason") + ": " + localize(screen.txFailReason)
-		} else {
-			desc = fmt.Sprintf("%s %s Lv%d.", localize("result sell finish desc"), localize(screen.activeItem.Name), screen.activeItem.Level)
-		}
-	case RESULT_UPGRADE_FINISH:
-		if screen.txFailReason != "" {
-			desc = localize("upgrade failed reason") + ": " + localize(screen.txFailReason)
-		} else {
-			desc = fmt.Sprintf("%s: %s.", localize("result upgrade finish desc"), localize(screen.activeItem.Name))
-		}
+	for i := 1; i < width; i++ {
+		io.WriteString(os.Stdout, fmt.Sprintf("%s%s─", cursor.MoveTo(y, x+i), color))
+		io.WriteString(os.Stdout, fmt.Sprintf("%s%s─", cursor.MoveTo(y+height, x+i), color))
 	}
 
-	basicLines := strings.Split(desc, "\n")
-
-	for _, line := range basicLines {
-		infoLines = append(infoLines, ChunkString(line, screen.screenSize.Width/2-4)...)
+	for i := 1; i < height; i++ {
+		midString := fmt.Sprintf("%%s%%s│%%%vs│", (width - 1))
+		io.WriteString(os.Stdout, fmt.Sprintf("%s%s│", cursor.MoveTo(y+i, x), color))
+		io.WriteString(os.Stdout, fmt.Sprintf("%s%s│", cursor.MoveTo(y+i, x+width), color))
+		io.WriteString(os.Stdout, fmt.Sprintf(midString, cursor.MoveTo(y+i, x), color, " "))
 	}
 
-	// box start point (x, y)
-	x := 2
-	y := 2
-
-	bgcolor := uint64(bgcolor)
-	fmtFunc := screen.colorFunc(fmt.Sprintf("255:%v", bgcolor))
-	for index, line := range infoLines {
-		io.WriteString(os.Stdout, fmt.Sprintf("%s%s", cursor.MoveTo(y+index, x), fmtFunc(line)))
-		if index+2 > int(screen.screenSize.Height) {
-			break
-		}
-	}
+	io.WriteString(os.Stdout, fmt.Sprintf("%s%s╭", cursor.MoveTo(y, x), color))
+	io.WriteString(os.Stdout, fmt.Sprintf("%s%s╰", cursor.MoveTo(y+height, x), color))
+	io.WriteString(os.Stdout, fmt.Sprintf("%s%s╮", cursor.MoveTo(y, x+width), color))
+	io.WriteString(os.Stdout, fmt.Sprintf("%s%s╯", cursor.MoveTo(y+height, x+width), color))
 }
 
+func (screen *GameScreen) SetScreenSize(Width, Height int) {
+	screen.screenSize = ssh.Window{
+		Width:  Width,
+		Height: Height,
+	}
+	screen.refreshed = false
+}
+
+func (screen *GameScreen) colorFunc(color string) func(string) string {
+	_, ok := screen.colorCodeCache[color]
+
+	if !ok {
+		screen.colorCodeCache[color] = ansi.ColorFunc(color)
+	}
+
+	return screen.colorCodeCache[color]
+}
+
+func (screen *GameScreen) IsResultScreen() bool {
+	return strings.Contains(string(screen.scrStatus), "RESULT_")
+}
 func (screen *GameScreen) InputActive() bool {
 	switch screen.scrStatus {
-	case CREATE_BUY_LOUD_ORDER_ENTER_LOUD_VALUE:
+	case CREATE_BUY_LOUD_REQUEST_ENTER_LOUD_VALUE:
 		return true
-	case CREATE_BUY_LOUD_ORDER_ENTER_PYLON_VALUE:
+	case CREATE_BUY_LOUD_REQUEST_ENTER_PYLON_VALUE:
 		return true
-	case CREATE_SELL_LOUD_ORDER_ENTER_LOUD_VALUE:
+	case CREATE_SELL_LOUD_REQUEST_ENTER_LOUD_VALUE:
 		return true
-	case CREATE_SELL_LOUD_ORDER_ENTER_PYLON_VALUE:
+	case CREATE_SELL_LOUD_REQUEST_ENTER_PYLON_VALUE:
+		return true
+	case CREATE_SELL_SWORD_REQUEST_ENTER_PYLON_VALUE:
+		return true
+	case CREATE_BUY_SWORD_REQUEST_ENTER_PYLON_VALUE:
 		return true
 	}
 	return false
@@ -388,32 +574,24 @@ func (screen *GameScreen) renderCharacterSheet() {
 }
 
 func (screen *GameScreen) RunSelectedLoudBuyTrade() {
-	if len(buyOrders) <= screen.activeLine || screen.activeLine < 0 {
-		// when activeLine is not refering to real order but when it is refering to nil order
-		screen.txFailReason = localize("you haven't selected any buy order")
-		screen.scrStatus = RESULT_FULFILL_BUY_LOUD_ORDER
-		screen.refreshed = false
-		screen.Render()
+	if len(buyTradeRequests) <= screen.activeLine || screen.activeLine < 0 {
+		// when activeLine is not refering to real request but when it is refering to nil request
+		screen.txFailReason = localize("you haven't selected any buy request")
+		screen.SetScreenStatusAndRefresh(RESULT_FULFILL_BUY_LOUD_REQUEST)
 	} else {
-		screen.scrStatus = WAIT_FULFILL_BUY_LOUD_ORDER
-		screen.activeOrder = buyOrders[screen.activeLine]
-		screen.refreshed = false
-		screen.Render()
+		screen.activeTradeRequest = buyTradeRequests[screen.activeLine]
+		screen.SetScreenStatusAndRefresh(WAIT_FULFILL_BUY_LOUD_REQUEST)
 		go func() {
-			txhash, err := FulfillTrade(screen.user, buyOrders[screen.activeLine].ID)
+			txhash, err := FulfillTrade(screen.user, buyTradeRequests[screen.activeLine].ID)
 
-			log.Println("ended sending request for creating buy loud order")
+			log.Println("ended sending request for creating buy loud request")
 			if err != nil {
 				screen.txFailReason = err.Error()
-				screen.scrStatus = RESULT_FULFILL_BUY_LOUD_ORDER
-				screen.refreshed = false
-				screen.Render()
+				screen.SetScreenStatusAndRefresh(RESULT_FULFILL_BUY_LOUD_REQUEST)
 			} else {
 				time.AfterFunc(2*time.Second, func() {
 					screen.txResult, screen.txFailReason = ProcessTxResult(screen.user, txhash)
-					screen.scrStatus = RESULT_FULFILL_BUY_LOUD_ORDER
-					screen.refreshed = false
-					screen.Render()
+					screen.SetScreenStatusAndRefresh(RESULT_FULFILL_BUY_LOUD_REQUEST)
 				})
 			}
 		}()
@@ -421,38 +599,92 @@ func (screen *GameScreen) RunSelectedLoudBuyTrade() {
 }
 
 func (screen *GameScreen) RunSelectedLoudSellTrade() {
-	if len(sellOrders) <= screen.activeLine || screen.activeLine < 0 {
-		screen.txFailReason = localize("you haven't selected any sell order")
-		screen.scrStatus = RESULT_FULFILL_SELL_LOUD_ORDER
-		screen.refreshed = false
-		screen.Render()
+	if len(sellTradeRequests) <= screen.activeLine || screen.activeLine < 0 {
+		screen.txFailReason = localize("you haven't selected any sell request")
+		screen.SetScreenStatusAndRefresh(RESULT_FULFILL_SELL_LOUD_REQUEST)
 	} else {
-		screen.scrStatus = WAIT_FULFILL_SELL_LOUD_ORDER
-		screen.activeOrder = sellOrders[screen.activeLine]
-		screen.refreshed = false
-		screen.Render()
+		screen.activeTradeRequest = sellTradeRequests[screen.activeLine]
+		screen.SetScreenStatusAndRefresh(WAIT_FULFILL_SELL_LOUD_REQUEST)
 		go func() {
-			log.Println("started sending request for creating sell loud order")
-			txhash, err := FulfillTrade(screen.user, sellOrders[screen.activeLine].ID)
-			log.Println("ended sending request for creating sell loud order")
+			log.Println("started sending request for creating sell loud request")
+			txhash, err := FulfillTrade(screen.user, sellTradeRequests[screen.activeLine].ID)
+			log.Println("ended sending request for creating sell loud request")
 			if err != nil {
 				screen.txFailReason = err.Error()
-				screen.scrStatus = RESULT_FULFILL_SELL_LOUD_ORDER
-				screen.refreshed = false
-				screen.Render()
+				screen.SetScreenStatusAndRefresh(RESULT_FULFILL_SELL_LOUD_REQUEST)
 			} else {
 				time.AfterFunc(2*time.Second, func() {
 					screen.txResult, screen.txFailReason = ProcessTxResult(screen.user, txhash)
-					screen.scrStatus = RESULT_FULFILL_SELL_LOUD_ORDER
-					screen.refreshed = false
-					screen.Render()
+					screen.SetScreenStatusAndRefresh(RESULT_FULFILL_SELL_LOUD_REQUEST)
 				})
 			}
 		}()
 	}
 }
 
+func (screen *GameScreen) RunSelectedSwordBuyTradeRequest() {
+	if len(swordBuyTradeRequests) <= screen.activeLine || screen.activeLine < 0 {
+		screen.txFailReason = localize("you haven't selected any buy item request")
+		screen.SetScreenStatusAndRefresh(RESULT_FULFILL_BUY_SWORD_REQUEST)
+	} else {
+		screen.activeItemTradeRequest = swordBuyTradeRequests[screen.activeLine]
+		screen.SetScreenStatusAndRefresh(WAIT_FULFILL_BUY_SWORD_REQUEST)
+		go func() {
+			log.Println("started sending request for creating buying item request")
+			txhash, err := FulfillTrade(screen.user, swordBuyTradeRequests[screen.activeLine].ID)
+			log.Println("ended sending request for creating buying item request")
+			if err != nil {
+				screen.txFailReason = err.Error()
+				screen.SetScreenStatusAndRefresh(RESULT_FULFILL_BUY_SWORD_REQUEST)
+			} else {
+				time.AfterFunc(2*time.Second, func() {
+					screen.txResult, screen.txFailReason = ProcessTxResult(screen.user, txhash)
+					screen.SetScreenStatusAndRefresh(RESULT_FULFILL_BUY_SWORD_REQUEST)
+				})
+			}
+		}()
+	}
+}
+
+func (screen *GameScreen) RunSelectedSwordSellTradeRequest() {
+	if len(swordSellTradeRequests) <= screen.activeLine || screen.activeLine < 0 {
+		screen.txFailReason = localize("you haven't selected any sell item request")
+		screen.SetScreenStatusAndRefresh(RESULT_FULFILL_SELL_SWORD_REQUEST)
+	} else {
+		screen.scrStatus = WAIT_FULFILL_SELL_SWORD_REQUEST
+		screen.activeItemTradeRequest = swordSellTradeRequests[screen.activeLine]
+		screen.FreshRender()
+		go func() {
+			log.Println("started sending request for creating selling item request")
+			txhash, err := FulfillTrade(screen.user, swordSellTradeRequests[screen.activeLine].ID)
+			log.Println("ended sending request for creating selling item request")
+			if err != nil {
+				screen.txFailReason = err.Error()
+				screen.SetScreenStatusAndRefresh(RESULT_FULFILL_SELL_SWORD_REQUEST)
+			} else {
+				time.AfterFunc(2*time.Second, func() {
+					screen.txResult, screen.txFailReason = ProcessTxResult(screen.user, txhash)
+					screen.SetScreenStatusAndRefresh(RESULT_FULFILL_SELL_SWORD_REQUEST)
+				})
+			}
+		}()
+	}
+}
+
+func (screen *GameScreen) SetScreenStatusAndRefresh(newStatus ScreenStatus) {
+	screen.SetScreenStatus(newStatus)
+	screen.FreshRender()
+}
+
+func (screen *GameScreen) FreshRender() {
+	screen.refreshed = false
+	screen.Render()
+}
+
 func (screen *GameScreen) Render() {
+	if screen.scrStatus == "" {
+		screen.scrStatus = SHOW_LOCATION
+	}
 	var HP uint64 = 10
 
 	if screen.screenSize.Height < 20 || screen.screenSize.Width < 60 {

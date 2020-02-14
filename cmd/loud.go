@@ -1,5 +1,22 @@
 package main
 
+// import (
+// 	"log"
+// 	"time"
+// )
+
+// func main() {
+// 	var tick <-chan time.Time
+// 	tick = time.Tick(3 * time.Second)
+
+// 	for {
+// 		select {
+// 		case <-tick:
+// 			log.Println("<-tick")
+// 		}
+// 	}
+// }
+
 import (
 	"log"
 	"os"

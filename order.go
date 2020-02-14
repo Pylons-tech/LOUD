@@ -1,12 +1,21 @@
 package loud
 
-type Order struct {
+type TradeRequest struct {
 	ID        string
 	Price     float64
 	Amount    int
 	Total     int
-	IsMyOrder bool
+	IsMyTradeRequest bool
 }
 
-var buyOrders = []Order{}
-var sellOrders = []Order{}
+type ItemTradeRequest struct {
+	ID        string
+	TItem     Item
+	Price     int
+	IsMyTradeRequest bool
+}
+
+var buyTradeRequests = []TradeRequest{}
+var sellTradeRequests = []TradeRequest{}
+var swordBuyTradeRequests = []ItemTradeRequest{}
+var swordSellTradeRequests = []ItemTradeRequest{}

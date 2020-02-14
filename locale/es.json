@@ -27,22 +27,40 @@
     "one": "No tienes suficiente oro para actualizar este artículo"
   },
   "home": {
-    "one": "Bosque(F)\nTienda(S)\nM)ercado\nAjust)es\nD)evelop"
+    "one": " "
   },
   "forest": {
-    "one": "Cazar(U)\nInicio(H)\nTienda(S)\nM)ercado"
+    "one": "1) Cazar\n"
   },
   "shop": {
-    "one": "Comprar(B) Artículos\nVender(E) Artículos\nMejorar(P) Artículos\nInicio(H)\nBosque(F)\nM)ercado"
+    "one": "1) Comprar Artículos\n2) Vender Artículos\n3) Mejorar Artículos\n"
   },
   "market": {
-    "one": "Comprar moneda LOUD(B)\nVender moneda L)OUD\nBosque(F)\nTienda(S)\nInicio(H)"
+    "one": "1) Sell Loud from orderbook / Create an order to buy Loud\n2) Buy Loud from orderbook / Create an order to Sell Loud\n3) Sell sword from orderbook / Create an order to buy sword\n4) Buy sword from orderbook / Create an order to sell sword\n"
   },
   "settings": {
-    "one": "Idioma:\nEng)lish\nEspa)ñol\nInicio(H)"
+    "one": "Idioma:\n1) English\n2) Español\n"
   },
   "develop": {
-    "one": "Create cookbook(j)\nSwitch user(z)\nH)ome\nS)hop\nM)arket\nSet)tings"
+    "one": "Create cookbook(j)\nSwitch user(z)\nGet initial py)lons\nGet I)nitial Loud Coin"
+  },
+  "go to home": {
+    "one": "Inicio(H)"
+  },
+  "go to forest": {
+    "one": "Bosque(F)"
+  },
+  "go to shop": {
+    "one": "Tienda(S)"
+  },
+  "go to market": {
+    "one": "M)ercado"
+  },
+  "go to settings": {
+    "one": "Ajust)es"
+  },
+  "go to develop": {
+    "one": "D)evelop"
   },
   "Wooden sword": {
     "one": "Espada de Madera",
@@ -74,7 +92,7 @@
     "one": "Estás en una tienda.\nSi quieres, puedes comprar o vender artículos aquí."
   },
   "market desc": {
-    "one": "Ahora estás en un mercado.\nPuedes comprar o vender monedas ruidosas aquí."
+    "one": "Ahora estás en un mercado.\nPuedes comerciar aquí por monedas y artículos."
   },
   "settings desc": {
     "one": "Ajustes"
@@ -127,16 +145,16 @@
   "you have sold loud coin successfully from loud/pylon market": {
     "one": "Has vendido monedas fuertes con éxito en el mercado loud/pylon"
   },
-  "you are now waiting for loud buy order creation": {
+  "you are now waiting for loud buy request creation": {
     "one": "Ahora está esperando la creación de la orden de compra loud"
   },
-  "you are now waiting for loud sell order creation": {
+  "you are now waiting for loud sell request creation": {
     "one": "Ahora está esperando la creación de órdenes de venta loud"
   },
-  "loud buy order was successfully created": {
+  "loud buy request was successfully created": {
     "one": "La orden de compra Loud se creó con éxito."
   },
-  "loud sell order was successfully created": {
+  "loud sell request was successfully created": {
     "one": "La orden de venta Loud se creó correctamente."
   },
   "use for hunting": {

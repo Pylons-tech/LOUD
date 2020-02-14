@@ -20,8 +20,11 @@ Key action descriptions
 
 ```
 'H': go to home
-'S': go to shop
 'F': go to forest
+'S': go to shop
+'M': go to market
+'T': go to settings
+'D': go to develop
 ```
 
 ## To run test
@@ -62,6 +65,10 @@ Run game with name "michael" and use rest endpoint for tx send
 ```
 make ARGS="michael -locald -userest" run
 ```
+Development channel is available and to do automation process on development channel
+```
+make ARGS="afti -locald -userest -automate" run
+```
 ### Fresh Remote node test
 Build game
 ```
@@ -93,4 +100,8 @@ make ARGS="michael" run
 Run game with rest endpoint with name "michael"
 ```
 make ARGS="michael -userest" run
+```
+Development channel is available and to do automation process on remote node
+```
+make ARGS="afti -userest -automate" run
 ```

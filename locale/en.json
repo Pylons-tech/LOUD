@@ -27,22 +27,40 @@
     "one": "You don't have enough gold to upgrade this item"
   },
   "home": {
-    "one": "F)orest\nS)hop\nM)arket\nSet)tings\nD)evelop"
+    "one": " "
   },
   "forest": {
-    "one": "Hu)nt\nH)ome\nS)hop\nM)arket"
+    "one": "1) Hunt\n"
   },
   "shop": {
-    "one": "B)uy Items\nSe)ll Items\nUp)grade Items\nH)ome\nF)orest\nM)arket"
+    "one": "1) Buy Items\n2) Sell Items\n3) Upgrade Items\n"
   },
   "market": {
-    "one": "B)uy Loud Coin\nSe)ll Loud Coin\nF)orest\nS)hop\nH)ome"
+    "one": "1) Sell Loud from orderbook / Create an order to buy Loud\n2) Buy Loud from orderbook / Create an order to Sell Loud\n3) Sell sword from orderbook / Create an order to buy sword\n4) Buy sword from orderbook / Create an order to sell sword\n"
   },
   "settings": {
-    "one": "Language:\nEng)lish\nEspa)ñol\nH)ome"
+    "one": "Language:\n1) English\n2) Español\n"
   },
   "develop": {
-    "one": "Create cookbook(j)\nSwitch user(z)\nH)ome\nS)hop\nM)arket\nSet)tings"
+    "one": "Create cookbook(j)\nSwitch user(z)\nGet initial py)lons\nGet I)nitial Loud Coin"
+  },
+  "go to home": {
+    "one": "H)ome"
+  },
+  "go to forest": {
+    "one": "F)orest"
+  },
+  "go to shop": {
+    "one": "S)hop"
+  },
+  "go to market": {
+    "one": "M)arket"
+  },
+  "go to settings": {
+    "one": "Set)tings"
+  },
+  "go to develop": {
+    "one": "D)evelop"
   },
   "Wooden sword": {
     "one": "Wooden sword",
@@ -74,7 +92,7 @@
     "one": "You are now at a shop.\nIf you want you can buy or sell items here."
   },
   "market desc": {
-    "one": "You are now at a marketplace.\nYou can buy or sell loud coin here."
+    "one": "You are now at a marketplace.\nYou can do trading here for coin and items."
   }, 
   "settings desc": {
     "one": "Settings"
@@ -92,7 +110,7 @@
     "one": "You are preparing for hunt.\nPlease select an item to carry."
   },
   "select upgrade item desc": {
-    "one": "You are gonna upgrade %s.\nPlease select an item to upgrade."
+    "one": "You are gonna upgrade an item.\nPlease select an item to upgrade."
   },
   "you are now buying loud from pylon": {
     "one": "You are now buying loud coin from pylon"
@@ -127,17 +145,17 @@
   "you have sold loud coin successfully from loud/pylon market": {
     "one": "You have sold loud coin successfully from loud/pylon market"
   },
-  "you are now waiting for loud buy order creation": {
-    "one": "You are now waiting for loud buy order creation"
+  "you are now waiting for loud buy request creation": {
+    "one": "You are now waiting for loud buy request creation"
   },
-  "you are now waiting for loud sell order creation": {
-    "one": "You are now waiting for loud sell order creation"
+  "you are now waiting for loud sell request creation": {
+    "one": "You are now waiting for loud sell request creation"
   },
-  "loud buy order was successfully created": {
-    "one": "Loud buy order was successfully created."
+  "loud buy request was successfully created": {
+    "one": "Loud buy request was successfully created."
   },
-  "loud sell order was successfully created": {
-    "one": "Loud sell order was successfully created."
+  "loud sell request was successfully created": {
+    "one": "Loud sell request was successfully created."
   },
   "use for hunting": {
     "one": "Please use it for hunting."
