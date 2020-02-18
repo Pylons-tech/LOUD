@@ -65,7 +65,17 @@ Run game with name "michael" and use rest endpoint for tx send
 ```
 make ARGS="michael -locald -userest" run
 ```
+##### Development channel
+
 Development channel is available and to do automation process on development channel
+
+To do automation process correctly with afti's java, copy artifacts_txutil.sh file which has below content
+```
+java -cp "walletcore_txutil_jar/walletcore_txutil.jar:walletcore_txutil_jar/*" com.pylons.fuzzer.Main $1 $2 $3 $4 $5
+```
+And also copy walletcore_txutil_jar folder in project root scope.
+
+Run below command to run automation.
 ```
 make ARGS="afti -locald -userest -automate" run
 ```
