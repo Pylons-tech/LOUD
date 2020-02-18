@@ -113,7 +113,7 @@ func (user *dbUser) Reload() {
 	}
 	log.Println("start InitPylonAccount")
 	user.UserData.PrivKey = InitPylonAccount(user.UserData.Username)
-	log.Println("finished InitPylonAccount", user.UserData.PrivKey)
+	log.Println("finished InitPylonAccount PrivKey=", user.UserData.PrivKey)
 	// Initial Synchronization
 	log.Println("start initial synchronization from node")
 	SyncFromNode(user)

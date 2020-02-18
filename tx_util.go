@@ -91,8 +91,7 @@ func fileExists(filename string) bool {
 	return !info.IsDir()
 }
 
-func RunAftiCli(args []string) ([]byte, error) { // run pylonscli with specific params : helper function
-	// cmd := exec.Command(path.Join(os.Getenv("GOPATH"), "/bin/artifacts/txutil.sh"), args...)
+func RunSHCmd(args []string) ([]byte, error) {
 	cmd := exec.Command("/bin/sh", args...)
 	res, err := cmd.CombinedOutput()
 	log.Println("Running command ./artifacts_txutil.sh", args)
@@ -141,7 +140,7 @@ func CheckSignatureMatchWithAftiCli(t *testing.T, txhash string, privKey string,
 	}
 
 	t.Log("TX sign with nonce=", nonce)
-	// pylonscli tx sign sample_transaction.json --account-number 2 --sequence 10 --offline --from eugen
+	// sh txutil.sh <privkey> <account number> <sequence> <msg> <op>
 	txSignArgs := []string{
 		"./artifacts_txutil.sh",
 		privKey,
@@ -149,23 +148,19 @@ func CheckSignatureMatchWithAftiCli(t *testing.T, txhash string, privKey string,
 		strconv.FormatUint(nonce, 10),
 		rawTxFile,
 		"SIGNED_TX",
-		// sh txutil.sh <privkey> <account number> <sequence> <msg> <op>
 	}
-	aftiOutput, err := RunAftiCli(txSignArgs)
+	aftiOutput, err := RunSHCmd(txSignArgs)
 	if err != nil {
 		return false, err
 	}
 
-	// TODO check afti's content and the signature returned by txhash here
-	log.Println("RunAftiCli output, err=", string(output), err)
+	log.Println("RunSHCmd output, err=", string(output), err)
 	cliTxOutput, err := pylonSDK.RunPylonsCli([]string{"query", "tx", txhash}, "")
 	if err != nil {
 		log.Println("txhash=", txhash, "txoutput=", string(cliTxOutput), "queryerr=", err)
 	}
 
-	// "signature": "ouyh4zAwNs22FB7I9x3rRhb4RDPT2/UmIPOUc89/Nb9uYslAxX09CTbEf+7K8o3fyDW4QERf7zoPzno1gg6RDg=="
-	// var txQueryResp sdk.TxResponse
-	// err = pylonSDK.GetAminoCdc().UnmarshalJSON(cliTxOutput, &txQueryResp)
+	// use regexp to find signature from cli command response
 	re := regexp.MustCompile(`"signature":.*"(.*)"`)
 	cliTxSign := re.FindSubmatch([]byte(cliTxOutput))
 	aftiTxSign := re.FindSubmatch([]byte(aftiOutput))
@@ -267,8 +262,6 @@ func InitPylonAccount(username string) string {
 			json.Unmarshal(addResult, &addedKeyResInterface)
 			privKey = addedKeyResInterface["privkey"]
 			log.Println("using existing account for", username, "privKey=", privKey)
-
-			// os.Exit(1)
 		}
 	} else {
 		addedKeyResInterface := make(map[string]string)
@@ -280,10 +273,9 @@ func InitPylonAccount(username string) string {
 
 		// Generate a Bip32 HD wallet for the mnemonic and a user supplied password
 		seed := bip39.NewSeed(mnemonic, "11111111")
-		// seed, err := bip39.NewSeedWithErrorChecking(tests.TestMnemonic, "")
-
-		// masterKey, ch := hd.ComputeMastersFromSeed(seed)
+		// TODO: this generation function is right? need to check again for cosmos-sdk's tx sign method
 		masterKey, _ := hd.ComputeMastersFromSeed(seed)
+
 		privKey = fmt.Sprintf("%x", masterKey)
 		addedKeyResInterface["privkey"] = privKey
 
@@ -296,8 +288,6 @@ func InitPylonAccount(username string) string {
 		ioutil.WriteFile(keyFile, addResult, 0644)
 		log.Println("privKey=", privKey)
 		log.Println("created new account for", username, "and saved to ~/.pylons/"+username+".json")
-
-		// os.Exit(1)
 	}
 	addr := pylonSDK.GetAccountAddr(username, GetTestingT())
 	accBytes, err := pylonSDK.RunPylonsCli([]string{"query", "account", addr}, "")
