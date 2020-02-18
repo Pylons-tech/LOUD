@@ -3,9 +3,7 @@ package loud
 import (
 	"errors"
 	"fmt"
-	"io"
 	"log"
-	"os"
 	"strconv"
 	"time"
 
@@ -37,9 +35,7 @@ func CreateCookbook(user User) (string, error) { // This is for afti develop mod
 	ok, err := CheckSignatureMatchWithAftiCli(t, txhash, user.GetPrivKey(), ccbMsg, username, false)
 	if (!ok || err != nil) && automateInput {
 		log.Println("error checking afticli", ok, err)
-		io.WriteString(os.Stdout, fmt.Sprintf("%s👋\n", resetScreen))
-
-		os.Exit(1)
+		somethingWentWrongMsg = "automation test failed, " + err.Error()
 	}
 	user.SetLastTransaction(txhash)
 	log.Println("ended sending transaction")

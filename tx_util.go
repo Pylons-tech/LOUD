@@ -99,6 +99,7 @@ func RunSHCmd(args []string) ([]byte, error) {
 }
 
 func CheckSignatureMatchWithAftiCli(t *testing.T, txhash string, privKey string, msgValue sdk.Msg, signer string, isBech32Addr bool) (bool, error) {
+
 	pylonSDK.WaitAndGetTxData(txhash, 3, t)
 	tmpDir, err := ioutil.TempDir("", "pylons")
 	if err != nil {
@@ -106,6 +107,8 @@ func CheckSignatureMatchWithAftiCli(t *testing.T, txhash string, privKey string,
 	}
 	nonceRootDir := "./"
 	nonceFile := filepath.Join(nonceRootDir, "nonce.json")
+
+	originSigner := signer
 	if !isBech32Addr {
 		signer = pylonSDK.GetAccountAddr(signer, t)
 	}
@@ -154,7 +157,7 @@ func CheckSignatureMatchWithAftiCli(t *testing.T, txhash string, privKey string,
 		return false, err
 	}
 
-	log.Println("RunSHCmd output, err=", string(output), err)
+	log.Println("RunSHCmd output, err=", string(aftiOutput), err)
 	cliTxOutput, err := pylonSDK.RunPylonsCli([]string{"query", "tx", txhash}, "")
 	if err != nil {
 		log.Println("txhash=", txhash, "txoutput=", string(cliTxOutput), "queryerr=", err)
@@ -165,18 +168,17 @@ func CheckSignatureMatchWithAftiCli(t *testing.T, txhash string, privKey string,
 	cliTxSign := re.FindSubmatch([]byte(cliTxOutput))
 	aftiTxSign := re.FindSubmatch([]byte(aftiOutput))
 
-	log.Println("comparing ", string(cliTxSign[1]), "\nand\n", string(aftiTxSign[1]))
-	log.Println("where username=",
-		signer,
-		"privKey=",
-		privKey,
-		"account-number=",
-		strconv.FormatUint(accInfo.GetAccountNumber(), 10),
-		"sequence", strconv.FormatUint(nonce, 10),
-		string(output),
-	)
+	log.Println("comparing afticli and pyloncli ;)", string(cliTxSign[1]), "\nand\n", string(aftiTxSign[1]))
+	log.Println("where")
+	log.Println("msg=", string(output))
+	log.Println("username=", originSigner)
+	log.Println("Bech32Addr=", signer)
+	log.Println("privKey=", privKey)
+	log.Println("account-number=", strconv.FormatUint(accInfo.GetAccountNumber(), 10))
+	log.Println("sequence", strconv.FormatUint(nonce, 10))
+
 	if string(cliTxSign[1]) != string(aftiTxSign[1]) {
-		os.Exit(1)
+		return false, errors.New("comparison different afticli and pyloncli ")
 	}
 
 	pylonSDK.CleanFile(rawTxFile, t)
@@ -247,7 +249,7 @@ func InitPylonAccount(username string) string {
 	if err != nil {
 		if strings.Contains(err.Error(), "no such file or directory") {
 			log.Println("pylonscli is not globally installed on your machine")
-			os.Exit(1)
+			somethingWentWrongMsg = "pylonscli is not globally installed on your machine"
 		} else {
 			log.Println("using existing account for", username)
 			usr, _ := user.Current()

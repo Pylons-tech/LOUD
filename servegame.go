@@ -15,6 +15,9 @@ import (
 	ctypes "github.com/tendermint/tendermint/rpc/core/types"
 )
 
+var terminalCloseSignal chan os.Signal = make(chan os.Signal, 2)
+var somethingWentWrongMsg string = ""
+
 func SetupLoggingFile(f *os.File) {
 	log.Println("Starting to save log into file")
 	log.SetOutput(f)
@@ -47,12 +50,15 @@ func SetupScreenAndEvents(world World, logFile *os.File) {
 	if automateInput {
 		screen.SetScreenStatus(RESULT_SWITCH_USER)
 		time.AfterFunc(2*time.Second, func() {
+
+		automateloop:
 			for {
 				log.Println("<-automateTick")
 				switch screen.GetScreenStatus() {
 				case RESULT_CREATE_COOKBOOK:
 					if screen.GetTxFailReason() != "" {
-						os.Exit(1)
+						somethingWentWrongMsg = "create cookbook failed, " + screen.GetTxFailReason()
+						break automateloop
 					}
 					screen.HandleInputKey(termbox.Event{
 						Ch: 122, // "z" 122 Switch user
@@ -74,7 +80,6 @@ func SetupScreenAndEvents(world World, logFile *os.File) {
 	}
 
 	// Setup terminal close handler
-	terminalCloseSignal := make(chan os.Signal, 2)
 	signal.Notify(terminalCloseSignal, os.Interrupt, syscall.SIGTERM)
 
 	err := termbox.Init()
@@ -128,7 +133,7 @@ eventloop:
 			screen.UpdateBlockHeight(ds.SyncInfo.LatestBlockHeight)
 		case <-terminalCloseSignal:
 			screen.Reset()
-			os.Exit(0)
+			break eventloop
 		}
 	}
 }

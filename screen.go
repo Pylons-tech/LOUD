@@ -682,6 +682,18 @@ func (screen *GameScreen) FreshRender() {
 }
 
 func (screen *GameScreen) Render() {
+	if len(somethingWentWrongMsg) > 0 {
+		clear := cursor.ClearEntireScreen()
+		dead := localize("Something went wrong, please close using Esc key and see loud.log")
+		move := cursor.MoveTo(screen.screenSize.Height/2, screen.screenSize.Width/2-utf8.RuneCountInString(dead)/2)
+		io.WriteString(os.Stdout, clear+move+dead)
+
+		detailedErrorMsg := localize("detailed error: " + somethingWentWrongMsg)
+		move = cursor.MoveTo(screen.screenSize.Height/2+3, screen.screenSize.Width/2-utf8.RuneCountInString(dead)/2)
+		io.WriteString(os.Stdout, move+detailedErrorMsg)
+		screen.refreshed = false
+		return
+	}
 	if screen.scrStatus == "" {
 		screen.scrStatus = SHOW_LOCATION
 	}

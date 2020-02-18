@@ -79,6 +79,25 @@ Run below command to run automation.
 ```
 make ARGS="afti -locald -userest -automate" run
 ```
+##### For Afti
+
+Once you see "something went wrong" message on loud app, you can just see loud.log and search for "comparing afticli and pyloncli ;)" and you will be able to see relevant logs on before and after.
+It looks like below.
+
+```
+2020/02/18 comparing afticli and pyloncli ;) OTuhvokIB+vfqNxx5AAHXbD+xmlq/l7HiOtoJ+805YlkHIr+bnNWlCTYtxMf06w6isk+OGMgLL9MjIx64EVprA== 
+and
+ ouhd/DfYAgsXycksZz+bRXFsToWqOPe6XTC6ph7smEp/+CjummjBKzVQecIEJSMkBAvu+5kbmroMXqw51Qb73w==
+2020/02/18 where
+2020/02/18 19:47:08 msg= {"type":"pylons/CreateCookbook","value":{"CookbookID":"1582019224","Name":"tst_cookbook_name","Description":"addghjkllsdfdggdgjkkk","Version":"1.0.0","Developer":"asdfasdfasdf","SupportEmail":"a@example.com","Level":"0","Sender":"cosmos1tdfk4ec383nftjavzdtr5mg5uxhjgzzmkvp4jv","CostPerBlock":"5"}}
+2020/02/18 username= afti112
+2020/02/18 Bech32Addr= cosmos1tdfk4ec383nftjavzdtr5mg5uxhjgzzmkvp4jv
+2020/02/18 privKey= a1e1247936bced4d713fa9ff18edde4dc381ef031c77aa049352a6e1ec1abb72
+2020/02/18 account-number= 69
+2020/02/18 sequence 13
+```
+You can get message to be signed, sequence, account number, private key, bech32addr, username on pyloncli, and tx sign result.
+
 ### Fresh Remote node test
 Build game
 ```
