@@ -72,12 +72,17 @@ type UserData struct {
 	Username    string `json:""`
 	Location    UserLocation
 	Items       []Item
+	PrivKey     string
 }
 
 type dbUser struct {
 	UserData
 	world           *dbWorld
 	lastTransaction string
+}
+
+func (user *dbUser) GetPrivKey() string {
+	return user.UserData.PrivKey
 }
 
 func (user *dbUser) GetLocation() UserLocation {
@@ -107,8 +112,8 @@ func (user *dbUser) Reload() {
 		log.Printf("Loaded user %v", user.UserData)
 	}
 	log.Println("start InitPylonAccount")
-	InitPylonAccount(user.UserData.Username)
-	log.Println("finished InitPylonAccount")
+	user.UserData.PrivKey = InitPylonAccount(user.UserData.Username)
+	log.Println("finished InitPylonAccount", user.UserData.PrivKey)
 	// Initial Synchronization
 	log.Println("start initial synchronization from node")
 	SyncFromNode(user)

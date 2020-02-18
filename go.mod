@@ -3,6 +3,8 @@ module github.com/Pylons-tech/LOUD
 go 1.13
 
 require (
+	github.com/FactomProject/basen v0.0.0-20150613233007-fe3947df716e // indirect
+	github.com/FactomProject/btcutilecc v0.0.0-20130527213604-d3a63a5752ec // indirect
 	github.com/Pylons-tech/pylons v0.0.0-20200207011603-c44ee6fe40a2
 	github.com/ahmetb/go-cursor v0.0.0-20131010032410-8136607ea412
 	github.com/anmitsu/go-shlex v0.0.0-20161002113705-648efa622239
@@ -34,6 +36,8 @@ require (
 	github.com/tendermint/iavl v0.12.2 // indirect
 	github.com/tendermint/tendermint v0.31.5
 	github.com/tendermint/tm-db v0.2.0 // indirect
+	github.com/tyler-smith/go-bip32 v0.0.0-20170922074101-2c9cfd177564
+	github.com/tyler-smith/go-bip39 v1.0.2
 	github.com/vmihailenco/msgpack v0.0.0-20190804092921-cd92a145e6d2
 	github.com/vmihailenco/tagparser v0.1.1
 	github.com/wayneashleyberry/terminal-dimensions v1.0.0

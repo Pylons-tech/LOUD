@@ -11,6 +11,8 @@ vendor/
 *.tgz
 *.log
 
+artifacts_txutil.sh
+walletcore_txutil_jar/
 test/nonce.json
 nonce.json
 
