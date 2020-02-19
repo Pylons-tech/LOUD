@@ -2,6 +2,7 @@ package loud
 
 import (
 	"bytes"
+	"encoding/hex"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -23,6 +24,7 @@ import (
 	"github.com/Pylons-tech/pylons/x/pylons/types"
 	"github.com/cosmos/cosmos-sdk/crypto/keys/hd"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/tendermint/tendermint/crypto/secp256k1"
 	"github.com/tyler-smith/go-bip39"
 )
 
@@ -270,16 +272,26 @@ func InitPylonAccount(username string) string {
 		json.Unmarshal(addResult, &addedKeyResInterface)
 
 		// Generate a mnemonic for memorization or user-friendly seeds
-		entropy, _ := bip39.EntropyFromMnemonic(addedKeyResInterface["mnemonic"])
-		mnemonic, _ := bip39.NewMnemonic(entropy)
+		mnemonic := addedKeyResInterface["mnemonic"]
+		log.Println("using mnemonic: ", mnemonic)
 
 		// Generate a Bip32 HD wallet for the mnemonic and a user supplied password
-		seed := bip39.NewSeed(mnemonic, "11111111")
-		// TODO: this generation function is right? need to check again for cosmos-sdk's tx sign method
-		masterKey, _ := hd.ComputeMastersFromSeed(seed)
+		seed, err := bip39.NewSeedWithErrorChecking(mnemonic, "")
+		if err != nil {
+			os.Exit(1)
+		}
 
-		privKey = fmt.Sprintf("%x", masterKey)
-		addedKeyResInterface["privkey"] = privKey
+		// This priv get code came from dbKeybase.CreateMnemonic function of cosmos-sdk
+		masterPriv, ch := hd.ComputeMastersFromSeed(seed)
+		derivedPriv, err := hd.DerivePrivateKeyForPath(masterPriv, ch, hd.NewFundraiserParams(0, 0).String())
+		if err != nil {
+			os.Exit(1)
+		}
+		priv := secp256k1.PrivKeySecp256k1(derivedPriv)
+
+		privHexString := hex.EncodeToString(priv[:])
+		addedKeyResInterface["privkey"] = privHexString
+		addedKeyResInterface["addressfrmPrivKey"] = sdk.AccAddress(priv.PubKey().Address().Bytes()).String()
 
 		addResult, err = json.Marshal(addedKeyResInterface)
 

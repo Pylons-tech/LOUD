@@ -1,0 +1,26 @@
+{
+  "type": "auth/StdTx",
+  "value": {
+    "msg": [
+      {
+        "type":"pylons/CreateCookbook",
+        "value":{
+          "CostPerBlock":"5",
+          "Description":"addghjkllsdfdggdgjkkk",
+          "Developer":"asdfasdfasdf",
+          "Level":"0",
+          "Name":"tst_cookbook_name",
+          "Sender":"cosmos16yvnng8ehf67h4d0h4vpxs0tqygsfxkspvldtd",
+          "SupportEmail":"a@example.com",
+          "Version":"1.0.0"
+        }
+      }  
+    ],
+    "fee": {
+      "amount": null,
+      "gas": "200000"
+    },
+    "signatures": null,
+    "memo": ""
+  }
+}

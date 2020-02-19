@@ -1,0 +1,34 @@
+{
+  "type": "auth/StdTx",
+  "value": {
+    "msg": [
+      {
+        "type": "pylons/CreateCookbook",
+        "value": {
+          "Name": "tst_cookbook_name",
+          "Description": "addghjkllsdfdggdgjkkk",
+          "Version": "1.0.0",
+          "Developer": "asdfasdfasdf",
+          "SupportEmail": "a@example.com",
+          "Level": "0",
+          "Sender": "cosmos1d75xzk2wqx8xdt3kcnxm2gqyw3rp6j59ys4yc5",
+          "CostPerBlock": "5"
+        }
+      }
+    ],
+    "fee": {
+      "amount": null,
+      "gas": "200000"
+    },
+    "signatures": [
+      {
+        "pub_key": {
+          "type": "tendermint/PubKeySecp256k1",
+          "value": "Aj0AC3ISSifRuYjyDx407IV9+KyRbp3mdtm1+hgzXjrR"
+        },
+        "signature": "FUCyB4MFQBxi98+xK28Qba1vfBWTqA9Ygf/3gXfOhh1POg0HTUvLt5IwsXMLX700qisJXqAHHn4ZzyvgKjg5CA=="
+      }
+    ],
+    "memo": ""
+  }
+}

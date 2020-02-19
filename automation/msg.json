@@ -1,0 +1,13 @@
+{
+    "type":"pylons/CreateCookbook",
+    "value":{
+      "Name":"tst_cookbook_name",
+      "Description":"addghjkllsdfdggdgjkkk",
+      "Version":"1.0.0",
+      "Developer":"asdfasdfasdf",
+      "SupportEmail":"a@example.com",
+      "Level":"0",
+      "Sender":"cosmos16yvnng8ehf67h4d0h4vpxs0tqygsfxkspvldtd",
+      "CostPerBlock":"5"
+    }
+  }  
