@@ -2,6 +2,7 @@ package loud
 
 import (
 	"bytes"
+	"encoding/hex"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -9,8 +10,11 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"os/exec"
 	"os/user"
 	"path/filepath"
+	"regexp"
+	"strconv"
 	"strings"
 
 	testing "github.com/Pylons-tech/pylons/cmd/fixtures_test/evtesting"
@@ -18,7 +22,10 @@ import (
 	"github.com/Pylons-tech/pylons/x/pylons/handlers"
 	"github.com/Pylons-tech/pylons/x/pylons/msgs"
 	"github.com/Pylons-tech/pylons/x/pylons/types"
+	"github.com/cosmos/cosmos-sdk/crypto/keys/hd"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/tendermint/tendermint/crypto/secp256k1"
+	"github.com/tyler-smith/go-bip39"
 )
 
 var RcpIDs map[string]string = map[string]string{
@@ -78,6 +85,105 @@ func init() {
 	log.Println("initing pylonSDK to customNode", customNode, "useRestTx=", useRestTx)
 }
 
+func fileExists(filename string) bool {
+	info, err := os.Stat(filename)
+	if os.IsNotExist(err) {
+		return false
+	}
+	return !info.IsDir()
+}
+
+func RunSHCmd(args []string) ([]byte, error) {
+	cmd := exec.Command("/bin/sh", args...)
+	res, err := cmd.CombinedOutput()
+	log.Println("Running command ./artifacts_txutil.sh", args)
+	return res, err
+}
+
+func CheckSignatureMatchWithAftiCli(t *testing.T, txhash string, privKey string, msgValue sdk.Msg, signer string, isBech32Addr bool) (bool, error) {
+
+	pylonSDK.WaitAndGetTxData(txhash, 3, t)
+	tmpDir, err := ioutil.TempDir("", "pylons")
+	if err != nil {
+		panic(err.Error())
+	}
+	nonceRootDir := "./"
+	nonceFile := filepath.Join(nonceRootDir, "nonce.json")
+
+	originSigner := signer
+	if !isBech32Addr {
+		signer = pylonSDK.GetAccountAddr(signer, t)
+	}
+
+	accInfo := pylonSDK.GetAccountInfoFromAddr(signer, t)
+	nonce := accInfo.Sequence
+
+	nonceMap := make(map[string]uint64)
+
+	if fileExists(nonceFile) {
+		nonceBytes := pylonSDK.ReadFile(nonceFile, t)
+		err := json.Unmarshal(nonceBytes, &nonceMap)
+		if err != nil {
+			return false, err
+		}
+		nonce = nonceMap[signer] - 1
+	} else {
+		return false, errors.New("nonce file does not exist :(")
+	}
+
+	output, err := pylonSDK.GetAminoCdc().MarshalJSON(msgValue)
+	t.MustNil(err)
+
+	rawTxFile := filepath.Join(tmpDir, "raw_tx_"+strconv.FormatUint(nonce, 10)+".json")
+	ioutil.WriteFile(rawTxFile, output, 0644)
+	if err != nil {
+		return false, err
+	}
+
+	t.Log("TX sign with nonce=", nonce)
+	// sh txutil.sh <op> <privkey> <account number> <sequence> <msg>
+	txSignArgs := []string{
+		"./artifacts_txutil.sh",
+		"SIGNED_TX",
+		privKey,
+		strconv.FormatUint(accInfo.GetAccountNumber(), 10),
+		strconv.FormatUint(nonce, 10),
+		rawTxFile,
+	}
+	aftiOutput, err := RunSHCmd(txSignArgs)
+	if err != nil {
+		return false, err
+	}
+
+	log.Println("RunSHCmd output, err=", string(aftiOutput), err)
+	cliTxOutput, err := pylonSDK.RunPylonsCli([]string{"query", "tx", txhash}, "")
+	if err != nil {
+		log.Println("txhash=", txhash, "txoutput=", string(cliTxOutput), "queryerr=", err)
+	}
+
+	// use regexp to find signature from cli command response
+	re := regexp.MustCompile(`"signature":.*"(.*)"`)
+	cliTxSign := re.FindSubmatch([]byte(cliTxOutput))
+	aftiTxSign := re.FindSubmatch([]byte(aftiOutput))
+
+	log.Println("comparing afticli and pyloncli ;)", string(cliTxSign[1]), "\nand\n", string(aftiTxSign[1]))
+	log.Println("where")
+	log.Println("msg=", string(output))
+	log.Println("username=", originSigner)
+	log.Println("Bech32Addr=", signer)
+	log.Println("privKey=", privKey)
+	log.Println("account-number=", strconv.FormatUint(accInfo.GetAccountNumber(), 10))
+	log.Println("sequence", strconv.FormatUint(nonce, 10))
+
+	if string(cliTxSign[1]) != string(aftiTxSign[1]) {
+		return false, errors.New("comparison different afticli and pyloncli ")
+	}
+
+	pylonSDK.CleanFile(rawTxFile, t)
+
+	return true, nil
+}
+
 func GetInitialPylons(username string) (string, error) {
 	addr := pylonSDK.GetAccountAddr(username, GetTestingT())
 	sdkAddr, err := sdk.AccAddressFromBech32(addr)
@@ -130,7 +236,8 @@ func GetInitialPylons(username string) (string, error) {
 	return result["txhash"], nil
 }
 
-func InitPylonAccount(username string) {
+func InitPylonAccount(username string) string {
+	var privKey string
 	// "pylonscli keys add ${username}"
 	addResult, err := pylonSDK.RunPylonsCli([]string{
 		"keys", "add", username,
@@ -140,16 +247,56 @@ func InitPylonAccount(username string) {
 	if err != nil {
 		if strings.Contains(err.Error(), "no such file or directory") {
 			log.Println("pylonscli is not globally installed on your machine")
-			os.Exit(1)
+			somethingWentWrongMsg = "pylonscli is not globally installed on your machine"
 		} else {
 			log.Println("using existing account for", username)
+			usr, _ := user.Current()
+			pylonsDir := filepath.Join(usr.HomeDir, ".pylons")
+			os.MkdirAll(pylonsDir, os.ModePerm)
+			keyFile := filepath.Join(pylonsDir, username+".json")
+			addResult, err = ioutil.ReadFile(keyFile)
+			if err != nil {
+				log.Fatal("Couldn't get private key from ", username, ".json")
+			}
+			addedKeyResInterface := make(map[string]string)
+			json.Unmarshal(addResult, &addedKeyResInterface)
+			privKey = addedKeyResInterface["privkey"]
+			log.Println("using existing account for", username, "privKey=", privKey)
 		}
 	} else {
+		addedKeyResInterface := make(map[string]string)
+		json.Unmarshal(addResult, &addedKeyResInterface)
+
+		// Generate a mnemonic for memorization or user-friendly seeds
+		mnemonic := addedKeyResInterface["mnemonic"]
+		log.Println("using mnemonic: ", mnemonic)
+
+		// Generate a Bip32 HD wallet for the mnemonic and a user supplied password
+		seed, err := bip39.NewSeedWithErrorChecking(mnemonic, "")
+		if err != nil {
+			os.Exit(1)
+		}
+
+		// This priv get code came from dbKeybase.CreateMnemonic function of cosmos-sdk
+		masterPriv, ch := hd.ComputeMastersFromSeed(seed)
+		derivedPriv, err := hd.DerivePrivateKeyForPath(masterPriv, ch, hd.NewFundraiserParams(0, 0).String())
+		if err != nil {
+			os.Exit(1)
+		}
+		priv := secp256k1.PrivKeySecp256k1(derivedPriv)
+
+		privKey = hex.EncodeToString(priv[:])
+		addedKeyResInterface["privkey"] = privKey
+		addedKeyResInterface["addressfrmPrivKey"] = sdk.AccAddress(priv.PubKey().Address().Bytes()).String()
+
+		addResult, err = json.Marshal(addedKeyResInterface)
+
 		usr, _ := user.Current()
 		pylonsDir := filepath.Join(usr.HomeDir, ".pylons")
 		os.MkdirAll(pylonsDir, os.ModePerm)
 		keyFile := filepath.Join(pylonsDir, username+".json")
 		ioutil.WriteFile(keyFile, addResult, 0644)
+		log.Println("privKey=", privKey)
 		log.Println("created new account for", username, "and saved to ~/.pylons/"+username+".json")
 	}
 	addr := pylonSDK.GetAccountAddr(username, GetTestingT())
@@ -178,6 +325,7 @@ func InitPylonAccount(username string) {
 	nonceFile := filepath.Join(nonceRootDir, "nonce.json")
 	err = os.Remove(nonceFile)
 	log.Println("remove nonce file result", err)
+	return privKey
 }
 
 func LogFullTxResultByHash(txhash string) {

@@ -32,6 +32,11 @@ func CreateCookbook(user User) (string, error) { // This is for afti develop mod
 		sdkAddr,                              // cbType.Sender,
 	)
 	txhash := pylonSDK.TestTxWithMsgWithNonce(t, ccbMsg, username, false)
+	ok, err := CheckSignatureMatchWithAftiCli(t, txhash, user.GetPrivKey(), ccbMsg, username, false)
+	if (!ok || err != nil) && automateInput {
+		log.Println("error checking afticli", ok, err)
+		somethingWentWrongMsg = "automation test failed, " + err.Error()
+	}
 	user.SetLastTransaction(txhash)
 	log.Println("ended sending transaction")
 	return txhash, nil

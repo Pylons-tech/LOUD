@@ -22,6 +22,7 @@ type User interface {
 	InventoryItems() []Item
 	UpgradableItems() []Item
 	GetLocation() UserLocation
+	GetPrivKey() string
 	SetLocation(UserLocation)
 	GetLastTransaction() string
 	SetLastTransaction(string)

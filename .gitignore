@@ -11,6 +11,11 @@ vendor/
 *.tgz
 *.log
 
+# java file which is copied to run automation test
+artifacts_txutil.sh
+jar/
+
+# nonce files which is generated when doing transactions
 test/nonce.json
 nonce.json
 
