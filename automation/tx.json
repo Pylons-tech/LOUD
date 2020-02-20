@@ -5,14 +5,15 @@
       {
         "type":"pylons/CreateCookbook",
         "value":{
-          "CostPerBlock":"5",
-          "Description":"addghjkllsdfdggdgjkkk",
-          "Developer":"asdfasdfasdf",
-          "Level":"0",
+          "CookbookID":"1582166381",
           "Name":"tst_cookbook_name",
-          "Sender":"cosmos16yvnng8ehf67h4d0h4vpxs0tqygsfxkspvldtd",
+          "Description":"addghjkllsdfdggdgjkkk",
+          "Version":"1.0.0",
+          "Developer":"asdfasdfasdf",
           "SupportEmail":"a@example.com",
-          "Version":"1.0.0"
+          "Level":"0",
+          "Sender":"cosmos1n57x7ej944sccavqsu8eyvqysc8ymjuzdszjh9",
+          "CostPerBlock":"5"
         }
       }  
     ],

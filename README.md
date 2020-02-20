@@ -71,9 +71,9 @@ Development channel is available and to do automation process on development cha
 
 To do automation process correctly with afti's java, copy artifacts_txutil.sh file which has below content
 ```
-java -cp "walletcore_txutil_jar/walletcore_txutil.jar:walletcore_txutil_jar/*" com.pylons.fuzzer.Main $1 $2 $3 $4 $5
+java -cp "jar/txutil.jar:jar/*" com.pylons.txutil.Main $1 $2 $3 $4 $5
 ```
-And also copy walletcore_txutil_jar folder in project root scope.
+And also copy `jar` folder in project root scope.
 
 Run below command to run automation.
 ```

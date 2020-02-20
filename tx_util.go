@@ -126,14 +126,10 @@ func CheckSignatureMatchWithAftiCli(t *testing.T, txhash string, privKey string,
 		if err != nil {
 			return false, err
 		}
-		nonce = nonceMap[signer]
+		nonce = nonceMap[signer] - 1
 	} else {
-		nonce = accInfo.GetSequence()
+		return false, errors.New("nonce file does not exist :(")
 	}
-	nonceMap[signer] = nonce
-	nonceOutput, err := json.Marshal(nonceMap)
-	t.MustNil(err)
-	ioutil.WriteFile(nonceFile, nonceOutput, 0644)
 
 	output, err := pylonSDK.GetAminoCdc().MarshalJSON(msgValue)
 	t.MustNil(err)
@@ -145,14 +141,14 @@ func CheckSignatureMatchWithAftiCli(t *testing.T, txhash string, privKey string,
 	}
 
 	t.Log("TX sign with nonce=", nonce)
-	// sh txutil.sh <privkey> <account number> <sequence> <msg> <op>
+	// sh txutil.sh <op> <privkey> <account number> <sequence> <msg>
 	txSignArgs := []string{
 		"./artifacts_txutil.sh",
+		"SIGNED_TX",
 		privKey,
 		strconv.FormatUint(accInfo.GetAccountNumber(), 10),
 		strconv.FormatUint(nonce, 10),
 		rawTxFile,
-		"SIGNED_TX",
 	}
 	aftiOutput, err := RunSHCmd(txSignArgs)
 	if err != nil {
@@ -289,8 +285,8 @@ func InitPylonAccount(username string) string {
 		}
 		priv := secp256k1.PrivKeySecp256k1(derivedPriv)
 
-		privHexString := hex.EncodeToString(priv[:])
-		addedKeyResInterface["privkey"] = privHexString
+		privKey = hex.EncodeToString(priv[:])
+		addedKeyResInterface["privkey"] = privKey
 		addedKeyResInterface["addressfrmPrivKey"] = sdk.AccAddress(priv.PubKey().Address().Bytes()).String()
 
 		addResult, err = json.Marshal(addedKeyResInterface)
