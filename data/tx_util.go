@@ -96,7 +96,7 @@ func fileExists(filename string) bool {
 func RunSHCmd(args []string) ([]byte, error) {
 	cmd := exec.Command("/bin/sh", args...)
 	res, err := cmd.CombinedOutput()
-	log.Println("Running command ./artifacts_txutil.sh", args)
+	log.Println("Running command /bin/sh", args)
 	return res, err
 }
 
@@ -187,7 +187,7 @@ func CheckSignatureMatchWithAftiCli(t *testing.T, txhash string, privKey string,
 func GetInitialPylons(username string) (string, error) {
 	addr := pylonSDK.GetAccountAddr(username, GetTestingT())
 	sdkAddr, err := sdk.AccAddressFromBech32(addr)
-	log.Println("sdkAddr, err := sdk.AccAddressFromBech32(addr)", sdkAddr, err)
+	log.Println("GetInitialPylons => sdkAddr, err", sdkAddr, err)
 
 	// this code is making the account to useable by doing get-pylons
 	txModel, err := pylonSDK.GenTxWithMsg([]sdk.Msg{msgs.NewMsgGetPylons(types.PremiumTier.Fee, sdkAddr)})
@@ -281,7 +281,7 @@ func InitPylonAccount(username string) string {
 			addedKeyResInterface := make(map[string]string)
 			json.Unmarshal(addResult, &addedKeyResInterface)
 			privKey = addedKeyResInterface["privkey"]
-			log.Println("using existing account for", username, "privKey=", privKey)
+			log.Println("privKey=", privKey)
 		}
 	} else {
 		addedKeyResInterface := make(map[string]string)
@@ -291,7 +291,7 @@ func InitPylonAccount(username string) string {
 		mnemonic := addedKeyResInterface["mnemonic"]
 		log.Println("using mnemonic: ", mnemonic)
 
-		privKey, _ = ComputePrivKeyFromMnemonic(mnemonic)
+		privKey, _ = ComputePrivKeyFromMnemonic(mnemonic) // get privKey and cosmosAddr
 
 		addResult, err = json.Marshal(addedKeyResInterface)
 

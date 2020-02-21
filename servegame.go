@@ -41,8 +41,7 @@ func SetupScreenAndEvents(world data.World, logFile *os.File) {
 
 	screenInstance := screen.NewScreen(world, user)
 
-	logMessage := fmt.Sprintf("setting up screen and events at %s", time.Now().UTC().Format(time.RFC3339))
-	log.Println(logMessage)
+	log.Println("setting up screen and events")
 
 	tick := time.Tick(50 * time.Millisecond)
 	daemonStatusRefreshTick := time.Tick(10 * time.Second)
