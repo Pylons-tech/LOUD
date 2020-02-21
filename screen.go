@@ -54,6 +54,7 @@ type GameScreen struct {
 	loudEnterValue         string
 	inputText              string
 	refreshingDaemonStatus bool
+	syncingData            bool
 	blockHeight            int64
 	txFailReason           string
 	txResult               []byte
@@ -86,7 +87,15 @@ func (screen *GameScreen) SwitchUser(newUser User) {
 }
 
 func (screen *GameScreen) Resync() {
-	SyncFromNode(screen.user)
+	screen.syncingData = true
+	screen.FreshRender()
+	go func() {
+		log.Println("start syncing from node")
+		SyncFromNode(screen.user)
+		log.Println("end syncing from node")
+		screen.syncingData = false
+		screen.FreshRender()
+	}()
 }
 
 func (screen *GameScreen) GetTxFailReason() string {

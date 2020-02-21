@@ -10,7 +10,17 @@ import (
 	"github.com/nsf/termbox-go"
 )
 
-func (screen *GameScreen) HandleInputKeyLocationSwitch(input termbox.Event) {
+func (screen *GameScreen) HandleInputKeyResync(input termbox.Event) bool {
+	Key := strings.ToUpper(string(input.Ch))
+	switch Key {
+	case "E": // REFRESH
+		screen.Resync()
+		return true
+	}
+	return false
+}
+
+func (screen *GameScreen) HandleInputKeyLocationSwitch(input termbox.Event) bool {
 	Key := strings.ToUpper(string(input.Ch))
 
 	tarLctMap := map[string]UserLocation{
@@ -25,6 +35,9 @@ func (screen *GameScreen) HandleInputKeyLocationSwitch(input termbox.Event) {
 	if newStus, ok := tarLctMap[Key]; ok {
 		screen.user.SetLocation(newStus)
 		screen.refreshed = false
+		return true
+	} else {
+		return false
 	}
 }
 func (screen *GameScreen) HandleInputKeyMarketEntryPoint(input termbox.Event) {
@@ -40,8 +53,8 @@ func (screen *GameScreen) HandleInputKeyMarketEntryPoint(input termbox.Event) {
 	if newStus, ok := tarStusMap[Key]; ok {
 		screen.scrStatus = newStus
 		screen.refreshed = false
-	} else {
-		screen.HandleInputKeyLocationSwitch(input)
+	} else if !screen.HandleInputKeyLocationSwitch(input) {
+		screen.HandleInputKeyResync(input)
 	}
 }
 
@@ -56,8 +69,8 @@ func (screen *GameScreen) HandleInputKeySettingsEntryPoint(input termbox.Event) 
 	if newLang, ok := tarLangMap[Key]; ok {
 		gameLanguage = newLang
 		screen.refreshed = false
-	} else {
-		screen.HandleInputKeyLocationSwitch(input)
+	} else if !screen.HandleInputKeyLocationSwitch(input) {
+		screen.HandleInputKeyResync(input)
 	}
 }
 
@@ -71,8 +84,8 @@ func (screen *GameScreen) HandleInputKeyForestEntryPoint(input termbox.Event) {
 	if newStus, ok := tarStusMap[Key]; ok {
 		screen.scrStatus = newStus
 		screen.refreshed = false
-	} else {
-		screen.HandleInputKeyLocationSwitch(input)
+	} else if !screen.HandleInputKeyLocationSwitch(input) {
+		screen.HandleInputKeyResync(input)
 	}
 }
 
@@ -88,8 +101,8 @@ func (screen *GameScreen) HandleInputKeyShopEntryPoint(input termbox.Event) {
 	if newStus, ok := tarStusMap[Key]; ok {
 		screen.scrStatus = newStus
 		screen.refreshed = false
-	} else {
-		screen.HandleInputKeyLocationSwitch(input)
+	} else if !screen.HandleInputKeyLocationSwitch(input) {
+		screen.HandleInputKeyResync(input)
 	}
 }
 
@@ -365,6 +378,8 @@ func (screen *GameScreen) HandleInputKey(input termbox.Event) {
 				}
 				screen.refreshed = false
 			}
+		case "E": // REFRESH
+			screen.Resync()
 		case "O": // GO ON
 			screen.MoveToNextStep()
 		case "Y": // get initial pylons
@@ -387,23 +402,7 @@ func (screen *GameScreen) HandleInputKey(input termbox.Event) {
 			fallthrough
 		case "I":
 			fallthrough
-		case "1": // SELECT 1st item
-			fallthrough
-		case "2": // SELECT 2nd item
-			fallthrough
-		case "3": // SELECT 3rd item
-			fallthrough
-		case "4": // SELECT 4th item
-			fallthrough
-		case "5": // SELECT 5rd item
-			fallthrough
-		case "6": // SELECT 6rd item
-			fallthrough
-		case "7": // SELECT 7rd item
-			fallthrough
-		case "8": // SELECT 8rd item
-			fallthrough
-		case "9": // SELECT 9rd item
+		case "1", "2", "3", "4", "5", "6", "7", "8", "9": // Numbers
 			screen.refreshed = false
 			switch screen.scrStatus {
 			case SELECT_BUY_ITEM:
