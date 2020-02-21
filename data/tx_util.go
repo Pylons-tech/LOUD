@@ -236,6 +236,26 @@ func GetInitialPylons(username string) (string, error) {
 	return result["txhash"], nil
 }
 
+func ComputePrivKeyFromMnemonic(mnemonic string) (string, string) {
+	// Generate a Bip32 HD wallet for the mnemonic and a user supplied password
+	seed, err := bip39.NewSeedWithErrorChecking(mnemonic, "")
+	if err != nil {
+		os.Exit(1)
+	}
+
+	// This priv get code came from dbKeybase.CreateMnemonic function of cosmos-sdk
+	masterPriv, ch := hd.ComputeMastersFromSeed(seed)
+	derivedPriv, err := hd.DerivePrivateKeyForPath(masterPriv, ch, hd.NewFundraiserParams(0, 0).String())
+	if err != nil {
+		os.Exit(1)
+	}
+	priv := secp256k1.PrivKeySecp256k1(derivedPriv)
+
+	privKeyHex := hex.EncodeToString(priv[:])
+	cosmosAddr := sdk.AccAddress(priv.PubKey().Address().Bytes()).String()
+	return privKeyHex, cosmosAddr
+}
+
 func InitPylonAccount(username string) string {
 	var privKey string
 	// "pylonscli keys add ${username}"
@@ -271,23 +291,7 @@ func InitPylonAccount(username string) string {
 		mnemonic := addedKeyResInterface["mnemonic"]
 		log.Println("using mnemonic: ", mnemonic)
 
-		// Generate a Bip32 HD wallet for the mnemonic and a user supplied password
-		seed, err := bip39.NewSeedWithErrorChecking(mnemonic, "")
-		if err != nil {
-			os.Exit(1)
-		}
-
-		// This priv get code came from dbKeybase.CreateMnemonic function of cosmos-sdk
-		masterPriv, ch := hd.ComputeMastersFromSeed(seed)
-		derivedPriv, err := hd.DerivePrivateKeyForPath(masterPriv, ch, hd.NewFundraiserParams(0, 0).String())
-		if err != nil {
-			os.Exit(1)
-		}
-		priv := secp256k1.PrivKeySecp256k1(derivedPriv)
-
-		privKey = hex.EncodeToString(priv[:])
-		addedKeyResInterface["privkey"] = privKey
-		addedKeyResInterface["addressfrmPrivKey"] = sdk.AccAddress(priv.PubKey().Address().Bytes()).String()
+		privKey, _ = ComputePrivKeyFromMnemonic(mnemonic)
 
 		addResult, err = json.Marshal(addedKeyResInterface)
 
