@@ -12,7 +12,7 @@ const (
 	COPPER_SWORD        = "Copper sword"
 )
 
-var shopItems = []Item{
+var ShopItems = []Item{
 	Item{
 		ID:    "001",
 		Name:  WOODEN_SWORD,
@@ -27,7 +27,7 @@ var shopItems = []Item{
 	},
 }
 
-var worldItems = []Item{
+var WorldItems = []Item{
 	Item{
 		Name:  WOODEN_SWORD,
 		Level: 1,

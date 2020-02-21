@@ -105,10 +105,10 @@ func SyncFromNode(user User) {
 	sort.SliceStable(nSellTradeRequests, func(i, j int) bool {
 		return nSellTradeRequests[i].Price > nSellTradeRequests[j].Price
 	})
-	buyTradeRequests = nBuyTradeRequests
-	sellTradeRequests = nSellTradeRequests
-	swordBuyTradeRequests = nBuySwordTradeRequests
-	swordSellTradeRequests = nSellSwordTradeRequests
-	log.Println("SyncFromNode buyTradeRequests=", buyTradeRequests)
-	log.Println("SyncFromNode sellTradeRequests=", sellTradeRequests)
+	BuyTradeRequests = nBuyTradeRequests
+	SellTradeRequests = nSellTradeRequests
+	SwordBuyTradeRequests = nBuySwordTradeRequests
+	SwordSellTradeRequests = nSellSwordTradeRequests
+	log.Println("SyncFromNode BuyTradeRequests=", BuyTradeRequests)
+	log.Println("SyncFromNode SellTradeRequests=", SellTradeRequests)
 }

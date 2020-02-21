@@ -7,15 +7,15 @@ import (
 	"golang.org/x/text/language"
 )
 
-var gameLanguage string = "en"
+var GameLanguage string = "en"
 
-func localize(key string) string {
+func Localize(key string) string {
 	bundle := i18n.NewBundle(language.English)
 	bundle.RegisterUnmarshalFunc("json", json.Unmarshal)
 	bundle.MustLoadMessageFile("locale/en.json")
 	bundle.MustLoadMessageFile("locale/es.json")
 
-	loc := i18n.NewLocalizer(bundle, gameLanguage)
+	loc := i18n.NewLocalizer(bundle, GameLanguage)
 
 	translate, err := loc.Localize(
 		&i18n.LocalizeConfig{

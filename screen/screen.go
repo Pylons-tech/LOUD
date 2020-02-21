@@ -1,4 +1,4 @@
-package loud
+package screen
 
 import (
 	"fmt"
@@ -16,6 +16,7 @@ import (
 	"github.com/mgutz/ansi"
 	"github.com/nsf/termbox-go"
 
+	loud "github.com/Pylons-tech/LOUD/data"
 	terminal "github.com/wayneashleyberry/terminal-dimensions"
 )
 
@@ -42,14 +43,14 @@ type Screen interface {
 }
 
 type GameScreen struct {
-	world                  World
-	user                   User
+	world                  loud.World
+	user                   loud.User
 	screenSize             ssh.Window
-	activeItem             Item
+	activeItem             loud.Item
 	lastInput              termbox.Event
 	activeLine             int
-	activeTradeRequest     TradeRequest
-	activeItemTradeRequest ItemTradeRequest
+	activeTradeRequest     loud.TradeRequest
+	activeItemTradeRequest loud.ItemTradeRequest
 	pylonEnterValue        string
 	loudEnterValue         string
 	inputText              string
@@ -64,7 +65,7 @@ type GameScreen struct {
 }
 
 // NewScreen manages the window rendering for game
-func NewScreen(world World, user User) Screen {
+func NewScreen(world loud.World, user loud.User) Screen {
 	width, _ := terminal.Width()
 	height, _ := terminal.Height()
 
@@ -82,7 +83,7 @@ func NewScreen(world World, user User) Screen {
 	return &screen
 }
 
-func (screen *GameScreen) SwitchUser(newUser User) {
+func (screen *GameScreen) SwitchUser(newUser loud.User) {
 	screen.user = newUser
 }
 
@@ -91,7 +92,7 @@ func (screen *GameScreen) Resync() {
 	screen.FreshRender()
 	go func() {
 		log.Println("start syncing from node")
-		SyncFromNode(screen.user)
+		loud.SyncFromNode(screen.user)
 		log.Println("end syncing from node")
 		screen.syncingData = false
 		screen.FreshRender()
@@ -164,7 +165,7 @@ func (screen *GameScreen) sellLoudDesc(loudValue interface{}, pylonValue interfa
 	return desc
 }
 
-func (screen *GameScreen) buySwordDesc(activeItem Item, pylonValue interface{}) string {
+func (screen *GameScreen) buySwordDesc(activeItem loud.Item, pylonValue interface{}) string {
 	var desc = strings.Join([]string{
 		"\n",
 		screen.pylonIcon(),
@@ -175,7 +176,7 @@ func (screen *GameScreen) buySwordDesc(activeItem Item, pylonValue interface{}) 
 	return desc
 }
 
-func (screen *GameScreen) sellSwordDesc(activeItem Item, pylonValue interface{}) string {
+func (screen *GameScreen) sellSwordDesc(activeItem loud.Item, pylonValue interface{}) string {
 	var desc = strings.Join([]string{
 		"\n",
 		fmt.Sprintf("%s Lv%d", activeItem.Name, activeItem.Level),
@@ -238,7 +239,7 @@ func (screen *GameScreen) renderTradeRequestTableLine(text1 string, text2 string
 	return calcText
 }
 
-func (screen *GameScreen) renderTradeRequestTable(requests []TradeRequest) []string {
+func (screen *GameScreen) renderTradeRequestTable(requests []loud.TradeRequest) []string {
 	infoLines := []string{}
 	infoLines = append(infoLines, "╭────────────────────┬───────────────┬───────────────╮")
 	// infoLines = append(infoLines, "│ LOUD price (pylon) │ Amount (loud) │ Total (pylon) │")
@@ -288,7 +289,7 @@ func (screen *GameScreen) renderItemTradeRequestTableLine(text1 string, text2 st
 	return calcText
 }
 
-func (screen *GameScreen) renderItemTradeRequestTable(requests []ItemTradeRequest) []string {
+func (screen *GameScreen) renderItemTradeRequestTable(requests []loud.ItemTradeRequest) []string {
 	infoLines := []string{}
 	infoLines = append(infoLines, "╭────────────────────────────────────┬───────────────╮")
 	// infoLines = append(infoLines, "│ Item                │ Price (pylon) │")
@@ -311,7 +312,7 @@ func (screen *GameScreen) renderItemTradeRequestTable(requests []ItemTradeReques
 		infoLines = append(
 			infoLines,
 			screen.renderItemTradeRequestTableLine(
-				fmt.Sprintf("%s Lv%d  ", localize(request.TItem.Name), request.TItem.Level),
+				fmt.Sprintf("%s Lv%d  ", loud.Localize(request.TItem.Name), request.TItem.Level),
 				fmt.Sprintf("%d", request.Price),
 				startLine+li == activeLine,
 				request.IsMyTradeRequest,
@@ -331,7 +332,7 @@ func (screen *GameScreen) renderItemTableLine(text1 string, isActiveLine bool) s
 	return calcText
 }
 
-func (screen *GameScreen) renderItemTable(items []Item) []string {
+func (screen *GameScreen) renderItemTable(items []loud.Item) []string {
 	infoLines := []string{}
 	infoLines = append(infoLines, "╭────────────────────────────────────────────────────╮")
 	// infoLines = append(infoLines, "│ Item                            │")
@@ -354,7 +355,7 @@ func (screen *GameScreen) renderItemTable(items []Item) []string {
 		infoLines = append(
 			infoLines,
 			screen.renderItemTableLine(
-				fmt.Sprintf("%s Lv%d  ", localize(item.Name), item.Level),
+				fmt.Sprintf("%s Lv%d  ", loud.Localize(item.Name), item.Level),
 				startLine+li == activeLine,
 			),
 		)
@@ -522,10 +523,10 @@ func (screen *GameScreen) renderCharacterSheet() {
 	warning := ""
 	if float32(HP) < float32(MaxHP)*.25 {
 		bgcolor = 124
-		warning = localize("health low warning")
+		warning = loud.Localize("health low warning")
 	} else if float32(HP) < float32(MaxHP)*.1 {
 		bgcolor = 160
-		warning = localize("health critical warning")
+		warning = loud.Localize("health critical warning")
 	}
 
 	x := screen.screenSize.Width/2 - 1
@@ -536,7 +537,7 @@ func (screen *GameScreen) renderCharacterSheet() {
 		centerText(fmt.Sprintf("%v", screen.user.GetUserName()), " ", width),
 		centerText(warning, "─", width),
 		screen.pylonIcon() + fmtFunc(truncateRight(fmt.Sprintf(" %s: %v", "Pylon", screen.user.GetPylonAmount()), width-1)),
-		screen.loudIcon() + fmtFunc(truncateRight(fmt.Sprintf(" %s: %v", localize("gold"), screen.user.GetGold()), width-1)),
+		screen.loudIcon() + fmtFunc(truncateRight(fmt.Sprintf(" %s: %v", loud.Localize("gold"), screen.user.GetGold()), width-1)),
 		screen.drawProgressMeter(HP, MaxHP, 196, bgcolor, 10) + fmtFunc(truncateRight(fmt.Sprintf(" HP: %v/%v", HP, MaxHP), width-10)),
 		// screen.drawProgressMeter(HP, MaxHP, 225, bgcolor, 10) + fmtFunc(truncateRight(fmt.Sprintf(" XP: %v/%v", HP, 10), width-10)),
 		// screen.drawProgressMeter(HP, MaxHP, 208, bgcolor, 10) + fmtFunc(truncateRight(fmt.Sprintf(" AP: %v/%v", HP, MaxHP), width-10)),
@@ -544,10 +545,10 @@ func (screen *GameScreen) renderCharacterSheet() {
 		// screen.drawProgressMeter(HP, MaxHP, 76, bgcolor, 10) + fmtFunc(truncateRight(fmt.Sprintf(" MP: %v/%v", HP, MaxHP), width-10)),
 	}
 
-	infoLines = append(infoLines, centerText(localize("inventory items"), "─", width))
+	infoLines = append(infoLines, centerText(loud.Localize("inventory items"), "─", width))
 	items := screen.user.InventoryItems()
 	for _, item := range items {
-		infoLines = append(infoLines, truncateRight(fmt.Sprintf("%s Lv%d", localize(item.Name), item.Level), width))
+		infoLines = append(infoLines, truncateRight(fmt.Sprintf("%s Lv%d", loud.Localize(item.Name), item.Level), width))
 	}
 	infoLines = append(infoLines, centerText(" ❦ ", "─", width))
 
@@ -559,11 +560,11 @@ func (screen *GameScreen) renderCharacterSheet() {
 	}
 
 	nodeLines := []string{
-		centerText(localize("pylons network status"), " ", width),
+		centerText(loud.Localize("pylons network status"), " ", width),
 		centerText(screen.user.GetLastTransaction(), " ", width),
 	}
 
-	blockHeightText := centerText(localize("block height")+": "+strconv.FormatInt(screen.blockHeight, 10), " ", width)
+	blockHeightText := centerText(loud.Localize("block height")+": "+strconv.FormatInt(screen.blockHeight, 10), " ", width)
 	if screen.refreshingDaemonStatus {
 		nodeLines = append(nodeLines, screen.blueBoldFont()(blockHeightText))
 	} else {
@@ -583,15 +584,15 @@ func (screen *GameScreen) renderCharacterSheet() {
 }
 
 func (screen *GameScreen) RunSelectedLoudBuyTrade() {
-	if len(buyTradeRequests) <= screen.activeLine || screen.activeLine < 0 {
+	if len(loud.BuyTradeRequests) <= screen.activeLine || screen.activeLine < 0 {
 		// when activeLine is not refering to real request but when it is refering to nil request
-		screen.txFailReason = localize("you haven't selected any buy request")
+		screen.txFailReason = loud.Localize("you haven't selected any buy request")
 		screen.SetScreenStatusAndRefresh(RESULT_FULFILL_BUY_LOUD_REQUEST)
 	} else {
-		screen.activeTradeRequest = buyTradeRequests[screen.activeLine]
+		screen.activeTradeRequest = loud.BuyTradeRequests[screen.activeLine]
 		screen.SetScreenStatusAndRefresh(WAIT_FULFILL_BUY_LOUD_REQUEST)
 		go func() {
-			txhash, err := FulfillTrade(screen.user, buyTradeRequests[screen.activeLine].ID)
+			txhash, err := loud.FulfillTrade(screen.user, loud.BuyTradeRequests[screen.activeLine].ID)
 
 			log.Println("ended sending request for creating buy loud request")
 			if err != nil {
@@ -599,7 +600,7 @@ func (screen *GameScreen) RunSelectedLoudBuyTrade() {
 				screen.SetScreenStatusAndRefresh(RESULT_FULFILL_BUY_LOUD_REQUEST)
 			} else {
 				time.AfterFunc(2*time.Second, func() {
-					screen.txResult, screen.txFailReason = ProcessTxResult(screen.user, txhash)
+					screen.txResult, screen.txFailReason = loud.ProcessTxResult(screen.user, txhash)
 					screen.SetScreenStatusAndRefresh(RESULT_FULFILL_BUY_LOUD_REQUEST)
 				})
 			}
@@ -608,22 +609,22 @@ func (screen *GameScreen) RunSelectedLoudBuyTrade() {
 }
 
 func (screen *GameScreen) RunSelectedLoudSellTrade() {
-	if len(sellTradeRequests) <= screen.activeLine || screen.activeLine < 0 {
-		screen.txFailReason = localize("you haven't selected any sell request")
+	if len(loud.SellTradeRequests) <= screen.activeLine || screen.activeLine < 0 {
+		screen.txFailReason = loud.Localize("you haven't selected any sell request")
 		screen.SetScreenStatusAndRefresh(RESULT_FULFILL_SELL_LOUD_REQUEST)
 	} else {
-		screen.activeTradeRequest = sellTradeRequests[screen.activeLine]
+		screen.activeTradeRequest = loud.SellTradeRequests[screen.activeLine]
 		screen.SetScreenStatusAndRefresh(WAIT_FULFILL_SELL_LOUD_REQUEST)
 		go func() {
 			log.Println("started sending request for creating sell loud request")
-			txhash, err := FulfillTrade(screen.user, sellTradeRequests[screen.activeLine].ID)
+			txhash, err := loud.FulfillTrade(screen.user, loud.SellTradeRequests[screen.activeLine].ID)
 			log.Println("ended sending request for creating sell loud request")
 			if err != nil {
 				screen.txFailReason = err.Error()
 				screen.SetScreenStatusAndRefresh(RESULT_FULFILL_SELL_LOUD_REQUEST)
 			} else {
 				time.AfterFunc(2*time.Second, func() {
-					screen.txResult, screen.txFailReason = ProcessTxResult(screen.user, txhash)
+					screen.txResult, screen.txFailReason = loud.ProcessTxResult(screen.user, txhash)
 					screen.SetScreenStatusAndRefresh(RESULT_FULFILL_SELL_LOUD_REQUEST)
 				})
 			}
@@ -632,22 +633,22 @@ func (screen *GameScreen) RunSelectedLoudSellTrade() {
 }
 
 func (screen *GameScreen) RunSelectedSwordBuyTradeRequest() {
-	if len(swordBuyTradeRequests) <= screen.activeLine || screen.activeLine < 0 {
-		screen.txFailReason = localize("you haven't selected any buy item request")
+	if len(loud.SwordBuyTradeRequests) <= screen.activeLine || screen.activeLine < 0 {
+		screen.txFailReason = loud.Localize("you haven't selected any buy item request")
 		screen.SetScreenStatusAndRefresh(RESULT_FULFILL_BUY_SWORD_REQUEST)
 	} else {
-		screen.activeItemTradeRequest = swordBuyTradeRequests[screen.activeLine]
+		screen.activeItemTradeRequest = loud.SwordBuyTradeRequests[screen.activeLine]
 		screen.SetScreenStatusAndRefresh(WAIT_FULFILL_BUY_SWORD_REQUEST)
 		go func() {
 			log.Println("started sending request for creating buying item request")
-			txhash, err := FulfillTrade(screen.user, swordBuyTradeRequests[screen.activeLine].ID)
+			txhash, err := loud.FulfillTrade(screen.user, loud.SwordBuyTradeRequests[screen.activeLine].ID)
 			log.Println("ended sending request for creating buying item request")
 			if err != nil {
 				screen.txFailReason = err.Error()
 				screen.SetScreenStatusAndRefresh(RESULT_FULFILL_BUY_SWORD_REQUEST)
 			} else {
 				time.AfterFunc(2*time.Second, func() {
-					screen.txResult, screen.txFailReason = ProcessTxResult(screen.user, txhash)
+					screen.txResult, screen.txFailReason = loud.ProcessTxResult(screen.user, txhash)
 					screen.SetScreenStatusAndRefresh(RESULT_FULFILL_BUY_SWORD_REQUEST)
 				})
 			}
@@ -656,23 +657,23 @@ func (screen *GameScreen) RunSelectedSwordBuyTradeRequest() {
 }
 
 func (screen *GameScreen) RunSelectedSwordSellTradeRequest() {
-	if len(swordSellTradeRequests) <= screen.activeLine || screen.activeLine < 0 {
-		screen.txFailReason = localize("you haven't selected any sell item request")
+	if len(loud.SwordSellTradeRequests) <= screen.activeLine || screen.activeLine < 0 {
+		screen.txFailReason = loud.Localize("you haven't selected any sell item request")
 		screen.SetScreenStatusAndRefresh(RESULT_FULFILL_SELL_SWORD_REQUEST)
 	} else {
 		screen.scrStatus = WAIT_FULFILL_SELL_SWORD_REQUEST
-		screen.activeItemTradeRequest = swordSellTradeRequests[screen.activeLine]
+		screen.activeItemTradeRequest = loud.SwordSellTradeRequests[screen.activeLine]
 		screen.FreshRender()
 		go func() {
 			log.Println("started sending request for creating selling item request")
-			txhash, err := FulfillTrade(screen.user, swordSellTradeRequests[screen.activeLine].ID)
+			txhash, err := loud.FulfillTrade(screen.user, loud.SwordSellTradeRequests[screen.activeLine].ID)
 			log.Println("ended sending request for creating selling item request")
 			if err != nil {
 				screen.txFailReason = err.Error()
 				screen.SetScreenStatusAndRefresh(RESULT_FULFILL_SELL_SWORD_REQUEST)
 			} else {
 				time.AfterFunc(2*time.Second, func() {
-					screen.txResult, screen.txFailReason = ProcessTxResult(screen.user, txhash)
+					screen.txResult, screen.txFailReason = loud.ProcessTxResult(screen.user, txhash)
 					screen.SetScreenStatusAndRefresh(RESULT_FULFILL_SELL_SWORD_REQUEST)
 				})
 			}
@@ -691,13 +692,13 @@ func (screen *GameScreen) FreshRender() {
 }
 
 func (screen *GameScreen) Render() {
-	if len(somethingWentWrongMsg) > 0 {
+	if len(loud.SomethingWentWrongMsg) > 0 {
 		clear := cursor.ClearEntireScreen()
-		dead := localize("Something went wrong, please close using Esc key and see loud.log")
+		dead := loud.Localize("Something went wrong, please close using Esc key and see loud.log")
 		move := cursor.MoveTo(screen.screenSize.Height/2, screen.screenSize.Width/2-utf8.RuneCountInString(dead)/2)
 		io.WriteString(os.Stdout, clear+move+dead)
 
-		detailedErrorMsg := localize("detailed error: " + somethingWentWrongMsg)
+		detailedErrorMsg := loud.Localize("detailed error: " + loud.SomethingWentWrongMsg)
 		move = cursor.MoveTo(screen.screenSize.Height/2+3, screen.screenSize.Width/2-utf8.RuneCountInString(dead)/2)
 		io.WriteString(os.Stdout, move+detailedErrorMsg)
 		screen.refreshed = false
@@ -712,11 +713,11 @@ func (screen *GameScreen) Render() {
 		clear := cursor.ClearEntireScreen()
 		move := cursor.MoveTo(1, 1)
 		io.WriteString(os.Stdout,
-			fmt.Sprintf("%s%s%s", clear, move, localize("screen size warning")))
+			fmt.Sprintf("%s%s%s", clear, move, loud.Localize("screen size warning")))
 		return
 	} else if HP == 0 {
 		clear := cursor.ClearEntireScreen()
-		dead := localize("dead")
+		dead := loud.Localize("dead")
 		move := cursor.MoveTo(screen.screenSize.Height/2, screen.screenSize.Width/2-utf8.RuneCountInString(dead)/2)
 		io.WriteString(os.Stdout, clear+move+dead)
 		screen.refreshed = false

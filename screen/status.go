@@ -1,4 +1,4 @@
-package loud
+package screen
 
 type ScreenStatus string
 

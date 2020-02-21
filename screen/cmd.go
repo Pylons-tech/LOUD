@@ -1,4 +1,4 @@
-package loud
+package screen
 
 import (
 	"fmt"
@@ -6,6 +6,7 @@ import (
 	"os"
 	"strings"
 
+	loud "github.com/Pylons-tech/LOUD/data"
 	"github.com/ahmetb/go-cursor"
 )
 
@@ -14,19 +15,19 @@ func (screen *GameScreen) renderUserCommands() {
 	infoLines := []string{}
 	switch screen.scrStatus {
 	case SHOW_LOCATION:
-		cmdMap := map[UserLocation]string{
-			HOME:     "home",
-			FOREST:   "forest",
-			SHOP:     "shop",
-			MARKET:   "market",
-			SETTINGS: "settings",
-			DEVELOP:  "develop",
+		cmdMap := map[loud.UserLocation]string{
+			loud.HOME:     "home",
+			loud.FOREST:   "forest",
+			loud.SHOP:     "shop",
+			loud.MARKET:   "market",
+			loud.SETTINGS: "settings",
+			loud.DEVELOP:  "develop",
 		}
-		cmdString := localize(cmdMap[screen.user.GetLocation()])
+		cmdString := loud.Localize(cmdMap[screen.user.GetLocation()])
 		infoLines = strings.Split(cmdString, "\n")
-		for _, loc := range []UserLocation{HOME, FOREST, SHOP, MARKET, SETTINGS, DEVELOP} {
+		for _, loc := range []loud.UserLocation{loud.HOME, loud.FOREST, loud.SHOP, loud.MARKET, loud.SETTINGS, loud.DEVELOP} {
 			if loc != screen.user.GetLocation() {
-				infoLines = append(infoLines, localize("go to "+cmdMap[loc]))
+				infoLines = append(infoLines, loud.Localize("go to "+cmdMap[loc]))
 			}
 		}
 	case SHOW_LOUD_BUY_REQUESTS:
@@ -61,45 +62,46 @@ func (screen *GameScreen) renderUserCommands() {
 			"Select ( ↵ )",
 			"Go bac)k( ⌫ )")
 	case SELECT_BUY_ITEM:
-		for idx, item := range shopItems {
-			infoLines = append(infoLines, fmt.Sprintf("%d) %s Lv%d  ", idx+1, localize(item.Name), item.Level)+screen.loudIcon()+fmt.Sprintf(" %d", item.Price))
+		for idx, item := range loud.ShopItems {
+			infoLines = append(infoLines, fmt.Sprintf("%d) %s Lv%d  ", idx+1, loud.Localize(item.Name), item.Level)+screen.loudIcon()+fmt.Sprintf(" %d", item.Price))
 		}
-		infoLines = append(infoLines, localize("C)ancel"))
+		infoLines = append(infoLines, loud.Localize("C)ancel"))
 	case SELECT_SELL_ITEM:
 		userItems := screen.user.InventoryItems()
 		for idx, item := range userItems {
-			infoLines = append(infoLines, fmt.Sprintf("%d) %s Lv%d  ", idx+1, localize(item.Name), item.Level)+screen.loudIcon()+fmt.Sprintf(" %d", item.GetSellPrice()))
+			infoLines = append(infoLines, fmt.Sprintf("%d) %s Lv%d  ", idx+1, loud.Localize(item.Name), item.Level)+screen.loudIcon()+fmt.Sprintf(" %d", item.GetSellPrice()))
 		}
-		infoLines = append(infoLines, localize("C)ancel"))
+		infoLines = append(infoLines, loud.Localize("C)ancel"))
 	case SELECT_HUNT_ITEM:
 		userWeaponItems := screen.user.InventoryItems()
-		infoLines = append(infoLines, localize("N)o item"))
+		infoLines = append(infoLines, loud.Localize("N)o item"))
+		infoLines = append(infoLines, loud.Localize("Get I)nitial Coin"))
 		for idx, item := range userWeaponItems {
-			infoLines = append(infoLines, fmt.Sprintf("%d) %s Lv%d", idx+1, localize(item.Name), item.Level))
+			infoLines = append(infoLines, fmt.Sprintf("%d) %s Lv%d", idx+1, loud.Localize(item.Name), item.Level))
 		}
 		infoLines = append(infoLines,
-			localize("C)ancel"))
+			loud.Localize("C)ancel"))
 	case SELECT_UPGRADE_ITEM:
 		userUpgradeItems := screen.user.UpgradableItems()
 		for idx, item := range userUpgradeItems {
-			infoLines = append(infoLines, fmt.Sprintf("%d) %s Lv%d ", idx+1, localize(item.Name), item.Level)+screen.loudIcon()+fmt.Sprintf(" %d", item.GetUpgradePrice()))
+			infoLines = append(infoLines, fmt.Sprintf("%d) %s Lv%d ", idx+1, loud.Localize(item.Name), item.Level)+screen.loudIcon()+fmt.Sprintf(" %d", item.GetUpgradePrice()))
 		}
-		infoLines = append(infoLines, localize("C)ancel"))
+		infoLines = append(infoLines, loud.Localize("C)ancel"))
 	default:
 		if screen.IsResultScreen() { // eg. RESULT_BUY_LOUD_REQUEST_CREATION
-			infoLines = append(infoLines, localize("Go) on( ↵ )"))
+			infoLines = append(infoLines, loud.Localize("Go) on( ↵ )"))
 		} else if screen.InputActive() { // eg. CREATE_BUY_SWORD_REQUEST_ENTER_PYLON_VALUE
 			infoLines = append(infoLines,
-				localize("Finish Enter ( ↵ )"),
-				localize("Go bac)k( ⌫ )"))
+				loud.Localize("Finish Enter ( ↵ )"),
+				loud.Localize("Go bac)k( ⌫ )"))
 		}
 	}
 
 	infoLines = append(infoLines, "\n")
 	if screen.syncingData {
-		infoLines = append(infoLines, screen.blueBoldFont()(localize("Re)fresh Status")))
+		infoLines = append(infoLines, screen.blueBoldFont()(loud.Localize("Re)fresh Status")))
 	} else {
-		infoLines = append(infoLines, localize("Re)fresh Status"))
+		infoLines = append(infoLines, loud.Localize("Re)fresh Status"))
 	}
 
 	// box start point (x, y)
