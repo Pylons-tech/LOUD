@@ -55,8 +55,8 @@ var restEndpointLocal string = "http://localhost:1317"
 
 var useRestTx bool = false
 var useLocalDm bool = false
-var automateInput bool = false
-var automateRunCnt int = 0
+var AutomateInput bool = false
+var AutomateRunCnt int = 0
 
 func init() {
 	args := os.Args
@@ -69,7 +69,7 @@ func init() {
 			case "-userest":
 				useRestTx = true
 			case "-automate":
-				automateInput = true
+				AutomateInput = true
 			}
 		}
 	}
@@ -247,7 +247,7 @@ func InitPylonAccount(username string) string {
 	if err != nil {
 		if strings.Contains(err.Error(), "no such file or directory") {
 			log.Println("pylonscli is not globally installed on your machine")
-			somethingWentWrongMsg = "pylonscli is not globally installed on your machine"
+			SomethingWentWrongMsg = "pylonscli is not globally installed on your machine"
 		} else {
 			log.Println("using existing account for", username)
 			usr, _ := user.Current()
@@ -428,8 +428,8 @@ func GetWeaponItemFromKey(user User, key string) Item {
 func GetToBuyItemFromKey(key string) Item {
 	useItem := Item{}
 	itemKey := GetIndexFromString(key)
-	if itemKey >= 0 && itemKey < len(shopItems) {
-		useItem = shopItems[itemKey]
+	if itemKey >= 0 && itemKey < len(ShopItems) {
+		useItem = ShopItems[itemKey]
 	}
 	return useItem
 }

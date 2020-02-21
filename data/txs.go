@@ -33,9 +33,9 @@ func CreateCookbook(user User) (string, error) { // This is for afti develop mod
 	)
 	txhash := pylonSDK.TestTxWithMsgWithNonce(t, ccbMsg, username, false)
 	ok, err := CheckSignatureMatchWithAftiCli(t, txhash, user.GetPrivKey(), ccbMsg, username, false)
-	if (!ok || err != nil) && automateInput {
+	if (!ok || err != nil) && AutomateInput {
 		log.Println("error checking afticli", ok, err)
-		somethingWentWrongMsg = "automation test failed, " + err.Error()
+		SomethingWentWrongMsg = "automation test failed, " + err.Error()
 	}
 	user.SetLastTransaction(txhash)
 	log.Println("ended sending transaction")
@@ -61,9 +61,7 @@ func Hunt(user User, key string) (string, error) {
 	useItem := GetWeaponItemFromKey(user, key)
 	itemIDs := []string{}
 	switch key {
-	case "I": // get initial coin
-		fallthrough
-	case "i":
+	case "I", "i": // get initial coin
 		rcpName = "LOUD's get initial coin recipe"
 	}
 
