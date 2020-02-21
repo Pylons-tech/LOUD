@@ -61,9 +61,7 @@ func Hunt(user User, key string) (string, error) {
 	useItem := GetWeaponItemFromKey(user, key)
 	itemIDs := []string{}
 	switch key {
-	case "I": // get initial coin
-		fallthrough
-	case "i":
+	case "I", "i": // get initial coin
 		rcpName = "LOUD's get initial coin recipe"
 	}
 

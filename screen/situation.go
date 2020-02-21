@@ -61,9 +61,7 @@ func (screen *GameScreen) renderUserSituation() {
 			desc = fmt.Sprintf("%s %s Lv%d.\n%s", loud.Localize("wait hunt process desc"), loud.Localize(screen.activeItem.Name), screen.activeItem.Level, waitProcessEnd)
 		} else {
 			switch string(screen.lastInput.Ch) {
-			case "I":
-				fallthrough
-			case "i":
+			case "I", "i":
 				desc = fmt.Sprintf("%s\n%s", loud.Localize("Getting initial gold from pylon"), waitProcessEnd)
 			default:
 				desc = fmt.Sprintf("%s\n%s", loud.Localize("hunting without weapon"), waitProcessEnd)
@@ -106,9 +104,7 @@ func (screen *GameScreen) renderUserSituation() {
 			respOutput := handlers.ExecuteRecipeSerialize{}
 			json.Unmarshal(screen.txResult, &respOutput)
 			switch string(screen.lastInput.Ch) {
-			case "I":
-				fallthrough
-			case "i":
+			case "I", "i":
 				desc = fmt.Sprintf("%s %d.", loud.Localize("Got initial gold from pylons. Amount is"), respOutput.Amount)
 			default:
 				desc = fmt.Sprintf("%s %d.", loud.Localize("result hunt finish desc"), respOutput.Amount)

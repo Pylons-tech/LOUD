@@ -11,14 +11,21 @@ import (
 	"github.com/nsf/termbox-go"
 )
 
-func (screen *GameScreen) HandleInputKeyResync(input termbox.Event) bool {
+func (screen *GameScreen) HandleInputKey(input termbox.Event) {
+	screen.lastInput = input
 	Key := strings.ToUpper(string(input.Ch))
-	switch Key {
-	case "E": // REFRESH
-		screen.Resync()
-		return true
+	log.Println("Handling Key \"", Key, "\"", input.Ch)
+	if screen.HandleFirstClassInputKeys(input) {
+		return
 	}
-	return false
+	if screen.HandleSecondClassInputKeys(input) {
+		return
+	}
+	if screen.HandleThirdClassInputKeys(input) {
+		return
+	}
+
+	screen.Render()
 }
 
 func (screen *GameScreen) HandleInputKeyLocationSwitch(input termbox.Event) bool {
@@ -41,7 +48,7 @@ func (screen *GameScreen) HandleInputKeyLocationSwitch(input termbox.Event) bool
 		return false
 	}
 }
-func (screen *GameScreen) HandleInputKeyMarketEntryPoint(input termbox.Event) {
+func (screen *GameScreen) HandleInputKeyMarketEntryPoint(input termbox.Event) bool {
 	Key := string(input.Ch)
 
 	tarStusMap := map[string]ScreenStatus{
@@ -54,12 +61,13 @@ func (screen *GameScreen) HandleInputKeyMarketEntryPoint(input termbox.Event) {
 	if newStus, ok := tarStusMap[Key]; ok {
 		screen.scrStatus = newStus
 		screen.refreshed = false
-	} else if !screen.HandleInputKeyLocationSwitch(input) {
-		screen.HandleInputKeyResync(input)
+		return true
+	} else {
+		return false
 	}
 }
 
-func (screen *GameScreen) HandleInputKeySettingsEntryPoint(input termbox.Event) {
+func (screen *GameScreen) HandleInputKeySettingsEntryPoint(input termbox.Event) bool {
 	Key := string(input.Ch)
 
 	tarLangMap := map[string]string{
@@ -70,12 +78,13 @@ func (screen *GameScreen) HandleInputKeySettingsEntryPoint(input termbox.Event) 
 	if newLang, ok := tarLangMap[Key]; ok {
 		loud.GameLanguage = newLang
 		screen.refreshed = false
-	} else if !screen.HandleInputKeyLocationSwitch(input) {
-		screen.HandleInputKeyResync(input)
+		return true
+	} else {
+		return false
 	}
 }
 
-func (screen *GameScreen) HandleInputKeyForestEntryPoint(input termbox.Event) {
+func (screen *GameScreen) HandleInputKeyForestEntryPoint(input termbox.Event) bool {
 	Key := strings.ToUpper(string(input.Ch))
 
 	tarStusMap := map[string]ScreenStatus{
@@ -85,12 +94,13 @@ func (screen *GameScreen) HandleInputKeyForestEntryPoint(input termbox.Event) {
 	if newStus, ok := tarStusMap[Key]; ok {
 		screen.scrStatus = newStus
 		screen.refreshed = false
-	} else if !screen.HandleInputKeyLocationSwitch(input) {
-		screen.HandleInputKeyResync(input)
+		return true
+	} else {
+		return false
 	}
 }
 
-func (screen *GameScreen) HandleInputKeyShopEntryPoint(input termbox.Event) {
+func (screen *GameScreen) HandleInputKeyShopEntryPoint(input termbox.Event) bool {
 	Key := strings.ToUpper(string(input.Ch))
 
 	tarStusMap := map[string]ScreenStatus{
@@ -102,8 +112,9 @@ func (screen *GameScreen) HandleInputKeyShopEntryPoint(input termbox.Event) {
 	if newStus, ok := tarStusMap[Key]; ok {
 		screen.scrStatus = newStus
 		screen.refreshed = false
-	} else if !screen.HandleInputKeyLocationSwitch(input) {
-		screen.HandleInputKeyResync(input)
+		return true
+	} else {
+		return false
 	}
 }
 
@@ -154,43 +165,123 @@ func (screen *GameScreen) MoveToPrevStep() {
 	screen.refreshed = false
 }
 
-func (screen *GameScreen) HandleInputKey(input termbox.Event) {
-	screen.lastInput = input
+func (screen *GameScreen) HandleFirstClassInputKeys(input termbox.Event) bool {
+	// implement first class commands, eg. development input keys
+	if screen.HandleInputKeyLocationSwitch(input) {
+		return true
+	}
 	Key := strings.ToUpper(string(input.Ch))
-	log.Println("Handling Key \"", Key, "\"", input.Ch)
+	switch Key {
+	case "J": // Create cookbook
+		screen.SetScreenStatusAndRefresh(WAIT_CREATE_COOKBOOK)
+		go func() {
+			txhash, err := loud.CreateCookbook(screen.user)
+			log.Println("ended sending request for creating cookbook")
+			if err != nil {
+				screen.txFailReason = err.Error()
+				screen.SetScreenStatusAndRefresh(RESULT_CREATE_COOKBOOK)
+			} else {
+				time.AfterFunc(1*time.Second, func() {
+					screen.txResult, screen.txFailReason = loud.ProcessTxResult(screen.user, txhash)
+					screen.SetScreenStatusAndRefresh(RESULT_CREATE_COOKBOOK)
+				})
+			}
+		}()
+	case "Z": // Switch user
+		screen.SetScreenStatusAndRefresh(WAIT_SWITCH_USER)
+		go func() {
+			newUser := screen.world.GetUser(fmt.Sprintf("%d", time.Now().Unix()))
+			orgLocation := screen.user.GetLocation()
+			screen.SwitchUser(newUser)           // this is moving user back to home
+			screen.user.SetLocation(orgLocation) // set the user back to original location
+			screen.SetScreenStatusAndRefresh(RESULT_SWITCH_USER)
+		}()
+	case "Y": // get initial pylons
+		screen.SetScreenStatusAndRefresh(WAIT_GET_PYLONS)
+		log.Println("started sending request for getting extra pylons")
+		go func() {
+			txhash, err := loud.GetExtraPylons(screen.user)
+			log.Println("ended sending request for getting extra pylons")
+			if err != nil {
+				screen.txFailReason = err.Error()
+				screen.SetScreenStatusAndRefresh(RESULT_GET_PYLONS)
+			} else {
+				time.AfterFunc(1*time.Second, func() {
+					screen.txResult, screen.txFailReason = loud.ProcessTxResult(screen.user, txhash)
+					screen.SetScreenStatusAndRefresh(RESULT_GET_PYLONS)
+				})
+			}
+		}()
+	case "I":
+		screen.activeItem = loud.GetWeaponItemFromKey(screen.user, Key)
+		screen.SetScreenStatusAndRefresh(WAIT_HUNT_PROCESS)
+		log.Println("started sending request for hunting item")
+		go func() {
+			txhash, err := loud.Hunt(screen.user, Key)
+			log.Println("ended sending request for hunting item")
+			if err != nil {
+				screen.txFailReason = err.Error()
+				screen.SetScreenStatusAndRefresh(RESULT_HUNT_FINISH)
+			} else {
+				time.AfterFunc(1*time.Second, func() {
+					screen.txResult, screen.txFailReason = loud.ProcessTxResult(screen.user, txhash)
+					screen.SetScreenStatusAndRefresh(RESULT_HUNT_FINISH)
+				})
+			}
+		}()
+	case "E": // REFRESH
+		screen.Resync()
+		return true
+	case "C": // CANCEL, GO BACK
+		screen.MoveToPrevStep()
+		return true
+	default:
+		return false
+	}
+	return true
+}
+
+func (screen *GameScreen) HandleSecondClassInputKeys(input termbox.Event) bool {
+	// implement second class commands, eg. input processing for show_location section
 	if screen.user.GetLocation() == loud.MARKET {
 		switch screen.scrStatus {
 		case SHOW_LOCATION:
-			screen.HandleInputKeyMarketEntryPoint(input)
-			return
+			return screen.HandleInputKeyMarketEntryPoint(input)
 		}
 	} else if screen.user.GetLocation() == loud.SETTINGS {
 		switch screen.scrStatus {
 		case SHOW_LOCATION:
-			screen.HandleInputKeySettingsEntryPoint(input)
-			return
+			return screen.HandleInputKeySettingsEntryPoint(input)
 		}
 	} else if screen.user.GetLocation() == loud.FOREST {
 		switch screen.scrStatus {
 		case SHOW_LOCATION:
-			screen.HandleInputKeyForestEntryPoint(input)
-			return
+			return screen.HandleInputKeyForestEntryPoint(input)
 		}
 	} else if screen.user.GetLocation() == loud.SHOP {
 		switch screen.scrStatus {
 		case SHOW_LOCATION:
-			screen.HandleInputKeyShopEntryPoint(input)
-			return
+			return screen.HandleInputKeyShopEntryPoint(input)
 		}
 	}
+	return false
+}
+
+func (screen *GameScreen) HandleThirdClassInputKeys(input termbox.Event) bool {
+	// implement thid class commands, eg. commands which are not processed by first, second classes
+	Key := strings.ToUpper(string(input.Ch))
 	if screen.InputActive() {
 		switch input.Key {
 		case termbox.KeyBackspace2:
 			fallthrough
 		case termbox.KeyBackspace:
 			log.Println("Pressed Backspace")
-			screen.SetInputTextAndRender(screen.inputText[:len(screen.inputText)-1])
-			return
+			lastIdx := len(screen.inputText) - 1
+			if lastIdx < 0 {
+				lastIdx = 0
+			}
+			screen.SetInputTextAndRender(screen.inputText[:lastIdx])
+			return true
 		case termbox.KeyEnter:
 			switch screen.scrStatus {
 			case CREATE_BUY_LOUD_REQUEST_ENTER_LOUD_VALUE:
@@ -262,18 +353,19 @@ func (screen *GameScreen) HandleInputKey(input termbox.Event) {
 						screen.SetScreenStatusAndRefresh(RESULT_BUY_SWORD_REQUEST_CREATION)
 					})
 				}
+			default:
+				return false
 			}
-
+			return true
 		default:
 			if _, err := strconv.Atoi(Key); err == nil {
 				// If user entered number, just use it
 				screen.SetInputTextAndRender(screen.inputText + Key)
 			}
-			return
+			return false
 		}
 		screen.refreshed = false
 	} else {
-		// TODO should check current location, scrStatus and then after that check Key, rather than checking Key first
 		switch input.Key {
 		case termbox.KeyArrowLeft:
 		case termbox.KeyArrowRight:
@@ -281,8 +373,10 @@ func (screen *GameScreen) HandleInputKey(input termbox.Event) {
 			if screen.activeLine > 0 {
 				screen.activeLine -= 1
 			}
+			return true
 		case termbox.KeyArrowDown:
 			screen.activeLine += 1
+			return true
 		}
 		if input.Key == termbox.KeyEnter {
 			if screen.user.GetLocation() == loud.MARKET {
@@ -298,7 +392,7 @@ func (screen *GameScreen) HandleInputKey(input termbox.Event) {
 				case CREATE_SELL_SWORD_REQUEST_SELECT_SWORD:
 					userItems := screen.user.InventoryItems()
 					if len(userItems) <= screen.activeLine || screen.activeLine < 0 {
-						return
+						return false
 					}
 					screen.activeItem = userItems[screen.activeLine]
 					screen.scrStatus = CREATE_SELL_SWORD_REQUEST_ENTER_PYLON_VALUE
@@ -306,7 +400,7 @@ func (screen *GameScreen) HandleInputKey(input termbox.Event) {
 					screen.refreshed = false
 				case CREATE_BUY_SWORD_REQUEST_SELECT_SWORD:
 					if len(loud.WorldItems) <= screen.activeLine || screen.activeLine < 0 {
-						return
+						return false
 					}
 					screen.activeItem = loud.WorldItems[screen.activeLine]
 					screen.scrStatus = CREATE_BUY_SWORD_REQUEST_ENTER_PYLON_VALUE
@@ -314,10 +408,12 @@ func (screen *GameScreen) HandleInputKey(input termbox.Event) {
 					screen.refreshed = false
 				default:
 					screen.MoveToNextStep()
+					return false
 				}
 			} else {
 				screen.MoveToNextStep()
 			}
+			return true
 		}
 
 		if input.Key == termbox.KeyBackspace2 || input.Key == termbox.KeyBackspace {
@@ -325,50 +421,6 @@ func (screen *GameScreen) HandleInputKey(input termbox.Event) {
 		}
 
 		switch Key {
-		case "J": // Create cookbook
-			screen.SetScreenStatusAndRefresh(WAIT_CREATE_COOKBOOK)
-			go func() {
-				txhash, err := loud.CreateCookbook(screen.user)
-				log.Println("ended sending request for creating cookbook")
-				if err != nil {
-					screen.txFailReason = err.Error()
-					screen.SetScreenStatusAndRefresh(RESULT_CREATE_COOKBOOK)
-				} else {
-					time.AfterFunc(1*time.Second, func() {
-						screen.txResult, screen.txFailReason = loud.ProcessTxResult(screen.user, txhash)
-						screen.SetScreenStatusAndRefresh(RESULT_CREATE_COOKBOOK)
-					})
-				}
-			}()
-		case "Z": // Switch user
-			screen.SetScreenStatusAndRefresh(WAIT_SWITCH_USER)
-			go func() {
-				newUser := screen.world.GetUser(fmt.Sprintf("%d", time.Now().Unix()))
-				orgLocation := screen.user.GetLocation()
-				screen.SwitchUser(newUser)           // this is moving user back to home
-				screen.user.SetLocation(orgLocation) // set the user back to original location
-				screen.SetScreenStatusAndRefresh(RESULT_SWITCH_USER)
-			}()
-		case "H": // HOME
-			screen.user.SetLocation(loud.HOME)
-			screen.refreshed = false
-		case "F": // FOREST
-			screen.user.SetLocation(loud.FOREST)
-			screen.refreshed = false
-		case "S": // SHOP
-			screen.user.SetLocation(loud.SHOP)
-			screen.refreshed = false
-		case "M": // MARKET
-			screen.user.SetLocation(loud.MARKET)
-			screen.refreshed = false
-		case "T": // SETTINGS
-			screen.user.SetLocation(loud.SETTINGS)
-			screen.refreshed = false
-		case "D": // DEVELOP
-			screen.user.SetLocation(loud.DEVELOP)
-			screen.refreshed = false
-		case "C": // CANCEL, GO BACK
-			screen.MoveToPrevStep()
 		case "R": // CREATE ORDER
 			if screen.user.GetLocation() == loud.MARKET {
 				switch screen.scrStatus {
@@ -383,52 +435,16 @@ func (screen *GameScreen) HandleInputKey(input termbox.Event) {
 				}
 				screen.refreshed = false
 			}
-		case "E": // REFRESH
-			screen.Resync()
 		case "O": // GO ON
 			screen.MoveToNextStep()
-		case "Y": // get initial pylons
-			screen.SetScreenStatusAndRefresh(WAIT_GET_PYLONS)
-			log.Println("started sending request for getting extra pylons")
-			go func() {
-				txhash, err := loud.GetExtraPylons(screen.user)
-				log.Println("ended sending request for getting extra pylons")
-				if err != nil {
-					screen.txFailReason = err.Error()
-					screen.SetScreenStatusAndRefresh(RESULT_GET_PYLONS)
-				} else {
-					time.AfterFunc(1*time.Second, func() {
-						screen.txResult, screen.txFailReason = loud.ProcessTxResult(screen.user, txhash)
-						screen.SetScreenStatusAndRefresh(RESULT_GET_PYLONS)
-					})
-				}
-			}()
-		case "I":
-			screen.activeItem = loud.GetWeaponItemFromKey(screen.user, Key)
-			screen.SetScreenStatusAndRefresh(WAIT_HUNT_PROCESS)
-			log.Println("started sending request for hunting item")
-			go func() {
-				txhash, err := loud.Hunt(screen.user, Key)
-				log.Println("ended sending request for hunting item")
-				if err != nil {
-					screen.txFailReason = err.Error()
-					screen.SetScreenStatusAndRefresh(RESULT_HUNT_FINISH)
-				} else {
-					time.AfterFunc(1*time.Second, func() {
-						screen.txResult, screen.txFailReason = loud.ProcessTxResult(screen.user, txhash)
-						screen.SetScreenStatusAndRefresh(RESULT_HUNT_FINISH)
-					})
-				}
-			}()
-		case "N": // Go hunt with no weapon
-			fallthrough
-		case "1", "2", "3", "4", "5", "6", "7", "8", "9": // Numbers
+			return true
+		case "0", "1", "2", "3", "4", "5", "6", "7", "8", "9": // Numbers
 			screen.refreshed = false
 			switch screen.scrStatus {
 			case SELECT_BUY_ITEM:
 				screen.activeItem = loud.GetToBuyItemFromKey(Key)
 				if len(screen.activeItem.Name) == 0 {
-					return
+					return false
 				}
 				screen.SetScreenStatusAndRefresh(WAIT_BUY_PROCESS)
 
@@ -466,7 +482,7 @@ func (screen *GameScreen) HandleInputKey(input termbox.Event) {
 			case SELECT_SELL_ITEM:
 				screen.activeItem = loud.GetToSellItemFromKey(screen.user, Key)
 				if len(screen.activeItem.Name) == 0 {
-					return
+					return false
 				}
 				screen.SetScreenStatusAndRefresh(WAIT_SELL_PROCESS)
 				log.Println("started sending request for selling item")
@@ -486,7 +502,7 @@ func (screen *GameScreen) HandleInputKey(input termbox.Event) {
 			case SELECT_UPGRADE_ITEM:
 				screen.activeItem = loud.GetToUpgradeItemFromKey(screen.user, Key)
 				if len(screen.activeItem.Name) == 0 {
-					return
+					return false
 				}
 				screen.SetScreenStatusAndRefresh(WAIT_UPGRADE_PROCESS)
 				log.Println("started sending request for upgrading item")
@@ -504,7 +520,8 @@ func (screen *GameScreen) HandleInputKey(input termbox.Event) {
 					}
 				}()
 			}
+			return true
 		}
 	}
-	screen.Render()
+	return false
 }

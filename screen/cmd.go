@@ -74,7 +74,7 @@ func (screen *GameScreen) renderUserCommands() {
 		infoLines = append(infoLines, loud.Localize("C)ancel"))
 	case SELECT_HUNT_ITEM:
 		userWeaponItems := screen.user.InventoryItems()
-		infoLines = append(infoLines, loud.Localize("N)o item"))
+		infoLines = append(infoLines, loud.Localize("No item"))
 		infoLines = append(infoLines, loud.Localize("Get I)nitial Coin"))
 		for idx, item := range userWeaponItems {
 			infoLines = append(infoLines, fmt.Sprintf("%d) %s Lv%d", idx+1, loud.Localize(item.Name), item.Level))
