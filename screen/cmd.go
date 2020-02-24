@@ -65,28 +65,33 @@ func (screen *GameScreen) renderUserCommands() {
 		for idx, item := range loud.ShopItems {
 			infoLines = append(infoLines, fmt.Sprintf("%d) %s Lv%d  ", idx+1, loud.Localize(item.Name), item.Level)+screen.loudIcon()+fmt.Sprintf(" %d", item.Price))
 		}
-		infoLines = append(infoLines, loud.Localize("C)ancel"))
+		infoLines = append(infoLines,
+			"Select ( ↵ )",
+			loud.Localize("C)ancel"))
 	case SELECT_SELL_ITEM:
 		userItems := screen.user.InventoryItems()
 		for idx, item := range userItems {
 			infoLines = append(infoLines, fmt.Sprintf("%d) %s Lv%d  ", idx+1, loud.Localize(item.Name), item.Level)+screen.loudIcon()+fmt.Sprintf(" %d", item.GetSellPrice()))
 		}
-		infoLines = append(infoLines, loud.Localize("C)ancel"))
+		infoLines = append(infoLines,
+			"Select ( ↵ )",
+			loud.Localize("C)ancel"))
 	case SELECT_HUNT_ITEM:
-		userWeaponItems := screen.user.InventoryItems()
 		infoLines = append(infoLines, loud.Localize("No item"))
 		infoLines = append(infoLines, loud.Localize("Get I)nitial Coin"))
-		for idx, item := range userWeaponItems {
+		for idx, item := range screen.user.InventoryItems() {
 			infoLines = append(infoLines, fmt.Sprintf("%d) %s Lv%d", idx+1, loud.Localize(item.Name), item.Level))
 		}
 		infoLines = append(infoLines,
+			"Select ( ↵ )",
 			loud.Localize("C)ancel"))
 	case SELECT_UPGRADE_ITEM:
-		userUpgradeItems := screen.user.UpgradableItems()
-		for idx, item := range userUpgradeItems {
+		for idx, item := range screen.user.UpgradableItems() {
 			infoLines = append(infoLines, fmt.Sprintf("%d) %s Lv%d ", idx+1, loud.Localize(item.Name), item.Level)+screen.loudIcon()+fmt.Sprintf(" %d", item.GetUpgradePrice()))
 		}
-		infoLines = append(infoLines, loud.Localize("C)ancel"))
+		infoLines = append(infoLines,
+			"Select ( ↵ )",
+			loud.Localize("C)ancel"))
 	default:
 		if screen.IsResultScreen() { // eg. RESULT_BUY_LOUD_REQUEST_CREATION
 			infoLines = append(infoLines, loud.Localize("Go) on( ↵ )"))

@@ -8,15 +8,16 @@ import (
 )
 
 func SyncFromNode(user User) {
-	log.Println("SyncFromNode username=", user.GetUserName())
-	log.Println("SyncFromNode userinfo=", pylonSDK.GetAccountAddr(user.GetUserName(), GetTestingT()))
+	log.Println("SyncFromNode Function Body")
+	log.Println("username=", user.GetUserName())
+	log.Println("userinfo=", pylonSDK.GetAccountAddr(user.GetUserName(), GetTestingT()))
 	accAddr := pylonSDK.GetAccountAddr(user.GetUserName(), GetTestingT())
 	accInfo := pylonSDK.GetAccountInfoFromName(user.GetUserName(), GetTestingT())
-	log.Println("accountInfo Result=", accInfo)
+	log.Println("accountInfo=", accInfo)
 
 	user.SetGold(int(accInfo.Coins.AmountOf("loudcoin").Int64()))
 	user.SetPylonAmount(int(accInfo.Coins.AmountOf("pylon").Int64()))
-	log.Println("SyncFromNode gold=", accInfo.Coins.AmountOf("loudcoin").Int64())
+	log.Println("gold=", accInfo.Coins.AmountOf("loudcoin").Int64())
 
 	rawItems, _ := pylonSDK.ListItemsViaCLI(accInfo.Address.String())
 	myItems := []Item{}
@@ -31,7 +32,7 @@ func SyncFromNode(user User) {
 		myItems = append(myItems, item)
 	}
 	user.SetItems(myItems)
-	log.Println("SyncFromNode myItems=", myItems)
+	log.Println("myItems=", myItems)
 
 	nBuyTradeRequests := []TradeRequest{}
 	nSellTradeRequests := []TradeRequest{}
@@ -109,6 +110,6 @@ func SyncFromNode(user User) {
 	SellTradeRequests = nSellTradeRequests
 	SwordBuyTradeRequests = nBuySwordTradeRequests
 	SwordSellTradeRequests = nSellSwordTradeRequests
-	log.Println("SyncFromNode BuyTradeRequests=", BuyTradeRequests)
-	log.Println("SyncFromNode SellTradeRequests=", SellTradeRequests)
+	log.Println("BuyTradeRequests=", BuyTradeRequests)
+	log.Println("SellTradeRequests=", SellTradeRequests)
 }

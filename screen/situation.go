@@ -41,13 +41,13 @@ func (screen *GameScreen) renderUserSituation() {
 	case SHOW_LOUD_SELL_REQUESTS:
 		infoLines = screen.renderTradeRequestTable(loud.SellTradeRequests)
 	case SELECT_BUY_ITEM:
-		desc = loud.Localize("select buy item desc")
+		infoLines = screen.renderItemTable(loud.Localize("select buy item desc"), loud.ShopItems)
 	case SELECT_SELL_ITEM:
-		desc = loud.Localize("select sell item desc")
+		infoLines = screen.renderItemTable(loud.Localize("select sell item desc"), screen.user.InventoryItems())
 	case SELECT_HUNT_ITEM:
-		desc = loud.Localize("select hunt item desc")
+		infoLines = screen.renderItemTable(loud.Localize("select hunt item desc"), screen.user.InventoryItems())
 	case SELECT_UPGRADE_ITEM:
-		desc = loud.Localize("select upgrade item desc")
+		infoLines = screen.renderItemTable(loud.Localize("select upgrade item desc"), screen.user.UpgradableItems())
 	case WAIT_BUY_LOUD_REQUEST_CREATION:
 		desc = loud.Localize("you are now waiting for loud buy request creation")
 		desc += screen.buyLoudDesc(screen.loudEnterValue, screen.pylonEnterValue)
@@ -141,9 +141,9 @@ func (screen *GameScreen) renderUserSituation() {
 			desc = fmt.Sprintf("%s: %s.", loud.Localize("result upgrade finish desc"), loud.Localize(screen.activeItem.Name))
 		}
 	case SHOW_BUY_SWORD_REQUESTS:
-		infoLines = screen.renderItemTradeRequestTable(loud.SwordBuyTradeRequests)
+		infoLines = screen.renderItemTradeRequestTable("Buy sword requests", loud.SwordBuyTradeRequests)
 	case CREATE_SELL_SWORD_REQUEST_SELECT_SWORD:
-		infoLines = screen.renderItemTable(screen.user.InventoryItems())
+		infoLines = screen.renderItemTable("Select sword to sell", screen.user.InventoryItems())
 	case CREATE_SELL_SWORD_REQUEST_ENTER_PYLON_VALUE:
 		desc = "Please enter pylon amount to use (should be integer value)" // TODO should add Localize
 	case WAIT_SELL_SWORD_REQUEST_CREATION:
@@ -157,9 +157,9 @@ func (screen *GameScreen) renderUserSituation() {
 			desc += screen.sellSwordDesc(screen.activeItem, screen.pylonEnterValue)
 		}
 	case SHOW_SELL_SWORD_REQUESTS:
-		infoLines = screen.renderItemTradeRequestTable(loud.SwordSellTradeRequests)
+		infoLines = screen.renderItemTradeRequestTable("Sell sword requests", loud.SwordSellTradeRequests)
 	case CREATE_BUY_SWORD_REQUEST_SELECT_SWORD:
-		infoLines = screen.renderItemTable(loud.WorldItems)
+		infoLines = screen.renderItemTable("Select sword to buy", loud.WorldItems)
 	case CREATE_BUY_SWORD_REQUEST_ENTER_PYLON_VALUE:
 		desc = "Please enter pylon amount to use (should be integer value)" // TODO should add Localize
 	case WAIT_BUY_SWORD_REQUEST_CREATION:

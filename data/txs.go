@@ -55,71 +55,67 @@ func GetExtraPylons(user User) (string, error) {
 	return txhash, nil
 }
 
-func Hunt(user User, key string) (string, error) {
+func Hunt(user User, item Item, getInitialCoin bool) (string, error) {
 	rcpName := "LOUD's hunt without sword recipe"
 
-	useItem := GetWeaponItemFromKey(user, key)
 	itemIDs := []string{}
-	switch key {
-	case "I", "i": // get initial coin
+	if getInitialCoin {
 		rcpName = "LOUD's get initial coin recipe"
 	}
 
-	switch useItem.Name {
+	switch item.Name {
 	case WOODEN_SWORD:
-		if useItem.Level == 1 {
+		if item.Level == 1 {
 			rcpName = "LOUD's hunt with lv1 wooden sword recipe"
 		} else {
 			rcpName = "LOUD's hunt with lv2 wooden sword recipe"
 		}
-		itemIDs = []string{useItem.ID}
+		itemIDs = []string{item.ID}
 	case COPPER_SWORD:
-		if useItem.Level == 1 {
+		if item.Level == 1 {
 			rcpName = "LOUD's hunt with lv1 copper sword recipe"
 		} else {
 			rcpName = "LOUD's hunt with lv2 copper sword recipe"
 		}
-		itemIDs = []string{useItem.ID}
+		itemIDs = []string{item.ID}
 	}
 
 	return ExecuteRecipe(user, rcpName, itemIDs)
 }
 
-func Buy(user User, key string) (string, error) {
-	useItem := GetToBuyItemFromKey(key)
+func Buy(user User, item Item) (string, error) {
 	rcpName := ""
-	switch useItem.Name {
+	switch item.Name {
 	case WOODEN_SWORD:
-		if useItem.Level == 1 {
+		if item.Level == 1 {
 			rcpName = "LOUD's Wooden sword lv1 buy recipe"
 		}
 	case COPPER_SWORD:
-		if useItem.Level == 1 {
+		if item.Level == 1 {
 			rcpName = "LOUD's Copper sword lv1 buy recipe"
 		}
 	default:
 		return "", errors.New("You are trying to buy something which is not in shop")
 	}
-	if useItem.Price > user.GetGold() {
+	if item.Price > user.GetGold() {
 		return "", errors.New("You don't have enough gold to buy this item")
 	}
 	return ExecuteRecipe(user, rcpName, []string{})
 }
 
-func Sell(user User, key string) (string, error) {
-	useItem := GetToSellItemFromKey(user, key)
-	itemIDs := []string{useItem.ID}
+func Sell(user User, item Item) (string, error) {
+	itemIDs := []string{item.ID}
 
 	rcpName := ""
-	switch useItem.Name {
+	switch item.Name {
 	case WOODEN_SWORD:
-		if useItem.Level == 1 {
+		if item.Level == 1 {
 			rcpName = "LOUD's Lv1 wooden sword sell recipe"
 		} else {
 			rcpName = "LOUD's Lv2 wooden sword sell recipe"
 		}
 	case COPPER_SWORD:
-		if useItem.Level == 1 {
+		if item.Level == 1 {
 			rcpName = "LOUD's Lv1 copper sword sell recipe"
 		} else {
 			rcpName = "LOUD's Lv2 copper sword sell recipe"
@@ -128,21 +124,20 @@ func Sell(user User, key string) (string, error) {
 	return ExecuteRecipe(user, rcpName, itemIDs)
 }
 
-func Upgrade(user User, key string) (string, error) {
-	useItem := GetToUpgradeItemFromKey(user, key)
-	itemIDs := []string{useItem.ID}
+func Upgrade(user User, item Item) (string, error) {
+	itemIDs := []string{item.ID}
 	rcpName := ""
-	switch useItem.Name {
+	switch item.Name {
 	case WOODEN_SWORD:
-		if useItem.Level == 1 {
+		if item.Level == 1 {
 			rcpName = "LOUD's Wooden sword lv1 to lv2 upgrade recipe"
 		}
 	case COPPER_SWORD:
-		if useItem.Level == 1 {
+		if item.Level == 1 {
 			rcpName = "LOUD's Copper sword lv1 to lv2 upgrade recipe"
 		}
 	}
-	if useItem.GetUpgradePrice() > user.GetGold() {
+	if item.GetUpgradePrice() > user.GetGold() {
 		return "", errors.New("You don't have enough gold to upgrade this item")
 	}
 	return ExecuteRecipe(user, rcpName, itemIDs)
