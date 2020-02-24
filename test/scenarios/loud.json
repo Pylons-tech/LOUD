@@ -337,7 +337,7 @@
             },
             "property": {
                 "owner": "eugen",
-                "trades": ["pylon to loud trading"]
+                "trades": ["pylon to loud trading created by loud game"]
             }
         }
     },
@@ -355,7 +355,7 @@
             },
             "property": {
                 "owner": "eugen",
-                "trades": ["loud to pylon trading"]
+                "trades": ["loud to pylon trading created by loud game"]
             }
         }
     },
@@ -373,7 +373,7 @@
             },
             "property": {
                 "owner": "eugen",
-                "trades": ["pylon to sword trading"]
+                "trades": ["pylon to sword trading created by loud game"]
             }
         }
     },
@@ -391,7 +391,7 @@
             },
             "property": {
                 "owner": "eugen",
-                "trades": ["sword to pylon trading"]
+                "trades": ["sword to pylon trading created by loud game"]
             }
         }
     }
