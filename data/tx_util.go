@@ -166,7 +166,17 @@ func CheckSignatureMatchWithAftiCli(t *testing.T, txhash string, privKey string,
 	cliTxSign := re.FindSubmatch([]byte(cliTxOutput))
 	aftiTxSign := re.FindSubmatch([]byte(aftiOutput))
 
-	log.Println("comparing afticli and pyloncli ;)", string(cliTxSign[1]), "\nand\n", string(aftiTxSign[1]))
+	if len(cliTxSign) < 2 {
+		log.Println("couldn't get pyloncli signature from", string(cliTxOutput))
+		return false, errors.New("couldn't get pyloncli signature")
+	} else if len(aftiTxSign) < 2 {
+		log.Println("couldn't get afticli signature from", string(aftiOutput))
+		return false, errors.New("couldn't get afticli signature")
+	} else {
+		pylonCliSignature := string(cliTxSign[1])
+		aftiSignatue := string(aftiTxSign[1])
+		log.Println("comparing afticli and pyloncli ;)", pylonCliSignature, "\nand\n", aftiSignatue)
+	}
 	log.Println("where")
 	log.Println("msg=", string(output))
 	log.Println("username=", originSigner)

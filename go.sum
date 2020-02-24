@@ -13,6 +13,8 @@ github.com/Pylons-tech/pylons v0.0.0-20200131022807-d966c0229bca h1:Gp0dQweUTxTF
 github.com/Pylons-tech/pylons v0.0.0-20200131022807-d966c0229bca/go.mod h1:F4HPvlhcSJLXy/+FsOGXgEmrUCVXrcJ5BPMe/+iB6KQ=
 github.com/Pylons-tech/pylons v0.0.0-20200207011603-c44ee6fe40a2 h1:p6Obcr0vpn/+k2/BLGsVL1eHmh9IUO65gib6+UFmW2A=
 github.com/Pylons-tech/pylons v0.0.0-20200207011603-c44ee6fe40a2/go.mod h1:F4HPvlhcSJLXy/+FsOGXgEmrUCVXrcJ5BPMe/+iB6KQ=
+github.com/Pylons-tech/pylons v0.0.0-20200224134457-aea0e694c0b5 h1:MwW4fEdmfrmo4bMa0Unn0SchLablX8hUCSXfoQs5GyQ=
+github.com/Pylons-tech/pylons v0.0.0-20200224134457-aea0e694c0b5/go.mod h1:F4HPvlhcSJLXy/+FsOGXgEmrUCVXrcJ5BPMe/+iB6KQ=
 github.com/VividCortex/gohistogram v1.0.0/go.mod h1:Pf5mBqqDxYaXu3hDrrU+w6nw50o/4+TcAqDqk/vUH7g=
 github.com/Workiva/go-datastructures v1.0.50/go.mod h1:Z+F2Rca0qCsVYDS8z7bAGm8f3UkzuWYS/oBZz5a7VVA=
 github.com/aead/siphash v1.0.1/go.mod h1:Nywa3cDsYNNK3gaciGTWPwHt0wlpNV15vwmswBAUSII=

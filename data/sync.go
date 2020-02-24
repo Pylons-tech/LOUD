@@ -3,6 +3,7 @@ package loud
 import (
 	"log"
 	"sort"
+	"strings"
 
 	pylonSDK "github.com/Pylons-tech/pylons/cmd/test"
 )
@@ -40,7 +41,7 @@ func SyncFromNode(user User) {
 	nSellSwordTradeRequests := []ItemTradeRequest{}
 	rawTrades, _ := pylonSDK.ListTradeViaCLI("")
 	for _, tradeItem := range rawTrades {
-		if tradeItem.Completed == false {
+		if tradeItem.Completed == false && strings.Contains(tradeItem.ExtraInfo, "created by loud game") {
 			inputCoin := ""
 			if len(tradeItem.CoinInputs) > 0 {
 				inputCoin = tradeItem.CoinInputs[0].Coin
