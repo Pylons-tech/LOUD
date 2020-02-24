@@ -41,13 +41,17 @@ func (screen *GameScreen) renderUserSituation() {
 	case SHOW_LOUD_SELL_REQUESTS:
 		infoLines = screen.renderTradeRequestTable(loud.SellTradeRequests)
 	case SELECT_BUY_ITEM:
-		desc = loud.Localize("select buy item desc")
+		// desc = loud.Localize("select buy item desc")
+		infoLines = screen.renderItemTable(loud.ShopItems)
 	case SELECT_SELL_ITEM:
-		desc = loud.Localize("select sell item desc")
+		// desc = loud.Localize("select sell item desc")
+		infoLines = screen.renderItemTable(screen.user.InventoryItems())
 	case SELECT_HUNT_ITEM:
-		desc = loud.Localize("select hunt item desc")
+		// desc = loud.Localize("select hunt item desc")
+		infoLines = screen.renderItemTable(screen.user.InventoryItems())
 	case SELECT_UPGRADE_ITEM:
-		desc = loud.Localize("select upgrade item desc")
+		// desc = loud.Localize("select upgrade item desc")
+		infoLines = screen.renderItemTable(screen.user.UpgradableItems())
 	case WAIT_BUY_LOUD_REQUEST_CREATION:
 		desc = loud.Localize("you are now waiting for loud buy request creation")
 		desc += screen.buyLoudDesc(screen.loudEnterValue, screen.pylonEnterValue)

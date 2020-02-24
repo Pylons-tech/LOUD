@@ -217,7 +217,7 @@ func (screen *GameScreen) HandleFirstClassInputKeys(input termbox.Event) bool {
 		screen.SetScreenStatusAndRefresh(WAIT_HUNT_PROCESS)
 		log.Println("started sending request for hunting item")
 		go func() {
-			txhash, err := loud.Hunt(screen.user, Key)
+			txhash, err := loud.Hunt(screen.user, loud.Item{}, true)
 			log.Println("ended sending request for hunting item")
 			if err != nil {
 				screen.txFailReason = err.Error()
@@ -364,7 +364,6 @@ func (screen *GameScreen) HandleThirdClassInputKeys(input termbox.Event) bool {
 			}
 			return false
 		}
-		screen.refreshed = false
 	} else {
 		switch input.Key {
 		case termbox.KeyArrowLeft:
@@ -379,7 +378,8 @@ func (screen *GameScreen) HandleThirdClassInputKeys(input termbox.Event) bool {
 			return true
 		}
 		if input.Key == termbox.KeyEnter {
-			if screen.user.GetLocation() == loud.MARKET {
+			switch screen.user.GetLocation() {
+			case loud.MARKET, loud.SHOP, loud.FOREST:
 				switch screen.scrStatus {
 				case SHOW_LOUD_BUY_REQUESTS:
 					screen.RunSelectedLoudBuyTrade()
@@ -406,12 +406,42 @@ func (screen *GameScreen) HandleThirdClassInputKeys(input termbox.Event) bool {
 					screen.scrStatus = CREATE_BUY_SWORD_REQUEST_ENTER_PYLON_VALUE
 					screen.inputText = ""
 					screen.refreshed = false
+				case SELECT_BUY_ITEM:
+					items := loud.ShopItems
+					if len(items) <= screen.activeLine || screen.activeLine < 0 {
+						return false
+					}
+					screen.activeItem = items[screen.activeLine]
+					screen.RunActiveItemBuy()
+					log.Println("SELECT_BUY_ITEM", screen.activeItem)
+				case SELECT_HUNT_ITEM:
+					items := screen.user.InventoryItems()
+					if len(items) <= screen.activeLine || screen.activeLine < 0 {
+						return false
+					}
+					screen.activeItem = items[screen.activeLine]
+					screen.RunActiveItemHunt()
+				case SELECT_SELL_ITEM:
+					items := screen.user.InventoryItems()
+					if len(items) <= screen.activeLine || screen.activeLine < 0 {
+						return false
+					}
+					screen.activeItem = items[screen.activeLine]
+					screen.RunActiveItemSell()
+				case SELECT_UPGRADE_ITEM:
+					items := screen.user.UpgradableItems()
+					if len(items) <= screen.activeLine || screen.activeLine < 0 {
+						return false
+					}
+					screen.activeItem = items[screen.activeLine]
+					screen.RunActiveItemUpgrade()
 				default:
 					screen.MoveToNextStep()
 					return false
 				}
-			} else {
+			default:
 				screen.MoveToNextStep()
+				return false
 			}
 			return true
 		}
@@ -446,79 +476,23 @@ func (screen *GameScreen) HandleThirdClassInputKeys(input termbox.Event) bool {
 				if len(screen.activeItem.Name) == 0 {
 					return false
 				}
-				screen.SetScreenStatusAndRefresh(WAIT_BUY_PROCESS)
-
-				log.Println("started sending request for buying item")
-				go func() {
-					txhash, err := loud.Buy(screen.user, Key)
-					log.Println("ended sending request for buying item")
-					if err != nil {
-						screen.txFailReason = err.Error()
-						screen.SetScreenStatusAndRefresh(RESULT_BUY_FINISH)
-					} else {
-						time.AfterFunc(1*time.Second, func() {
-							screen.txResult, screen.txFailReason = loud.ProcessTxResult(screen.user, txhash)
-							screen.SetScreenStatusAndRefresh(RESULT_BUY_FINISH)
-						})
-					}
-				}()
+				screen.RunActiveItemBuy()
 			case SELECT_HUNT_ITEM:
 				screen.activeItem = loud.GetWeaponItemFromKey(screen.user, Key)
-				screen.SetScreenStatusAndRefresh(WAIT_HUNT_PROCESS)
-				log.Println("started sending request for hunting item")
-				go func() {
-					txhash, err := loud.Hunt(screen.user, Key)
-					log.Println("ended sending request for hunting item")
-					if err != nil {
-						screen.txFailReason = err.Error()
-						screen.SetScreenStatusAndRefresh(RESULT_HUNT_FINISH)
-					} else {
-						time.AfterFunc(1*time.Second, func() {
-							screen.txResult, screen.txFailReason = loud.ProcessTxResult(screen.user, txhash)
-							screen.SetScreenStatusAndRefresh(RESULT_HUNT_FINISH)
-						})
-					}
-				}()
+				screen.RunActiveItemHunt()
 			case SELECT_SELL_ITEM:
 				screen.activeItem = loud.GetToSellItemFromKey(screen.user, Key)
 				if len(screen.activeItem.Name) == 0 {
 					return false
 				}
-				screen.SetScreenStatusAndRefresh(WAIT_SELL_PROCESS)
-				log.Println("started sending request for selling item")
-				go func() {
-					txhash, err := loud.Sell(screen.user, Key)
-					log.Println("ended sending request for selling item")
-					if err != nil {
-						screen.txFailReason = err.Error()
-						screen.SetScreenStatusAndRefresh(RESULT_SELL_FINISH)
-					} else {
-						time.AfterFunc(1*time.Second, func() {
-							screen.txResult, screen.txFailReason = loud.ProcessTxResult(screen.user, txhash)
-							screen.SetScreenStatusAndRefresh(RESULT_SELL_FINISH)
-						})
-					}
-				}()
+				screen.RunActiveItemSell()
+
 			case SELECT_UPGRADE_ITEM:
 				screen.activeItem = loud.GetToUpgradeItemFromKey(screen.user, Key)
 				if len(screen.activeItem.Name) == 0 {
 					return false
 				}
-				screen.SetScreenStatusAndRefresh(WAIT_UPGRADE_PROCESS)
-				log.Println("started sending request for upgrading item")
-				go func() {
-					txhash, err := loud.Upgrade(screen.user, Key)
-					log.Println("ended sending request for upgrading item")
-					if err != nil {
-						screen.txFailReason = err.Error()
-						screen.SetScreenStatusAndRefresh(RESULT_UPGRADE_FINISH)
-					} else {
-						time.AfterFunc(1*time.Second, func() {
-							screen.txResult, screen.txFailReason = loud.ProcessTxResult(screen.user, txhash)
-							screen.SetScreenStatusAndRefresh(RESULT_UPGRADE_FINISH)
-						})
-					}
-				}()
+				screen.RunActiveItemUpgrade()
 			}
 			return true
 		}
