@@ -289,13 +289,14 @@ func (screen *GameScreen) renderItemTradeRequestTableLine(text1 string, text2 st
 	return calcText
 }
 
-func (screen *GameScreen) renderItemTradeRequestTable(requests []loud.ItemTradeRequest) []string {
-	infoLines := []string{}
+func (screen *GameScreen) renderItemTradeRequestTable(header string, requests []loud.ItemTradeRequest) []string {
+	infoLines := strings.Split(header, "\n")
+	numHeaderLines := len(infoLines)
 	infoLines = append(infoLines, "╭────────────────────────────────────┬───────────────╮")
 	// infoLines = append(infoLines, "│ Item                │ Price (pylon) │")
 	infoLines = append(infoLines, screen.renderItemTradeRequestTableLine("Item", "Price (pylon)", false, false))
 	infoLines = append(infoLines, "├────────────────────────────────────┼───────────────┤")
-	numLines := screen.screenSize.Height/2 - 7
+	numLines := screen.screenSize.Height/2 - 7 - numHeaderLines
 	if screen.activeLine >= len(requests) {
 		screen.activeLine = len(requests) - 1
 	}
@@ -332,13 +333,14 @@ func (screen *GameScreen) renderItemTableLine(text1 string, isActiveLine bool) s
 	return calcText
 }
 
-func (screen *GameScreen) renderItemTable(items []loud.Item) []string {
-	infoLines := []string{}
+func (screen *GameScreen) renderItemTable(header string, items []loud.Item) []string {
+	infoLines := strings.Split(header, "\n")
+	numHeaderLines := len(infoLines)
 	infoLines = append(infoLines, "╭────────────────────────────────────────────────────╮")
 	// infoLines = append(infoLines, "│ Item                            │")
 	infoLines = append(infoLines, screen.renderItemTableLine("Item", false))
 	infoLines = append(infoLines, "├────────────────────────────────────────────────────┤")
-	numLines := screen.screenSize.Height/2 - 7
+	numLines := screen.screenSize.Height/2 - 7 - numHeaderLines
 	if screen.activeLine >= len(items) {
 		screen.activeLine = len(items) - 1
 	}
