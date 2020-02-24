@@ -134,3 +134,13 @@ Development channel is available and to do automation process on remote node
 ```
 make ARGS="afti -userest -automate" run
 ```
+
+### To run multiple instances on same computer
+
+Just clone repos two times in different places something like below
+```
+/Users/admin/go/src/github.com/MikeSofaer/LOUD
+/Users/admin/go/src/github.com/MikeSofaer/LOUD_C
+```
+
+And then run `make` and `make ARGS="XXX XXX" run` on each folder.
