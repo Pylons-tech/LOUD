@@ -11,10 +11,12 @@
             "txResult": {
                 "status": "Success"
             },
-            "property": {
-                "owner": "eugen",
-                "cookbooks": ["Legend of Undead Dragon"]
-            }
+            "property": [
+                {
+                    "owner": "eugen",
+                    "cookbooks": ["Legend of Undead Dragon"]
+                }
+            ]
         }
     },
     {
@@ -29,19 +31,21 @@
             "txResult": {
                 "status": "Success"
             },
-            "property": {
-                "owner": "eugen",
-                "items": [
-                    {
-                        "stringKeys": [],
-                        "stringValues": { "Name": "Copper sword" },
-                        "dblKeys": [],
-                        "dblValues": {},
-                        "longKeys": [],
-                        "longValues": {}
-                    }
-                ]
-            }
+            "property": [
+                {
+                    "owner": "eugen",
+                    "items": [
+                        {
+                            "stringKeys": [],
+                            "stringValues": { "Name": "Copper sword" },
+                            "dblKeys": [],
+                            "dblValues": {},
+                            "longKeys": [],
+                            "longValues": {}
+                        }
+                    ]
+                }
+            ]
         }
     },
     {
@@ -56,19 +60,21 @@
             "txResult": {
                 "status": "Success"
             },
-            "property": {
-                "owner": "eugen",
-                "items": [
-                    {
-                        "stringKeys": [],
-                        "stringValues": { "Name": "Wooden sword" },
-                        "dblKeys": [],
-                        "dblValues": {},
-                        "longKeys": [],
-                        "longValues": {}
-                    }
-                ]
-            }
+            "property": [
+                {
+                    "owner": "eugen",
+                    "items": [
+                        {
+                            "stringKeys": [],
+                            "stringValues": { "Name": "Wooden sword" },
+                            "dblKeys": [],
+                            "dblValues": {},
+                            "longKeys": [],
+                            "longValues": {}
+                        }
+                    ]
+                }
+            ]
         }
     },
     {
@@ -83,10 +89,12 @@
             "txResult": {
                 "status": "Success"
             },
-            "property": {
-                "owner": "eugen",
-                "recipes": ["LOUD's get initial coin recipe"]
-            }
+            "property": [
+                {
+                    "owner": "eugen",
+                    "recipes": ["LOUD's get initial coin recipe"]
+                }
+            ]
         }
     },
     {
@@ -101,10 +109,12 @@
             "txResult": {
                 "status": "Success"
             },
-            "property": {
-                "owner": "eugen",
-                "recipes": ["LOUD's Copper sword lv1 buy recipe"]
-            }
+            "property": [
+                {
+                    "owner": "eugen",
+                    "recipes": ["LOUD's Copper sword lv1 buy recipe"]
+                }
+            ]
         }
     },
     {
@@ -119,10 +129,12 @@
             "txResult": {
                 "status": "Success"
             },
-            "property": {
-                "owner": "eugen",
-                "recipes": ["LOUD's Wooden sword lv1 buy recipe"]
-            }
+            "property": [
+                {
+                    "owner": "eugen",
+                    "recipes": ["LOUD's Wooden sword lv1 buy recipe"]
+                }
+            ]
         }
     },
     {
@@ -137,10 +149,12 @@
             "txResult": {
                 "status": "Success"
             },
-            "property": {
-                "owner": "eugen",
-                "recipes": ["LOUD's hunt with lv1 copper sword recipe"]
-            }
+            "property": [
+                {
+                    "owner": "eugen",
+                    "recipes": ["LOUD's hunt with lv1 copper sword recipe"]
+                }
+            ]
         }
     },
     {
@@ -155,10 +169,12 @@
             "txResult": {
                 "status": "Success"
             },
-            "property": {
-                "owner": "eugen",
-                "recipes": ["LOUD's hunt with lv2 copper sword recipe"]
-            }
+            "property": [
+                {
+                    "owner": "eugen",
+                    "recipes": ["LOUD's hunt with lv2 copper sword recipe"]
+                }
+            ]
         }
     },
     {
@@ -173,10 +189,12 @@
             "txResult": {
                 "status": "Success"
             },
-            "property": {
-                "owner": "eugen",
-                "recipes": ["LOUD's hunt without sword recipe"]
-            }
+            "property": [
+                {
+                    "owner": "eugen",
+                    "recipes": ["LOUD's hunt without sword recipe"]
+                }
+            ]
         }
     },
     {
@@ -191,10 +209,12 @@
             "txResult": {
                 "status": "Success"
             },
-            "property": {
-                "owner": "eugen",
-                "recipes": ["LOUD's hunt with lv1 wooden sword recipe"]
-            }
+            "property": [
+                {
+                    "owner": "eugen",
+                    "recipes": ["LOUD's hunt with lv1 wooden sword recipe"]
+                }
+            ]
         }
     },
     {
@@ -209,10 +229,12 @@
             "txResult": {
                 "status": "Success"
             },
-            "property": {
-                "owner": "eugen",
-                "recipes": ["LOUD's hunt with lv2 wooden sword recipe"]
-            }
+            "property": [
+                {
+                    "owner": "eugen",
+                    "recipes": ["LOUD's hunt with lv2 wooden sword recipe"]
+                }
+            ]
         }
     },
     {
@@ -227,10 +249,12 @@
             "txResult": {
                 "status": "Success"
             },
-            "property": {
-                "owner": "eugen",
-                "recipes": ["LOUD's Lv1 copper sword sell recipe"]
-            }
+            "property": [
+                {
+                    "owner": "eugen",
+                    "recipes": ["LOUD's Lv1 copper sword sell recipe"]
+                }
+            ]
         }
     },
     {
@@ -245,10 +269,12 @@
             "txResult": {
                 "status": "Success"
             },
-            "property": {
-                "owner": "eugen",
-                "recipes": ["LOUD's Lv2 copper sword sell recipe"]
-            }
+            "property": [
+                {
+                    "owner": "eugen",
+                    "recipes": ["LOUD's Lv2 copper sword sell recipe"]
+                }
+            ]
         }
     },
     {
@@ -263,10 +289,12 @@
             "txResult": {
                 "status": "Success"
             },
-            "property": {
-                "owner": "eugen",
-                "recipes": ["LOUD's Lv1 wooden sword sell recipe"]
-            }
+            "property": [
+                {
+                    "owner": "eugen",
+                    "recipes": ["LOUD's Lv1 wooden sword sell recipe"]
+                }
+            ]
         }
     },
     {
@@ -281,10 +309,12 @@
             "txResult": {
                 "status": "Success"
             },
-            "property": {
-                "owner": "eugen",
-                "recipes": ["LOUD's Lv2 wooden sword sell recipe"]
-            }
+            "property": [
+                {
+                    "owner": "eugen",
+                    "recipes": ["LOUD's Lv2 wooden sword sell recipe"]
+                }
+            ]
         }
     },
     {
@@ -299,10 +329,12 @@
             "txResult": {
                 "status": "Success"
             },
-            "property": {
-                "owner": "eugen",
-                "recipes": ["LOUD's Copper sword lv1 to lv2 upgrade recipe"]
-            }
+            "property": [
+                {
+                    "owner": "eugen",
+                    "recipes": ["LOUD's Copper sword lv1 to lv2 upgrade recipe"]
+                }
+            ]
         }
     },
     {
@@ -317,10 +349,12 @@
             "txResult": {
                 "status": "Success"
             },
-            "property": {
-                "owner": "eugen",
-                "recipes": ["LOUD's Wooden sword lv1 to lv2 upgrade recipe"]
-            }
+            "property": [
+                {
+                    "owner": "eugen",
+                    "recipes": ["LOUD's Wooden sword lv1 to lv2 upgrade recipe"]
+                }
+            ]
         }
     },
     {
@@ -335,10 +369,12 @@
             "txResult": {
                 "status": "Success"
             },
-            "property": {
-                "owner": "eugen",
-                "trades": ["pylon to loud trading created by loud game"]
-            }
+            "property": [
+                {
+                    "owner": "eugen",
+                    "trades": ["pylon to loud trading created by loud game"]
+                }
+            ]
         }
     },
     {
@@ -353,10 +389,12 @@
             "txResult": {
                 "status": "Success"
             },
-            "property": {
-                "owner": "eugen",
-                "trades": ["loud to pylon trading created by loud game"]
-            }
+            "property": [
+                {
+                    "owner": "eugen",
+                    "trades": ["loud to pylon trading created by loud game"]
+                }
+            ]
         }
     },
     {
@@ -371,10 +409,12 @@
             "txResult": {
                 "status": "Success"
             },
-            "property": {
-                "owner": "eugen",
-                "trades": ["pylon to sword trading created by loud game"]
-            }
+            "property": [
+                {
+                    "owner": "eugen",
+                    "trades": ["pylon to sword trading created by loud game"]
+                }
+            ]
         }
     },
     {
@@ -389,10 +429,12 @@
             "txResult": {
                 "status": "Success"
             },
-            "property": {
-                "owner": "eugen",
-                "trades": ["sword to pylon trading created by loud game"]
-            }
+            "property": [
+                {
+                    "owner": "eugen",
+                    "trades": ["sword to pylon trading created by loud game"]
+                }
+            ]
         }
     }
 ]
