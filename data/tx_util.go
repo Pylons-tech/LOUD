@@ -255,7 +255,8 @@ func ComputePrivKeyFromMnemonic(mnemonic string) (string, string) {
 
 	// This priv get code came from dbKeybase.CreateMnemonic function of cosmos-sdk
 	masterPriv, ch := hd.ComputeMastersFromSeed(seed)
-	derivedPriv, err := hd.DerivePrivateKeyForPath(masterPriv, ch, hd.NewFundraiserParams(0, 0).String())
+	hdPath := hd.NewFundraiserParams(0, 0).String()
+	derivedPriv, err := hd.DerivePrivateKeyForPath(masterPriv, ch, hdPath)
 	if err != nil {
 		os.Exit(1)
 	}
@@ -289,7 +290,10 @@ func InitPylonAccount(username string) string {
 				log.Fatal("Couldn't get private key from ", username, ".json")
 			}
 			addedKeyResInterface := make(map[string]string)
-			json.Unmarshal(addResult, &addedKeyResInterface)
+			err = json.Unmarshal(addResult, &addedKeyResInterface)
+			if err != nil {
+				log.Fatal("Couldn't parse file for", username, ".json", err.Error())
+			}
 			privKey = addedKeyResInterface["privkey"]
 			log.Println("privKey=", privKey)
 		}
@@ -297,7 +301,7 @@ func InitPylonAccount(username string) string {
 		addedKeyResInterface := make(map[string]string)
 		json.Unmarshal(addResult, &addedKeyResInterface)
 
-		// Generate a mnemonic for memorization or user-friendly seeds
+		// mnemonic key from the pylonscli add result
 		mnemonic := addedKeyResInterface["mnemonic"]
 		log.Println("using mnemonic: ", mnemonic)
 
