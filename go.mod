@@ -5,7 +5,7 @@ go 1.13
 require (
 	github.com/FactomProject/basen v0.0.0-20150613233007-fe3947df716e // indirect
 	github.com/FactomProject/btcutilecc v0.0.0-20130527213604-d3a63a5752ec // indirect
-	github.com/Pylons-tech/pylons v0.0.0-20200226094800-f509a3462949
+	github.com/Pylons-tech/pylons v0.0.0-20200305122341-dca4b8c092f2
 	github.com/ahmetb/go-cursor v0.0.0-20131010032410-8136607ea412
 	github.com/anmitsu/go-shlex v0.0.0-20161002113705-648efa622239
 	github.com/coreos/bbolt v1.3.3
