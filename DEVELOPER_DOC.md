@@ -232,104 +232,27 @@ Lv2 copper sword
 }
 ```
 
-### Wooden sword lv1 sell recipe, 80 gold
-```
+### Sword sell recipe, attack * (randi(2)+20) gold
 {
+    "ID": "LOUD-hunt-with-a-sword-recipe-v0.0.0-1583631194",
     "RType": "0",
     "CoinInputs":[],
-    "ItemInput": [{
-        "Doubles": [],
-        "Longs": [{"Key": "level", "MinValue": "1", "MaxValue": "1"}],
-        "Strings": [{"Key": "Name", "Value": "Wooden sword"}]
+    "ItemInputs":[{
+        "Doubles": [{"Key": "attack", "MinValue": "1.0", "MaxValue": "1000.0"}],
+        "Longs": [{"Key": "level", "MinValue": "1", "MaxValue": "1000"}],
+        "Strings": []
     }],
     "Entries": {
         "CoinOutputs": [{
             "Coin":"loudcoin",
-            "Count": 80,
+            "Program": "int(attack * double(randi(2)+20))",
             "Weight":1
         }]
     },
     "ExtraInfo":"",
     "Sender":"eugen",
-    "Name": "LOUD's Lv1 wooden sword sell recipe",
+    "Name": "LOUD's sword sell recipe",
     "CookbookName": "Legend of Undead Dragon",
-    "Description": "this recipe is used to sell lv1 wooden sword.",
+    "Description": "this recipe is used to sell a sword.",
     "BlockInterval":"0"
 }
-```
-
-### Wooden sword lv2 sell recipe, 160 gold
-```
-{
-    "RType": "0",
-    "CoinInputs":[],
-    "ItemInput": [{
-        "Doubles": [],
-        "Longs": [{"Key": "level", "MinValue": "2", "MaxValue": "2"}],
-        "Strings": [{"Key": "Name", "Value": "Wooden sword"}]
-    }],
-    "Entries": {
-        "CoinOutputs": [{
-            "Coin":"loudcoin",
-            "Count": 160,
-            "Weight":1
-        }]
-    },
-    "ExtraInfo":"",
-    "Sender":"eugen",
-    "Name": "LOUD's Lv2 wooden sword sell recipe",
-    "CookbookName": "Legend of Undead Dragon",
-    "Description": "this recipe is used to sell lv1 wooden sword.",
-    "BlockInterval":"0"
-}
-```
-### Copper sword lv1 sell recipe, 200 gold
-```
-{
-    "RType": "0",
-    "CoinInputs":[],
-    "ItemInput": [{
-        "Doubles": [],
-        "Longs": [{"Key": "level", "MinValue": "1", "MaxValue": "1"}],
-        "Strings": [{"Key": "Name", "Value": "Copper sword"}]
-    }],
-    "Entries": {
-        "CoinOutputs": [{
-            "Coin":"loudcoin",
-            "Count": 200,
-            "Weight":1
-        }]
-    },
-    "ExtraInfo":"",
-    "Sender":"eugen",
-    "Name": "LOUD's Lv1 copper sword sell recipe",
-    "CookbookName": "Legend of Undead Dragon",
-    "Description": "this recipe is used to sell lv1 copper sword.",
-    "BlockInterval":"0"
-}
-```
-### Copper sword lv2 sell recipe, 400 gold
-```
-{
-    "RType": "0",
-    "CoinInputs":[],
-    "ItemInput": [{
-        "Doubles": [],
-        "Longs": [{"Key": "level", "MinValue": "2", "MaxValue": "2"}],
-        "Strings": [{"Key": "Name", "Value": "Copper sword"}]
-    }],
-    "Entries": {
-        "CoinOutputs": [{
-            "Coin":"loudcoin",
-            "Count": 400,
-            "Weight":1
-        }]
-    },
-    "ExtraInfo":"",
-    "Sender":"eugen",
-    "Name": "LOUD's Lv2 copper sword sell recipe",
-    "CookbookName": "Legend of Undead Dragon",
-    "Description": "this recipe is used to sell lv2 copper sword.",
-    "BlockInterval":"0"
-}
-```
