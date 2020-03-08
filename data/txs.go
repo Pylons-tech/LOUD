@@ -66,19 +66,8 @@ func Hunt(user User, item Item, getInitialCoin bool) (string, error) {
 	}
 
 	switch item.Name {
-	case WOODEN_SWORD:
-		if item.Level == 1 {
-			rcpName = "LOUD's hunt with lv1 wooden sword recipe"
-		} else {
-			rcpName = "LOUD's hunt with lv2 wooden sword recipe"
-		}
-		itemIDs = []string{item.ID}
-	case COPPER_SWORD:
-		if item.Level == 1 {
-			rcpName = "LOUD's hunt with lv1 copper sword recipe"
-		} else {
-			rcpName = "LOUD's hunt with lv2 copper sword recipe"
-		}
+	case WOODEN_SWORD, COPPER_SWORD:
+		rcpName = "LOUD's hunt with a sword recipe"
 		itemIDs = []string{item.ID}
 	}
 

@@ -49,24 +49,18 @@ Lv2 copper sword
 
 ## Recipes
 
-### Hunt recipe without sword (1, 5, 10)
+
+### Hunt recipe without sword (1 or 2)
 ```
 {
+    "ID": "LOUD-hunt-with-no-weapon-recipe-v0.0.0-1579053457",
     "RType": "0",
-    "CoinInputs":[],
+    "CoinInputs":[],    
     "ItemInput": [],
     "Entries":{
         "CoinOutputs":[{
             "Coin":"loudcoin",
-            "Count": 1,
-            "Weight":1
-        }, {
-            "Coin":"loudcoin",
-            "Count": 5,
-            "Weight": 2
-        }, {
-            "Coin":"loudcoin",
-            "Count": 10,
+            "Program": "randi(2)+1",
             "Weight": 1
         }],
         "ItemOutputs":[]
@@ -80,146 +74,33 @@ Lv2 copper sword
 }
 ```
 
-### Hunt recipe with lv1 Wooden sword  (10, 15, 20)
+### Hunt recipe with a sword (attack *4 or attack *5 )
 ```
 {
+    "ID": "LOUD-hunt-with-a-sword-recipe-v0.0.0-1583631194",
     "RType": "0",
     "CoinInputs":[],
-    "ItemInput": [{
-        "Doubles": [],
-        "Longs": [{"Key": "level", "MinValue": "1", "MaxValue": "1"}],
-        "Strings": [{"Key": "Name", "Value": "Wooden sword"}]
+    "ItemInputs":[{
+        "Doubles": [{"Key": "attack", "MinValue": "1.0", "MaxValue": "1000.0"}],
+        "Longs": [{"Key": "level", "MinValue": "1", "MaxValue": "1000"}],
+        "Strings": []
     }],
     "Entries":{
         "CoinOutputs":[{
             "Coin":"loudcoin",
-            "Count": 10,
-            "Weight":1
-        }, {
-            "Coin":"loudcoin",
-            "Count": 15,
-            "Weight": 2
-        }, {
-            "Coin":"loudcoin",
-            "Count": 20,
+            "Program": "int(attack * double(randi(2)+4))",
             "Weight": 1
         }],
         "ItemOutputs":[]
     },
     "ExtraInfo":"",
     "Sender":"eugen",
-    "Name": "LOUD's hunt with lv1 wooden sword recipe",
+    "Name": "LOUD's hunt with a sword recipe",
     "CookbookName": "Legend of Undead Dragon",
-    "Description": "this recipe is used to hunt with lv1 wooden sword.",
+    "Description": "this recipe is used to hunt with a sword.",
     "BlockInterval":"0"
 }
 ```
-
-### Hunt recipe with Wooden sword lv2 (20-30)
-```
-{
-    "RType": "0",
-    "CoinInputs":[],
-    "ItemInput": [{
-        "Doubles": [],
-        "Longs": [{"Key": "level", "MinValue": "2", "MaxValue": "2"}],
-        "Strings": [{"Key": "Name", "Value": "Wooden sword"}]
-    }],
-    "Entries":{
-        "CoinOutputs":[{
-            "Coin":"loudcoin",
-            "Count": 20,
-            "Weight":1
-        }, {
-            "Coin":"loudcoin",
-            "Count": 25,
-            "Weight": 2
-        }, {
-            "Coin":"loudcoin",
-            "Count": 30,
-            "Weight": 1
-        }],
-        "ItemOutputs":[]
-    },
-    "ExtraInfo":"",
-    "Sender":"eugen",
-    "Name": "LOUD's hunt with lv2 wooden sword recipe",
-    "CookbookName": "Legend of Undead Dragon",
-    "Description": "this recipe is used to hunt with lv2 wooden sword.",
-    "BlockInterval":"0"
-}
-```
-
-### Hunt recipe with Copper  sword lv1 (50-80)
-```
-{
-    "RType": "0",
-    "CoinInputs":[],
-    "ItemInput": [{
-        "Doubles": [],
-        "Longs": [{"Key": "level", "MinValue": "1", "MaxValue": "1"}],
-        "Strings": [{"Key": "Name", "Value": "Copper sword"}]
-    }],
-    "Entries":{
-        "CoinOutputs":[{
-            "Coin":"loudcoin",
-            "Count": 50,
-            "Weight":1
-        }, {
-            "Coin":"loudcoin",
-            "Count": 65,
-            "Weight": 2
-        }, {
-            "Coin":"loudcoin",
-            "Count": 80,
-            "Weight": 1
-        }],
-        "ItemOutputs":[]
-    },
-    "ExtraInfo":"",
-    "Sender":"eugen",
-    "Name": "LOUD's hunt with lv1 copper sword recipe",
-    "CookbookName": "Legend of Undead Dragon",
-    "Description": "this recipe is used to hunt with lv1 copper sword.",
-    "BlockInterval":"0"
-}
-```
-
-### Hunt recipe with Copper sword lv2 (80-120)
-```
-{
-    "RType": "0",
-    "CoinInputs":[],
-    "ItemInput": [{
-        "Doubles": [],
-        "Longs": [{"Key": "level", "MinValue": "2", "MaxValue": "2"}],
-        "Strings": [{"Key": "Name", "Value": "Copper sword"}]
-    }],
-    "Entries":{
-        "CoinOutputs":[{
-            "Coin":"loudcoin",
-            "Count": 80,
-            "Weight":1
-        }, {
-            "Coin":"loudcoin",
-            "Count": 100,
-            "Weight": 2
-        }, {
-            "Coin":"loudcoin",
-            "Count": 120,
-            "Weight": 1
-        }],
-        "ItemOutputs":[]
-    },
-    "ExtraInfo":"",
-    "Sender":"eugen",
-    "Name": "LOUD's hunt with lv2 copper sword recipe",
-    "CookbookName": "Legend of Undead Dragon",
-    "Description": "this recipe is used to hunt with lv2 copper sword.",
-    "BlockInterval":"0"
-}
-```
-
 ### Buy Wooden sword lv1 price: 100 gold 
 ```
 {
