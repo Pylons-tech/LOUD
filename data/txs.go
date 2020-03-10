@@ -74,6 +74,20 @@ func Hunt(user User, item Item, getInitialCoin bool) (string, error) {
 	return ExecuteRecipe(user, rcpName, itemIDs)
 }
 
+func BuyCharacter(user User, item Item) (string, error) {
+	rcpName := ""
+	switch item.Name {
+	case TIGER_CHARACTER:
+		rcpName = "LOUD's Get Character recipe"
+	default:
+		return "", errors.New("You are trying to buy something which is not in shop")
+	}
+	if item.Price > user.GetPylonAmount() {
+		return "", errors.New("You don't have enough pylon to buy this character")
+	}
+	return ExecuteRecipe(user, rcpName, []string{})
+}
+
 func Buy(user User, item Item) (string, error) {
 	rcpName := ""
 	switch item.Name {

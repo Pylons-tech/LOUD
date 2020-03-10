@@ -2,7 +2,10 @@
   "block height": {
     "one": "Altura del bloque"
   },
-  "buy failed reason": {
+  "buy item failed reason": {
+    "one": "Razón de compra fallida"
+  },
+  "buy character failed reason": {
     "one": "Razón de compra fallida"
   },
   "hunt failed reason": {
@@ -33,7 +36,7 @@
     "one": "1) Cazar\n"
   },
   "shop": {
-    "one": "1) Comprar Artículos\n2) Vender Artículos\n3) Mejorar Artículos\n"
+    "one": "1) Comprar Artículos\n2) Vender Artículos\n3) Mejorar Artículos\n4) Comprar personajes\n"
   },
   "market": {
     "one": "1) Sell Loud from orderbook / Create an order to buy Loud\n2) Buy Loud from orderbook / Create an order to Sell Loud\n3) Sell sword from orderbook / Create an order to buy sword\n4) Buy sword from orderbook / Create an order to sell sword\n"
@@ -100,6 +103,9 @@
   "develop desc": {
     "one": "You are now testing things for development. Please enter commands you want to try"
   },
+  "select buy character desc": {
+    "one": "You are gonna buy a character.\nPlease select a character to buy."
+  },
   "select buy item desc": {
     "one": "Vas a comprar un artículo.\nPor favor selecciona un artículo a comprar."
   },
@@ -121,8 +127,11 @@
   "wait process to end": {
     "one": "Por favor espere un momento a finalizar el proceso."
   },
-  "wait buy process desc": {
+  "wait buy item process desc": {
     "one": "Estás comprando en la tienda"
+  },
+  "wait buy character process desc": {
+    "one": "You are now buying a character at the shop"
   },
   "wait hunt process desc": {
     "one": "Estás cazando con"
@@ -180,6 +189,9 @@
   },
   "inventory items": {
     "one": " Inventario de Artículos "
+  },
+  "inventory chracters": {
+    "one": " Inventory Characters "
   },
   "screen size warning": {
     "one": "La pantalla es muy pequena. Haga su terminal mas larga. (60x20 minimo)"

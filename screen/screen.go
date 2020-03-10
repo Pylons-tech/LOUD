@@ -552,6 +552,12 @@ func (screen *GameScreen) renderCharacterSheet() {
 	for _, item := range items {
 		infoLines = append(infoLines, truncateRight(fmt.Sprintf("%s Lv%d", loud.Localize(item.Name), item.Level), width))
 	}
+
+	infoLines = append(infoLines, centerText(loud.Localize("inventory chracters"), "─", width))
+	characters := screen.user.InventoryCharacters()
+	for _, character := range characters {
+		infoLines = append(infoLines, truncateRight(fmt.Sprintf("%s Lv%d", loud.Localize(character.Name), character.Level), width))
+	}
 	infoLines = append(infoLines, centerText(" ❦ ", "─", width))
 
 	for index, line := range infoLines {
@@ -586,7 +592,7 @@ func (screen *GameScreen) renderCharacterSheet() {
 }
 
 func (screen *GameScreen) RunActiveItemBuy() {
-	screen.SetScreenStatusAndRefresh(WAIT_BUY_PROCESS)
+	screen.SetScreenStatusAndRefresh(WAIT_BUY_ITEM_PROCESS)
 
 	log.Println("started sending request for buying item")
 	go func() {
@@ -594,11 +600,30 @@ func (screen *GameScreen) RunActiveItemBuy() {
 		log.Println("ended sending request for buying item")
 		if err != nil {
 			screen.txFailReason = err.Error()
-			screen.SetScreenStatusAndRefresh(RESULT_BUY_FINISH)
+			screen.SetScreenStatusAndRefresh(RESULT_BUY_ITEM_FINISH)
 		} else {
 			time.AfterFunc(1*time.Second, func() {
 				screen.txResult, screen.txFailReason = loud.ProcessTxResult(screen.user, txhash)
-				screen.SetScreenStatusAndRefresh(RESULT_BUY_FINISH)
+				screen.SetScreenStatusAndRefresh(RESULT_BUY_ITEM_FINISH)
+			})
+		}
+	}()
+}
+
+func (screen *GameScreen) RunActiveCharacterBuy() {
+	screen.SetScreenStatusAndRefresh(WAIT_BUY_CHARACTER_PROCESS)
+
+	log.Println("started sending request for buying character")
+	go func() {
+		txhash, err := loud.BuyCharacter(screen.user, screen.activeItem)
+		log.Println("ended sending request for buying character")
+		if err != nil {
+			screen.txFailReason = err.Error()
+			screen.SetScreenStatusAndRefresh(RESULT_BUY_CHARACTER_FINISH)
+		} else {
+			time.AfterFunc(1*time.Second, func() {
+				screen.txResult, screen.txFailReason = loud.ProcessTxResult(screen.user, txhash)
+				screen.SetScreenStatusAndRefresh(RESULT_BUY_CHARACTER_FINISH)
 			})
 		}
 	}()

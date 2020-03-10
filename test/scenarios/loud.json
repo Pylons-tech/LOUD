@@ -78,6 +78,26 @@
         }
     },
     {
+        "ID": "CREATE_GET_CHARACTER_RECIPE",
+        "runAfter": {
+            "precondition": ["CREATE_LOUD_COOKBOOK"],
+            "blockWait": 0
+        },
+        "action": "create_recipe",
+        "paramsRef": "./recipes/get_character.json",
+        "output": {
+            "txResult": {
+                "status": "Success"
+            },
+            "property": [
+                {
+                    "owner": "eugen",
+                    "recipes": ["LOUD's Get Character recipe"]
+                }
+            ]
+        }
+    },
+    {
         "ID": "CREATE_GET_INITIAL_COIN_RECIPE",
         "runAfter": {
             "precondition": ["CREATE_LOUD_COOKBOOK"],

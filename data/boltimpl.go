@@ -72,6 +72,7 @@ type UserData struct {
 	Username    string `json:""`
 	Location    UserLocation
 	Items       []Item
+	Characters  []Item
 	PrivKey     string
 }
 
@@ -159,8 +160,16 @@ func (user *dbUser) SetItems(items []Item) {
 	user.UserData.Items = items
 }
 
+func (user *dbUser) SetCharacters(items []Item) {
+	user.UserData.Characters = items
+}
+
 func (user *dbUser) InventoryItems() []Item {
 	return user.UserData.Items
+}
+
+func (user *dbUser) InventoryCharacters() []Item {
+	return user.UserData.Characters
 }
 
 func (user *dbUser) UpgradableItems() []Item {

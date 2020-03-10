@@ -42,6 +42,8 @@ func (screen *GameScreen) renderUserSituation() {
 		infoLines = screen.renderTradeRequestTable(loud.SellTradeRequests)
 	case SELECT_BUY_ITEM:
 		infoLines = screen.renderItemTable(loud.Localize("select buy item desc"), loud.ShopItems)
+	case SELECT_BUY_CHARACTER:
+		infoLines = screen.renderItemTable(loud.Localize("select buy character desc"), loud.ShopCharacters)
 	case SELECT_SELL_ITEM:
 		infoLines = screen.renderItemTable(loud.Localize("select sell item desc"), screen.user.InventoryItems())
 	case SELECT_HUNT_ITEM:
@@ -54,8 +56,10 @@ func (screen *GameScreen) renderUserSituation() {
 	case WAIT_SELL_LOUD_REQUEST_CREATION:
 		desc = loud.Localize("you are now waiting for loud sell request creation")
 		desc += screen.sellLoudDesc(screen.loudEnterValue, screen.pylonEnterValue)
-	case WAIT_BUY_PROCESS:
-		desc = fmt.Sprintf("%s %s Lv%d.\n%s", loud.Localize("wait buy process desc"), loud.Localize(screen.activeItem.Name), screen.activeItem.Level, waitProcessEnd)
+	case WAIT_BUY_ITEM_PROCESS:
+		desc = fmt.Sprintf("%s %s Lv%d.\n%s", loud.Localize("wait buy item process desc"), loud.Localize(screen.activeItem.Name), screen.activeItem.Level, waitProcessEnd)
+	case WAIT_BUY_CHARACTER_PROCESS:
+		desc = fmt.Sprintf("%s %s Lv%d.\n%s", loud.Localize("wait buy character process desc"), loud.Localize(screen.activeItem.Name), screen.activeItem.Level, waitProcessEnd)
 	case WAIT_HUNT_PROCESS:
 		if len(screen.activeItem.Name) > 0 {
 			desc = fmt.Sprintf("%s %s Lv%d.\n%s", loud.Localize("wait hunt process desc"), loud.Localize(screen.activeItem.Name), screen.activeItem.Level, waitProcessEnd)
@@ -91,9 +95,15 @@ func (screen *GameScreen) renderUserSituation() {
 			desc = loud.Localize("loud sell request was successfully created")
 			desc += screen.sellLoudDesc(screen.loudEnterValue, screen.pylonEnterValue)
 		}
-	case RESULT_BUY_FINISH:
+	case RESULT_BUY_ITEM_FINISH:
 		if screen.txFailReason != "" {
-			desc = loud.Localize("buy failed reason") + ": " + loud.Localize(screen.txFailReason)
+			desc = loud.Localize("buy item failed reason") + ": " + loud.Localize(screen.txFailReason)
+		} else {
+			desc = fmt.Sprintf("%s %s Lv%d.\n%s", loud.Localize("result buy finish desc"), loud.Localize(screen.activeItem.Name), screen.activeItem.Level, loud.Localize("use for hunting"))
+		}
+	case RESULT_BUY_CHARACTER_FINISH:
+		if screen.txFailReason != "" {
+			desc = loud.Localize("buy character failed reason") + ": " + loud.Localize(screen.txFailReason)
 		} else {
 			desc = fmt.Sprintf("%s %s Lv%d.\n%s", loud.Localize("result buy finish desc"), loud.Localize(screen.activeItem.Name), screen.activeItem.Level, loud.Localize("use for hunting"))
 		}

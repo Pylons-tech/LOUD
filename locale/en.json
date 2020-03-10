@@ -2,8 +2,11 @@
   "block height": {
     "one": "Block Height"
   },
-  "buy failed reason": {
-    "one": "Buy Failed Reason"
+  "buy item failed reason": {
+    "one": "Buy Item Failed Reason"
+  },
+  "buy character failed reason": {
+    "one": "Buy Character Failed Reason"
   },
   "hunt failed reason": {
     "one": "Hunt Failed Reason"
@@ -33,7 +36,7 @@
     "one": "1) Hunt\n"
   },
   "shop": {
-    "one": "1) Buy Items\n2) Sell Items\n3) Upgrade Items\n"
+    "one": "1) Buy Items\n2) Sell Items\n3) Upgrade Items\n4) Buy Characters\n"
   },
   "market": {
     "one": "1) Sell Loud from orderbook / Create an order to buy Loud\n2) Buy Loud from orderbook / Create an order to Sell Loud\n3) Sell sword from orderbook / Create an order to buy sword\n4) Buy sword from orderbook / Create an order to sell sword\n"
@@ -100,6 +103,9 @@
   "develop desc": {
     "one": "You are now testing things for development. Please enter commands you want to try"
   },
+  "select buy character desc": {
+    "one": "You are gonna buy a character.\nPlease select a character to buy."
+  },
   "select buy item desc": {
     "one": "You are gonna buy an item.\nPlease select an item to buy."
   },
@@ -121,8 +127,11 @@
   "wait process to end": {
     "one": "Please wait for a moment to finish the process."
   },
-  "wait buy process desc": {
-    "one": "You are now buying at the shop"
+  "wait buy item process desc": {
+    "one": "You are now buying an item at the shop"
+  },
+  "wait buy character process desc": {
+    "one": "You are now buying a character at the shop"
   },
   "wait hunt process desc": {
     "one": "You are now hunting with"
@@ -180,6 +189,9 @@
   },
   "inventory items": {
     "one": " Inventory Items "
+  },
+  "inventory chracters": {
+    "one": " Inventory Characters "
   },
   "screen size warning": {
     "one": "Screen is too small. Make your terminal larger. (60x20 minimum)"

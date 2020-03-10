@@ -107,6 +107,7 @@ func (screen *GameScreen) HandleInputKeyShopEntryPoint(input termbox.Event) bool
 		"1": SELECT_BUY_ITEM,
 		"2": SELECT_SELL_ITEM,
 		"3": SELECT_UPGRADE_ITEM,
+		"4": SELECT_BUY_CHARACTER,
 	}
 
 	if newStus, ok := tarStusMap[Key]; ok {
@@ -129,7 +130,8 @@ func (screen *GameScreen) MoveToNextStep() {
 		RESULT_FULFILL_SELL_SWORD_REQUEST:  SHOW_SELL_SWORD_REQUESTS,
 		RESULT_BUY_SWORD_REQUEST_CREATION:  SHOW_BUY_SWORD_REQUESTS,
 		RESULT_FULFILL_BUY_SWORD_REQUEST:   SHOW_BUY_SWORD_REQUESTS,
-		RESULT_BUY_FINISH:                  SELECT_BUY_ITEM,
+		RESULT_BUY_ITEM_FINISH:             SELECT_BUY_ITEM,
+		RESULT_BUY_CHARACTER_FINISH:        SELECT_BUY_CHARACTER,
 		RESULT_SELL_FINISH:                 SELECT_SELL_ITEM,
 		RESULT_UPGRADE_FINISH:              SELECT_UPGRADE_ITEM,
 	}
@@ -414,6 +416,14 @@ func (screen *GameScreen) HandleThirdClassInputKeys(input termbox.Event) bool {
 					screen.activeItem = items[screen.activeLine]
 					screen.RunActiveItemBuy()
 					log.Println("SELECT_BUY_ITEM", screen.activeItem)
+				case SELECT_BUY_CHARACTER:
+					characs := loud.ShopCharacters
+					if len(characs) <= screen.activeLine || screen.activeLine < 0 {
+						return false
+					}
+					screen.activeItem = characs[screen.activeLine]
+					screen.RunActiveCharacterBuy()
+					log.Println("SELECT_BUY_CHARACTER", screen.activeItem)
 				case SELECT_HUNT_ITEM:
 					items := screen.user.InventoryItems()
 					if len(items) <= screen.activeLine || screen.activeLine < 0 {
@@ -477,6 +487,12 @@ func (screen *GameScreen) HandleThirdClassInputKeys(input termbox.Event) bool {
 					return false
 				}
 				screen.RunActiveItemBuy()
+			case SELECT_BUY_CHARACTER:
+				screen.activeItem = loud.GetToBuyCharacterFromKey(Key)
+				if len(screen.activeItem.Name) == 0 {
+					return false
+				}
+				screen.RunActiveCharacterBuy()
 			case SELECT_HUNT_ITEM:
 				screen.activeItem = loud.GetWeaponItemFromKey(screen.user, Key)
 				screen.RunActiveItemHunt()

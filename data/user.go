@@ -16,10 +16,12 @@ type User interface {
 	SetGold(int)
 	SetPylonAmount(int)
 	SetItems([]Item)
+	SetCharacters([]Item)
 	GetGold() int
 	GetPylonAmount() int
 	GetUserName() string
 	InventoryItems() []Item
+	InventoryCharacters() []Item
 	UpgradableItems() []Item
 	GetLocation() UserLocation
 	GetPrivKey() string

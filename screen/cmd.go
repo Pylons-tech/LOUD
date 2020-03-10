@@ -68,6 +68,13 @@ func (screen *GameScreen) renderUserCommands() {
 		infoLines = append(infoLines,
 			"Select ( ↵ )",
 			loud.Localize("C)ancel"))
+	case SELECT_BUY_CHARACTER:
+		for idx, item := range loud.ShopCharacters {
+			infoLines = append(infoLines, fmt.Sprintf("%d) %s Lv%d  ", idx+1, loud.Localize(item.Name), item.Level)+screen.pylonIcon()+fmt.Sprintf(" %d", item.Price))
+		}
+		infoLines = append(infoLines,
+			"Select ( ↵ )",
+			loud.Localize("C)ancel"))
 	case SELECT_SELL_ITEM:
 		userItems := screen.user.InventoryItems()
 		for idx, item := range userItems {
