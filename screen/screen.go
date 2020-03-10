@@ -549,14 +549,22 @@ func (screen *GameScreen) renderCharacterSheet() {
 
 	infoLines = append(infoLines, centerText(loud.Localize("inventory items"), "─", width))
 	items := screen.user.InventoryItems()
-	for _, item := range items {
-		infoLines = append(infoLines, truncateRight(fmt.Sprintf("%s Lv%d", loud.Localize(item.Name), item.Level), width))
+	for idx, item := range items {
+		itemInfo := truncateRight(fmt.Sprintf("%s Lv%d", loud.Localize(item.Name), item.Level), width)
+		if idx == screen.user.GetDefaultItemIndex() {
+			itemInfo = screen.blueBoldFont()(itemInfo)
+		}
+		infoLines = append(infoLines, itemInfo)
 	}
 
 	infoLines = append(infoLines, centerText(loud.Localize("inventory chracters"), "─", width))
 	characters := screen.user.InventoryCharacters()
-	for _, character := range characters {
-		infoLines = append(infoLines, truncateRight(fmt.Sprintf("%s Lv%d", loud.Localize(character.Name), character.Level), width))
+	for idx, character := range characters {
+		characterInfo := truncateRight(fmt.Sprintf("%s Lv%d", loud.Localize(character.Name), character.Level), width)
+		if idx == screen.user.GetDefaultCharacterIndex() {
+			characterInfo = screen.blueBoldFont()(characterInfo)
+		}
+		infoLines = append(infoLines, characterInfo)
 	}
 	infoLines = append(infoLines, centerText(" ❦ ", "─", width))
 
@@ -589,6 +597,16 @@ func (screen *GameScreen) renderCharacterSheet() {
 
 	lastLine := len(infoLines) + len(nodeLines) + 1
 	screen.drawFill(x, lastLine+1, width, screen.screenSize.Height-(lastLine+2))
+}
+
+func (screen *GameScreen) RunActiveCharacterSelect() {
+	screen.user.SetDefaultCharacterIndex(screen.activeLine)
+	screen.SetScreenStatusAndRefresh(RESULT_SELECT_DEF_CHAR)
+}
+
+func (screen *GameScreen) RunActiveWeaponSelect() {
+	screen.user.SetDefaultItemIndex(screen.activeLine)
+	screen.SetScreenStatusAndRefresh(RESULT_SELECT_DEF_WEAPON)
 }
 
 func (screen *GameScreen) RunActiveItemBuy() {

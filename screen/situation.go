@@ -40,6 +40,10 @@ func (screen *GameScreen) renderUserSituation() {
 		infoLines = screen.renderTradeRequestTable(loud.BuyTradeRequests)
 	case SHOW_LOUD_SELL_REQUESTS:
 		infoLines = screen.renderTradeRequestTable(loud.SellTradeRequests)
+	case SELECT_DEFAULT_CHAR:
+		infoLines = screen.renderItemTable(loud.Localize("Please select default character"), screen.user.InventoryCharacters())
+	case SELECT_DEFAULT_WEAPON:
+		infoLines = screen.renderItemTable(loud.Localize("Please select default weapon"), screen.user.InventoryItems())
 	case SELECT_BUY_ITEM:
 		infoLines = screen.renderItemTable(loud.Localize("select buy item desc"), loud.ShopItems)
 	case SELECT_BUY_CHARACTER:
@@ -95,6 +99,10 @@ func (screen *GameScreen) renderUserSituation() {
 			desc = loud.Localize("loud sell request was successfully created")
 			desc += screen.sellLoudDesc(screen.loudEnterValue, screen.pylonEnterValue)
 		}
+	case RESULT_SELECT_DEF_CHAR:
+		desc = loud.Localize("You have successfully set default character!")
+	case RESULT_SELECT_DEF_WEAPON:
+		desc = loud.Localize("You have successfully set default weapon!")
 	case RESULT_BUY_ITEM_FINISH:
 		if screen.txFailReason != "" {
 			desc = loud.Localize("buy item failed reason") + ": " + loud.Localize(screen.txFailReason)

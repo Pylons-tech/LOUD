@@ -61,6 +61,20 @@ func (screen *GameScreen) renderUserCommands() {
 		infoLines = append(infoLines,
 			"Select ( ↵ )",
 			"Go bac)k( ⌫ )")
+	case SELECT_DEFAULT_CHAR:
+		for idx, char := range screen.user.InventoryCharacters() {
+			infoLines = append(infoLines, fmt.Sprintf("%d) %s Lv%d  ", idx+1, loud.Localize(char.Name), char.Level))
+		}
+		infoLines = append(infoLines,
+			"Select ( ↵ )",
+			loud.Localize("C)ancel"))
+	case SELECT_DEFAULT_WEAPON:
+		for idx, item := range screen.user.InventoryItems() {
+			infoLines = append(infoLines, fmt.Sprintf("%d) %s Lv%d  ", idx+1, loud.Localize(item.Name), item.Level))
+		}
+		infoLines = append(infoLines,
+			"Select ( ↵ )",
+			loud.Localize("C)ancel"))
 	case SELECT_BUY_ITEM:
 		for idx, item := range loud.ShopItems {
 			infoLines = append(infoLines, fmt.Sprintf("%d) %s Lv%d  ", idx+1, loud.Localize(item.Name), item.Level)+screen.loudIcon()+fmt.Sprintf(" %d", item.Price))

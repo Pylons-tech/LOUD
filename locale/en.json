@@ -30,7 +30,7 @@
     "one": "You don't have enough gold to upgrade this item"
   },
   "home": {
-    "one": " "
+    "one": "1) Select default character\n2) Select default weapon\n"
   },
   "forest": {
     "one": "1) Hunt\n"

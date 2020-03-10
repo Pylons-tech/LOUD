@@ -30,7 +30,7 @@
     "one": "No tienes suficiente oro para actualizar este artículo"
   },
   "home": {
-    "one": " "
+    "one": "1) Select default character\n2) Select default weapon\n"
   },
   "forest": {
     "one": "1) Cazar\n"
