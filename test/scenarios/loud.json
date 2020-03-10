@@ -138,13 +138,13 @@
         }
     },
     {
-        "ID": "CREATE_HUNT_WITH_COPPER_SWORD_LV1_RECIPE",
+        "ID": "CREATE_HUNT_WITH_A_SWORD_RECIPE",
         "runAfter": {
             "precondition": ["CREATE_LOUD_COOKBOOK"],
             "blockWait": 0
         },
         "action": "create_recipe",
-        "paramsRef": "./recipes/hunt_with_copper_sword_lv1.json",
+        "paramsRef": "./recipes/hunt_with_a_sword.json",
         "output": {
             "txResult": {
                 "status": "Success"
@@ -152,27 +152,7 @@
             "property": [
                 {
                     "owner": "eugen",
-                    "recipes": ["LOUD's hunt with lv1 copper sword recipe"]
-                }
-            ]
-        }
-    },
-    {
-        "ID": "CREATE_HUNT_WITH_COPPER_SWORD_LV2_RECIPE",
-        "runAfter": {
-            "precondition": ["CREATE_LOUD_COOKBOOK"],
-            "blockWait": 0
-        },
-        "action": "create_recipe",
-        "paramsRef": "./recipes/hunt_with_copper_sword_lv2.json",
-        "output": {
-            "txResult": {
-                "status": "Success"
-            },
-            "property": [
-                {
-                    "owner": "eugen",
-                    "recipes": ["LOUD's hunt with lv2 copper sword recipe"]
+                    "recipes": ["LOUD's hunt with a sword recipe"]
                 }
             ]
         }
@@ -198,13 +178,13 @@
         }
     },
     {
-        "ID": "CREATE_HUNT_WITH_WOODEN_SWORD_LV1_RECIPE",
+        "ID": "CREATE_SELL_A_SWORD_RECIPE",
         "runAfter": {
             "precondition": ["CREATE_LOUD_COOKBOOK"],
             "blockWait": 0
         },
         "action": "create_recipe",
-        "paramsRef": "./recipes/hunt_with_wooden_sword_lv1.json",
+        "paramsRef": "./recipes/sell_a_sword.json",
         "output": {
             "txResult": {
                 "status": "Success"
@@ -212,107 +192,7 @@
             "property": [
                 {
                     "owner": "eugen",
-                    "recipes": ["LOUD's hunt with lv1 wooden sword recipe"]
-                }
-            ]
-        }
-    },
-    {
-        "ID": "CREATE_HUNT_WITH_WOODEN_SWORD_LV2_RECIPE",
-        "runAfter": {
-            "precondition": ["CREATE_LOUD_COOKBOOK"],
-            "blockWait": 0
-        },
-        "action": "create_recipe",
-        "paramsRef": "./recipes/hunt_with_wooden_sword_lv2.json",
-        "output": {
-            "txResult": {
-                "status": "Success"
-            },
-            "property": [
-                {
-                    "owner": "eugen",
-                    "recipes": ["LOUD's hunt with lv2 wooden sword recipe"]
-                }
-            ]
-        }
-    },
-    {
-        "ID": "CREATE_SELL_COPPER_SWORD_LV1_RECIPE",
-        "runAfter": {
-            "precondition": ["CREATE_LOUD_COOKBOOK"],
-            "blockWait": 0
-        },
-        "action": "create_recipe",
-        "paramsRef": "./recipes/sell_copper_sword_lv1.json",
-        "output": {
-            "txResult": {
-                "status": "Success"
-            },
-            "property": [
-                {
-                    "owner": "eugen",
-                    "recipes": ["LOUD's Lv1 copper sword sell recipe"]
-                }
-            ]
-        }
-    },
-    {
-        "ID": "CREATE_SELL_COPPER_SWORD_LV2_RECIPE",
-        "runAfter": {
-            "precondition": ["CREATE_LOUD_COOKBOOK"],
-            "blockWait": 0
-        },
-        "action": "create_recipe",
-        "paramsRef": "./recipes/sell_copper_sword_lv2.json",
-        "output": {
-            "txResult": {
-                "status": "Success"
-            },
-            "property": [
-                {
-                    "owner": "eugen",
-                    "recipes": ["LOUD's Lv2 copper sword sell recipe"]
-                }
-            ]
-        }
-    },
-    {
-        "ID": "CREATE_SELL_WOODEN_SWORD_LV1_RECIPE",
-        "runAfter": {
-            "precondition": ["CREATE_LOUD_COOKBOOK"],
-            "blockWait": 0
-        },
-        "action": "create_recipe",
-        "paramsRef": "./recipes/sell_wooden_sword_lv1.json",
-        "output": {
-            "txResult": {
-                "status": "Success"
-            },
-            "property": [
-                {
-                    "owner": "eugen",
-                    "recipes": ["LOUD's Lv1 wooden sword sell recipe"]
-                }
-            ]
-        }
-    },
-    {
-        "ID": "CREATE_SELL_WOODEN_SWORD_LV2_RECIPE",
-        "runAfter": {
-            "precondition": ["CREATE_LOUD_COOKBOOK"],
-            "blockWait": 0
-        },
-        "action": "create_recipe",
-        "paramsRef": "./recipes/sell_wooden_sword_lv2.json",
-        "output": {
-            "txResult": {
-                "status": "Success"
-            },
-            "property": [
-                {
-                    "owner": "eugen",
-                    "recipes": ["LOUD's Lv2 wooden sword sell recipe"]
+                    "recipes": ["LOUD's sword sell recipe"]
                 }
             ]
         }

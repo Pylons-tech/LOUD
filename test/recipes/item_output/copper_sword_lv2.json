@@ -3,14 +3,14 @@
         {
             "Rate":"1.0",
             "Key":"attack",
-            "WeightRanges":[{ "Lower":"1.0", "Upper":"1.0","Weight":1 }]
+            "Program": "20.0"
         }
     ],
     "Longs":[
         {
             "Rate":"1.0",
             "Key":"level",
-            "WeightRanges":[{ "Lower": 2, "Upper":2,"Weight":1 }]
+            "Program": "2"
         }
     ],
     "Strings":[{ "Key":"Name", "Value":"Copper sword", "Rate":"1.0" }]

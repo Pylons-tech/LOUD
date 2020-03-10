@@ -66,19 +66,8 @@ func Hunt(user User, item Item, getInitialCoin bool) (string, error) {
 	}
 
 	switch item.Name {
-	case WOODEN_SWORD:
-		if item.Level == 1 {
-			rcpName = "LOUD's hunt with lv1 wooden sword recipe"
-		} else {
-			rcpName = "LOUD's hunt with lv2 wooden sword recipe"
-		}
-		itemIDs = []string{item.ID}
-	case COPPER_SWORD:
-		if item.Level == 1 {
-			rcpName = "LOUD's hunt with lv1 copper sword recipe"
-		} else {
-			rcpName = "LOUD's hunt with lv2 copper sword recipe"
-		}
+	case WOODEN_SWORD, COPPER_SWORD:
+		rcpName = "LOUD's hunt with a sword recipe"
 		itemIDs = []string{item.ID}
 	}
 
@@ -110,18 +99,8 @@ func Sell(user User, item Item) (string, error) {
 
 	rcpName := ""
 	switch item.Name {
-	case WOODEN_SWORD:
-		if item.Level == 1 {
-			rcpName = "LOUD's Lv1 wooden sword sell recipe"
-		} else {
-			rcpName = "LOUD's Lv2 wooden sword sell recipe"
-		}
-	case COPPER_SWORD:
-		if item.Level == 1 {
-			rcpName = "LOUD's Lv1 copper sword sell recipe"
-		} else {
-			rcpName = "LOUD's Lv2 copper sword sell recipe"
-		}
+	case WOODEN_SWORD, COPPER_SWORD:
+		rcpName = "LOUD's sword sell recipe"
 	}
 	return ExecuteRecipe(user, rcpName, itemIDs)
 }

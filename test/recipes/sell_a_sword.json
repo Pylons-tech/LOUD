@@ -1,21 +1,21 @@
 {
-    "ID": "LOUD-sell-wooden-sword-lv2-recipe-v0.0.0-1579053457",
+    "ID": "LOUD-sell-a-sword-recipe-v0.0.0-1583631194",
     "RType": "0",
     "CoinInputs":[],
     "ItemInputRefs":[
-        "./recipes/item_input/wooden_sword_lv2.json"
+        "./recipes/item_input/sword.json"
     ],
     "Entries": {
         "CoinOutputs": [{
             "Coin":"loudcoin",
-            "Count": 160,
+            "Program": "int(attack * double(randi(2)+20))",
             "Weight":1
         }]
     },
     "ExtraInfo":"",
     "Sender":"eugen",
-    "Name": "LOUD's Lv2 wooden sword sell recipe",
+    "Name": "LOUD's sword sell recipe",
     "CookbookName": "Legend of Undead Dragon",
-    "Description": "this recipe is used to sell lv1 wooden sword.",
+    "Description": "this recipe is used to sell a sword.",
     "BlockInterval":"0"
 }
