@@ -2,7 +2,8 @@
     "Doubles":[{ "Rate":"1.0", "Key":"xp", "Program": "1" }],
     "Longs":[
         { "Rate":"1.0", "Key":"level", "Program": "1" },
-        { "Rate":"1.0", "Key":"HP", "Program": "100" }
+        { "Rate":"1.0", "Key":"HP", "Program": "100" },
+        { "Rate":"1.0", "Key":"MaxHP", "Program": "100" }
     ],
     "Strings":[
         { "Key":"Name", "Value": "Tiger", "Rate":"1.0" },
