@@ -33,7 +33,7 @@
     "one": "1) Select default character\n2) Select default weapon\n"
   },
   "forest": {
-    "one": "1) Cazar\n"
+    "one": "1) Cazar\n2) Goblin\n3) Wolf\n4) Troll\n5) Giant\n"
   },
   "shop": {
     "one": "1) Comprar Artículos\n2) Vender Artículos\n3) Mejorar Artículos\n4) Comprar personajes\n"

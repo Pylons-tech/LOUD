@@ -372,7 +372,7 @@ func ProcessTxResult(user User, txhash string) ([]byte, string) {
 	if err != nil {
 		errString := fmt.Sprintf("failed to parse transaction result; maybe this is get_pylons? txhash=%s", txhash)
 		log.Println(errString)
-		return []byte{}, ""
+		return []byte{}, errString
 	} else {
 		log.Println("ProcessTxResult::txResp", resp.Message, string(resp.Output))
 		return resp.Output, ""

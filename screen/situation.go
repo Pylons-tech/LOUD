@@ -125,7 +125,8 @@ func (screen *GameScreen) renderUserSituation() {
 			case "I", "i":
 				desc = fmt.Sprintf("%s %d.", loud.Localize("Got initial gold from pylons. Amount is"), respOutput.Amount)
 			default:
-				desc = fmt.Sprintf("%s %d.", loud.Localize("result hunt finish desc"), respOutput.Amount)
+				// TODO: should visualize item lost result better after updating recipe structure for character catalyst item
+				desc = fmt.Sprintf("%s %d. Item losts %+v", loud.Localize("result hunt finish desc"), respOutput.Amount, respOutput.ItemLoseResult)
 			}
 		}
 	case RESULT_GET_PYLONS:
