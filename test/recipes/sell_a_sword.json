@@ -3,7 +3,7 @@
     "RType": "0",
     "CoinInputs":[],
     "ItemInputRefs":[
-        "./recipes/item_input/sword.json"
+        "./recipes/item_input/sell_sword.json"
     ],
     "Entries": {
         "CoinOutputs": [{

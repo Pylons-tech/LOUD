@@ -10,7 +10,7 @@
         "CoinOutputs":[],
         "ItemOutputs":[
             {
-                "Ref": "./recipes/item_output/character_lv1.json",
+                "Ref": "./recipes/item_output/tiger_character_lv1.json",
                 "Weight":1
             }
         ]

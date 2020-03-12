@@ -1,5 +1,6 @@
 {
     "Doubles": [],
     "Longs": [{"Key": "level", "MinValue": "2", "MaxValue": "2"}],
-    "Strings": [{"Key": "Name", "Value": "Wooden sword"}]
+    "Strings": [{"Key": "Name", "Value": "Wooden sword"}],
+    "AlivePercent": "90"
 }
