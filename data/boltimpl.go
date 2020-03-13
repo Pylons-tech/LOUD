@@ -181,6 +181,14 @@ func (user *dbUser) GetDefaultCharacterIndex() int {
 	return user.UserData.DefaultCHARIndex
 }
 
+func (user *dbUser) GetDefaultCharacter() *Item {
+	i := user.UserData.DefaultCHARIndex
+	if i < 0 || i >= len(user.UserData.CHARs) {
+		return nil
+	}
+	return &user.UserData.CHARs[i]
+}
+
 func (user *dbUser) InventoryItems() []Item {
 	return user.UserData.Items
 }

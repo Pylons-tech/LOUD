@@ -28,6 +28,7 @@ type User interface {
 	GetPrivKey() string
 	GetDefaultItemIndex() int
 	GetDefaultCharacterIndex() int
+	GetDefaultCharacter() *Item
 	GetGold() int
 	GetPylonAmount() int
 	GetUserName() string

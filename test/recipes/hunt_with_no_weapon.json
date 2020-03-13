@@ -2,7 +2,9 @@
     "ID": "LOUD-hunt-with-no-weapon-recipe-v0.0.0-1579053457",
     "RType": "0",
     "CoinInputs":[],    
-    "ItemInputRefs":[],
+    "ItemInputRefs":[
+        "./recipes/item_input/character.json"
+    ],
     "Entries":{
         "CoinOutputs":[{
             "Coin":"loudcoin",
