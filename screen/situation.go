@@ -41,13 +41,13 @@ func (screen *GameScreen) renderUserSituation() {
 	case SHOW_LOUD_SELL_REQUESTS:
 		infoLines = screen.renderTradeRequestTable(loud.SellTradeRequests)
 	case SELECT_DEFAULT_CHAR:
-		infoLines = screen.renderItemTable(loud.Localize("Please select default character"), screen.user.InventoryCharacters())
+		infoLines = screen.renderCharacterTable(loud.Localize("Please select default character"), screen.user.InventoryCharacters())
 	case SELECT_DEFAULT_WEAPON:
 		infoLines = screen.renderItemTable(loud.Localize("Please select default weapon"), screen.user.InventoryItems())
 	case SELECT_BUY_ITEM:
 		infoLines = screen.renderItemTable(loud.Localize("select buy item desc"), loud.ShopItems)
 	case SELECT_BUY_CHARACTER:
-		infoLines = screen.renderItemTable(loud.Localize("select buy character desc"), loud.ShopCharacters)
+		infoLines = screen.renderCharacterTable(loud.Localize("select buy character desc"), loud.ShopCharacters)
 	case SELECT_SELL_ITEM:
 		infoLines = screen.renderItemTable(loud.Localize("select sell item desc"), screen.user.InventoryItems())
 	case SELECT_HUNT_ITEM:

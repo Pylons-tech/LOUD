@@ -1,10 +1,11 @@
 {
-    "Doubles": [{"Key": "xp", "MinValue": "1.0", "MaxValue": "1000.0"}],
+    "Doubles": [{"Key": "XP", "MinValue": "1.0", "MaxValue": "1000.0"}],
     "Longs": [
         {"Key": "level", "MinValue": "1", "MaxValue": "1000"},
         {"Key": "HP", "MinValue": "1", "MaxValue": "1000"},
         {"Key": "MaxHP", "MinValue": "1", "MaxValue": "1000"}
     ],
     "Strings": [{"Key": "Type", "Value": "Character"}],
-    "AlivePercent": "90"
+    "AlivePercent": "90",
+    "ToUpgradeRef": "./recipes/upgrader/character_after_hunt.json"
 }

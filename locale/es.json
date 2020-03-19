@@ -20,7 +20,10 @@
   "Recipe Name does not exist!": {
     "one": "¡El nombre de la receta no existe!"
   },
-  "You are trying to buy something which is not in shop": {
+  "You are trying to buy item which is not in shop": {
+    "one": "Estás intentando comprar algo que no está en la tienda"
+  },
+  "You are trying to buy character which is not in shop": {
     "one": "Estás intentando comprar algo que no está en la tienda"
   },
   "You don't have enough gold to buy this item": {

@@ -452,8 +452,8 @@ func (screen *GameScreen) HandleThirdClassInputKeys(input termbox.Event) bool {
 				}
 				screen.RunActiveItemBuy()
 			case SELECT_BUY_CHARACTER:
-				screen.activeItem = loud.GetToBuyCharacterFromKey(Key)
-				if len(screen.activeItem.Name) == 0 {
+				screen.activeCharacter = loud.GetToBuyCharacterFromKey(Key)
+				if len(screen.activeCharacter.Name) == 0 {
 					return false
 				}
 				screen.RunActiveCharacterBuy()
@@ -510,11 +510,11 @@ func (screen *GameScreen) HandleThirdClassKeyEnterEvent() bool {
 			screen.inputText = ""
 			screen.refreshed = false
 		case SELECT_DEFAULT_CHAR:
-			items := screen.user.InventoryCharacters()
-			if len(items) <= screen.activeLine || screen.activeLine < 0 {
+			characters := screen.user.InventoryCharacters()
+			if len(characters) <= screen.activeLine || screen.activeLine < 0 {
 				return false
 			}
-			screen.activeItem = items[screen.activeLine]
+			screen.activeCharacter = characters[screen.activeLine]
 			screen.RunActiveCharacterSelect()
 			log.Println("SELECT_DEFAULT_CHAR", screen.activeItem)
 		case SELECT_DEFAULT_WEAPON:
@@ -534,13 +534,13 @@ func (screen *GameScreen) HandleThirdClassKeyEnterEvent() bool {
 			screen.RunActiveItemBuy()
 			log.Println("SELECT_BUY_ITEM", screen.activeItem)
 		case SELECT_BUY_CHARACTER:
-			characs := loud.ShopCharacters
-			if len(characs) <= screen.activeLine || screen.activeLine < 0 {
+			characters := loud.ShopCharacters
+			if len(characters) <= screen.activeLine || screen.activeLine < 0 {
 				return false
 			}
-			screen.activeItem = characs[screen.activeLine]
+			screen.activeCharacter = characters[screen.activeLine]
 			screen.RunActiveCharacterBuy()
-			log.Println("SELECT_BUY_CHARACTER", screen.activeItem)
+			log.Println("SELECT_BUY_CHARACTER", screen.activeCharacter)
 		case SELECT_HUNT_ITEM:
 			items := screen.user.InventoryItems()
 			if len(items) <= screen.activeLine || screen.activeLine < 0 {

@@ -47,6 +47,7 @@ type GameScreen struct {
 	user                   loud.User
 	screenSize             ssh.Window
 	activeItem             loud.Item
+	activeCharacter        loud.Character
 	lastInput              termbox.Event
 	activeLine             int
 	activeTradeRequest     loud.TradeRequest
@@ -366,6 +367,39 @@ func (screen *GameScreen) renderItemTable(header string, items []loud.Item) []st
 	return infoLines
 }
 
+func (screen *GameScreen) renderCharacterTable(header string, characters []loud.Character) []string {
+	infoLines := strings.Split(header, "\n")
+	numHeaderLines := len(infoLines)
+	infoLines = append(infoLines, "╭────────────────────────────────────────────────────╮")
+	// infoLines = append(infoLines, "│ Item                            │")
+	infoLines = append(infoLines, screen.renderItemTableLine("Character", false))
+	infoLines = append(infoLines, "├────────────────────────────────────────────────────┤")
+	numLines := screen.screenSize.Height/2 - 7 - numHeaderLines
+	if screen.activeLine >= len(characters) {
+		screen.activeLine = len(characters) - 1
+	}
+	activeLine := screen.activeLine
+	startLine := activeLine - numLines + 1
+	if startLine < 0 {
+		startLine = 0
+	}
+	endLine := startLine + numLines
+	if endLine > len(characters) {
+		endLine = len(characters)
+	}
+	for li, character := range characters[startLine:endLine] {
+		infoLines = append(
+			infoLines,
+			screen.renderItemTableLine(
+				fmt.Sprintf("%s  ", formatCharacter(character)),
+				startLine+li == activeLine,
+			),
+		)
+	}
+	infoLines = append(infoLines, "╰────────────────────────────────────────────────────╯")
+	return infoLines
+}
+
 func (screen *GameScreen) drawVerticalLine(x, y, height int) {
 	color := ansi.ColorCode(fmt.Sprintf("255:%v", bgcolor))
 	for i := 1; i < height; i++ {
@@ -560,7 +594,7 @@ func (screen *GameScreen) renderCharacterSheet() {
 	infoLines = append(infoLines, centerText(loud.Localize("inventory chracters"), "─", width))
 	characters := screen.user.InventoryCharacters()
 	for idx, character := range characters {
-		characterInfo := truncateRight(fmt.Sprintf("%s", formatItem(character)), width)
+		characterInfo := truncateRight(fmt.Sprintf("%s", formatCharacter(character)), width)
 		if idx == screen.user.GetDefaultCharacterIndex() {
 			characterInfo = screen.blueBoldFont()(characterInfo)
 		}
@@ -633,7 +667,7 @@ func (screen *GameScreen) RunActiveCharacterBuy() {
 
 	log.Println("started sending request for buying character")
 	go func() {
-		txhash, err := loud.BuyCharacter(screen.user, screen.activeItem)
+		txhash, err := loud.BuyCharacter(screen.user, screen.activeCharacter)
 		log.Println("ended sending request for buying character")
 		if err != nil {
 			screen.txFailReason = err.Error()

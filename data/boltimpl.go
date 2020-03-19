@@ -73,7 +73,7 @@ type UserData struct {
 	Location              UserLocation
 	Items                 []Item
 	DefaultItemIndex      int
-	Characters            []Item
+	Characters            []Character
 	DefaultCharacterIndex int
 	PrivKey               string
 }
@@ -169,7 +169,7 @@ func (user *dbUser) GetDefaultItemIndex() int {
 	return user.UserData.DefaultItemIndex
 }
 
-func (user *dbUser) SetCharacters(items []Item) {
+func (user *dbUser) SetCharacters(items []Character) {
 	user.UserData.Characters = items
 }
 
@@ -181,7 +181,7 @@ func (user *dbUser) GetDefaultCharacterIndex() int {
 	return user.UserData.DefaultCharacterIndex
 }
 
-func (user *dbUser) GetDefaultCharacter() *Item {
+func (user *dbUser) GetDefaultCharacter() *Character {
 	i := user.UserData.DefaultCharacterIndex
 	if i < 0 || i >= len(user.UserData.Characters) {
 		return nil
@@ -193,7 +193,7 @@ func (user *dbUser) InventoryItems() []Item {
 	return user.UserData.Items
 }
 
-func (user *dbUser) InventoryCharacters() []Item {
+func (user *dbUser) InventoryCharacters() []Character {
 	return user.UserData.Characters
 }
 

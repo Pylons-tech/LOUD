@@ -7,6 +7,14 @@ type Item struct {
 	Price int
 }
 
+type Character struct {
+	ID    string `json:""`
+	Name  string `json:""`
+	Level int
+	Price int
+	XP    float64
+}
+
 const (
 	WOODEN_SWORD string = "Wooden sword"
 	COPPER_SWORD        = "Copper sword"

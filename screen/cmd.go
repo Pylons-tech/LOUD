@@ -73,7 +73,7 @@ func (screen *GameScreen) renderUserCommands() {
 			"Go bac)k( ⌫ )")
 	case SELECT_DEFAULT_CHAR:
 		for idx, char := range screen.user.InventoryCharacters() {
-			infoLines = append(infoLines, fmt.Sprintf("%d) %s  ", idx+1, formatItem(char)))
+			infoLines = append(infoLines, fmt.Sprintf("%d) %s  ", idx+1, formatCharacter(char)))
 		}
 		infoLines = appendSelectCancelCmds(infoLines)
 	case SELECT_DEFAULT_WEAPON:
@@ -88,7 +88,7 @@ func (screen *GameScreen) renderUserCommands() {
 		infoLines = appendSelectCancelCmds(infoLines)
 	case SELECT_BUY_CHARACTER:
 		for idx, item := range loud.ShopCharacters {
-			infoLines = append(infoLines, fmt.Sprintf("%d) %s  ", idx+1, formatItem(item))+screen.pylonIcon()+fmt.Sprintf(" %d", item.Price))
+			infoLines = append(infoLines, fmt.Sprintf("%d) %s  ", idx+1, formatCharacter(item))+screen.pylonIcon()+fmt.Sprintf(" %d", item.Price))
 		}
 		infoLines = appendSelectCancelCmds(infoLines)
 	case SELECT_SELL_ITEM:

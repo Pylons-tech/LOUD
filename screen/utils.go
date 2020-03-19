@@ -59,3 +59,7 @@ func centerText(message, pad string, width int) string {
 func formatItem(item loud.Item) string {
 	return fmt.Sprintf("%s Lv%d", loud.Localize(item.Name), item.Level)
 }
+
+func formatCharacter(ch loud.Character) string {
+	return fmt.Sprintf("%s Lv%d XP=%.0f", loud.Localize(ch.Name), ch.Level, ch.XP)
+}

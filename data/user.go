@@ -16,19 +16,19 @@ type User interface {
 	SetGold(int)
 	SetPylonAmount(int)
 	SetItems([]Item)
-	SetCharacters([]Item)
+	SetCharacters([]Character)
 	SetDefaultItemIndex(idx int)
 	SetDefaultCharacterIndex(idx int)
 	SetLocation(UserLocation)
 	SetLastTransaction(string)
 	InventoryItems() []Item
-	InventoryCharacters() []Item
+	InventoryCharacters() []Character
 	UpgradableItems() []Item
 	GetLocation() UserLocation
 	GetPrivKey() string
 	GetDefaultItemIndex() int
 	GetDefaultCharacterIndex() int
-	GetDefaultCharacter() *Item
+	GetDefaultCharacter() *Character
 	GetGold() int
 	GetPylonAmount() int
 	GetUserName() string

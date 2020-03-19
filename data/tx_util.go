@@ -447,13 +447,13 @@ func GetToBuyItemFromKey(key string) Item {
 	return useItem
 }
 
-func GetToBuyCharacterFromKey(key string) Item {
-	useItem := Item{}
-	itemKey := GetIndexFromString(key)
-	if itemKey >= 0 && itemKey < len(ShopCharacters) {
-		useItem = ShopCharacters[itemKey]
+func GetToBuyCharacterFromKey(key string) Character {
+	useCharacter := Character{}
+	cKey := GetIndexFromString(key)
+	if cKey >= 0 && cKey < len(ShopCharacters) {
+		useCharacter = ShopCharacters[cKey]
 	}
-	return useItem
+	return useCharacter
 }
 
 func GetToSellItemFromKey(user User, key string) Item {
