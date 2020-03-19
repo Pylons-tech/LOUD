@@ -171,7 +171,7 @@ func (screen *GameScreen) buySwordDesc(activeItem loud.Item, pylonValue interfac
 		screen.pylonIcon(),
 		fmt.Sprintf("%v", pylonValue),
 		"\n  ↓\n",
-		fmt.Sprintf("%s Lv%d", activeItem.Name, activeItem.Level),
+		fmt.Sprintf("%s", formatItem(activeItem)),
 	}, "")
 	return desc
 }
@@ -179,7 +179,7 @@ func (screen *GameScreen) buySwordDesc(activeItem loud.Item, pylonValue interfac
 func (screen *GameScreen) sellSwordDesc(activeItem loud.Item, pylonValue interface{}) string {
 	var desc = strings.Join([]string{
 		"\n",
-		fmt.Sprintf("%s Lv%d", activeItem.Name, activeItem.Level),
+		fmt.Sprintf("%s", formatItem(activeItem)),
 		"\n  ↓\n",
 		screen.pylonIcon(),
 		fmt.Sprintf("%v", pylonValue),
@@ -313,7 +313,7 @@ func (screen *GameScreen) renderItemTradeRequestTable(header string, requests []
 		infoLines = append(
 			infoLines,
 			screen.renderItemTradeRequestTableLine(
-				fmt.Sprintf("%s Lv%d  ", loud.Localize(request.TItem.Name), request.TItem.Level),
+				fmt.Sprintf("%s  ", formatItem(request.TItem)),
 				fmt.Sprintf("%d", request.Price),
 				startLine+li == activeLine,
 				request.IsMyTradeRequest,
@@ -357,7 +357,7 @@ func (screen *GameScreen) renderItemTable(header string, items []loud.Item) []st
 		infoLines = append(
 			infoLines,
 			screen.renderItemTableLine(
-				fmt.Sprintf("%s Lv%d  ", loud.Localize(item.Name), item.Level),
+				fmt.Sprintf("%s  ", formatItem(item)),
 				startLine+li == activeLine,
 			),
 		)
@@ -550,7 +550,7 @@ func (screen *GameScreen) renderCharacterSheet() {
 	infoLines = append(infoLines, centerText(loud.Localize("inventory items"), "─", width))
 	items := screen.user.InventoryItems()
 	for idx, item := range items {
-		itemInfo := truncateRight(fmt.Sprintf("%s Lv%d", loud.Localize(item.Name), item.Level), width)
+		itemInfo := truncateRight(fmt.Sprintf("%s", formatItem(item)), width)
 		if idx == screen.user.GetDefaultItemIndex() {
 			itemInfo = screen.blueBoldFont()(itemInfo)
 		}
@@ -560,7 +560,7 @@ func (screen *GameScreen) renderCharacterSheet() {
 	infoLines = append(infoLines, centerText(loud.Localize("inventory chracters"), "─", width))
 	characters := screen.user.InventoryCharacters()
 	for idx, character := range characters {
-		characterInfo := truncateRight(fmt.Sprintf("%s Lv%d", loud.Localize(character.Name), character.Level), width)
+		characterInfo := truncateRight(fmt.Sprintf("%s", formatItem(character)), width)
 		if idx == screen.user.GetDefaultCharacterIndex() {
 			characterInfo = screen.blueBoldFont()(characterInfo)
 		}

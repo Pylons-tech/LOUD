@@ -67,15 +67,15 @@ func LoadWorldFromDB(filename string) World {
 
 // UserData is a JSON-serializable set of information about a User.
 type UserData struct {
-	Gold             int
-	PylonAmount      int
-	Username         string `json:""`
-	Location         UserLocation
-	Items            []Item
-	DefaultItemIndex int
-	CHARs            []Item
-	DefaultCHARIndex int
-	PrivKey          string
+	Gold                  int
+	PylonAmount           int
+	Username              string `json:""`
+	Location              UserLocation
+	Items                 []Item
+	DefaultItemIndex      int
+	Characters            []Item
+	DefaultCharacterIndex int
+	PrivKey               string
 }
 
 type dbUser struct {
@@ -170,23 +170,23 @@ func (user *dbUser) GetDefaultItemIndex() int {
 }
 
 func (user *dbUser) SetCharacters(items []Item) {
-	user.UserData.CHARs = items
+	user.UserData.Characters = items
 }
 
 func (user *dbUser) SetDefaultCharacterIndex(idx int) {
-	user.UserData.DefaultCHARIndex = idx
+	user.UserData.DefaultCharacterIndex = idx
 }
 
 func (user *dbUser) GetDefaultCharacterIndex() int {
-	return user.UserData.DefaultCHARIndex
+	return user.UserData.DefaultCharacterIndex
 }
 
 func (user *dbUser) GetDefaultCharacter() *Item {
-	i := user.UserData.DefaultCHARIndex
-	if i < 0 || i >= len(user.UserData.CHARs) {
+	i := user.UserData.DefaultCharacterIndex
+	if i < 0 || i >= len(user.UserData.Characters) {
 		return nil
 	}
-	return &user.UserData.CHARs[i]
+	return &user.UserData.Characters[i]
 }
 
 func (user *dbUser) InventoryItems() []Item {
@@ -194,7 +194,7 @@ func (user *dbUser) InventoryItems() []Item {
 }
 
 func (user *dbUser) InventoryCharacters() []Item {
-	return user.UserData.CHARs
+	return user.UserData.Characters
 }
 
 func (user *dbUser) UpgradableItems() []Item {

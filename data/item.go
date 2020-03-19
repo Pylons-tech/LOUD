@@ -67,9 +67,9 @@ func (item *Item) GetSellPrice() int {
 func (item *Item) GetUpgradePrice() int {
 	switch item.Name {
 	case WOODEN_SWORD:
-		return 250
-	case COPPER_SWORD:
 		return 100
+	case COPPER_SWORD:
+		return 250
 	}
 	return -1
 }

@@ -61,12 +61,12 @@ func (screen *GameScreen) renderUserSituation() {
 		desc = loud.Localize("you are now waiting for loud sell request creation")
 		desc += screen.sellLoudDesc(screen.loudEnterValue, screen.pylonEnterValue)
 	case WAIT_BUY_ITEM_PROCESS:
-		desc = fmt.Sprintf("%s %s Lv%d.\n%s", loud.Localize("wait buy item process desc"), loud.Localize(screen.activeItem.Name), screen.activeItem.Level, waitProcessEnd)
+		desc = fmt.Sprintf("%s %s.\n%s", loud.Localize("wait buy item process desc"), formatItem(screen.activeItem), waitProcessEnd)
 	case WAIT_BUY_CHARACTER_PROCESS:
-		desc = fmt.Sprintf("%s %s Lv%d.\n%s", loud.Localize("wait buy character process desc"), loud.Localize(screen.activeItem.Name), screen.activeItem.Level, waitProcessEnd)
+		desc = fmt.Sprintf("%s %s.\n%s", loud.Localize("wait buy character process desc"), formatItem(screen.activeItem), waitProcessEnd)
 	case WAIT_HUNT_PROCESS:
 		if len(screen.activeItem.Name) > 0 {
-			desc = fmt.Sprintf("%s %s Lv%d.\n%s", loud.Localize("wait hunt process desc"), loud.Localize(screen.activeItem.Name), screen.activeItem.Level, waitProcessEnd)
+			desc = fmt.Sprintf("%s %s.\n%s", loud.Localize("wait hunt process desc"), formatItem(screen.activeItem), waitProcessEnd)
 		} else {
 			switch string(screen.lastInput.Ch) {
 			case "I", "i":
@@ -82,7 +82,7 @@ func (screen *GameScreen) renderUserSituation() {
 	case WAIT_CREATE_COOKBOOK:
 		desc = loud.Localize("You are waiting for creating cookbook")
 	case WAIT_SELL_PROCESS:
-		desc = fmt.Sprintf("%s %s Lv%d.\n%s", loud.Localize("wait sell process desc"), loud.Localize(screen.activeItem.Name), screen.activeItem.Level, waitProcessEnd)
+		desc = fmt.Sprintf("%s %s.\n%s", loud.Localize("wait sell process desc"), formatItem(screen.activeItem), waitProcessEnd)
 	case WAIT_UPGRADE_PROCESS:
 		desc = fmt.Sprintf("%s %s.\n%s", loud.Localize("wait upgrade process desc"), loud.Localize(screen.activeItem.Name), waitProcessEnd)
 	case RESULT_BUY_LOUD_REQUEST_CREATION:
@@ -107,13 +107,13 @@ func (screen *GameScreen) renderUserSituation() {
 		if screen.txFailReason != "" {
 			desc = loud.Localize("buy item failed reason") + ": " + loud.Localize(screen.txFailReason)
 		} else {
-			desc = fmt.Sprintf("%s %s Lv%d.\n%s", loud.Localize("result buy finish desc"), loud.Localize(screen.activeItem.Name), screen.activeItem.Level, loud.Localize("use for hunting"))
+			desc = fmt.Sprintf("%s %s.\n%s", loud.Localize("result buy finish desc"), formatItem(screen.activeItem), loud.Localize("use for hunting"))
 		}
 	case RESULT_BUY_CHARACTER_FINISH:
 		if screen.txFailReason != "" {
 			desc = loud.Localize("buy character failed reason") + ": " + loud.Localize(screen.txFailReason)
 		} else {
-			desc = fmt.Sprintf("%s %s Lv%d.\n%s", loud.Localize("result buy finish desc"), loud.Localize(screen.activeItem.Name), screen.activeItem.Level, loud.Localize("use for hunting"))
+			desc = fmt.Sprintf("%s %s.\n%s", loud.Localize("result buy finish desc"), formatItem(screen.activeItem), loud.Localize("use for hunting"))
 		}
 	case RESULT_HUNT_FINISH:
 		if screen.txFailReason != "" {
@@ -151,7 +151,7 @@ func (screen *GameScreen) renderUserSituation() {
 		if screen.txFailReason != "" {
 			desc = loud.Localize("sell failed reason") + ": " + loud.Localize(screen.txFailReason)
 		} else {
-			desc = fmt.Sprintf("%s %s Lv%d.", loud.Localize("result sell finish desc"), loud.Localize(screen.activeItem.Name), screen.activeItem.Level)
+			desc = fmt.Sprintf("%s %s.", loud.Localize("result sell finish desc"), formatItem(screen.activeItem))
 		}
 	case RESULT_UPGRADE_FINISH:
 		if screen.txFailReason != "" {
