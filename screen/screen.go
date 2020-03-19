@@ -687,7 +687,7 @@ func (screen *GameScreen) RunActiveItemHunt() {
 	screen.SetScreenStatusAndRefresh(WAIT_HUNT_PROCESS)
 	log.Println("started sending request for hunting item")
 	go func() {
-		txhash, err := loud.Hunt(screen.user, screen.activeItem, false)
+		txhash, err := loud.Hunt(screen.user, screen.activeItem)
 		log.Println("ended sending request for hunting item")
 		if err != nil {
 			screen.txFailReason = err.Error()

@@ -237,7 +237,7 @@ func (screen *GameScreen) HandleFirstClassInputKeys(input termbox.Event) bool {
 		screen.SetScreenStatusAndRefresh(WAIT_HUNT_PROCESS)
 		log.Println("started sending request for hunting item")
 		go func() {
-			txhash, err := loud.Hunt(screen.user, loud.Item{}, true)
+			txhash, err := loud.GetInitialCoin(screen.user)
 			log.Println("ended sending request for hunting item")
 			if err != nil {
 				screen.txFailReason = err.Error()

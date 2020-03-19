@@ -57,20 +57,24 @@ func GetExtraPylons(user User) (string, error) {
 	return txhash, nil
 }
 
-func Hunt(user User, item Item, getInitialCoin bool) (string, error) {
+func GetInitialCoin(user User) (string, error) {
+	rcpName := "LOUD's get initial coin recipe"
+	itemIDs := []string{}
+
+	return ExecuteRecipe(user, rcpName, itemIDs)
+}
+
+func Hunt(user User, item Item) (string, error) {
 
 	defaultCharacter := user.GetDefaultCharacter()
 	defaultCharacterID := ""
 	if defaultCharacter != nil {
 		defaultCharacterID = defaultCharacter.ID
+	} else {
+		return "", errors.New("character is required to hunt!")
 	}
 	rcpName := "LOUD's hunt without sword recipe"
 	itemIDs := []string{defaultCharacterID}
-
-	if getInitialCoin {
-		rcpName = "LOUD's get initial coin recipe"
-		itemIDs = []string{}
-	}
 
 	switch item.Name {
 	case WOODEN_SWORD, COPPER_SWORD:
