@@ -2,5 +2,6 @@
     "Doubles": [],
     "Longs": [{"Key": "level", "MinValue": "1", "MaxValue": "1"}],
     "Strings": [{"Key": "Name", "Value": "Wooden sword"}],
-    "AlivePercent": "100"
+    "AlivePercent": "100",
+    "ToUpgradeRef": "./recipes/upgrader/level.json"
 }

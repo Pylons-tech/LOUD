@@ -1,6 +1,5 @@
 {
     "ID": "LOUD-get-initial-coin-recipe-v0.0.1-1579652622",
-    "RType": "0",
     "CoinInputs":[{
         "Coin": "pylon",
         "Count": "100"
