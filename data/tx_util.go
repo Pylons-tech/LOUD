@@ -30,6 +30,7 @@ import (
 
 var RcpIDs map[string]string = map[string]string{
 	"LOUD's get initial coin recipe":                "LOUD-get-initial-coin-recipe-v0.0.1-1579652622",
+	"LOUD's Get Character recipe":                   "LOUD-get-character-recipe-v0.0.0-1583801800",
 	"LOUD's hunt without sword recipe":              "LOUD-hunt-with-no-weapon-recipe-v0.0.0-1579053457",
 	"LOUD's hunt with a sword recipe":               "LOUD-hunt-with-a-sword-recipe-v0.0.0-1583631194",
 	"LOUD's sword sell recipe":                      "LOUD-sell-a-sword-recipe-v0.0.0-1583631194",
@@ -371,7 +372,7 @@ func ProcessTxResult(user User, txhash string) ([]byte, string) {
 	if err != nil {
 		errString := fmt.Sprintf("failed to parse transaction result; maybe this is get_pylons? txhash=%s", txhash)
 		log.Println(errString)
-		return []byte{}, ""
+		return []byte{}, errString
 	} else {
 		log.Println("ProcessTxResult::txResp", resp.Message, string(resp.Output))
 		return resp.Output, ""
@@ -442,6 +443,15 @@ func GetToBuyItemFromKey(key string) Item {
 	itemKey := GetIndexFromString(key)
 	if itemKey >= 0 && itemKey < len(ShopItems) {
 		useItem = ShopItems[itemKey]
+	}
+	return useItem
+}
+
+func GetToBuyCharacterFromKey(key string) Item {
+	useItem := Item{}
+	itemKey := GetIndexFromString(key)
+	if itemKey >= 0 && itemKey < len(ShopCharacters) {
+		useItem = ShopCharacters[itemKey]
 	}
 	return useItem
 }

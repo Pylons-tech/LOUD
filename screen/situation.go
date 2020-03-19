@@ -40,8 +40,14 @@ func (screen *GameScreen) renderUserSituation() {
 		infoLines = screen.renderTradeRequestTable(loud.BuyTradeRequests)
 	case SHOW_LOUD_SELL_REQUESTS:
 		infoLines = screen.renderTradeRequestTable(loud.SellTradeRequests)
+	case SELECT_DEFAULT_CHAR:
+		infoLines = screen.renderItemTable(loud.Localize("Please select default character"), screen.user.InventoryCharacters())
+	case SELECT_DEFAULT_WEAPON:
+		infoLines = screen.renderItemTable(loud.Localize("Please select default weapon"), screen.user.InventoryItems())
 	case SELECT_BUY_ITEM:
 		infoLines = screen.renderItemTable(loud.Localize("select buy item desc"), loud.ShopItems)
+	case SELECT_BUY_CHARACTER:
+		infoLines = screen.renderItemTable(loud.Localize("select buy character desc"), loud.ShopCharacters)
 	case SELECT_SELL_ITEM:
 		infoLines = screen.renderItemTable(loud.Localize("select sell item desc"), screen.user.InventoryItems())
 	case SELECT_HUNT_ITEM:
@@ -54,11 +60,13 @@ func (screen *GameScreen) renderUserSituation() {
 	case WAIT_SELL_LOUD_REQUEST_CREATION:
 		desc = loud.Localize("you are now waiting for loud sell request creation")
 		desc += screen.sellLoudDesc(screen.loudEnterValue, screen.pylonEnterValue)
-	case WAIT_BUY_PROCESS:
-		desc = fmt.Sprintf("%s %s Lv%d.\n%s", loud.Localize("wait buy process desc"), loud.Localize(screen.activeItem.Name), screen.activeItem.Level, waitProcessEnd)
+	case WAIT_BUY_ITEM_PROCESS:
+		desc = fmt.Sprintf("%s %s.\n%s", loud.Localize("wait buy item process desc"), formatItem(screen.activeItem), waitProcessEnd)
+	case WAIT_BUY_CHARACTER_PROCESS:
+		desc = fmt.Sprintf("%s %s.\n%s", loud.Localize("wait buy character process desc"), formatItem(screen.activeItem), waitProcessEnd)
 	case WAIT_HUNT_PROCESS:
 		if len(screen.activeItem.Name) > 0 {
-			desc = fmt.Sprintf("%s %s Lv%d.\n%s", loud.Localize("wait hunt process desc"), loud.Localize(screen.activeItem.Name), screen.activeItem.Level, waitProcessEnd)
+			desc = fmt.Sprintf("%s %s.\n%s", loud.Localize("wait hunt process desc"), formatItem(screen.activeItem), waitProcessEnd)
 		} else {
 			switch string(screen.lastInput.Ch) {
 			case "I", "i":
@@ -74,7 +82,7 @@ func (screen *GameScreen) renderUserSituation() {
 	case WAIT_CREATE_COOKBOOK:
 		desc = loud.Localize("You are waiting for creating cookbook")
 	case WAIT_SELL_PROCESS:
-		desc = fmt.Sprintf("%s %s Lv%d.\n%s", loud.Localize("wait sell process desc"), loud.Localize(screen.activeItem.Name), screen.activeItem.Level, waitProcessEnd)
+		desc = fmt.Sprintf("%s %s.\n%s", loud.Localize("wait sell process desc"), formatItem(screen.activeItem), waitProcessEnd)
 	case WAIT_UPGRADE_PROCESS:
 		desc = fmt.Sprintf("%s %s.\n%s", loud.Localize("wait upgrade process desc"), loud.Localize(screen.activeItem.Name), waitProcessEnd)
 	case RESULT_BUY_LOUD_REQUEST_CREATION:
@@ -91,11 +99,21 @@ func (screen *GameScreen) renderUserSituation() {
 			desc = loud.Localize("loud sell request was successfully created")
 			desc += screen.sellLoudDesc(screen.loudEnterValue, screen.pylonEnterValue)
 		}
-	case RESULT_BUY_FINISH:
+	case RESULT_SELECT_DEF_CHAR:
+		desc = loud.Localize("You have successfully set default character!")
+	case RESULT_SELECT_DEF_WEAPON:
+		desc = loud.Localize("You have successfully set default weapon!")
+	case RESULT_BUY_ITEM_FINISH:
 		if screen.txFailReason != "" {
-			desc = loud.Localize("buy failed reason") + ": " + loud.Localize(screen.txFailReason)
+			desc = loud.Localize("buy item failed reason") + ": " + loud.Localize(screen.txFailReason)
 		} else {
-			desc = fmt.Sprintf("%s %s Lv%d.\n%s", loud.Localize("result buy finish desc"), loud.Localize(screen.activeItem.Name), screen.activeItem.Level, loud.Localize("use for hunting"))
+			desc = fmt.Sprintf("%s %s.\n%s", loud.Localize("result buy finish desc"), formatItem(screen.activeItem), loud.Localize("use for hunting"))
+		}
+	case RESULT_BUY_CHARACTER_FINISH:
+		if screen.txFailReason != "" {
+			desc = loud.Localize("buy character failed reason") + ": " + loud.Localize(screen.txFailReason)
+		} else {
+			desc = fmt.Sprintf("%s %s.\n%s", loud.Localize("result buy finish desc"), formatItem(screen.activeItem), loud.Localize("use for hunting"))
 		}
 	case RESULT_HUNT_FINISH:
 		if screen.txFailReason != "" {
@@ -107,7 +125,8 @@ func (screen *GameScreen) renderUserSituation() {
 			case "I", "i":
 				desc = fmt.Sprintf("%s %d.", loud.Localize("Got initial gold from pylons. Amount is"), respOutput.Amount)
 			default:
-				desc = fmt.Sprintf("%s %d.", loud.Localize("result hunt finish desc"), respOutput.Amount)
+				// TODO: should visualize item lost result better after updating recipe structure for character catalyst item
+				desc = fmt.Sprintf("%s %d. Item losts %+v", loud.Localize("result hunt finish desc"), respOutput.Amount, respOutput.ItemLoseResult)
 			}
 		}
 	case RESULT_GET_PYLONS:
@@ -132,7 +151,7 @@ func (screen *GameScreen) renderUserSituation() {
 		if screen.txFailReason != "" {
 			desc = loud.Localize("sell failed reason") + ": " + loud.Localize(screen.txFailReason)
 		} else {
-			desc = fmt.Sprintf("%s %s Lv%d.", loud.Localize("result sell finish desc"), loud.Localize(screen.activeItem.Name), screen.activeItem.Level)
+			desc = fmt.Sprintf("%s %s.", loud.Localize("result sell finish desc"), formatItem(screen.activeItem))
 		}
 	case RESULT_UPGRADE_FINISH:
 		if screen.txFailReason != "" {

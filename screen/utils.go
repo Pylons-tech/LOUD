@@ -3,6 +3,8 @@ package screen
 import (
 	"fmt"
 	"unicode/utf8"
+
+	loud "github.com/Pylons-tech/LOUD/data"
 )
 
 func truncateRight(message string, width int) string {
@@ -52,4 +54,8 @@ func centerText(message, pad string, width int) string {
 	}
 
 	return fmt.Sprintf("%s%s%s", string([]rune(leftString)[0:left]), message, string([]rune(leftString)[0:right]))
+}
+
+func formatItem(item loud.Item) string {
+	return fmt.Sprintf("%s Lv%d", loud.Localize(item.Name), item.Level)
 }

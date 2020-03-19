@@ -48,6 +48,22 @@ func (screen *GameScreen) HandleInputKeyLocationSwitch(input termbox.Event) bool
 		return false
 	}
 }
+func (screen *GameScreen) HandleInputKeyHomeEntryPoint(input termbox.Event) bool {
+	Key := string(input.Ch)
+
+	tarStusMap := map[string]ScreenStatus{
+		"1": SELECT_DEFAULT_CHAR,
+		"2": SELECT_DEFAULT_WEAPON,
+	}
+
+	if newStus, ok := tarStusMap[Key]; ok {
+		screen.scrStatus = newStus
+		screen.refreshed = false
+		return true
+	} else {
+		return false
+	}
+}
 func (screen *GameScreen) HandleInputKeyMarketEntryPoint(input termbox.Event) bool {
 	Key := string(input.Ch)
 
@@ -107,6 +123,7 @@ func (screen *GameScreen) HandleInputKeyShopEntryPoint(input termbox.Event) bool
 		"1": SELECT_BUY_ITEM,
 		"2": SELECT_SELL_ITEM,
 		"3": SELECT_UPGRADE_ITEM,
+		"4": SELECT_BUY_CHARACTER,
 	}
 
 	if newStus, ok := tarStusMap[Key]; ok {
@@ -129,7 +146,10 @@ func (screen *GameScreen) MoveToNextStep() {
 		RESULT_FULFILL_SELL_SWORD_REQUEST:  SHOW_SELL_SWORD_REQUESTS,
 		RESULT_BUY_SWORD_REQUEST_CREATION:  SHOW_BUY_SWORD_REQUESTS,
 		RESULT_FULFILL_BUY_SWORD_REQUEST:   SHOW_BUY_SWORD_REQUESTS,
-		RESULT_BUY_FINISH:                  SELECT_BUY_ITEM,
+		RESULT_SELECT_DEF_CHAR:             SELECT_DEFAULT_CHAR,
+		RESULT_SELECT_DEF_WEAPON:           SELECT_DEFAULT_WEAPON,
+		RESULT_BUY_ITEM_FINISH:             SELECT_BUY_ITEM,
+		RESULT_BUY_CHARACTER_FINISH:        SELECT_BUY_CHARACTER,
 		RESULT_SELL_FINISH:                 SELECT_SELL_ITEM,
 		RESULT_UPGRADE_FINISH:              SELECT_UPGRADE_ITEM,
 	}
@@ -243,7 +263,12 @@ func (screen *GameScreen) HandleFirstClassInputKeys(input termbox.Event) bool {
 
 func (screen *GameScreen) HandleSecondClassInputKeys(input termbox.Event) bool {
 	// implement second class commands, eg. input processing for show_location section
-	if screen.user.GetLocation() == loud.MARKET {
+	if screen.user.GetLocation() == loud.HOME {
+		switch screen.scrStatus {
+		case SHOW_LOCATION:
+			return screen.HandleInputKeyHomeEntryPoint(input)
+		}
+	} else if screen.user.GetLocation() == loud.MARKET {
 		switch screen.scrStatus {
 		case SHOW_LOCATION:
 			return screen.HandleInputKeyMarketEntryPoint(input)
@@ -378,72 +403,7 @@ func (screen *GameScreen) HandleThirdClassInputKeys(input termbox.Event) bool {
 			return true
 		}
 		if input.Key == termbox.KeyEnter {
-			switch screen.user.GetLocation() {
-			case loud.MARKET, loud.SHOP, loud.FOREST:
-				switch screen.scrStatus {
-				case SHOW_LOUD_BUY_REQUESTS:
-					screen.RunSelectedLoudBuyTrade()
-				case SHOW_LOUD_SELL_REQUESTS:
-					screen.RunSelectedLoudSellTrade()
-				case SHOW_BUY_SWORD_REQUESTS:
-					screen.RunSelectedSwordBuyTradeRequest()
-				case SHOW_SELL_SWORD_REQUESTS:
-					screen.RunSelectedSwordSellTradeRequest()
-				case CREATE_SELL_SWORD_REQUEST_SELECT_SWORD:
-					userItems := screen.user.InventoryItems()
-					if len(userItems) <= screen.activeLine || screen.activeLine < 0 {
-						return false
-					}
-					screen.activeItem = userItems[screen.activeLine]
-					screen.scrStatus = CREATE_SELL_SWORD_REQUEST_ENTER_PYLON_VALUE
-					screen.inputText = ""
-					screen.refreshed = false
-				case CREATE_BUY_SWORD_REQUEST_SELECT_SWORD:
-					if len(loud.WorldItems) <= screen.activeLine || screen.activeLine < 0 {
-						return false
-					}
-					screen.activeItem = loud.WorldItems[screen.activeLine]
-					screen.scrStatus = CREATE_BUY_SWORD_REQUEST_ENTER_PYLON_VALUE
-					screen.inputText = ""
-					screen.refreshed = false
-				case SELECT_BUY_ITEM:
-					items := loud.ShopItems
-					if len(items) <= screen.activeLine || screen.activeLine < 0 {
-						return false
-					}
-					screen.activeItem = items[screen.activeLine]
-					screen.RunActiveItemBuy()
-					log.Println("SELECT_BUY_ITEM", screen.activeItem)
-				case SELECT_HUNT_ITEM:
-					items := screen.user.InventoryItems()
-					if len(items) <= screen.activeLine || screen.activeLine < 0 {
-						return false
-					}
-					screen.activeItem = items[screen.activeLine]
-					screen.RunActiveItemHunt()
-				case SELECT_SELL_ITEM:
-					items := screen.user.InventoryItems()
-					if len(items) <= screen.activeLine || screen.activeLine < 0 {
-						return false
-					}
-					screen.activeItem = items[screen.activeLine]
-					screen.RunActiveItemSell()
-				case SELECT_UPGRADE_ITEM:
-					items := screen.user.UpgradableItems()
-					if len(items) <= screen.activeLine || screen.activeLine < 0 {
-						return false
-					}
-					screen.activeItem = items[screen.activeLine]
-					screen.RunActiveItemUpgrade()
-				default:
-					screen.MoveToNextStep()
-					return false
-				}
-			default:
-				screen.MoveToNextStep()
-				return false
-			}
-			return true
+			return screen.HandleThirdClassKeyEnterEvent()
 		}
 
 		if input.Key == termbox.KeyBackspace2 || input.Key == termbox.KeyBackspace {
@@ -471,12 +431,32 @@ func (screen *GameScreen) HandleThirdClassInputKeys(input termbox.Event) bool {
 		case "0", "1", "2", "3", "4", "5", "6", "7", "8", "9": // Numbers
 			screen.refreshed = false
 			switch screen.scrStatus {
+			case SELECT_DEFAULT_CHAR:
+				screen.activeLine = loud.GetIndexFromString(Key)
+				characters := screen.user.InventoryCharacters()
+				if len(characters) <= screen.activeLine || screen.activeLine < 0 {
+					return false
+				}
+				screen.RunActiveCharacterSelect()
+			case SELECT_DEFAULT_WEAPON:
+				screen.activeLine = loud.GetIndexFromString(Key)
+				items := screen.user.InventoryItems()
+				if len(items) <= screen.activeLine || screen.activeLine < 0 {
+					return false
+				}
+				screen.RunActiveWeaponSelect()
 			case SELECT_BUY_ITEM:
 				screen.activeItem = loud.GetToBuyItemFromKey(Key)
 				if len(screen.activeItem.Name) == 0 {
 					return false
 				}
 				screen.RunActiveItemBuy()
+			case SELECT_BUY_CHARACTER:
+				screen.activeItem = loud.GetToBuyCharacterFromKey(Key)
+				if len(screen.activeItem.Name) == 0 {
+					return false
+				}
+				screen.RunActiveCharacterBuy()
 			case SELECT_HUNT_ITEM:
 				screen.activeItem = loud.GetWeaponItemFromKey(screen.user, Key)
 				screen.RunActiveItemHunt()
@@ -498,4 +478,97 @@ func (screen *GameScreen) HandleThirdClassInputKeys(input termbox.Event) bool {
 		}
 	}
 	return false
+}
+
+func (screen *GameScreen) HandleThirdClassKeyEnterEvent() bool {
+	switch screen.user.GetLocation() {
+	case loud.HOME, loud.MARKET, loud.SHOP, loud.FOREST:
+		switch screen.scrStatus {
+		case SHOW_LOUD_BUY_REQUESTS:
+			screen.RunSelectedLoudBuyTrade()
+		case SHOW_LOUD_SELL_REQUESTS:
+			screen.RunSelectedLoudSellTrade()
+		case SHOW_BUY_SWORD_REQUESTS:
+			screen.RunSelectedSwordBuyTradeRequest()
+		case SHOW_SELL_SWORD_REQUESTS:
+			screen.RunSelectedSwordSellTradeRequest()
+		case CREATE_SELL_SWORD_REQUEST_SELECT_SWORD:
+			userItems := screen.user.InventoryItems()
+			if len(userItems) <= screen.activeLine || screen.activeLine < 0 {
+				return false
+			}
+			screen.activeItem = userItems[screen.activeLine]
+			screen.scrStatus = CREATE_SELL_SWORD_REQUEST_ENTER_PYLON_VALUE
+			screen.inputText = ""
+			screen.refreshed = false
+		case CREATE_BUY_SWORD_REQUEST_SELECT_SWORD:
+			if len(loud.WorldItems) <= screen.activeLine || screen.activeLine < 0 {
+				return false
+			}
+			screen.activeItem = loud.WorldItems[screen.activeLine]
+			screen.scrStatus = CREATE_BUY_SWORD_REQUEST_ENTER_PYLON_VALUE
+			screen.inputText = ""
+			screen.refreshed = false
+		case SELECT_DEFAULT_CHAR:
+			items := screen.user.InventoryCharacters()
+			if len(items) <= screen.activeLine || screen.activeLine < 0 {
+				return false
+			}
+			screen.activeItem = items[screen.activeLine]
+			screen.RunActiveCharacterSelect()
+			log.Println("SELECT_DEFAULT_CHAR", screen.activeItem)
+		case SELECT_DEFAULT_WEAPON:
+			items := screen.user.InventoryItems()
+			if len(items) <= screen.activeLine || screen.activeLine < 0 {
+				return false
+			}
+			screen.activeItem = items[screen.activeLine]
+			screen.RunActiveWeaponSelect()
+			log.Println("SELECT_DEFAULT_WEAPON", screen.activeItem)
+		case SELECT_BUY_ITEM:
+			items := loud.ShopItems
+			if len(items) <= screen.activeLine || screen.activeLine < 0 {
+				return false
+			}
+			screen.activeItem = items[screen.activeLine]
+			screen.RunActiveItemBuy()
+			log.Println("SELECT_BUY_ITEM", screen.activeItem)
+		case SELECT_BUY_CHARACTER:
+			characs := loud.ShopCharacters
+			if len(characs) <= screen.activeLine || screen.activeLine < 0 {
+				return false
+			}
+			screen.activeItem = characs[screen.activeLine]
+			screen.RunActiveCharacterBuy()
+			log.Println("SELECT_BUY_CHARACTER", screen.activeItem)
+		case SELECT_HUNT_ITEM:
+			items := screen.user.InventoryItems()
+			if len(items) <= screen.activeLine || screen.activeLine < 0 {
+				return false
+			}
+			screen.activeItem = items[screen.activeLine]
+			screen.RunActiveItemHunt()
+		case SELECT_SELL_ITEM:
+			items := screen.user.InventoryItems()
+			if len(items) <= screen.activeLine || screen.activeLine < 0 {
+				return false
+			}
+			screen.activeItem = items[screen.activeLine]
+			screen.RunActiveItemSell()
+		case SELECT_UPGRADE_ITEM:
+			items := screen.user.UpgradableItems()
+			if len(items) <= screen.activeLine || screen.activeLine < 0 {
+				return false
+			}
+			screen.activeItem = items[screen.activeLine]
+			screen.RunActiveItemUpgrade()
+		default:
+			screen.MoveToNextStep()
+			return false
+		}
+	default:
+		screen.MoveToNextStep()
+		return false
+	}
+	return true
 }

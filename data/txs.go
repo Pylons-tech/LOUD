@@ -58,20 +58,41 @@ func GetExtraPylons(user User) (string, error) {
 }
 
 func Hunt(user User, item Item, getInitialCoin bool) (string, error) {
-	rcpName := "LOUD's hunt without sword recipe"
 
-	itemIDs := []string{}
+	defaultCharacter := user.GetDefaultCharacter()
+	defaultCharacterID := ""
+	if defaultCharacter != nil {
+		defaultCharacterID = defaultCharacter.ID
+	}
+	rcpName := "LOUD's hunt without sword recipe"
+	itemIDs := []string{defaultCharacterID}
+
 	if getInitialCoin {
 		rcpName = "LOUD's get initial coin recipe"
+		itemIDs = []string{}
 	}
 
 	switch item.Name {
 	case WOODEN_SWORD, COPPER_SWORD:
 		rcpName = "LOUD's hunt with a sword recipe"
-		itemIDs = []string{item.ID}
+		itemIDs = []string{defaultCharacterID, item.ID}
 	}
 
 	return ExecuteRecipe(user, rcpName, itemIDs)
+}
+
+func BuyCharacter(user User, item Item) (string, error) {
+	rcpName := ""
+	switch item.Name {
+	case TIGER_CHARACTER:
+		rcpName = "LOUD's Get Character recipe"
+	default:
+		return "", errors.New("You are trying to buy something which is not in shop")
+	}
+	if item.Price > user.GetPylonAmount() {
+		return "", errors.New("You don't have enough pylon to buy this character")
+	}
+	return ExecuteRecipe(user, rcpName, []string{})
 }
 
 func Buy(user User, item Item) (string, error) {

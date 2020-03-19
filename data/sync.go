@@ -22,18 +22,26 @@ func SyncFromNode(user User) {
 
 	rawItems, _ := pylonSDK.ListItemsViaCLI(accInfo.Address.String())
 	myItems := []Item{}
+	myCharacters := []Item{}
 	for _, rawItem := range rawItems {
 		Level, _ := rawItem.FindLong("level")
 		Name, _ := rawItem.FindString("Name")
+		itemType, _ := rawItem.FindString("Type")
 		item := Item{
 			Level: Level,
 			Name:  Name,
 			ID:    rawItem.ID,
 		}
-		myItems = append(myItems, item)
+		if itemType == "Character" {
+			myCharacters = append(myCharacters, item)
+		} else {
+			myItems = append(myItems, item)
+		}
 	}
 	user.SetItems(myItems)
+	user.SetCharacters(myCharacters)
 	log.Println("myItems=", myItems)
+	log.Println("myCharacters=", myCharacters)
 
 	nBuyTradeRequests := []TradeRequest{}
 	nSellTradeRequests := []TradeRequest{}

@@ -10,6 +10,16 @@ import (
 	"github.com/ahmetb/go-cursor"
 )
 
+const (
+	SELECT_CMD string = "Select ( ↵ )"
+)
+
+func appendSelectCancelCmds(infoLines []string) []string {
+	return append(infoLines,
+		SELECT_CMD,
+		loud.Localize("C)ancel"))
+}
+
 func (screen *GameScreen) renderUserCommands() {
 
 	infoLines := []string{}
@@ -59,39 +69,46 @@ func (screen *GameScreen) renderUserCommands() {
 		fallthrough
 	case CREATE_BUY_SWORD_REQUEST_SELECT_SWORD:
 		infoLines = append(infoLines,
-			"Select ( ↵ )",
+			SELECT_CMD,
 			"Go bac)k( ⌫ )")
+	case SELECT_DEFAULT_CHAR:
+		for idx, char := range screen.user.InventoryCharacters() {
+			infoLines = append(infoLines, fmt.Sprintf("%d) %s  ", idx+1, formatItem(char)))
+		}
+		infoLines = appendSelectCancelCmds(infoLines)
+	case SELECT_DEFAULT_WEAPON:
+		for idx, item := range screen.user.InventoryItems() {
+			infoLines = append(infoLines, fmt.Sprintf("%d) %s  ", idx+1, formatItem(item)))
+		}
+		infoLines = appendSelectCancelCmds(infoLines)
 	case SELECT_BUY_ITEM:
 		for idx, item := range loud.ShopItems {
-			infoLines = append(infoLines, fmt.Sprintf("%d) %s Lv%d  ", idx+1, loud.Localize(item.Name), item.Level)+screen.loudIcon()+fmt.Sprintf(" %d", item.Price))
+			infoLines = append(infoLines, fmt.Sprintf("%d) %s  ", idx+1, formatItem(item))+screen.loudIcon()+fmt.Sprintf(" %d", item.Price))
 		}
-		infoLines = append(infoLines,
-			"Select ( ↵ )",
-			loud.Localize("C)ancel"))
+		infoLines = appendSelectCancelCmds(infoLines)
+	case SELECT_BUY_CHARACTER:
+		for idx, item := range loud.ShopCharacters {
+			infoLines = append(infoLines, fmt.Sprintf("%d) %s  ", idx+1, formatItem(item))+screen.pylonIcon()+fmt.Sprintf(" %d", item.Price))
+		}
+		infoLines = appendSelectCancelCmds(infoLines)
 	case SELECT_SELL_ITEM:
 		userItems := screen.user.InventoryItems()
 		for idx, item := range userItems {
-			infoLines = append(infoLines, fmt.Sprintf("%d) %s Lv%d  ", idx+1, loud.Localize(item.Name), item.Level)+screen.loudIcon()+fmt.Sprintf(" %d", item.GetSellPrice()))
+			infoLines = append(infoLines, fmt.Sprintf("%d) %s  ", idx+1, formatItem(item))+screen.loudIcon()+fmt.Sprintf(" %d", item.GetSellPrice()))
 		}
-		infoLines = append(infoLines,
-			"Select ( ↵ )",
-			loud.Localize("C)ancel"))
+		infoLines = appendSelectCancelCmds(infoLines)
 	case SELECT_HUNT_ITEM:
 		infoLines = append(infoLines, loud.Localize("No item"))
 		infoLines = append(infoLines, loud.Localize("Get I)nitial Coin"))
 		for idx, item := range screen.user.InventoryItems() {
-			infoLines = append(infoLines, fmt.Sprintf("%d) %s Lv%d", idx+1, loud.Localize(item.Name), item.Level))
+			infoLines = append(infoLines, fmt.Sprintf("%d) %s", idx+1, formatItem(item)))
 		}
-		infoLines = append(infoLines,
-			"Select ( ↵ )",
-			loud.Localize("C)ancel"))
+		infoLines = appendSelectCancelCmds(infoLines)
 	case SELECT_UPGRADE_ITEM:
 		for idx, item := range screen.user.UpgradableItems() {
-			infoLines = append(infoLines, fmt.Sprintf("%d) %s Lv%d ", idx+1, loud.Localize(item.Name), item.Level)+screen.loudIcon()+fmt.Sprintf(" %d", item.GetUpgradePrice()))
+			infoLines = append(infoLines, fmt.Sprintf("%d) %s ", idx+1, formatItem(item))+screen.loudIcon()+fmt.Sprintf(" %d", item.GetUpgradePrice()))
 		}
-		infoLines = append(infoLines,
-			"Select ( ↵ )",
-			loud.Localize("C)ancel"))
+		infoLines = appendSelectCancelCmds(infoLines)
 	default:
 		if screen.IsResultScreen() { // eg. RESULT_BUY_LOUD_REQUEST_CREATION
 			infoLines = append(infoLines, loud.Localize("Go) on( ↵ )"))

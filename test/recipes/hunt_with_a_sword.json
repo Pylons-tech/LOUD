@@ -3,12 +3,13 @@
     "RType": "0",
     "CoinInputs":[],
     "ItemInputRefs":[
-        "./recipes/item_input/sword.json"
+        "./recipes/item_input/character.json",
+        "./recipes/item_input/hunt_sword.json"
     ],
     "Entries":{
         "CoinOutputs":[{
             "Coin":"loudcoin",
-            "Program": "int(attack * double(randi(2)+4))",
+            "Program": "int(input1.attack * double(randi(2)+4))",
             "Weight": 1
         }],
         "ItemOutputs":[]
