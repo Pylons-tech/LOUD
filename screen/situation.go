@@ -61,20 +61,21 @@ func (screen *GameScreen) renderUserSituation() {
 		desc = loud.Localize("you are now waiting for loud sell request creation")
 		desc += screen.sellLoudDesc(screen.loudEnterValue, screen.pylonEnterValue)
 	case WAIT_BUY_ITEM_PROCESS:
-		desc = fmt.Sprintf("%s %s.\n%s", loud.Localize("wait buy item process desc"), formatItem(screen.activeItem), waitProcessEnd)
+		desc = fmt.Sprintf("%s %s.\n", loud.Localize("wait buy item process desc"), formatItem(screen.activeItem))
+		desc += waitProcessEnd
 	case WAIT_BUY_CHARACTER_PROCESS:
-		desc = fmt.Sprintf("%s %s.\n%s", loud.Localize("wait buy character process desc"), formatItem(screen.activeItem), waitProcessEnd)
+		desc = fmt.Sprintf("%s %s.\n", loud.Localize("wait buy character process desc"), formatItem(screen.activeItem))
+		desc += waitProcessEnd
 	case WAIT_HUNT_PROCESS:
 		if len(screen.activeItem.Name) > 0 {
-			desc = fmt.Sprintf("%s %s.\n%s", loud.Localize("wait hunt process desc"), formatItem(screen.activeItem), waitProcessEnd)
+			desc = fmt.Sprintf("%s %s.\n", loud.Localize("wait hunt process desc"), formatItem(screen.activeItem))
 		} else {
-			switch string(screen.lastInput.Ch) {
-			case "I", "i":
-				desc = fmt.Sprintf("%s\n%s", loud.Localize("Getting initial gold from pylon"), waitProcessEnd)
-			default:
-				desc = fmt.Sprintf("%s\n%s", loud.Localize("hunting without weapon"), waitProcessEnd)
-			}
+			desc = fmt.Sprintf("%s\n", loud.Localize("hunting without weapon"))
 		}
+		desc += waitProcessEnd
+	case WAIT_GET_INITIAL_COIN:
+		desc = fmt.Sprintf("%s\n", loud.Localize("Getting initial gold from pylon"))
+		desc += waitProcessEnd
 	case WAIT_GET_PYLONS:
 		desc = loud.Localize("You are waiting for getting pylons process")
 	case WAIT_SWITCH_USER:
@@ -121,13 +122,16 @@ func (screen *GameScreen) renderUserSituation() {
 		} else {
 			respOutput := handlers.ExecuteRecipeSerialize{}
 			json.Unmarshal(screen.txResult, &respOutput)
-			switch string(screen.lastInput.Ch) {
-			case "I", "i":
-				desc = fmt.Sprintf("%s %d.", loud.Localize("Got initial gold from pylons. Amount is"), respOutput.Amount)
-			default:
-				// TODO: should visualize item lost result better after updating recipe structure for character catalyst item
-				desc = fmt.Sprintf("%s %d. Item losts %+v", loud.Localize("result hunt finish desc"), respOutput.Amount, respOutput.ItemLoseResult)
-			}
+			// TODO: should visualize item lost result better after updating recipe structure for character catalyst item
+			desc = fmt.Sprintf("%s %d. Item losts %+v", loud.Localize("result hunt finish desc"), respOutput.Amount, respOutput.ItemLoseResult)
+		}
+	case RESULT_GET_INITIAL_COIN:
+		if screen.txFailReason != "" {
+			desc = loud.Localize("get initial coin failed reason") + ": " + loud.Localize(screen.txFailReason)
+		} else {
+			respOutput := handlers.ExecuteRecipeSerialize{}
+			json.Unmarshal(screen.txResult, &respOutput)
+			desc = fmt.Sprintf("%s %d.", loud.Localize("Got initial gold from pylons. Amount is"), respOutput.Amount)
 		}
 	case RESULT_GET_PYLONS:
 		if screen.txFailReason != "" {

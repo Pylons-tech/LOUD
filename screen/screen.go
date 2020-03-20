@@ -48,7 +48,6 @@ type GameScreen struct {
 	screenSize                  ssh.Window
 	activeItem                  loud.Item
 	activeCharacter             loud.Character
-	lastInput                   termbox.Event
 	activeLine                  int
 	activeTradeRequest          loud.TradeRequest
 	activeItemTradeRequest      loud.ItemTradeRequest

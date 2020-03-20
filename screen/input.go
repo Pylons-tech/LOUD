@@ -12,7 +12,6 @@ import (
 )
 
 func (screen *GameScreen) HandleInputKey(input termbox.Event) {
-	screen.lastInput = input
 	Key := strings.ToUpper(string(input.Ch))
 	log.Println("Handling Key \"", Key, "\"", input.Ch)
 	if screen.HandleFirstClassInputKeys(input) {
@@ -244,18 +243,18 @@ func (screen *GameScreen) HandleFirstClassInputKeys(input termbox.Event) bool {
 		}()
 	case "I":
 		screen.activeItem = loud.GetWeaponItemFromKey(screen.user, Key)
-		screen.SetScreenStatusAndRefresh(WAIT_HUNT_PROCESS)
+		screen.SetScreenStatusAndRefresh(WAIT_GET_INITIAL_COIN)
 		log.Println("started sending request for hunting item")
 		go func() {
 			txhash, err := loud.GetInitialCoin(screen.user)
 			log.Println("ended sending request for hunting item")
 			if err != nil {
 				screen.txFailReason = err.Error()
-				screen.SetScreenStatusAndRefresh(RESULT_HUNT_FINISH)
+				screen.SetScreenStatusAndRefresh(RESULT_GET_INITIAL_COIN)
 			} else {
 				time.AfterFunc(1*time.Second, func() {
 					screen.txResult, screen.txFailReason = loud.ProcessTxResult(screen.user, txhash)
-					screen.SetScreenStatusAndRefresh(RESULT_HUNT_FINISH)
+					screen.SetScreenStatusAndRefresh(RESULT_GET_INITIAL_COIN)
 				})
 			}
 		}()
