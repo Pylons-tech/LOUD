@@ -705,95 +705,33 @@ func (screen *GameScreen) RunActiveWeaponSelect() {
 }
 
 func (screen *GameScreen) RunActiveItemBuy() {
-	screen.SetScreenStatusAndRefresh(WAIT_BUY_ITEM_PROCESS)
-
-	log.Println("started sending request for buying item")
-	go func() {
-		txhash, err := loud.Buy(screen.user, screen.activeItem)
-		log.Println("ended sending request for buying item")
-		if err != nil {
-			screen.txFailReason = err.Error()
-			screen.SetScreenStatusAndRefresh(RESULT_BUY_ITEM_FINISH)
-		} else {
-			time.AfterFunc(1*time.Second, func() {
-				screen.txResult, screen.txFailReason = loud.ProcessTxResult(screen.user, txhash)
-				screen.SetScreenStatusAndRefresh(RESULT_BUY_ITEM_FINISH)
-			})
-		}
-	}()
+	screen.RunTxProcess(WAIT_BUY_ITEM_PROCESS, RESULT_BUY_ITEM_FINISH, func() (string, error) {
+		return loud.Buy(screen.user, screen.activeItem)
+	})
 }
 
 func (screen *GameScreen) RunActiveCharacterBuy() {
-	screen.SetScreenStatusAndRefresh(WAIT_BUY_CHARACTER_PROCESS)
-
-	log.Println("started sending request for buying character")
-	go func() {
-		txhash, err := loud.BuyCharacter(screen.user, screen.activeCharacter)
-		log.Println("ended sending request for buying character")
-		if err != nil {
-			screen.txFailReason = err.Error()
-			screen.SetScreenStatusAndRefresh(RESULT_BUY_CHARACTER_FINISH)
-		} else {
-			time.AfterFunc(1*time.Second, func() {
-				screen.txResult, screen.txFailReason = loud.ProcessTxResult(screen.user, txhash)
-				screen.SetScreenStatusAndRefresh(RESULT_BUY_CHARACTER_FINISH)
-			})
-		}
-	}()
+	screen.RunTxProcess(WAIT_BUY_CHARACTER_PROCESS, RESULT_BUY_CHARACTER_FINISH, func() (string, error) {
+		return loud.BuyCharacter(screen.user, screen.activeCharacter)
+	})
 }
 
 func (screen *GameScreen) RunActiveItemSell() {
-	screen.SetScreenStatusAndRefresh(WAIT_SELL_PROCESS)
-	log.Println("started sending request for selling item")
-	go func() {
-		txhash, err := loud.Sell(screen.user, screen.activeItem)
-		log.Println("ended sending request for selling item")
-		if err != nil {
-			screen.txFailReason = err.Error()
-			screen.SetScreenStatusAndRefresh(RESULT_SELL_FINISH)
-		} else {
-			time.AfterFunc(1*time.Second, func() {
-				screen.txResult, screen.txFailReason = loud.ProcessTxResult(screen.user, txhash)
-				screen.SetScreenStatusAndRefresh(RESULT_SELL_FINISH)
-			})
-		}
-	}()
+	screen.RunTxProcess(WAIT_SELL_PROCESS, RESULT_SELL_FINISH, func() (string, error) {
+		return loud.Sell(screen.user, screen.activeItem)
+	})
 }
 
 func (screen *GameScreen) RunActiveItemUpgrade() {
-	screen.SetScreenStatusAndRefresh(WAIT_UPGRADE_PROCESS)
-	log.Println("started sending request for upgrading item")
-	go func() {
-		txhash, err := loud.Upgrade(screen.user, screen.activeItem)
-		log.Println("ended sending request for upgrading item")
-		if err != nil {
-			screen.txFailReason = err.Error()
-			screen.SetScreenStatusAndRefresh(RESULT_UPGRADE_FINISH)
-		} else {
-			time.AfterFunc(1*time.Second, func() {
-				screen.txResult, screen.txFailReason = loud.ProcessTxResult(screen.user, txhash)
-				screen.SetScreenStatusAndRefresh(RESULT_UPGRADE_FINISH)
-			})
-		}
-	}()
+	screen.RunTxProcess(WAIT_UPGRADE_PROCESS, RESULT_UPGRADE_FINISH, func() (string, error) {
+		return loud.Upgrade(screen.user, screen.activeItem)
+	})
 }
 
 func (screen *GameScreen) RunActiveItemHunt() {
-	screen.SetScreenStatusAndRefresh(WAIT_HUNT_PROCESS)
-	log.Println("started sending request for hunting item")
-	go func() {
-		txhash, err := loud.Hunt(screen.user, screen.activeItem)
-		log.Println("ended sending request for hunting item")
-		if err != nil {
-			screen.txFailReason = err.Error()
-			screen.SetScreenStatusAndRefresh(RESULT_HUNT_FINISH)
-		} else {
-			time.AfterFunc(1*time.Second, func() {
-				screen.txResult, screen.txFailReason = loud.ProcessTxResult(screen.user, txhash)
-				screen.SetScreenStatusAndRefresh(RESULT_HUNT_FINISH)
-			})
-		}
-	}()
+	screen.RunTxProcess(WAIT_HUNT_PROCESS, RESULT_HUNT_FINISH, func() (string, error) {
+		return loud.Hunt(screen.user, screen.activeItem)
+	})
 }
 
 func (screen *GameScreen) RunSelectedLoudBuyTrade() {
@@ -803,21 +741,9 @@ func (screen *GameScreen) RunSelectedLoudBuyTrade() {
 		screen.SetScreenStatusAndRefresh(RESULT_FULFILL_BUY_LOUD_REQUEST)
 	} else {
 		screen.activeTradeRequest = loud.BuyTradeRequests[screen.activeLine]
-		screen.SetScreenStatusAndRefresh(WAIT_FULFILL_BUY_LOUD_REQUEST)
-		go func() {
-			txhash, err := loud.FulfillTrade(screen.user, loud.BuyTradeRequests[screen.activeLine].ID)
-
-			log.Println("ended sending request for creating buy loud request")
-			if err != nil {
-				screen.txFailReason = err.Error()
-				screen.SetScreenStatusAndRefresh(RESULT_FULFILL_BUY_LOUD_REQUEST)
-			} else {
-				time.AfterFunc(2*time.Second, func() {
-					screen.txResult, screen.txFailReason = loud.ProcessTxResult(screen.user, txhash)
-					screen.SetScreenStatusAndRefresh(RESULT_FULFILL_BUY_LOUD_REQUEST)
-				})
-			}
-		}()
+		screen.RunTxProcess(WAIT_FULFILL_BUY_LOUD_REQUEST, RESULT_FULFILL_BUY_LOUD_REQUEST, func() (string, error) {
+			return loud.FulfillTrade(screen.user, screen.activeTradeRequest.ID)
+		})
 	}
 }
 
@@ -827,21 +753,9 @@ func (screen *GameScreen) RunSelectedLoudSellTrade() {
 		screen.SetScreenStatusAndRefresh(RESULT_FULFILL_SELL_LOUD_REQUEST)
 	} else {
 		screen.activeTradeRequest = loud.SellTradeRequests[screen.activeLine]
-		screen.SetScreenStatusAndRefresh(WAIT_FULFILL_SELL_LOUD_REQUEST)
-		go func() {
-			log.Println("started sending request for creating sell loud request")
-			txhash, err := loud.FulfillTrade(screen.user, loud.SellTradeRequests[screen.activeLine].ID)
-			log.Println("ended sending request for creating sell loud request")
-			if err != nil {
-				screen.txFailReason = err.Error()
-				screen.SetScreenStatusAndRefresh(RESULT_FULFILL_SELL_LOUD_REQUEST)
-			} else {
-				time.AfterFunc(2*time.Second, func() {
-					screen.txResult, screen.txFailReason = loud.ProcessTxResult(screen.user, txhash)
-					screen.SetScreenStatusAndRefresh(RESULT_FULFILL_SELL_LOUD_REQUEST)
-				})
-			}
-		}()
+		screen.RunTxProcess(WAIT_FULFILL_SELL_LOUD_REQUEST, RESULT_FULFILL_SELL_LOUD_REQUEST, func() (string, error) {
+			return loud.FulfillTrade(screen.user, screen.activeTradeRequest.ID)
+		})
 	}
 }
 
@@ -851,21 +765,9 @@ func (screen *GameScreen) RunSelectedSwordBuyTradeRequest() {
 		screen.SetScreenStatusAndRefresh(RESULT_FULFILL_BUY_SWORD_REQUEST)
 	} else {
 		screen.activeItemTradeRequest = loud.SwordBuyTradeRequests[screen.activeLine]
-		screen.SetScreenStatusAndRefresh(WAIT_FULFILL_BUY_SWORD_REQUEST)
-		go func() {
-			log.Println("started sending request for creating buying item request")
-			txhash, err := loud.FulfillTrade(screen.user, loud.SwordBuyTradeRequests[screen.activeLine].ID)
-			log.Println("ended sending request for creating buying item request")
-			if err != nil {
-				screen.txFailReason = err.Error()
-				screen.SetScreenStatusAndRefresh(RESULT_FULFILL_BUY_SWORD_REQUEST)
-			} else {
-				time.AfterFunc(2*time.Second, func() {
-					screen.txResult, screen.txFailReason = loud.ProcessTxResult(screen.user, txhash)
-					screen.SetScreenStatusAndRefresh(RESULT_FULFILL_BUY_SWORD_REQUEST)
-				})
-			}
-		}()
+		screen.RunTxProcess(WAIT_FULFILL_BUY_SWORD_REQUEST, RESULT_FULFILL_BUY_SWORD_REQUEST, func() (string, error) {
+			return loud.FulfillTrade(screen.user, screen.activeItemTradeRequest.ID)
+		})
 	}
 }
 
@@ -874,23 +776,10 @@ func (screen *GameScreen) RunSelectedSwordSellTradeRequest() {
 		screen.txFailReason = loud.Localize("you haven't selected any sell item request")
 		screen.SetScreenStatusAndRefresh(RESULT_FULFILL_SELL_SWORD_REQUEST)
 	} else {
-		screen.scrStatus = WAIT_FULFILL_SELL_SWORD_REQUEST
 		screen.activeItemTradeRequest = loud.SwordSellTradeRequests[screen.activeLine]
-		screen.FreshRender()
-		go func() {
-			log.Println("started sending request for creating selling item request")
-			txhash, err := loud.FulfillTrade(screen.user, loud.SwordSellTradeRequests[screen.activeLine].ID)
-			log.Println("ended sending request for creating selling item request")
-			if err != nil {
-				screen.txFailReason = err.Error()
-				screen.SetScreenStatusAndRefresh(RESULT_FULFILL_SELL_SWORD_REQUEST)
-			} else {
-				time.AfterFunc(2*time.Second, func() {
-					screen.txResult, screen.txFailReason = loud.ProcessTxResult(screen.user, txhash)
-					screen.SetScreenStatusAndRefresh(RESULT_FULFILL_SELL_SWORD_REQUEST)
-				})
-			}
-		}()
+		screen.RunTxProcess(WAIT_FULFILL_SELL_SWORD_REQUEST, RESULT_FULFILL_SELL_SWORD_REQUEST, func() (string, error) {
+			return loud.FulfillTrade(screen.user, screen.activeItemTradeRequest.ID)
+		})
 	}
 }
 
@@ -900,21 +789,9 @@ func (screen *GameScreen) RunSelectedCharacterBuyTradeRequest() {
 		screen.SetScreenStatusAndRefresh(RESULT_FULFILL_BUY_CHARACTER_REQUEST)
 	} else {
 		screen.activeCharacterTradeRequest = loud.CharacterBuyTradeRequests[screen.activeLine]
-		screen.SetScreenStatusAndRefresh(WAIT_FULFILL_BUY_CHARACTER_REQUEST)
-		go func() {
-			log.Println("started sending request for creating buying character request")
-			txhash, err := loud.FulfillTrade(screen.user, loud.CharacterBuyTradeRequests[screen.activeLine].ID)
-			log.Println("ended sending request for creating buying character request")
-			if err != nil {
-				screen.txFailReason = err.Error()
-				screen.SetScreenStatusAndRefresh(RESULT_FULFILL_BUY_CHARACTER_REQUEST)
-			} else {
-				time.AfterFunc(2*time.Second, func() {
-					screen.txResult, screen.txFailReason = loud.ProcessTxResult(screen.user, txhash)
-					screen.SetScreenStatusAndRefresh(RESULT_FULFILL_BUY_CHARACTER_REQUEST)
-				})
-			}
-		}()
+		screen.RunTxProcess(WAIT_FULFILL_BUY_CHARACTER_REQUEST, RESULT_FULFILL_BUY_CHARACTER_REQUEST, func() (string, error) {
+			return loud.FulfillTrade(screen.user, screen.activeCharacterTradeRequest.ID)
+		})
 	}
 }
 
@@ -923,23 +800,10 @@ func (screen *GameScreen) RunSelectedCharacterSellTradeRequest() {
 		screen.txFailReason = loud.Localize("you haven't selected any sell character request")
 		screen.SetScreenStatusAndRefresh(RESULT_FULFILL_SELL_CHARACTER_REQUEST)
 	} else {
-		screen.scrStatus = WAIT_FULFILL_SELL_CHARACTER_REQUEST
 		screen.activeCharacterTradeRequest = loud.CharacterSellTradeRequests[screen.activeLine]
-		screen.FreshRender()
-		go func() {
-			log.Println("started sending request for creating selling character request")
-			txhash, err := loud.FulfillTrade(screen.user, loud.CharacterSellTradeRequests[screen.activeLine].ID)
-			log.Println("ended sending request for creating selling character request")
-			if err != nil {
-				screen.txFailReason = err.Error()
-				screen.SetScreenStatusAndRefresh(RESULT_FULFILL_SELL_CHARACTER_REQUEST)
-			} else {
-				time.AfterFunc(2*time.Second, func() {
-					screen.txResult, screen.txFailReason = loud.ProcessTxResult(screen.user, txhash)
-					screen.SetScreenStatusAndRefresh(RESULT_FULFILL_SELL_CHARACTER_REQUEST)
-				})
-			}
-		}()
+		screen.RunTxProcess(WAIT_FULFILL_SELL_CHARACTER_REQUEST, RESULT_FULFILL_SELL_CHARACTER_REQUEST, func() (string, error) {
+			return loud.FulfillTrade(screen.user, screen.activeCharacterTradeRequest.ID)
+		})
 	}
 }
 
@@ -951,6 +815,25 @@ func (screen *GameScreen) SetScreenStatusAndRefresh(newStatus ScreenStatus) {
 func (screen *GameScreen) FreshRender() {
 	screen.refreshed = false
 	screen.Render()
+}
+
+func (screen *GameScreen) RunTxProcess(waitStatus ScreenStatus, resultStatus ScreenStatus, fn func() (string, error)) {
+	screen.SetScreenStatusAndRefresh(waitStatus)
+
+	log.Println("started sending request for ", waitStatus)
+	go func() {
+		txhash, err := fn()
+		log.Println("ended sending request for ", waitStatus)
+		if err != nil {
+			screen.txFailReason = err.Error()
+			screen.SetScreenStatusAndRefresh(resultStatus)
+		} else {
+			time.AfterFunc(1*time.Second, func() {
+				screen.txResult, screen.txFailReason = loud.ProcessTxResult(screen.user, txhash)
+				screen.SetScreenStatusAndRefresh(resultStatus)
+			})
+		}
+	}()
 }
 
 func (screen *GameScreen) Render() {

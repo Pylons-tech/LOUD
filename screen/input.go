@@ -202,20 +202,9 @@ func (screen *GameScreen) HandleFirstClassInputKeys(input termbox.Event) bool {
 	Key := strings.ToUpper(string(input.Ch))
 	switch Key {
 	case "J": // Create cookbook
-		screen.SetScreenStatusAndRefresh(WAIT_CREATE_COOKBOOK)
-		go func() {
-			txhash, err := loud.CreateCookbook(screen.user)
-			log.Println("ended sending request for creating cookbook")
-			if err != nil {
-				screen.txFailReason = err.Error()
-				screen.SetScreenStatusAndRefresh(RESULT_CREATE_COOKBOOK)
-			} else {
-				time.AfterFunc(1*time.Second, func() {
-					screen.txResult, screen.txFailReason = loud.ProcessTxResult(screen.user, txhash)
-					screen.SetScreenStatusAndRefresh(RESULT_CREATE_COOKBOOK)
-				})
-			}
-		}()
+		screen.RunTxProcess(WAIT_CREATE_COOKBOOK, RESULT_CREATE_COOKBOOK, func() (string, error) {
+			return loud.CreateCookbook(screen.user)
+		})
 	case "Z": // Switch user
 		screen.SetScreenStatusAndRefresh(WAIT_SWITCH_USER)
 		go func() {
@@ -226,38 +215,14 @@ func (screen *GameScreen) HandleFirstClassInputKeys(input termbox.Event) bool {
 			screen.SetScreenStatusAndRefresh(RESULT_SWITCH_USER)
 		}()
 	case "Y": // get initial pylons
-		screen.SetScreenStatusAndRefresh(WAIT_GET_PYLONS)
-		log.Println("started sending request for getting extra pylons")
-		go func() {
-			txhash, err := loud.GetExtraPylons(screen.user)
-			log.Println("ended sending request for getting extra pylons")
-			if err != nil {
-				screen.txFailReason = err.Error()
-				screen.SetScreenStatusAndRefresh(RESULT_GET_PYLONS)
-			} else {
-				time.AfterFunc(1*time.Second, func() {
-					screen.txResult, screen.txFailReason = loud.ProcessTxResult(screen.user, txhash)
-					screen.SetScreenStatusAndRefresh(RESULT_GET_PYLONS)
-				})
-			}
-		}()
+		screen.RunTxProcess(WAIT_GET_PYLONS, RESULT_GET_PYLONS, func() (string, error) {
+			return loud.GetExtraPylons(screen.user)
+		})
 	case "I":
 		screen.activeItem = loud.GetWeaponItemFromKey(screen.user, Key)
-		screen.SetScreenStatusAndRefresh(WAIT_GET_INITIAL_COIN)
-		log.Println("started sending request for hunting item")
-		go func() {
-			txhash, err := loud.GetInitialCoin(screen.user)
-			log.Println("ended sending request for hunting item")
-			if err != nil {
-				screen.txFailReason = err.Error()
-				screen.SetScreenStatusAndRefresh(RESULT_GET_INITIAL_COIN)
-			} else {
-				time.AfterFunc(1*time.Second, func() {
-					screen.txResult, screen.txFailReason = loud.ProcessTxResult(screen.user, txhash)
-					screen.SetScreenStatusAndRefresh(RESULT_GET_INITIAL_COIN)
-				})
-			}
-		}()
+		screen.RunTxProcess(WAIT_GET_INITIAL_COIN, RESULT_GET_INITIAL_COIN, func() (string, error) {
+			return loud.GetInitialCoin(screen.user)
+		})
 	case "E": // REFRESH
 		screen.Resync()
 		return true
