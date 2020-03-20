@@ -36,6 +36,7 @@ Since Pylons repos are private below command will be needed to run test correctl
 
 ```
 export GOPRIVATE="github.com/Pylons-tech"
+go get "github.com/Pylons-tech/pylons"
 ```
 
 ### Fresh Local test

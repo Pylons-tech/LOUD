@@ -43,25 +43,26 @@ type Screen interface {
 }
 
 type GameScreen struct {
-	world                  loud.World
-	user                   loud.User
-	screenSize             ssh.Window
-	activeItem             loud.Item
-	lastInput              termbox.Event
-	activeLine             int
-	activeTradeRequest     loud.TradeRequest
-	activeItemTradeRequest loud.ItemTradeRequest
-	pylonEnterValue        string
-	loudEnterValue         string
-	inputText              string
-	refreshingDaemonStatus bool
-	syncingData            bool
-	blockHeight            int64
-	txFailReason           string
-	txResult               []byte
-	refreshed              bool
-	scrStatus              ScreenStatus
-	colorCodeCache         map[string](func(string) string)
+	world                       loud.World
+	user                        loud.User
+	screenSize                  ssh.Window
+	activeItem                  loud.Item
+	activeCharacter             loud.Character
+	activeLine                  int
+	activeTradeRequest          loud.TradeRequest
+	activeItemTradeRequest      loud.ItemTradeRequest
+	activeCharacterTradeRequest loud.CharacterTradeRequest
+	pylonEnterValue             string
+	loudEnterValue              string
+	inputText                   string
+	refreshingDaemonStatus      bool
+	syncingData                 bool
+	blockHeight                 int64
+	txFailReason                string
+	txResult                    []byte
+	refreshed                   bool
+	scrStatus                   ScreenStatus
+	colorCodeCache              map[string](func(string) string)
 }
 
 // NewScreen manages the window rendering for game
@@ -176,10 +177,32 @@ func (screen *GameScreen) buySwordDesc(activeItem loud.Item, pylonValue interfac
 	return desc
 }
 
+func (screen *GameScreen) buyCharacterDesc(activeCharacter loud.Character, pylonValue interface{}) string {
+	var desc = strings.Join([]string{
+		"\n",
+		screen.pylonIcon(),
+		fmt.Sprintf("%v", pylonValue),
+		"\n  ↓\n",
+		fmt.Sprintf("%s", formatCharacter(activeCharacter)),
+	}, "")
+	return desc
+}
+
 func (screen *GameScreen) sellSwordDesc(activeItem loud.Item, pylonValue interface{}) string {
 	var desc = strings.Join([]string{
 		"\n",
 		fmt.Sprintf("%s", formatItem(activeItem)),
+		"\n  ↓\n",
+		screen.pylonIcon(),
+		fmt.Sprintf("%v", pylonValue),
+	}, "")
+	return desc
+}
+
+func (screen *GameScreen) sellCharacterDesc(activeCharacter loud.Character, pylonValue interface{}) string {
+	var desc = strings.Join([]string{
+		"\n",
+		fmt.Sprintf("%s", formatCharacter(activeCharacter)),
 		"\n  ↓\n",
 		screen.pylonIcon(),
 		fmt.Sprintf("%v", pylonValue),
@@ -324,6 +347,41 @@ func (screen *GameScreen) renderItemTradeRequestTable(header string, requests []
 	return infoLines
 }
 
+func (screen *GameScreen) renderCharacterTradeRequestTable(header string, requests []loud.CharacterTradeRequest) []string {
+	infoLines := strings.Split(header, "\n")
+	numHeaderLines := len(infoLines)
+	infoLines = append(infoLines, "╭────────────────────────────────────┬───────────────╮")
+	// infoLines = append(infoLines, "│ Character                │ Price (pylon) │")
+	infoLines = append(infoLines, screen.renderItemTradeRequestTableLine("Character", "Price (pylon)", false, false))
+	infoLines = append(infoLines, "├────────────────────────────────────┼───────────────┤")
+	numLines := screen.screenSize.Height/2 - 7 - numHeaderLines
+	if screen.activeLine >= len(requests) {
+		screen.activeLine = len(requests) - 1
+	}
+	activeLine := screen.activeLine
+	startLine := activeLine - numLines + 1
+	if startLine < 0 {
+		startLine = 0
+	}
+	endLine := startLine + numLines
+	if endLine > len(requests) {
+		endLine = len(requests)
+	}
+	for li, request := range requests[startLine:endLine] {
+		infoLines = append(
+			infoLines,
+			screen.renderItemTradeRequestTableLine(
+				fmt.Sprintf("%s  ", formatCharacter(request.TCharacter)),
+				fmt.Sprintf("%d", request.Price),
+				startLine+li == activeLine,
+				request.IsMyTradeRequest,
+			),
+		)
+	}
+	infoLines = append(infoLines, "╰────────────────────────────────────┴───────────────╯")
+	return infoLines
+}
+
 func (screen *GameScreen) renderItemTableLine(text1 string, isActiveLine bool) string {
 	calcText := "│" + centerText(text1, " ", 52) + "│"
 	if isActiveLine {
@@ -358,6 +416,39 @@ func (screen *GameScreen) renderItemTable(header string, items []loud.Item) []st
 			infoLines,
 			screen.renderItemTableLine(
 				fmt.Sprintf("%s  ", formatItem(item)),
+				startLine+li == activeLine,
+			),
+		)
+	}
+	infoLines = append(infoLines, "╰────────────────────────────────────────────────────╯")
+	return infoLines
+}
+
+func (screen *GameScreen) renderCharacterTable(header string, characters []loud.Character) []string {
+	infoLines := strings.Split(header, "\n")
+	numHeaderLines := len(infoLines)
+	infoLines = append(infoLines, "╭────────────────────────────────────────────────────╮")
+	// infoLines = append(infoLines, "│ Item                            │")
+	infoLines = append(infoLines, screen.renderItemTableLine("Character", false))
+	infoLines = append(infoLines, "├────────────────────────────────────────────────────┤")
+	numLines := screen.screenSize.Height/2 - 7 - numHeaderLines
+	if screen.activeLine >= len(characters) {
+		screen.activeLine = len(characters) - 1
+	}
+	activeLine := screen.activeLine
+	startLine := activeLine - numLines + 1
+	if startLine < 0 {
+		startLine = 0
+	}
+	endLine := startLine + numLines
+	if endLine > len(characters) {
+		endLine = len(characters)
+	}
+	for li, character := range characters[startLine:endLine] {
+		infoLines = append(
+			infoLines,
+			screen.renderItemTableLine(
+				fmt.Sprintf("%s  ", formatCharacter(character)),
 				startLine+li == activeLine,
 			),
 		)
@@ -494,6 +585,10 @@ func (screen *GameScreen) InputActive() bool {
 		return true
 	case CREATE_BUY_SWORD_REQUEST_ENTER_PYLON_VALUE:
 		return true
+	case CREATE_SELL_CHARACTER_REQUEST_ENTER_PYLON_VALUE:
+		return true
+	case CREATE_BUY_CHARACTER_REQUEST_ENTER_PYLON_VALUE:
+		return true
 	}
 	return false
 }
@@ -560,7 +655,7 @@ func (screen *GameScreen) renderCharacterSheet() {
 	infoLines = append(infoLines, centerText(loud.Localize("inventory chracters"), "─", width))
 	characters := screen.user.InventoryCharacters()
 	for idx, character := range characters {
-		characterInfo := truncateRight(fmt.Sprintf("%s", formatItem(character)), width)
+		characterInfo := truncateRight(fmt.Sprintf("%s", formatCharacter(character)), width)
 		if idx == screen.user.GetDefaultCharacterIndex() {
 			characterInfo = screen.blueBoldFont()(characterInfo)
 		}
@@ -610,95 +705,33 @@ func (screen *GameScreen) RunActiveWeaponSelect() {
 }
 
 func (screen *GameScreen) RunActiveItemBuy() {
-	screen.SetScreenStatusAndRefresh(WAIT_BUY_ITEM_PROCESS)
-
-	log.Println("started sending request for buying item")
-	go func() {
-		txhash, err := loud.Buy(screen.user, screen.activeItem)
-		log.Println("ended sending request for buying item")
-		if err != nil {
-			screen.txFailReason = err.Error()
-			screen.SetScreenStatusAndRefresh(RESULT_BUY_ITEM_FINISH)
-		} else {
-			time.AfterFunc(1*time.Second, func() {
-				screen.txResult, screen.txFailReason = loud.ProcessTxResult(screen.user, txhash)
-				screen.SetScreenStatusAndRefresh(RESULT_BUY_ITEM_FINISH)
-			})
-		}
-	}()
+	screen.RunTxProcess(WAIT_BUY_ITEM_PROCESS, RESULT_BUY_ITEM_FINISH, func() (string, error) {
+		return loud.Buy(screen.user, screen.activeItem)
+	})
 }
 
 func (screen *GameScreen) RunActiveCharacterBuy() {
-	screen.SetScreenStatusAndRefresh(WAIT_BUY_CHARACTER_PROCESS)
-
-	log.Println("started sending request for buying character")
-	go func() {
-		txhash, err := loud.BuyCharacter(screen.user, screen.activeItem)
-		log.Println("ended sending request for buying character")
-		if err != nil {
-			screen.txFailReason = err.Error()
-			screen.SetScreenStatusAndRefresh(RESULT_BUY_CHARACTER_FINISH)
-		} else {
-			time.AfterFunc(1*time.Second, func() {
-				screen.txResult, screen.txFailReason = loud.ProcessTxResult(screen.user, txhash)
-				screen.SetScreenStatusAndRefresh(RESULT_BUY_CHARACTER_FINISH)
-			})
-		}
-	}()
+	screen.RunTxProcess(WAIT_BUY_CHARACTER_PROCESS, RESULT_BUY_CHARACTER_FINISH, func() (string, error) {
+		return loud.BuyCharacter(screen.user, screen.activeCharacter)
+	})
 }
 
 func (screen *GameScreen) RunActiveItemSell() {
-	screen.SetScreenStatusAndRefresh(WAIT_SELL_PROCESS)
-	log.Println("started sending request for selling item")
-	go func() {
-		txhash, err := loud.Sell(screen.user, screen.activeItem)
-		log.Println("ended sending request for selling item")
-		if err != nil {
-			screen.txFailReason = err.Error()
-			screen.SetScreenStatusAndRefresh(RESULT_SELL_FINISH)
-		} else {
-			time.AfterFunc(1*time.Second, func() {
-				screen.txResult, screen.txFailReason = loud.ProcessTxResult(screen.user, txhash)
-				screen.SetScreenStatusAndRefresh(RESULT_SELL_FINISH)
-			})
-		}
-	}()
+	screen.RunTxProcess(WAIT_SELL_PROCESS, RESULT_SELL_FINISH, func() (string, error) {
+		return loud.Sell(screen.user, screen.activeItem)
+	})
 }
 
 func (screen *GameScreen) RunActiveItemUpgrade() {
-	screen.SetScreenStatusAndRefresh(WAIT_UPGRADE_PROCESS)
-	log.Println("started sending request for upgrading item")
-	go func() {
-		txhash, err := loud.Upgrade(screen.user, screen.activeItem)
-		log.Println("ended sending request for upgrading item")
-		if err != nil {
-			screen.txFailReason = err.Error()
-			screen.SetScreenStatusAndRefresh(RESULT_UPGRADE_FINISH)
-		} else {
-			time.AfterFunc(1*time.Second, func() {
-				screen.txResult, screen.txFailReason = loud.ProcessTxResult(screen.user, txhash)
-				screen.SetScreenStatusAndRefresh(RESULT_UPGRADE_FINISH)
-			})
-		}
-	}()
+	screen.RunTxProcess(WAIT_UPGRADE_PROCESS, RESULT_UPGRADE_FINISH, func() (string, error) {
+		return loud.Upgrade(screen.user, screen.activeItem)
+	})
 }
 
 func (screen *GameScreen) RunActiveItemHunt() {
-	screen.SetScreenStatusAndRefresh(WAIT_HUNT_PROCESS)
-	log.Println("started sending request for hunting item")
-	go func() {
-		txhash, err := loud.Hunt(screen.user, screen.activeItem, false)
-		log.Println("ended sending request for hunting item")
-		if err != nil {
-			screen.txFailReason = err.Error()
-			screen.SetScreenStatusAndRefresh(RESULT_HUNT_FINISH)
-		} else {
-			time.AfterFunc(1*time.Second, func() {
-				screen.txResult, screen.txFailReason = loud.ProcessTxResult(screen.user, txhash)
-				screen.SetScreenStatusAndRefresh(RESULT_HUNT_FINISH)
-			})
-		}
-	}()
+	screen.RunTxProcess(WAIT_HUNT_PROCESS, RESULT_HUNT_FINISH, func() (string, error) {
+		return loud.Hunt(screen.user, screen.activeItem)
+	})
 }
 
 func (screen *GameScreen) RunSelectedLoudBuyTrade() {
@@ -708,21 +741,9 @@ func (screen *GameScreen) RunSelectedLoudBuyTrade() {
 		screen.SetScreenStatusAndRefresh(RESULT_FULFILL_BUY_LOUD_REQUEST)
 	} else {
 		screen.activeTradeRequest = loud.BuyTradeRequests[screen.activeLine]
-		screen.SetScreenStatusAndRefresh(WAIT_FULFILL_BUY_LOUD_REQUEST)
-		go func() {
-			txhash, err := loud.FulfillTrade(screen.user, loud.BuyTradeRequests[screen.activeLine].ID)
-
-			log.Println("ended sending request for creating buy loud request")
-			if err != nil {
-				screen.txFailReason = err.Error()
-				screen.SetScreenStatusAndRefresh(RESULT_FULFILL_BUY_LOUD_REQUEST)
-			} else {
-				time.AfterFunc(2*time.Second, func() {
-					screen.txResult, screen.txFailReason = loud.ProcessTxResult(screen.user, txhash)
-					screen.SetScreenStatusAndRefresh(RESULT_FULFILL_BUY_LOUD_REQUEST)
-				})
-			}
-		}()
+		screen.RunTxProcess(WAIT_FULFILL_BUY_LOUD_REQUEST, RESULT_FULFILL_BUY_LOUD_REQUEST, func() (string, error) {
+			return loud.FulfillTrade(screen.user, screen.activeTradeRequest.ID)
+		})
 	}
 }
 
@@ -732,21 +753,9 @@ func (screen *GameScreen) RunSelectedLoudSellTrade() {
 		screen.SetScreenStatusAndRefresh(RESULT_FULFILL_SELL_LOUD_REQUEST)
 	} else {
 		screen.activeTradeRequest = loud.SellTradeRequests[screen.activeLine]
-		screen.SetScreenStatusAndRefresh(WAIT_FULFILL_SELL_LOUD_REQUEST)
-		go func() {
-			log.Println("started sending request for creating sell loud request")
-			txhash, err := loud.FulfillTrade(screen.user, loud.SellTradeRequests[screen.activeLine].ID)
-			log.Println("ended sending request for creating sell loud request")
-			if err != nil {
-				screen.txFailReason = err.Error()
-				screen.SetScreenStatusAndRefresh(RESULT_FULFILL_SELL_LOUD_REQUEST)
-			} else {
-				time.AfterFunc(2*time.Second, func() {
-					screen.txResult, screen.txFailReason = loud.ProcessTxResult(screen.user, txhash)
-					screen.SetScreenStatusAndRefresh(RESULT_FULFILL_SELL_LOUD_REQUEST)
-				})
-			}
-		}()
+		screen.RunTxProcess(WAIT_FULFILL_SELL_LOUD_REQUEST, RESULT_FULFILL_SELL_LOUD_REQUEST, func() (string, error) {
+			return loud.FulfillTrade(screen.user, screen.activeTradeRequest.ID)
+		})
 	}
 }
 
@@ -756,21 +765,9 @@ func (screen *GameScreen) RunSelectedSwordBuyTradeRequest() {
 		screen.SetScreenStatusAndRefresh(RESULT_FULFILL_BUY_SWORD_REQUEST)
 	} else {
 		screen.activeItemTradeRequest = loud.SwordBuyTradeRequests[screen.activeLine]
-		screen.SetScreenStatusAndRefresh(WAIT_FULFILL_BUY_SWORD_REQUEST)
-		go func() {
-			log.Println("started sending request for creating buying item request")
-			txhash, err := loud.FulfillTrade(screen.user, loud.SwordBuyTradeRequests[screen.activeLine].ID)
-			log.Println("ended sending request for creating buying item request")
-			if err != nil {
-				screen.txFailReason = err.Error()
-				screen.SetScreenStatusAndRefresh(RESULT_FULFILL_BUY_SWORD_REQUEST)
-			} else {
-				time.AfterFunc(2*time.Second, func() {
-					screen.txResult, screen.txFailReason = loud.ProcessTxResult(screen.user, txhash)
-					screen.SetScreenStatusAndRefresh(RESULT_FULFILL_BUY_SWORD_REQUEST)
-				})
-			}
-		}()
+		screen.RunTxProcess(WAIT_FULFILL_BUY_SWORD_REQUEST, RESULT_FULFILL_BUY_SWORD_REQUEST, func() (string, error) {
+			return loud.FulfillTrade(screen.user, screen.activeItemTradeRequest.ID)
+		})
 	}
 }
 
@@ -779,23 +776,34 @@ func (screen *GameScreen) RunSelectedSwordSellTradeRequest() {
 		screen.txFailReason = loud.Localize("you haven't selected any sell item request")
 		screen.SetScreenStatusAndRefresh(RESULT_FULFILL_SELL_SWORD_REQUEST)
 	} else {
-		screen.scrStatus = WAIT_FULFILL_SELL_SWORD_REQUEST
 		screen.activeItemTradeRequest = loud.SwordSellTradeRequests[screen.activeLine]
-		screen.FreshRender()
-		go func() {
-			log.Println("started sending request for creating selling item request")
-			txhash, err := loud.FulfillTrade(screen.user, loud.SwordSellTradeRequests[screen.activeLine].ID)
-			log.Println("ended sending request for creating selling item request")
-			if err != nil {
-				screen.txFailReason = err.Error()
-				screen.SetScreenStatusAndRefresh(RESULT_FULFILL_SELL_SWORD_REQUEST)
-			} else {
-				time.AfterFunc(2*time.Second, func() {
-					screen.txResult, screen.txFailReason = loud.ProcessTxResult(screen.user, txhash)
-					screen.SetScreenStatusAndRefresh(RESULT_FULFILL_SELL_SWORD_REQUEST)
-				})
-			}
-		}()
+		screen.RunTxProcess(WAIT_FULFILL_SELL_SWORD_REQUEST, RESULT_FULFILL_SELL_SWORD_REQUEST, func() (string, error) {
+			return loud.FulfillTrade(screen.user, screen.activeItemTradeRequest.ID)
+		})
+	}
+}
+
+func (screen *GameScreen) RunSelectedCharacterBuyTradeRequest() {
+	if len(loud.CharacterBuyTradeRequests) <= screen.activeLine || screen.activeLine < 0 {
+		screen.txFailReason = loud.Localize("you haven't selected any buy character request")
+		screen.SetScreenStatusAndRefresh(RESULT_FULFILL_BUY_CHARACTER_REQUEST)
+	} else {
+		screen.activeCharacterTradeRequest = loud.CharacterBuyTradeRequests[screen.activeLine]
+		screen.RunTxProcess(WAIT_FULFILL_BUY_CHARACTER_REQUEST, RESULT_FULFILL_BUY_CHARACTER_REQUEST, func() (string, error) {
+			return loud.FulfillTrade(screen.user, screen.activeCharacterTradeRequest.ID)
+		})
+	}
+}
+
+func (screen *GameScreen) RunSelectedCharacterSellTradeRequest() {
+	if len(loud.CharacterSellTradeRequests) <= screen.activeLine || screen.activeLine < 0 {
+		screen.txFailReason = loud.Localize("you haven't selected any sell character request")
+		screen.SetScreenStatusAndRefresh(RESULT_FULFILL_SELL_CHARACTER_REQUEST)
+	} else {
+		screen.activeCharacterTradeRequest = loud.CharacterSellTradeRequests[screen.activeLine]
+		screen.RunTxProcess(WAIT_FULFILL_SELL_CHARACTER_REQUEST, RESULT_FULFILL_SELL_CHARACTER_REQUEST, func() (string, error) {
+			return loud.FulfillTrade(screen.user, screen.activeCharacterTradeRequest.ID)
+		})
 	}
 }
 
@@ -807,6 +815,25 @@ func (screen *GameScreen) SetScreenStatusAndRefresh(newStatus ScreenStatus) {
 func (screen *GameScreen) FreshRender() {
 	screen.refreshed = false
 	screen.Render()
+}
+
+func (screen *GameScreen) RunTxProcess(waitStatus ScreenStatus, resultStatus ScreenStatus, fn func() (string, error)) {
+	screen.SetScreenStatusAndRefresh(waitStatus)
+
+	log.Println("started sending request for ", waitStatus)
+	go func() {
+		txhash, err := fn()
+		log.Println("ended sending request for ", waitStatus)
+		if err != nil {
+			screen.txFailReason = err.Error()
+			screen.SetScreenStatusAndRefresh(resultStatus)
+		} else {
+			time.AfterFunc(1*time.Second, func() {
+				screen.txResult, screen.txFailReason = loud.ProcessTxResult(screen.user, txhash)
+				screen.SetScreenStatusAndRefresh(resultStatus)
+			})
+		}
+	}()
 }
 
 func (screen *GameScreen) Render() {

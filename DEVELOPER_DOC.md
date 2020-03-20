@@ -54,7 +54,6 @@ Lv2 copper sword
 ```
 {
     "ID": "LOUD-hunt-with-no-weapon-recipe-v0.0.0-1579053457",
-    "RType": "0",
     "CoinInputs":[],    
     "ItemInput": [],
     "Entries":{
@@ -78,7 +77,6 @@ Lv2 copper sword
 ```
 {
     "ID": "LOUD-hunt-with-a-sword-recipe-v0.0.0-1583631194",
-    "RType": "0",
     "CoinInputs":[],
     "ItemInputs":[{
         "Doubles": [{"Key": "attack", "MinValue": "1.0", "MaxValue": "1000.0"}],
@@ -104,7 +102,6 @@ Lv2 copper sword
 ### Buy Wooden sword lv1 price: 100 gold 
 ```
 {
-    "RType": "0",
     "CoinInputs":[{
         "Coin": "loudcoin",
         "Count": "100"
@@ -139,7 +136,6 @@ Lv2 copper sword
 ### Wooden sword lv1 to lv2 upgrade price: 100 gold
 ```
 {
-    "RType": "1",
     "CoinInputs":[{
         "Coin": "loudcoin",
         "Count": "100"
@@ -170,7 +166,6 @@ Lv2 copper sword
 ### Buy Copper sword lv1 price: 250 gold
 ```
 {
-    "RType": "0",
     "CoinInputs":[{
         "Coin": "loudcoin",
         "Count": "250"
@@ -205,7 +200,6 @@ Lv2 copper sword
 ### Copper sword lv1 to lv2 upgrade price: 250 gold
 ```
 {
-    "RType": "1",
     "CoinInputs":[{
         "Coin": "loudcoin",
         "Count": "250"
@@ -235,7 +229,6 @@ Lv2 copper sword
 ### Sword sell recipe, attack * (randi(2)+20) gold
 {
     "ID": "LOUD-hunt-with-a-sword-recipe-v0.0.0-1583631194",
-    "RType": "0",
     "CoinInputs":[],
     "ItemInputs":[{
         "Doubles": [{"Key": "attack", "MinValue": "1.0", "MaxValue": "1000.0"}],

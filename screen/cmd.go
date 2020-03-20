@@ -64,16 +64,29 @@ func (screen *GameScreen) renderUserCommands() {
 			"Buy item to fulfill selected request( ↵ )",
 			"Create an order to sell item(R)",
 			"Go bac)k( ⌫ )")
+	case SHOW_BUY_CHARACTER_REQUESTS:
+		infoLines = append(infoLines, screen.tradeTableColorDesc()...)
+		infoLines = append(infoLines,
+			"Sell character to fulfill selected request( ↵ )",
+			"Create an order to buy character(R)",
+			"Go bac)k( ⌫ )")
+	case SHOW_SELL_CHARACTER_REQUESTS:
+		infoLines = append(infoLines, screen.tradeTableColorDesc()...)
+		infoLines = append(infoLines,
+			"Buy character to fulfill selected request( ↵ )",
+			"Create an order to sell character(R)",
+			"Go bac)k( ⌫ )")
 
-	case CREATE_SELL_SWORD_REQUEST_SELECT_SWORD:
-		fallthrough
-	case CREATE_BUY_SWORD_REQUEST_SELECT_SWORD:
+	case CREATE_BUY_CHARACTER_REQUEST_SELECT_CHARACTER,
+		CREATE_SELL_CHARACTER_REQUEST_SELECT_CHARACTER,
+		CREATE_SELL_SWORD_REQUEST_SELECT_SWORD,
+		CREATE_BUY_SWORD_REQUEST_SELECT_SWORD:
 		infoLines = append(infoLines,
 			SELECT_CMD,
 			"Go bac)k( ⌫ )")
 	case SELECT_DEFAULT_CHAR:
 		for idx, char := range screen.user.InventoryCharacters() {
-			infoLines = append(infoLines, fmt.Sprintf("%d) %s  ", idx+1, formatItem(char)))
+			infoLines = append(infoLines, fmt.Sprintf("%d) %s  ", idx+1, formatCharacter(char)))
 		}
 		infoLines = appendSelectCancelCmds(infoLines)
 	case SELECT_DEFAULT_WEAPON:
@@ -88,7 +101,7 @@ func (screen *GameScreen) renderUserCommands() {
 		infoLines = appendSelectCancelCmds(infoLines)
 	case SELECT_BUY_CHARACTER:
 		for idx, item := range loud.ShopCharacters {
-			infoLines = append(infoLines, fmt.Sprintf("%d) %s  ", idx+1, formatItem(item))+screen.pylonIcon()+fmt.Sprintf(" %d", item.Price))
+			infoLines = append(infoLines, fmt.Sprintf("%d) %s  ", idx+1, formatCharacter(item))+screen.pylonIcon()+fmt.Sprintf(" %d", item.Price))
 		}
 		infoLines = appendSelectCancelCmds(infoLines)
 	case SELECT_SELL_ITEM:

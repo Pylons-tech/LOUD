@@ -22,20 +22,26 @@ func SyncFromNode(user User) {
 
 	rawItems, _ := pylonSDK.ListItemsViaCLI(accInfo.Address.String())
 	myItems := []Item{}
-	myCharacters := []Item{}
+	myCharacters := []Character{}
 	for _, rawItem := range rawItems {
+		XP, _ := rawItem.FindDouble("XP")
 		Level, _ := rawItem.FindLong("level")
 		Name, _ := rawItem.FindString("Name")
 		itemType, _ := rawItem.FindString("Type")
-		item := Item{
-			Level: Level,
-			Name:  Name,
-			ID:    rawItem.ID,
-		}
+
 		if itemType == "Character" {
-			myCharacters = append(myCharacters, item)
+			myCharacters = append(myCharacters, Character{
+				Level: Level,
+				Name:  Name,
+				ID:    rawItem.ID,
+				XP:    XP,
+			})
 		} else {
-			myItems = append(myItems, item)
+			myItems = append(myItems, Item{
+				Level: Level,
+				Name:  Name,
+				ID:    rawItem.ID,
+			})
 		}
 	}
 	user.SetItems(myItems)
@@ -47,6 +53,8 @@ func SyncFromNode(user User) {
 	nSellTradeRequests := []TradeRequest{}
 	nBuySwordTradeRequests := []ItemTradeRequest{}
 	nSellSwordTradeRequests := []ItemTradeRequest{}
+	nBuyCharacterTradeRequests := []CharacterTradeRequest{}
+	nSellCharacterTradeRequests := []CharacterTradeRequest{}
 	rawTrades, _ := pylonSDK.ListTradeViaCLI("")
 	for _, tradeItem := range rawTrades {
 		if tradeItem.Completed == false && strings.Contains(tradeItem.ExtraInfo, "created by loud game") {
@@ -79,31 +87,67 @@ func SyncFromNode(user User) {
 					IsMyTradeRequest: isMyTradeRequest,
 				})
 			} else if itemInputLen > 0 { // buy sword trade
-				tItem := Item{
-					Level: tradeItem.ItemInputs[0].Longs[0].MinValue, // Level
-					Name:  tradeItem.ItemInputs[0].Strings[0].Value,
+				Level := tradeItem.ItemInputs[0].Longs[0].MinValue
+				Name := tradeItem.ItemInputs[0].Strings[0].Value
+				if tradeItem.ExtraInfo == "sword buy request created by loud game" {
+					tItem := Item{
+						Level: Level,
+						Name:  Name,
+					}
+					nBuySwordTradeRequests = append(nBuySwordTradeRequests, ItemTradeRequest{
+						ID:               tradeItem.ID,
+						TItem:            tItem,
+						Price:            int(pylonOutputAmount),
+						IsMyTradeRequest: isMyTradeRequest,
+					})
+				} else { // character buy request created by loud game
+					XP := 0.0
+					if len(tradeItem.ItemInputs[0].Doubles) > 0 {
+						XP = tradeItem.ItemInputs[0].Doubles[0].MinValue.Float()
+					}
+					tCharacter := Character{
+						Level: Level,
+						Name:  Name,
+						XP:    XP,
+					}
+					nBuyCharacterTradeRequests = append(nBuyCharacterTradeRequests, CharacterTradeRequest{
+						ID:               tradeItem.ID,
+						TCharacter:       tCharacter,
+						Price:            int(pylonOutputAmount),
+						IsMyTradeRequest: isMyTradeRequest,
+					})
 				}
-				nBuySwordTradeRequests = append(nBuySwordTradeRequests, ItemTradeRequest{
-					ID:               tradeItem.ID,
-					TItem:            tItem,
-					Price:            int(pylonOutputAmount),
-					IsMyTradeRequest: isMyTradeRequest,
-				})
 			} else if itemOutputLen > 0 { // sell sword trade
 				inputPylonAmount := tradeItem.CoinInputs[0].Count
 				level, _ := tradeItem.ItemOutputs[0].FindLong("level")
 				name, _ := tradeItem.ItemOutputs[0].FindString("Name")
-				tItem := Item{
-					ID:    tradeItem.ItemOutputs[0].ID,
-					Level: level,
-					Name:  name,
+				if tradeItem.ExtraInfo == "sword sell request created by loud game" {
+					tItem := Item{
+						ID:    tradeItem.ItemOutputs[0].ID,
+						Level: level,
+						Name:  name,
+					}
+					nSellSwordTradeRequests = append(nSellSwordTradeRequests, ItemTradeRequest{
+						ID:               tradeItem.ID,
+						TItem:            tItem,
+						Price:            int(inputPylonAmount),
+						IsMyTradeRequest: isMyTradeRequest,
+					})
+				} else { // character sell request created by loud game
+					XP, _ := tradeItem.ItemOutputs[0].FindDouble("XP")
+					tCharacter := Character{
+						ID:    tradeItem.ItemOutputs[0].ID,
+						Level: level,
+						Name:  name,
+						XP:    XP,
+					}
+					nSellCharacterTradeRequests = append(nSellCharacterTradeRequests, CharacterTradeRequest{
+						ID:               tradeItem.ID,
+						TCharacter:       tCharacter,
+						Price:            int(inputPylonAmount),
+						IsMyTradeRequest: isMyTradeRequest,
+					})
 				}
-				nSellSwordTradeRequests = append(nSellSwordTradeRequests, ItemTradeRequest{
-					ID:               tradeItem.ID,
-					TItem:            tItem,
-					Price:            int(inputPylonAmount),
-					IsMyTradeRequest: isMyTradeRequest,
-				})
 			}
 		}
 	}
@@ -119,6 +163,8 @@ func SyncFromNode(user User) {
 	SellTradeRequests = nSellTradeRequests
 	SwordBuyTradeRequests = nBuySwordTradeRequests
 	SwordSellTradeRequests = nSellSwordTradeRequests
+	CharacterBuyTradeRequests = nBuyCharacterTradeRequests
+	CharacterSellTradeRequests = nSellCharacterTradeRequests
 	log.Println("BuyTradeRequests=", BuyTradeRequests)
 	log.Println("SellTradeRequests=", SellTradeRequests)
 }

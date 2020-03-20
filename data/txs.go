@@ -57,20 +57,24 @@ func GetExtraPylons(user User) (string, error) {
 	return txhash, nil
 }
 
-func Hunt(user User, item Item, getInitialCoin bool) (string, error) {
+func GetInitialCoin(user User) (string, error) {
+	rcpName := "LOUD's get initial coin recipe"
+	itemIDs := []string{}
+
+	return ExecuteRecipe(user, rcpName, itemIDs)
+}
+
+func Hunt(user User, item Item) (string, error) {
 
 	defaultCharacter := user.GetDefaultCharacter()
 	defaultCharacterID := ""
 	if defaultCharacter != nil {
 		defaultCharacterID = defaultCharacter.ID
+	} else {
+		return "", errors.New("character is required to hunt!")
 	}
 	rcpName := "LOUD's hunt without sword recipe"
 	itemIDs := []string{defaultCharacterID}
-
-	if getInitialCoin {
-		rcpName = "LOUD's get initial coin recipe"
-		itemIDs = []string{}
-	}
 
 	switch item.Name {
 	case WOODEN_SWORD, COPPER_SWORD:
@@ -81,13 +85,13 @@ func Hunt(user User, item Item, getInitialCoin bool) (string, error) {
 	return ExecuteRecipe(user, rcpName, itemIDs)
 }
 
-func BuyCharacter(user User, item Item) (string, error) {
+func BuyCharacter(user User, item Character) (string, error) {
 	rcpName := ""
 	switch item.Name {
 	case TIGER_CHARACTER:
 		rcpName = "LOUD's Get Character recipe"
 	default:
-		return "", errors.New("You are trying to buy something which is not in shop")
+		return "", errors.New("You are trying to buy character which is not in shop")
 	}
 	if item.Price > user.GetPylonAmount() {
 		return "", errors.New("You don't have enough pylon to buy this character")
@@ -107,7 +111,7 @@ func Buy(user User, item Item) (string, error) {
 			rcpName = "LOUD's Copper sword lv1 buy recipe"
 		}
 	default:
-		return "", errors.New("You are trying to buy something which is not in shop")
+		return "", errors.New("You are trying to buy item which is not in shop")
 	}
 	if item.Price > user.GetGold() {
 		return "", errors.New("You don't have enough gold to buy this item")
@@ -261,6 +265,71 @@ func CreateSellSwordTradeRequest(user User, activeItem Item, pylonEnterValue str
 	}
 
 	extraInfo := "sword sell request created by loud game"
+
+	createTrdMsg := msgs.NewMsgCreateTrade(
+		inputCoinList,
+		nil,
+		nil,
+		itemOutputList,
+		extraInfo,
+		sdkAddr)
+	log.Println("started sending transaction", user.GetUserName(), createTrdMsg)
+	txhash := pylonSDK.TestTxWithMsgWithNonce(t, createTrdMsg, user.GetUserName(), false)
+	user.SetLastTransaction(txhash)
+	log.Println("ended sending transaction")
+	return txhash, nil
+}
+
+func CreateBuyCharacterTradeRequest(user User, activeCharacter Character, pylonEnterValue string) (string, error) {
+	// trade creator will get character from pylon
+	t := GetTestingT()
+
+	itemInputs := GetItemInputsFromActiveCharacter(activeCharacter)
+
+	pylonValue, err := strconv.Atoi(pylonEnterValue)
+	if err != nil {
+		return "", err
+	}
+
+	eugenAddr := pylonSDK.GetAccountAddr(user.GetUserName(), nil)
+	sdkAddr, err := sdk.AccAddressFromBech32(eugenAddr)
+
+	outputCoins := sdk.Coins{sdk.NewInt64Coin("pylon", int64(pylonValue))}
+	extraInfo := "character buy request created by loud game"
+
+	createTrdMsg := msgs.NewMsgCreateTrade(
+		nil,
+		itemInputs,
+		outputCoins,
+		nil,
+		extraInfo,
+		sdkAddr)
+	log.Println("started sending transaction", user.GetUserName(), createTrdMsg)
+	txhash := pylonSDK.TestTxWithMsgWithNonce(t, createTrdMsg, user.GetUserName(), false)
+	user.SetLastTransaction(txhash)
+	log.Println("ended sending transaction")
+	return txhash, nil
+}
+
+func CreateSellCharacterTradeRequest(user User, activeCharacter Character, pylonEnterValue string) (string, error) {
+	// trade creator will get pylon from character
+	t := GetTestingT()
+
+	pylonValue, err := strconv.Atoi(pylonEnterValue)
+	if err != nil {
+		return "", err
+	}
+
+	eugenAddr := pylonSDK.GetAccountAddr(user.GetUserName(), nil)
+	sdkAddr, _ := sdk.AccAddressFromBech32(eugenAddr)
+
+	inputCoinList := types.GenCoinInputList("pylon", int64(pylonValue))
+	itemOutputList, err := GetItemOutputFromActiveCharacter(activeCharacter)
+	if err != nil {
+		return "", err
+	}
+
+	extraInfo := "character sell request created by loud game"
 
 	createTrdMsg := msgs.NewMsgCreateTrade(
 		inputCoinList,

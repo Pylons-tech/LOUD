@@ -12,7 +12,6 @@ import (
 )
 
 func (screen *GameScreen) HandleInputKey(input termbox.Event) {
-	screen.lastInput = input
 	Key := strings.ToUpper(string(input.Ch))
 	log.Println("Handling Key \"", Key, "\"", input.Ch)
 	if screen.HandleFirstClassInputKeys(input) {
@@ -72,6 +71,8 @@ func (screen *GameScreen) HandleInputKeyMarketEntryPoint(input termbox.Event) bo
 		"2": SHOW_LOUD_SELL_REQUESTS,
 		"3": SHOW_BUY_SWORD_REQUESTS,
 		"4": SHOW_SELL_SWORD_REQUESTS,
+		"5": SHOW_BUY_CHARACTER_REQUESTS,
+		"6": SHOW_SELL_CHARACTER_REQUESTS,
 	}
 
 	if newStus, ok := tarStusMap[Key]; ok {
@@ -137,21 +138,25 @@ func (screen *GameScreen) HandleInputKeyShopEntryPoint(input termbox.Event) bool
 
 func (screen *GameScreen) MoveToNextStep() {
 	nextMapper := map[ScreenStatus]ScreenStatus{
-		RESULT_HUNT_FINISH:                 SELECT_HUNT_ITEM,
-		RESULT_BUY_LOUD_REQUEST_CREATION:   SHOW_LOUD_BUY_REQUESTS,
-		RESULT_FULFILL_BUY_LOUD_REQUEST:    SHOW_LOUD_BUY_REQUESTS,
-		RESULT_SELL_LOUD_REQUEST_CREATION:  SHOW_LOUD_SELL_REQUESTS,
-		RESULT_FULFILL_SELL_LOUD_REQUEST:   SHOW_LOUD_SELL_REQUESTS,
-		RESULT_SELL_SWORD_REQUEST_CREATION: SHOW_SELL_SWORD_REQUESTS,
-		RESULT_FULFILL_SELL_SWORD_REQUEST:  SHOW_SELL_SWORD_REQUESTS,
-		RESULT_BUY_SWORD_REQUEST_CREATION:  SHOW_BUY_SWORD_REQUESTS,
-		RESULT_FULFILL_BUY_SWORD_REQUEST:   SHOW_BUY_SWORD_REQUESTS,
-		RESULT_SELECT_DEF_CHAR:             SELECT_DEFAULT_CHAR,
-		RESULT_SELECT_DEF_WEAPON:           SELECT_DEFAULT_WEAPON,
-		RESULT_BUY_ITEM_FINISH:             SELECT_BUY_ITEM,
-		RESULT_BUY_CHARACTER_FINISH:        SELECT_BUY_CHARACTER,
-		RESULT_SELL_FINISH:                 SELECT_SELL_ITEM,
-		RESULT_UPGRADE_FINISH:              SELECT_UPGRADE_ITEM,
+		RESULT_HUNT_FINISH:                     SELECT_HUNT_ITEM,
+		RESULT_BUY_LOUD_REQUEST_CREATION:       SHOW_LOUD_BUY_REQUESTS,
+		RESULT_FULFILL_BUY_LOUD_REQUEST:        SHOW_LOUD_BUY_REQUESTS,
+		RESULT_SELL_LOUD_REQUEST_CREATION:      SHOW_LOUD_SELL_REQUESTS,
+		RESULT_FULFILL_SELL_LOUD_REQUEST:       SHOW_LOUD_SELL_REQUESTS,
+		RESULT_SELL_SWORD_REQUEST_CREATION:     SHOW_SELL_SWORD_REQUESTS,
+		RESULT_FULFILL_SELL_SWORD_REQUEST:      SHOW_SELL_SWORD_REQUESTS,
+		RESULT_BUY_SWORD_REQUEST_CREATION:      SHOW_BUY_SWORD_REQUESTS,
+		RESULT_FULFILL_BUY_SWORD_REQUEST:       SHOW_BUY_SWORD_REQUESTS,
+		RESULT_SELL_CHARACTER_REQUEST_CREATION: SHOW_SELL_CHARACTER_REQUESTS,
+		RESULT_FULFILL_SELL_CHARACTER_REQUEST:  SHOW_SELL_CHARACTER_REQUESTS,
+		RESULT_BUY_CHARACTER_REQUEST_CREATION:  SHOW_BUY_CHARACTER_REQUESTS,
+		RESULT_FULFILL_BUY_CHARACTER_REQUEST:   SHOW_BUY_CHARACTER_REQUESTS,
+		RESULT_SELECT_DEF_CHAR:                 SELECT_DEFAULT_CHAR,
+		RESULT_SELECT_DEF_WEAPON:               SELECT_DEFAULT_WEAPON,
+		RESULT_BUY_ITEM_FINISH:                 SELECT_BUY_ITEM,
+		RESULT_BUY_CHARACTER_FINISH:            SELECT_BUY_CHARACTER,
+		RESULT_SELL_FINISH:                     SELECT_SELL_ITEM,
+		RESULT_UPGRADE_FINISH:                  SELECT_UPGRADE_ITEM,
 	}
 	if nextStatus, ok := nextMapper[screen.scrStatus]; ok {
 		if screen.user.GetLocation() == loud.DEVELOP {
@@ -168,14 +173,18 @@ func (screen *GameScreen) MoveToNextStep() {
 
 func (screen *GameScreen) MoveToPrevStep() {
 	prevMapper := map[ScreenStatus]ScreenStatus{
-		CREATE_BUY_LOUD_REQUEST_ENTER_LOUD_VALUE:    SHOW_LOUD_BUY_REQUESTS,
-		CREATE_BUY_LOUD_REQUEST_ENTER_PYLON_VALUE:   CREATE_BUY_LOUD_REQUEST_ENTER_LOUD_VALUE,
-		CREATE_SELL_LOUD_REQUEST_ENTER_LOUD_VALUE:   SHOW_LOUD_SELL_REQUESTS,
-		CREATE_SELL_LOUD_REQUEST_ENTER_PYLON_VALUE:  CREATE_SELL_LOUD_REQUEST_ENTER_LOUD_VALUE,
-		CREATE_SELL_SWORD_REQUEST_SELECT_SWORD:      SHOW_SELL_SWORD_REQUESTS,
-		CREATE_SELL_SWORD_REQUEST_ENTER_PYLON_VALUE: CREATE_SELL_SWORD_REQUEST_SELECT_SWORD,
-		CREATE_BUY_SWORD_REQUEST_SELECT_SWORD:       SHOW_BUY_SWORD_REQUESTS,
-		CREATE_BUY_SWORD_REQUEST_ENTER_PYLON_VALUE:  CREATE_BUY_SWORD_REQUEST_SELECT_SWORD,
+		CREATE_BUY_LOUD_REQUEST_ENTER_LOUD_VALUE:        SHOW_LOUD_BUY_REQUESTS,
+		CREATE_BUY_LOUD_REQUEST_ENTER_PYLON_VALUE:       CREATE_BUY_LOUD_REQUEST_ENTER_LOUD_VALUE,
+		CREATE_SELL_LOUD_REQUEST_ENTER_LOUD_VALUE:       SHOW_LOUD_SELL_REQUESTS,
+		CREATE_SELL_LOUD_REQUEST_ENTER_PYLON_VALUE:      CREATE_SELL_LOUD_REQUEST_ENTER_LOUD_VALUE,
+		CREATE_SELL_SWORD_REQUEST_SELECT_SWORD:          SHOW_SELL_SWORD_REQUESTS,
+		CREATE_SELL_SWORD_REQUEST_ENTER_PYLON_VALUE:     CREATE_SELL_SWORD_REQUEST_SELECT_SWORD,
+		CREATE_BUY_SWORD_REQUEST_SELECT_SWORD:           SHOW_BUY_SWORD_REQUESTS,
+		CREATE_BUY_SWORD_REQUEST_ENTER_PYLON_VALUE:      CREATE_BUY_SWORD_REQUEST_SELECT_SWORD,
+		CREATE_SELL_CHARACTER_REQUEST_SELECT_CHARACTER:  SHOW_SELL_CHARACTER_REQUESTS,
+		CREATE_SELL_CHARACTER_REQUEST_ENTER_PYLON_VALUE: CREATE_SELL_CHARACTER_REQUEST_SELECT_CHARACTER,
+		CREATE_BUY_CHARACTER_REQUEST_SELECT_CHARACTER:   SHOW_BUY_CHARACTER_REQUESTS,
+		CREATE_BUY_CHARACTER_REQUEST_ENTER_PYLON_VALUE:  CREATE_BUY_CHARACTER_REQUEST_SELECT_CHARACTER,
 	}
 	if nextStatus, ok := prevMapper[screen.scrStatus]; ok {
 		screen.scrStatus = nextStatus
@@ -193,20 +202,9 @@ func (screen *GameScreen) HandleFirstClassInputKeys(input termbox.Event) bool {
 	Key := strings.ToUpper(string(input.Ch))
 	switch Key {
 	case "J": // Create cookbook
-		screen.SetScreenStatusAndRefresh(WAIT_CREATE_COOKBOOK)
-		go func() {
-			txhash, err := loud.CreateCookbook(screen.user)
-			log.Println("ended sending request for creating cookbook")
-			if err != nil {
-				screen.txFailReason = err.Error()
-				screen.SetScreenStatusAndRefresh(RESULT_CREATE_COOKBOOK)
-			} else {
-				time.AfterFunc(1*time.Second, func() {
-					screen.txResult, screen.txFailReason = loud.ProcessTxResult(screen.user, txhash)
-					screen.SetScreenStatusAndRefresh(RESULT_CREATE_COOKBOOK)
-				})
-			}
-		}()
+		screen.RunTxProcess(WAIT_CREATE_COOKBOOK, RESULT_CREATE_COOKBOOK, func() (string, error) {
+			return loud.CreateCookbook(screen.user)
+		})
 	case "Z": // Switch user
 		screen.SetScreenStatusAndRefresh(WAIT_SWITCH_USER)
 		go func() {
@@ -217,38 +215,14 @@ func (screen *GameScreen) HandleFirstClassInputKeys(input termbox.Event) bool {
 			screen.SetScreenStatusAndRefresh(RESULT_SWITCH_USER)
 		}()
 	case "Y": // get initial pylons
-		screen.SetScreenStatusAndRefresh(WAIT_GET_PYLONS)
-		log.Println("started sending request for getting extra pylons")
-		go func() {
-			txhash, err := loud.GetExtraPylons(screen.user)
-			log.Println("ended sending request for getting extra pylons")
-			if err != nil {
-				screen.txFailReason = err.Error()
-				screen.SetScreenStatusAndRefresh(RESULT_GET_PYLONS)
-			} else {
-				time.AfterFunc(1*time.Second, func() {
-					screen.txResult, screen.txFailReason = loud.ProcessTxResult(screen.user, txhash)
-					screen.SetScreenStatusAndRefresh(RESULT_GET_PYLONS)
-				})
-			}
-		}()
+		screen.RunTxProcess(WAIT_GET_PYLONS, RESULT_GET_PYLONS, func() (string, error) {
+			return loud.GetExtraPylons(screen.user)
+		})
 	case "I":
 		screen.activeItem = loud.GetWeaponItemFromKey(screen.user, Key)
-		screen.SetScreenStatusAndRefresh(WAIT_HUNT_PROCESS)
-		log.Println("started sending request for hunting item")
-		go func() {
-			txhash, err := loud.Hunt(screen.user, loud.Item{}, true)
-			log.Println("ended sending request for hunting item")
-			if err != nil {
-				screen.txFailReason = err.Error()
-				screen.SetScreenStatusAndRefresh(RESULT_HUNT_FINISH)
-			} else {
-				time.AfterFunc(1*time.Second, func() {
-					screen.txResult, screen.txFailReason = loud.ProcessTxResult(screen.user, txhash)
-					screen.SetScreenStatusAndRefresh(RESULT_HUNT_FINISH)
-				})
-			}
-		}()
+		screen.RunTxProcess(WAIT_GET_INITIAL_COIN, RESULT_GET_INITIAL_COIN, func() (string, error) {
+			return loud.GetInitialCoin(screen.user)
+		})
 	case "E": // REFRESH
 		screen.Resync()
 		return true
@@ -297,9 +271,9 @@ func (screen *GameScreen) HandleThirdClassInputKeys(input termbox.Event) bool {
 	Key := strings.ToUpper(string(input.Ch))
 	if screen.InputActive() {
 		switch input.Key {
-		case termbox.KeyBackspace2:
-			fallthrough
-		case termbox.KeyBackspace:
+		case termbox.KeyBackspace2,
+			termbox.KeyBackspace:
+
 			log.Println("Pressed Backspace")
 			lastIdx := len(screen.inputText) - 1
 			if lastIdx < 0 {
@@ -378,6 +352,37 @@ func (screen *GameScreen) HandleThirdClassInputKeys(input termbox.Event) bool {
 						screen.SetScreenStatusAndRefresh(RESULT_BUY_SWORD_REQUEST_CREATION)
 					})
 				}
+
+			case CREATE_SELL_CHARACTER_REQUEST_ENTER_PYLON_VALUE:
+				screen.scrStatus = WAIT_SELL_CHARACTER_REQUEST_CREATION
+				screen.pylonEnterValue = screen.inputText
+				screen.SetInputTextAndRender("")
+				txhash, err := loud.CreateSellCharacterTradeRequest(screen.user, screen.activeCharacter, screen.pylonEnterValue)
+				log.Println("ended sending request for creating character -> pylon request")
+				if err != nil {
+					screen.txFailReason = err.Error()
+					screen.SetScreenStatusAndRefresh(RESULT_SELL_CHARACTER_REQUEST_CREATION)
+				} else {
+					time.AfterFunc(2*time.Second, func() {
+						screen.txResult, screen.txFailReason = loud.ProcessTxResult(screen.user, txhash)
+						screen.SetScreenStatusAndRefresh(RESULT_SELL_CHARACTER_REQUEST_CREATION)
+					})
+				}
+			case CREATE_BUY_CHARACTER_REQUEST_ENTER_PYLON_VALUE:
+				screen.scrStatus = WAIT_BUY_CHARACTER_REQUEST_CREATION
+				screen.pylonEnterValue = screen.inputText
+				screen.SetInputTextAndRender("")
+				txhash, err := loud.CreateBuyCharacterTradeRequest(screen.user, screen.activeCharacter, screen.pylonEnterValue)
+				log.Println("ended sending request for creating character -> pylon request")
+				if err != nil {
+					screen.txFailReason = err.Error()
+					screen.SetScreenStatusAndRefresh(RESULT_BUY_CHARACTER_REQUEST_CREATION)
+				} else {
+					time.AfterFunc(2*time.Second, func() {
+						screen.txResult, screen.txFailReason = loud.ProcessTxResult(screen.user, txhash)
+						screen.SetScreenStatusAndRefresh(RESULT_BUY_CHARACTER_REQUEST_CREATION)
+					})
+				}
 			default:
 				return false
 			}
@@ -422,6 +427,10 @@ func (screen *GameScreen) HandleThirdClassInputKeys(input termbox.Event) bool {
 					screen.scrStatus = CREATE_SELL_SWORD_REQUEST_SELECT_SWORD
 				case SHOW_BUY_SWORD_REQUESTS:
 					screen.scrStatus = CREATE_BUY_SWORD_REQUEST_SELECT_SWORD
+				case SHOW_SELL_CHARACTER_REQUESTS:
+					screen.scrStatus = CREATE_SELL_CHARACTER_REQUEST_SELECT_CHARACTER
+				case SHOW_BUY_CHARACTER_REQUESTS:
+					screen.scrStatus = CREATE_BUY_CHARACTER_REQUEST_SELECT_CHARACTER
 				}
 				screen.refreshed = false
 			}
@@ -452,8 +461,8 @@ func (screen *GameScreen) HandleThirdClassInputKeys(input termbox.Event) bool {
 				}
 				screen.RunActiveItemBuy()
 			case SELECT_BUY_CHARACTER:
-				screen.activeItem = loud.GetToBuyCharacterFromKey(Key)
-				if len(screen.activeItem.Name) == 0 {
+				screen.activeCharacter = loud.GetToBuyCharacterFromKey(Key)
+				if len(screen.activeCharacter.Name) == 0 {
 					return false
 				}
 				screen.RunActiveCharacterBuy()
@@ -492,6 +501,10 @@ func (screen *GameScreen) HandleThirdClassKeyEnterEvent() bool {
 			screen.RunSelectedSwordBuyTradeRequest()
 		case SHOW_SELL_SWORD_REQUESTS:
 			screen.RunSelectedSwordSellTradeRequest()
+		case SHOW_BUY_CHARACTER_REQUESTS:
+			screen.RunSelectedCharacterBuyTradeRequest()
+		case SHOW_SELL_CHARACTER_REQUESTS:
+			screen.RunSelectedCharacterSellTradeRequest()
 		case CREATE_SELL_SWORD_REQUEST_SELECT_SWORD:
 			userItems := screen.user.InventoryItems()
 			if len(userItems) <= screen.activeLine || screen.activeLine < 0 {
@@ -509,12 +522,29 @@ func (screen *GameScreen) HandleThirdClassKeyEnterEvent() bool {
 			screen.scrStatus = CREATE_BUY_SWORD_REQUEST_ENTER_PYLON_VALUE
 			screen.inputText = ""
 			screen.refreshed = false
-		case SELECT_DEFAULT_CHAR:
-			items := screen.user.InventoryCharacters()
-			if len(items) <= screen.activeLine || screen.activeLine < 0 {
+		case CREATE_SELL_CHARACTER_REQUEST_SELECT_CHARACTER:
+			userCharacters := screen.user.InventoryCharacters()
+			if len(userCharacters) <= screen.activeLine || screen.activeLine < 0 {
 				return false
 			}
-			screen.activeItem = items[screen.activeLine]
+			screen.activeCharacter = userCharacters[screen.activeLine]
+			screen.scrStatus = CREATE_SELL_CHARACTER_REQUEST_ENTER_PYLON_VALUE
+			screen.inputText = ""
+			screen.refreshed = false
+		case CREATE_BUY_CHARACTER_REQUEST_SELECT_CHARACTER:
+			if len(loud.WorldCharacters) <= screen.activeLine || screen.activeLine < 0 {
+				return false
+			}
+			screen.activeCharacter = loud.WorldCharacters[screen.activeLine]
+			screen.scrStatus = CREATE_BUY_CHARACTER_REQUEST_ENTER_PYLON_VALUE
+			screen.inputText = ""
+			screen.refreshed = false
+		case SELECT_DEFAULT_CHAR:
+			characters := screen.user.InventoryCharacters()
+			if len(characters) <= screen.activeLine || screen.activeLine < 0 {
+				return false
+			}
+			screen.activeCharacter = characters[screen.activeLine]
 			screen.RunActiveCharacterSelect()
 			log.Println("SELECT_DEFAULT_CHAR", screen.activeItem)
 		case SELECT_DEFAULT_WEAPON:
@@ -534,13 +564,13 @@ func (screen *GameScreen) HandleThirdClassKeyEnterEvent() bool {
 			screen.RunActiveItemBuy()
 			log.Println("SELECT_BUY_ITEM", screen.activeItem)
 		case SELECT_BUY_CHARACTER:
-			characs := loud.ShopCharacters
-			if len(characs) <= screen.activeLine || screen.activeLine < 0 {
+			characters := loud.ShopCharacters
+			if len(characters) <= screen.activeLine || screen.activeLine < 0 {
 				return false
 			}
-			screen.activeItem = characs[screen.activeLine]
+			screen.activeCharacter = characters[screen.activeLine]
 			screen.RunActiveCharacterBuy()
-			log.Println("SELECT_BUY_CHARACTER", screen.activeItem)
+			log.Println("SELECT_BUY_CHARACTER", screen.activeCharacter)
 		case SELECT_HUNT_ITEM:
 			items := screen.user.InventoryItems()
 			if len(items) <= screen.activeLine || screen.activeLine < 0 {

@@ -7,6 +7,14 @@ type Item struct {
 	Price int
 }
 
+type Character struct {
+	ID    string `json:""`
+	Name  string `json:""`
+	Level int
+	Price int
+	XP    float64
+}
+
 const (
 	WOODEN_SWORD string = "Wooden sword"
 	COPPER_SWORD        = "Copper sword"
@@ -43,6 +51,19 @@ var WorldItems = []Item{
 	Item{
 		Name:  COPPER_SWORD,
 		Level: 2,
+	},
+}
+
+var WorldCharacters = []Character{
+	Character{
+		Name:  "Lion",
+		Level: 1,
+		XP:    1,
+	},
+	Character{
+		Name:  "Liger",
+		Level: 2,
+		XP:    1,
 	},
 }
 

@@ -1,14 +1,12 @@
 {
     "ID": "LOUD-upgrade-copper-sword-lv1-to-lv2-recipe-v0.0.0-1579053457",
-    "RType": "1",
     "CoinInputs":[{
         "Coin": "loudcoin",
         "Count": "250"
     }],    
     "ItemInputRefs":[
-        "./recipes/item_input/copper_sword_lv1.json"
+        "./recipes/item_input/copper_sword_lv1_upgrade.json"
     ],
-    "ToUpgradeRef": "./recipes/upgrader/level.json",
     "ExtraInfo":"",
     "Sender":"eugen",
     "Name": "LOUD's Copper sword lv1 to lv2 upgrade recipe",

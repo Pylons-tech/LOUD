@@ -447,13 +447,13 @@ func GetToBuyItemFromKey(key string) Item {
 	return useItem
 }
 
-func GetToBuyCharacterFromKey(key string) Item {
-	useItem := Item{}
-	itemKey := GetIndexFromString(key)
-	if itemKey >= 0 && itemKey < len(ShopCharacters) {
-		useItem = ShopCharacters[itemKey]
+func GetToBuyCharacterFromKey(key string) Character {
+	useCharacter := Character{}
+	cKey := GetIndexFromString(key)
+	if cKey >= 0 && cKey < len(ShopCharacters) {
+		useCharacter = ShopCharacters[cKey]
 	}
-	return useItem
+	return useCharacter
 }
 
 func GetToSellItemFromKey(user User, key string) Item {
@@ -482,10 +482,10 @@ func GetItemInputsFromActiveItem(activeItem Item) types.ItemInputList {
 	ii := types.ItemInput{
 		Doubles: nil,
 		Longs: types.LongInputParamList{
-			types.LongInputParam{"level", activeItem.Level, activeItem.Level},
+			types.LongInputParam{Key: "level", MinValue: activeItem.Level, MaxValue: activeItem.Level},
 		},
 		Strings: types.StringInputParamList{
-			types.StringInputParam{"Name", activeItem.Name},
+			types.StringInputParam{Key: "Name", Value: activeItem.Name},
 		},
 	}
 	itemInputs = append(itemInputs, ii)
@@ -495,6 +495,31 @@ func GetItemInputsFromActiveItem(activeItem Item) types.ItemInputList {
 func GetItemOutputFromActiveItem(activeItem Item) (types.ItemList, error) {
 	var itemOutputs types.ItemList
 	io, err := pylonSDK.GetItemByGUID(activeItem.ID)
+	itemOutputs = append(itemOutputs, io)
+	return itemOutputs, err
+}
+
+func GetItemInputsFromActiveCharacter(activeCharacter Character) types.ItemInputList {
+	var itemInputs types.ItemInputList
+
+	ii := types.ItemInput{
+		Doubles: types.DoubleInputParamList{
+			types.DoubleInputParam{Key: "XP", MinValue: types.ToFloatString(activeCharacter.XP), MaxValue: types.ToFloatString(activeCharacter.XP)},
+		},
+		Longs: types.LongInputParamList{
+			types.LongInputParam{Key: "level", MinValue: activeCharacter.Level, MaxValue: activeCharacter.Level},
+		},
+		Strings: types.StringInputParamList{
+			types.StringInputParam{Key: "Name", Value: activeCharacter.Name},
+		},
+	}
+	itemInputs = append(itemInputs, ii)
+	return itemInputs
+}
+
+func GetItemOutputFromActiveCharacter(activeCharacter Character) (types.ItemList, error) {
+	var itemOutputs types.ItemList
+	io, err := pylonSDK.GetItemByGUID(activeCharacter.ID)
 	itemOutputs = append(itemOutputs, io)
 	return itemOutputs, err
 }

@@ -20,7 +20,10 @@
   "Recipe Name does not exist!": {
     "one": "¡El nombre de la receta no existe!"
   },
-  "You are trying to buy something which is not in shop": {
+  "You are trying to buy item which is not in shop": {
+    "one": "Estás intentando comprar algo que no está en la tienda"
+  },
+  "You are trying to buy character which is not in shop": {
     "one": "Estás intentando comprar algo que no está en la tienda"
   },
   "You don't have enough gold to buy this item": {
@@ -39,7 +42,7 @@
     "one": "1) Comprar Artículos\n2) Vender Artículos\n3) Mejorar Artículos\n4) Comprar personajes\n"
   },
   "market": {
-    "one": "1) Sell Loud from orderbook / Create an order to buy Loud\n2) Buy Loud from orderbook / Create an order to Sell Loud\n3) Sell sword from orderbook / Create an order to buy sword\n4) Buy sword from orderbook / Create an order to sell sword\n"
+    "one": "1) Sell Loud from orderbook / Create an order to buy Loud\n2) Buy Loud from orderbook / Create an order to Sell Loud\n3) Sell sword from orderbook / Create an order to buy sword\n4) Buy sword from orderbook / Create an order to sell sword\n5) Sell character from orderbook / Create an order to buy character\n6) Buy character from orderbook / Create an order to sell character\n"
   },
   "settings": {
     "one": "Idioma:\n1) English\n2) Español\n"
@@ -133,7 +136,7 @@
   "wait buy character process desc": {
     "one": "You are now buying a character at the shop"
   },
-  "wait hunt process desc": {
+  "You are now hunting with": {
     "one": "Estás cazando con"
   },
   "hunting without weapon": {

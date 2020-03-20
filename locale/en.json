@@ -20,8 +20,11 @@
   "Recipe Name does not exist!": {
     "one": "Recipe Name does not exist!"
   },
-  "You are trying to buy something which is not in shop": {
-    "one": "You are trying to buy something which is not in shop"
+  "You are trying to buy item which is not in shop": {
+    "one": "You are trying to buy item which is not in shop"
+  },
+  "You are trying to buy character which is not in shop": {
+    "one": "You are trying to buy character which is not in shop"
   },
   "You don't have enough gold to buy this item": {
     "one": "You don't have enough gold to buy this item"
@@ -39,7 +42,7 @@
     "one": "1) Buy Items\n2) Sell Items\n3) Upgrade Items\n4) Buy Characters\n"
   },
   "market": {
-    "one": "1) Sell Loud from orderbook / Create an order to buy Loud\n2) Buy Loud from orderbook / Create an order to Sell Loud\n3) Sell sword from orderbook / Create an order to buy sword\n4) Buy sword from orderbook / Create an order to sell sword\n"
+    "one": "1) Sell Loud from orderbook / Create an order to buy Loud\n2) Buy Loud from orderbook / Create an order to Sell Loud\n3) Sell sword from orderbook / Create an order to buy sword\n4) Buy sword from orderbook / Create an order to sell sword\n5) Sell character from orderbook / Create an order to buy character\n6) Buy character from orderbook / Create an order to sell character\n"
   },
   "settings": {
     "one": "Language:\n1) English\n2) Español\n"
@@ -133,7 +136,7 @@
   "wait buy character process desc": {
     "one": "You are now buying a character at the shop"
   },
-  "wait hunt process desc": {
+  "You are now hunting with": {
     "one": "You are now hunting with"
   },
   "hunting without weapon": {

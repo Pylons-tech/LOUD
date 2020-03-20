@@ -15,7 +15,16 @@ type ItemTradeRequest struct {
 	IsMyTradeRequest bool
 }
 
+type CharacterTradeRequest struct {
+	ID               string
+	TCharacter       Character
+	Price            int
+	IsMyTradeRequest bool
+}
+
 var BuyTradeRequests = []TradeRequest{}
 var SellTradeRequests = []TradeRequest{}
 var SwordBuyTradeRequests = []ItemTradeRequest{}
 var SwordSellTradeRequests = []ItemTradeRequest{}
+var CharacterBuyTradeRequests = []CharacterTradeRequest{}
+var CharacterSellTradeRequests = []CharacterTradeRequest{}
