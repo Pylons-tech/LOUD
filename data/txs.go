@@ -280,6 +280,71 @@ func CreateSellSwordTradeRequest(user User, activeItem Item, pylonEnterValue str
 	return txhash, nil
 }
 
+func CreateBuyCharacterTradeRequest(user User, activeCharacter Character, pylonEnterValue string) (string, error) {
+	// trade creator will get character from pylon
+	t := GetTestingT()
+
+	itemInputs := GetItemInputsFromActiveCharacter(activeCharacter)
+
+	pylonValue, err := strconv.Atoi(pylonEnterValue)
+	if err != nil {
+		return "", err
+	}
+
+	eugenAddr := pylonSDK.GetAccountAddr(user.GetUserName(), nil)
+	sdkAddr, err := sdk.AccAddressFromBech32(eugenAddr)
+
+	outputCoins := sdk.Coins{sdk.NewInt64Coin("pylon", int64(pylonValue))}
+	extraInfo := "character buy request created by loud game"
+
+	createTrdMsg := msgs.NewMsgCreateTrade(
+		nil,
+		itemInputs,
+		outputCoins,
+		nil,
+		extraInfo,
+		sdkAddr)
+	log.Println("started sending transaction", user.GetUserName(), createTrdMsg)
+	txhash := pylonSDK.TestTxWithMsgWithNonce(t, createTrdMsg, user.GetUserName(), false)
+	user.SetLastTransaction(txhash)
+	log.Println("ended sending transaction")
+	return txhash, nil
+}
+
+func CreateSellCharacterTradeRequest(user User, activeCharacter Character, pylonEnterValue string) (string, error) {
+	// trade creator will get pylon from character
+	t := GetTestingT()
+
+	pylonValue, err := strconv.Atoi(pylonEnterValue)
+	if err != nil {
+		return "", err
+	}
+
+	eugenAddr := pylonSDK.GetAccountAddr(user.GetUserName(), nil)
+	sdkAddr, _ := sdk.AccAddressFromBech32(eugenAddr)
+
+	inputCoinList := types.GenCoinInputList("pylon", int64(pylonValue))
+	itemOutputList, err := GetItemOutputFromActiveCharacter(activeCharacter)
+	if err != nil {
+		return "", err
+	}
+
+	extraInfo := "character sell request created by loud game"
+
+	createTrdMsg := msgs.NewMsgCreateTrade(
+		inputCoinList,
+		nil,
+		nil,
+		itemOutputList,
+		extraInfo,
+		sdkAddr)
+	log.Println("started sending transaction", user.GetUserName(), createTrdMsg)
+	txhash := pylonSDK.TestTxWithMsgWithNonce(t, createTrdMsg, user.GetUserName(), false)
+	user.SetLastTransaction(txhash)
+	log.Println("ended sending transaction")
+	return txhash, nil
+}
+
 func FulfillTrade(user User, tradeID string) (string, error) {
 	t := GetTestingT()
 	eugenAddr := pylonSDK.GetAccountAddr(user.GetUserName(), nil)

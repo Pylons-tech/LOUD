@@ -42,7 +42,7 @@
     "one": "1) Comprar Artículos\n2) Vender Artículos\n3) Mejorar Artículos\n4) Comprar personajes\n"
   },
   "market": {
-    "one": "1) Sell Loud from orderbook / Create an order to buy Loud\n2) Buy Loud from orderbook / Create an order to Sell Loud\n3) Sell sword from orderbook / Create an order to buy sword\n4) Buy sword from orderbook / Create an order to sell sword\n"
+    "one": "1) Sell Loud from orderbook / Create an order to buy Loud\n2) Buy Loud from orderbook / Create an order to Sell Loud\n3) Sell sword from orderbook / Create an order to buy sword\n4) Buy sword from orderbook / Create an order to sell sword\n5) Sell character from orderbook / Create an order to buy character\n6) Buy character from orderbook / Create an order to sell character\n"
   },
   "settings": {
     "one": "Idioma:\n1) English\n2) Español\n"

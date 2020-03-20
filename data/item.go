@@ -54,6 +54,19 @@ var WorldItems = []Item{
 	},
 }
 
+var WorldCharacters = []Character{
+	Character{
+		Name:  "Lion",
+		Level: 1,
+		XP:    1,
+	},
+	Character{
+		Name:  "Liger",
+		Level: 2,
+		XP:    1,
+	},
+}
+
 func (item *Item) GetSellPrice() int {
 	switch item.Name {
 	case WOODEN_SWORD:

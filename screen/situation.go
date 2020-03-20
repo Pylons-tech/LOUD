@@ -163,11 +163,18 @@ func (screen *GameScreen) renderUserSituation() {
 		infoLines = screen.renderItemTradeRequestTable("Buy sword requests", loud.SwordBuyTradeRequests)
 	case CREATE_SELL_SWORD_REQUEST_SELECT_SWORD:
 		infoLines = screen.renderItemTable("Select sword to sell", screen.user.InventoryItems())
+	case CREATE_SELL_CHARACTER_REQUEST_SELECT_CHARACTER:
+		infoLines = screen.renderCharacterTable("Select character to sell", screen.user.InventoryCharacters())
 	case CREATE_SELL_SWORD_REQUEST_ENTER_PYLON_VALUE:
+		desc = "Please enter pylon amount to use (should be integer value)" // TODO should add Localize
+	case CREATE_SELL_CHARACTER_REQUEST_ENTER_PYLON_VALUE:
 		desc = "Please enter pylon amount to use (should be integer value)" // TODO should add Localize
 	case WAIT_SELL_SWORD_REQUEST_CREATION:
 		desc = loud.Localize("you are now waiting for sword sell request creation")
 		desc += screen.sellSwordDesc(screen.activeItem, screen.pylonEnterValue)
+	case WAIT_SELL_CHARACTER_REQUEST_CREATION:
+		desc = loud.Localize("you are now waiting for character sell request creation")
+		desc += screen.sellCharacterDesc(screen.activeCharacter, screen.pylonEnterValue)
 	case RESULT_SELL_SWORD_REQUEST_CREATION:
 		if screen.txFailReason != "" {
 			desc = loud.Localize("sword sell request creation fail reason") + ": " + loud.Localize(screen.txFailReason)
@@ -175,15 +182,29 @@ func (screen *GameScreen) renderUserSituation() {
 			desc = loud.Localize("sword sell request was successfully created")
 			desc += screen.sellSwordDesc(screen.activeItem, screen.pylonEnterValue)
 		}
+	case RESULT_SELL_CHARACTER_REQUEST_CREATION:
+		if screen.txFailReason != "" {
+			desc = loud.Localize("character sell request creation fail reason") + ": " + loud.Localize(screen.txFailReason)
+		} else {
+			desc = loud.Localize("character sell request was successfully created")
+			desc += screen.sellCharacterDesc(screen.activeCharacter, screen.pylonEnterValue)
+		}
 	case SHOW_SELL_SWORD_REQUESTS:
 		infoLines = screen.renderItemTradeRequestTable("Sell sword requests", loud.SwordSellTradeRequests)
 	case CREATE_BUY_SWORD_REQUEST_SELECT_SWORD:
 		infoLines = screen.renderItemTable("Select sword to buy", loud.WorldItems)
+	case CREATE_BUY_CHARACTER_REQUEST_SELECT_CHARACTER:
+		infoLines = screen.renderCharacterTable("Select character to buy", loud.WorldCharacters)
 	case CREATE_BUY_SWORD_REQUEST_ENTER_PYLON_VALUE:
+		desc = "Please enter pylon amount to use (should be integer value)" // TODO should add Localize
+	case CREATE_BUY_CHARACTER_REQUEST_ENTER_PYLON_VALUE:
 		desc = "Please enter pylon amount to use (should be integer value)" // TODO should add Localize
 	case WAIT_BUY_SWORD_REQUEST_CREATION:
 		desc = loud.Localize("you are now waiting for sword buy request creation")
 		desc += screen.buySwordDesc(screen.activeItem, screen.pylonEnterValue)
+	case WAIT_BUY_CHARACTER_REQUEST_CREATION:
+		desc = loud.Localize("you are now waiting for character buy request creation")
+		desc += screen.buyCharacterDesc(screen.activeCharacter, screen.pylonEnterValue)
 	case RESULT_BUY_SWORD_REQUEST_CREATION:
 		if screen.txFailReason != "" {
 			desc = loud.Localize("sword buy request creation fail reason") + ": " + loud.Localize(screen.txFailReason)
@@ -191,6 +212,17 @@ func (screen *GameScreen) renderUserSituation() {
 			desc = loud.Localize("sword buy request was successfully created")
 			desc += screen.buySwordDesc(screen.activeItem, screen.pylonEnterValue)
 		}
+	case RESULT_BUY_CHARACTER_REQUEST_CREATION:
+		if screen.txFailReason != "" {
+			desc = loud.Localize("character buy request creation fail reason") + ": " + loud.Localize(screen.txFailReason)
+		} else {
+			desc = loud.Localize("character buy request was successfully created")
+			desc += screen.buyCharacterDesc(screen.activeCharacter, screen.pylonEnterValue)
+		}
+	case SHOW_SELL_CHARACTER_REQUESTS:
+		infoLines = screen.renderCharacterTradeRequestTable("Sell character requests", loud.CharacterSellTradeRequests)
+	case SHOW_BUY_CHARACTER_REQUESTS:
+		infoLines = screen.renderCharacterTradeRequestTable("Buy character requests", loud.CharacterBuyTradeRequests)
 	// For FULFILL trades, msg should be reversed, since user is opposite
 	case WAIT_FULFILL_BUY_LOUD_REQUEST:
 		request := screen.activeTradeRequest
@@ -220,10 +252,18 @@ func (screen *GameScreen) renderUserSituation() {
 		request := screen.activeItemTradeRequest
 		desc = loud.Localize("you are now buying sword ") + fmt.Sprintf(" at %d.\n", request.Price)
 		desc += screen.buySwordDesc(request.TItem, fmt.Sprintf("%d", request.Price))
+	case WAIT_FULFILL_SELL_CHARACTER_REQUEST:
+		request := screen.activeCharacterTradeRequest
+		desc = loud.Localize("you are now buying character ") + fmt.Sprintf(" at %d.\n", request.Price)
+		desc += screen.buyCharacterDesc(request.TCharacter, fmt.Sprintf("%d", request.Price))
 	case WAIT_FULFILL_BUY_SWORD_REQUEST:
 		request := screen.activeItemTradeRequest
 		desc = loud.Localize("you are now selling sword ") + fmt.Sprintf(" at %d.\n", request.Price)
 		desc += screen.sellSwordDesc(request.TItem, fmt.Sprintf("%d", request.Price))
+	case WAIT_FULFILL_BUY_CHARACTER_REQUEST:
+		request := screen.activeCharacterTradeRequest
+		desc = loud.Localize("you are now selling character ") + fmt.Sprintf(" at %d.\n", request.Price)
+		desc += screen.sellCharacterDesc(request.TCharacter, fmt.Sprintf("%d", request.Price))
 	case RESULT_FULFILL_SELL_SWORD_REQUEST:
 		if screen.txFailReason != "" {
 			desc = loud.Localize("buy sword failed reason") + ": " + loud.Localize(screen.txFailReason)
@@ -232,6 +272,14 @@ func (screen *GameScreen) renderUserSituation() {
 			desc = loud.Localize("you have bought sword successfully from sword/pylon market") + fmt.Sprintf(" at %d.\n", request.Price)
 			desc += screen.buySwordDesc(request.TItem, fmt.Sprintf("%d", request.Price))
 		}
+	case RESULT_FULFILL_SELL_CHARACTER_REQUEST:
+		if screen.txFailReason != "" {
+			desc = loud.Localize("buy character failed reason") + ": " + loud.Localize(screen.txFailReason)
+		} else {
+			request := screen.activeCharacterTradeRequest
+			desc = loud.Localize("you have bought character successfully from character/pylon market") + fmt.Sprintf(" at %d.\n", request.Price)
+			desc += screen.buyCharacterDesc(request.TCharacter, fmt.Sprintf("%d", request.Price))
+		}
 	case RESULT_FULFILL_BUY_SWORD_REQUEST:
 		if screen.txFailReason != "" {
 			desc = loud.Localize("sell sword failed reason") + ": " + loud.Localize(screen.txFailReason)
@@ -239,6 +287,14 @@ func (screen *GameScreen) renderUserSituation() {
 			request := screen.activeItemTradeRequest
 			desc = loud.Localize("you have sold sword successfully from sword/pylon market") + fmt.Sprintf(" at %d.\n", request.Price)
 			desc += screen.sellSwordDesc(request.TItem, fmt.Sprintf("%d", request.Price))
+		}
+	case RESULT_FULFILL_BUY_CHARACTER_REQUEST:
+		if screen.txFailReason != "" {
+			desc = loud.Localize("sell character failed reason") + ": " + loud.Localize(screen.txFailReason)
+		} else {
+			request := screen.activeCharacterTradeRequest
+			desc = loud.Localize("you have sold character successfully from character/pylon market") + fmt.Sprintf(" at %d.\n", request.Price)
+			desc += screen.sellCharacterDesc(request.TCharacter, fmt.Sprintf("%d", request.Price))
 		}
 	}
 
