@@ -27,6 +27,18 @@ func (screen *GameScreen) renderUserSituation() {
 			loud.DEVELOP:  loud.Localize("develop desc"),
 		}
 		desc = locationDescMap[screen.user.GetLocation()]
+	case SHOW_LOUD_BUY_REQUESTS:
+		infoLines = screen.renderTradeRequestTable(loud.BuyTradeRequests)
+	case SHOW_LOUD_SELL_REQUESTS:
+		infoLines = screen.renderTradeRequestTable(loud.SellTradeRequests)
+	case SHOW_BUY_SWORD_REQUESTS:
+		infoLines = screen.renderItemTradeRequestTable("Buy sword requests", loud.SwordBuyTradeRequests)
+	case SHOW_SELL_SWORD_REQUESTS:
+		infoLines = screen.renderItemTradeRequestTable("Sell sword requests", loud.SwordSellTradeRequests)
+	case SHOW_SELL_CHARACTER_REQUESTS:
+		infoLines = screen.renderCharacterTradeRequestTable("Sell character requests", loud.CharacterSellTradeRequests)
+	case SHOW_BUY_CHARACTER_REQUESTS:
+		infoLines = screen.renderCharacterTradeRequestTable("Buy character requests", loud.CharacterBuyTradeRequests)
 	case CREATE_BUY_LOUD_REQUEST_ENTER_PYLON_VALUE:
 		desc = "Please enter pylon amount to use (should be integer value)" // TODO should add Localize
 	case CREATE_SELL_LOUD_REQUEST_ENTER_PYLON_VALUE:
@@ -35,11 +47,22 @@ func (screen *GameScreen) renderUserSituation() {
 		desc = "Please enter loud amount to buy (should be integer value)" // TODO should add Localize
 	case CREATE_SELL_LOUD_REQUEST_ENTER_LOUD_VALUE:
 		desc = "Please enter loud amount to sell (should be integer value)" // TODO should add Localize
-
-	case SHOW_LOUD_BUY_REQUESTS:
-		infoLines = screen.renderTradeRequestTable(loud.BuyTradeRequests)
-	case SHOW_LOUD_SELL_REQUESTS:
-		infoLines = screen.renderTradeRequestTable(loud.SellTradeRequests)
+	case CREATE_SELL_SWORD_REQUEST_SELECT_SWORD:
+		infoLines = screen.renderItemTable("Select sword to sell", screen.user.InventoryItems())
+	case CREATE_SELL_CHARACTER_REQUEST_SELECT_CHARACTER:
+		infoLines = screen.renderCharacterTable("Select character to sell", screen.user.InventoryCharacters())
+	case CREATE_SELL_SWORD_REQUEST_ENTER_PYLON_VALUE:
+		desc = "Please enter pylon amount to use (should be integer value)" // TODO should add Localize
+	case CREATE_SELL_CHARACTER_REQUEST_ENTER_PYLON_VALUE:
+		desc = "Please enter pylon amount to use (should be integer value)" // TODO should add Localize
+	case CREATE_BUY_SWORD_REQUEST_SELECT_SWORD:
+		infoLines = screen.renderItemTable("Select sword to buy", loud.WorldItems)
+	case CREATE_BUY_CHARACTER_REQUEST_SELECT_CHARACTER:
+		infoLines = screen.renderCharacterTable("Select character to buy", loud.WorldCharacters)
+	case CREATE_BUY_SWORD_REQUEST_ENTER_PYLON_VALUE:
+		desc = "Please enter pylon amount to use (should be integer value)" // TODO should add Localize
+	case CREATE_BUY_CHARACTER_REQUEST_ENTER_PYLON_VALUE:
+		desc = "Please enter pylon amount to use (should be integer value)" // TODO should add Localize
 	case SELECT_DEFAULT_CHAR:
 		infoLines = screen.renderCharacterTable(loud.Localize("Please select default character"), screen.user.InventoryCharacters())
 	case SELECT_DEFAULT_WEAPON:
@@ -68,7 +91,7 @@ func (screen *GameScreen) renderUserSituation() {
 		desc += waitProcessEnd
 	case WAIT_HUNT_PROCESS:
 		if len(screen.activeItem.Name) > 0 {
-			desc = fmt.Sprintf("%s %s.\n", loud.Localize("wait hunt process desc"), formatItem(screen.activeItem))
+			desc = fmt.Sprintf("%s %s.\n", loud.Localize("You are now hunting with"), formatItem(screen.activeItem))
 		} else {
 			desc = fmt.Sprintf("%s\n", loud.Localize("hunting without weapon"))
 		}
@@ -86,6 +109,43 @@ func (screen *GameScreen) renderUserSituation() {
 		desc = fmt.Sprintf("%s %s.\n%s", loud.Localize("wait sell process desc"), formatItem(screen.activeItem), waitProcessEnd)
 	case WAIT_UPGRADE_PROCESS:
 		desc = fmt.Sprintf("%s %s.\n%s", loud.Localize("wait upgrade process desc"), loud.Localize(screen.activeItem.Name), waitProcessEnd)
+	case WAIT_SELL_SWORD_REQUEST_CREATION:
+		desc = loud.Localize("you are now waiting for sword sell request creation")
+		desc += screen.sellSwordDesc(screen.activeItem, screen.pylonEnterValue)
+	case WAIT_SELL_CHARACTER_REQUEST_CREATION:
+		desc = loud.Localize("you are now waiting for character sell request creation")
+		desc += screen.sellCharacterDesc(screen.activeCharacter, screen.pylonEnterValue)
+	case WAIT_BUY_SWORD_REQUEST_CREATION:
+		desc = loud.Localize("you are now waiting for sword buy request creation")
+		desc += screen.buySwordDesc(screen.activeItem, screen.pylonEnterValue)
+	case WAIT_BUY_CHARACTER_REQUEST_CREATION:
+		desc = loud.Localize("you are now waiting for character buy request creation")
+		desc += screen.buyCharacterDesc(screen.activeCharacter, screen.pylonEnterValue)
+	case WAIT_FULFILL_SELL_SWORD_REQUEST:
+		request := screen.activeItemTradeRequest
+		desc = loud.Localize("you are now buying sword ") + fmt.Sprintf(" at %d.\n", request.Price)
+		desc += screen.buySwordDesc(request.TItem, fmt.Sprintf("%d", request.Price))
+	case WAIT_FULFILL_SELL_CHARACTER_REQUEST:
+		request := screen.activeCharacterTradeRequest
+		desc = loud.Localize("you are now buying character ") + fmt.Sprintf(" at %d.\n", request.Price)
+		desc += screen.buyCharacterDesc(request.TCharacter, fmt.Sprintf("%d", request.Price))
+	case WAIT_FULFILL_BUY_SWORD_REQUEST:
+		request := screen.activeItemTradeRequest
+		desc = loud.Localize("you are now selling sword ") + fmt.Sprintf(" at %d.\n", request.Price)
+		desc += screen.sellSwordDesc(request.TItem, fmt.Sprintf("%d", request.Price))
+	case WAIT_FULFILL_BUY_CHARACTER_REQUEST:
+		request := screen.activeCharacterTradeRequest
+		desc = loud.Localize("you are now selling character ") + fmt.Sprintf(" at %d.\n", request.Price)
+		desc += screen.sellCharacterDesc(request.TCharacter, fmt.Sprintf("%d", request.Price))
+	// For FULFILL trades, msg should be reversed, since user is opposite
+	case WAIT_FULFILL_BUY_LOUD_REQUEST:
+		request := screen.activeTradeRequest
+		desc = loud.Localize("you are now selling loud for pylon") + fmt.Sprintf(" at %.4f.\n", request.Price)
+		desc += screen.sellLoudDesc(request.Amount, request.Total)
+	case WAIT_FULFILL_SELL_LOUD_REQUEST:
+		request := screen.activeTradeRequest
+		desc = loud.Localize("you are now buying loud from pylon") + fmt.Sprintf(" at %.4f.\n", request.Price)
+		desc += screen.buyLoudDesc(request.Amount, request.Total)
 	case RESULT_BUY_LOUD_REQUEST_CREATION:
 		if screen.txFailReason != "" {
 			desc = loud.Localize("loud buy request creation fail reason") + ": " + loud.Localize(screen.txFailReason)
@@ -163,22 +223,6 @@ func (screen *GameScreen) renderUserSituation() {
 		} else {
 			desc = fmt.Sprintf("%s: %s.", loud.Localize("result upgrade finish desc"), loud.Localize(screen.activeItem.Name))
 		}
-	case SHOW_BUY_SWORD_REQUESTS:
-		infoLines = screen.renderItemTradeRequestTable("Buy sword requests", loud.SwordBuyTradeRequests)
-	case CREATE_SELL_SWORD_REQUEST_SELECT_SWORD:
-		infoLines = screen.renderItemTable("Select sword to sell", screen.user.InventoryItems())
-	case CREATE_SELL_CHARACTER_REQUEST_SELECT_CHARACTER:
-		infoLines = screen.renderCharacterTable("Select character to sell", screen.user.InventoryCharacters())
-	case CREATE_SELL_SWORD_REQUEST_ENTER_PYLON_VALUE:
-		desc = "Please enter pylon amount to use (should be integer value)" // TODO should add Localize
-	case CREATE_SELL_CHARACTER_REQUEST_ENTER_PYLON_VALUE:
-		desc = "Please enter pylon amount to use (should be integer value)" // TODO should add Localize
-	case WAIT_SELL_SWORD_REQUEST_CREATION:
-		desc = loud.Localize("you are now waiting for sword sell request creation")
-		desc += screen.sellSwordDesc(screen.activeItem, screen.pylonEnterValue)
-	case WAIT_SELL_CHARACTER_REQUEST_CREATION:
-		desc = loud.Localize("you are now waiting for character sell request creation")
-		desc += screen.sellCharacterDesc(screen.activeCharacter, screen.pylonEnterValue)
 	case RESULT_SELL_SWORD_REQUEST_CREATION:
 		if screen.txFailReason != "" {
 			desc = loud.Localize("sword sell request creation fail reason") + ": " + loud.Localize(screen.txFailReason)
@@ -193,22 +237,6 @@ func (screen *GameScreen) renderUserSituation() {
 			desc = loud.Localize("character sell request was successfully created")
 			desc += screen.sellCharacterDesc(screen.activeCharacter, screen.pylonEnterValue)
 		}
-	case SHOW_SELL_SWORD_REQUESTS:
-		infoLines = screen.renderItemTradeRequestTable("Sell sword requests", loud.SwordSellTradeRequests)
-	case CREATE_BUY_SWORD_REQUEST_SELECT_SWORD:
-		infoLines = screen.renderItemTable("Select sword to buy", loud.WorldItems)
-	case CREATE_BUY_CHARACTER_REQUEST_SELECT_CHARACTER:
-		infoLines = screen.renderCharacterTable("Select character to buy", loud.WorldCharacters)
-	case CREATE_BUY_SWORD_REQUEST_ENTER_PYLON_VALUE:
-		desc = "Please enter pylon amount to use (should be integer value)" // TODO should add Localize
-	case CREATE_BUY_CHARACTER_REQUEST_ENTER_PYLON_VALUE:
-		desc = "Please enter pylon amount to use (should be integer value)" // TODO should add Localize
-	case WAIT_BUY_SWORD_REQUEST_CREATION:
-		desc = loud.Localize("you are now waiting for sword buy request creation")
-		desc += screen.buySwordDesc(screen.activeItem, screen.pylonEnterValue)
-	case WAIT_BUY_CHARACTER_REQUEST_CREATION:
-		desc = loud.Localize("you are now waiting for character buy request creation")
-		desc += screen.buyCharacterDesc(screen.activeCharacter, screen.pylonEnterValue)
 	case RESULT_BUY_SWORD_REQUEST_CREATION:
 		if screen.txFailReason != "" {
 			desc = loud.Localize("sword buy request creation fail reason") + ": " + loud.Localize(screen.txFailReason)
@@ -223,19 +251,6 @@ func (screen *GameScreen) renderUserSituation() {
 			desc = loud.Localize("character buy request was successfully created")
 			desc += screen.buyCharacterDesc(screen.activeCharacter, screen.pylonEnterValue)
 		}
-	case SHOW_SELL_CHARACTER_REQUESTS:
-		infoLines = screen.renderCharacterTradeRequestTable("Sell character requests", loud.CharacterSellTradeRequests)
-	case SHOW_BUY_CHARACTER_REQUESTS:
-		infoLines = screen.renderCharacterTradeRequestTable("Buy character requests", loud.CharacterBuyTradeRequests)
-	// For FULFILL trades, msg should be reversed, since user is opposite
-	case WAIT_FULFILL_BUY_LOUD_REQUEST:
-		request := screen.activeTradeRequest
-		desc = loud.Localize("you are now selling loud for pylon") + fmt.Sprintf(" at %.4f.\n", request.Price)
-		desc += screen.sellLoudDesc(request.Amount, request.Total)
-	case WAIT_FULFILL_SELL_LOUD_REQUEST:
-		request := screen.activeTradeRequest
-		desc = loud.Localize("you are now buying loud from pylon") + fmt.Sprintf(" at %.4f.\n", request.Price)
-		desc += screen.buyLoudDesc(request.Amount, request.Total)
 	case RESULT_FULFILL_BUY_LOUD_REQUEST:
 		if screen.txFailReason != "" {
 			desc = loud.Localize("sell loud failed reason") + ": " + loud.Localize(screen.txFailReason)
@@ -252,22 +267,6 @@ func (screen *GameScreen) renderUserSituation() {
 			desc = loud.Localize("you have bought loud coin successfully from loud/pylon market") + fmt.Sprintf(" at %.4f.\n", request.Price)
 			desc += screen.buyLoudDesc(request.Amount, request.Total)
 		}
-	case WAIT_FULFILL_SELL_SWORD_REQUEST:
-		request := screen.activeItemTradeRequest
-		desc = loud.Localize("you are now buying sword ") + fmt.Sprintf(" at %d.\n", request.Price)
-		desc += screen.buySwordDesc(request.TItem, fmt.Sprintf("%d", request.Price))
-	case WAIT_FULFILL_SELL_CHARACTER_REQUEST:
-		request := screen.activeCharacterTradeRequest
-		desc = loud.Localize("you are now buying character ") + fmt.Sprintf(" at %d.\n", request.Price)
-		desc += screen.buyCharacterDesc(request.TCharacter, fmt.Sprintf("%d", request.Price))
-	case WAIT_FULFILL_BUY_SWORD_REQUEST:
-		request := screen.activeItemTradeRequest
-		desc = loud.Localize("you are now selling sword ") + fmt.Sprintf(" at %d.\n", request.Price)
-		desc += screen.sellSwordDesc(request.TItem, fmt.Sprintf("%d", request.Price))
-	case WAIT_FULFILL_BUY_CHARACTER_REQUEST:
-		request := screen.activeCharacterTradeRequest
-		desc = loud.Localize("you are now selling character ") + fmt.Sprintf(" at %d.\n", request.Price)
-		desc += screen.sellCharacterDesc(request.TCharacter, fmt.Sprintf("%d", request.Price))
 	case RESULT_FULFILL_SELL_SWORD_REQUEST:
 		if screen.txFailReason != "" {
 			desc = loud.Localize("buy sword failed reason") + ": " + loud.Localize(screen.txFailReason)
