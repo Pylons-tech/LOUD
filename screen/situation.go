@@ -146,159 +146,10 @@ func (screen *GameScreen) renderUserSituation() {
 		request := screen.activeTradeRequest
 		desc = loud.Localize("you are now buying loud from pylon") + fmt.Sprintf(" at %.4f.\n", request.Price)
 		desc += screen.buyLoudDesc(request.Amount, request.Total)
-	case RESULT_BUY_LOUD_REQUEST_CREATION:
-		if screen.txFailReason != "" {
-			desc = loud.Localize("loud buy request creation fail reason") + ": " + loud.Localize(screen.txFailReason)
-		} else {
-			desc = loud.Localize("loud buy request was successfully created")
-			desc += screen.buyLoudDesc(screen.loudEnterValue, screen.pylonEnterValue)
-		}
-	case RESULT_SELL_LOUD_REQUEST_CREATION:
-		if screen.txFailReason != "" {
-			desc = loud.Localize("loud sell request creation fail reason") + ": " + loud.Localize(screen.txFailReason)
-		} else {
-			desc = loud.Localize("loud sell request was successfully created")
-			desc += screen.sellLoudDesc(screen.loudEnterValue, screen.pylonEnterValue)
-		}
-	case RESULT_SELECT_DEF_CHAR:
-		desc = loud.Localize("You have successfully set default character!")
-	case RESULT_SELECT_DEF_WEAPON:
-		desc = loud.Localize("You have successfully set default weapon!")
-	case RESULT_BUY_ITEM_FINISH:
-		if screen.txFailReason != "" {
-			desc = loud.Localize("buy item failed reason") + ": " + loud.Localize(screen.txFailReason)
-		} else {
-			desc = fmt.Sprintf("%s %s.\n%s", loud.Localize("result buy finish desc"), formatItem(screen.activeItem), loud.Localize("use for hunting"))
-		}
-	case RESULT_BUY_CHARACTER_FINISH:
-		if screen.txFailReason != "" {
-			desc = loud.Localize("buy character failed reason") + ": " + loud.Localize(screen.txFailReason)
-		} else {
-			desc = fmt.Sprintf("%s %s.\n%s", loud.Localize("result buy finish desc"), formatItem(screen.activeItem), loud.Localize("use for hunting"))
-		}
-	case RESULT_HUNT_FINISH:
-		if screen.txFailReason != "" {
-			desc = loud.Localize("hunt failed reason") + ": " + loud.Localize(screen.txFailReason)
-		} else {
-			respOutput := handlers.ExecuteRecipeSerialize{}
-			json.Unmarshal(screen.txResult, &respOutput)
-			// TODO: should visualize item lost result better after updating recipe structure for character catalyst item
-			desc = fmt.Sprintf("%s %d. Item losts %+v", loud.Localize("result hunt finish desc"), respOutput.Amount, respOutput.ItemLoseResult)
-		}
-	case RESULT_GET_INITIAL_COIN:
-		if screen.txFailReason != "" {
-			desc = loud.Localize("get initial coin failed reason") + ": " + loud.Localize(screen.txFailReason)
-		} else {
-			respOutput := handlers.ExecuteRecipeSerialize{}
-			json.Unmarshal(screen.txResult, &respOutput)
-			desc = fmt.Sprintf("%s %d.", loud.Localize("Got initial gold from pylons. Amount is"), respOutput.Amount)
-		}
-	case RESULT_GET_PYLONS:
-		if screen.txFailReason != "" {
-			desc = loud.Localize("get pylon failed reason") + ": " + loud.Localize(screen.txFailReason)
-		} else {
-			desc = fmt.Sprintf("You got extra pylons for loud game")
-		}
-	case RESULT_SWITCH_USER:
-		if screen.txFailReason != "" {
-			desc = loud.Localize("switch user fail reason") + ": " + loud.Localize(screen.txFailReason)
-		} else {
-			desc = fmt.Sprintf("You switched user to %s", screen.user.GetUserName())
-		}
-	case RESULT_CREATE_COOKBOOK:
-		if screen.txFailReason != "" {
-			desc = loud.Localize("create cookbook failed reason") + ": " + loud.Localize(screen.txFailReason)
-		} else {
-			desc = fmt.Sprintf("You created a new cookbook for a new game build")
-		}
-	case RESULT_SELL_FINISH:
-		if screen.txFailReason != "" {
-			desc = loud.Localize("sell failed reason") + ": " + loud.Localize(screen.txFailReason)
-		} else {
-			desc = fmt.Sprintf("%s %s.", loud.Localize("result sell finish desc"), formatItem(screen.activeItem))
-		}
-	case RESULT_UPGRADE_FINISH:
-		if screen.txFailReason != "" {
-			desc = loud.Localize("upgrade failed reason") + ": " + loud.Localize(screen.txFailReason)
-		} else {
-			desc = fmt.Sprintf("%s: %s.", loud.Localize("result upgrade finish desc"), loud.Localize(screen.activeItem.Name))
-		}
-	case RESULT_SELL_SWORD_REQUEST_CREATION:
-		if screen.txFailReason != "" {
-			desc = loud.Localize("sword sell request creation fail reason") + ": " + loud.Localize(screen.txFailReason)
-		} else {
-			desc = loud.Localize("sword sell request was successfully created")
-			desc += screen.sellSwordDesc(screen.activeItem, screen.pylonEnterValue)
-		}
-	case RESULT_SELL_CHARACTER_REQUEST_CREATION:
-		if screen.txFailReason != "" {
-			desc = loud.Localize("character sell request creation fail reason") + ": " + loud.Localize(screen.txFailReason)
-		} else {
-			desc = loud.Localize("character sell request was successfully created")
-			desc += screen.sellCharacterDesc(screen.activeCharacter, screen.pylonEnterValue)
-		}
-	case RESULT_BUY_SWORD_REQUEST_CREATION:
-		if screen.txFailReason != "" {
-			desc = loud.Localize("sword buy request creation fail reason") + ": " + loud.Localize(screen.txFailReason)
-		} else {
-			desc = loud.Localize("sword buy request was successfully created")
-			desc += screen.buySwordDesc(screen.activeItem, screen.pylonEnterValue)
-		}
-	case RESULT_BUY_CHARACTER_REQUEST_CREATION:
-		if screen.txFailReason != "" {
-			desc = loud.Localize("character buy request creation fail reason") + ": " + loud.Localize(screen.txFailReason)
-		} else {
-			desc = loud.Localize("character buy request was successfully created")
-			desc += screen.buyCharacterDesc(screen.activeCharacter, screen.pylonEnterValue)
-		}
-	case RESULT_FULFILL_BUY_LOUD_REQUEST:
-		if screen.txFailReason != "" {
-			desc = loud.Localize("sell loud failed reason") + ": " + loud.Localize(screen.txFailReason)
-		} else {
-			request := screen.activeTradeRequest
-			desc = loud.Localize("you have sold loud coin successfully from loud/pylon market") + fmt.Sprintf(" at %.4f.\n", request.Price)
-			desc += screen.sellLoudDesc(request.Amount, request.Total)
-		}
-	case RESULT_FULFILL_SELL_LOUD_REQUEST:
-		if screen.txFailReason != "" {
-			desc = loud.Localize("buy loud failed reason") + ": " + loud.Localize(screen.txFailReason)
-		} else {
-			request := screen.activeTradeRequest
-			desc = loud.Localize("you have bought loud coin successfully from loud/pylon market") + fmt.Sprintf(" at %.4f.\n", request.Price)
-			desc += screen.buyLoudDesc(request.Amount, request.Total)
-		}
-	case RESULT_FULFILL_SELL_SWORD_REQUEST:
-		if screen.txFailReason != "" {
-			desc = loud.Localize("buy sword failed reason") + ": " + loud.Localize(screen.txFailReason)
-		} else {
-			request := screen.activeItemTradeRequest
-			desc = loud.Localize("you have bought sword successfully from sword/pylon market") + fmt.Sprintf(" at %d.\n", request.Price)
-			desc += screen.buySwordDesc(request.TItem, fmt.Sprintf("%d", request.Price))
-		}
-	case RESULT_FULFILL_SELL_CHARACTER_REQUEST:
-		if screen.txFailReason != "" {
-			desc = loud.Localize("buy character failed reason") + ": " + loud.Localize(screen.txFailReason)
-		} else {
-			request := screen.activeCharacterTradeRequest
-			desc = loud.Localize("you have bought character successfully from character/pylon market") + fmt.Sprintf(" at %d.\n", request.Price)
-			desc += screen.buyCharacterDesc(request.TCharacter, fmt.Sprintf("%d", request.Price))
-		}
-	case RESULT_FULFILL_BUY_SWORD_REQUEST:
-		if screen.txFailReason != "" {
-			desc = loud.Localize("sell sword failed reason") + ": " + loud.Localize(screen.txFailReason)
-		} else {
-			request := screen.activeItemTradeRequest
-			desc = loud.Localize("you have sold sword successfully from sword/pylon market") + fmt.Sprintf(" at %d.\n", request.Price)
-			desc += screen.sellSwordDesc(request.TItem, fmt.Sprintf("%d", request.Price))
-		}
-	case RESULT_FULFILL_BUY_CHARACTER_REQUEST:
-		if screen.txFailReason != "" {
-			desc = loud.Localize("sell character failed reason") + ": " + loud.Localize(screen.txFailReason)
-		} else {
-			request := screen.activeCharacterTradeRequest
-			desc = loud.Localize("you have sold character successfully from character/pylon market") + fmt.Sprintf(" at %d.\n", request.Price)
-			desc += screen.sellCharacterDesc(request.TCharacter, fmt.Sprintf("%d", request.Price))
-		}
+	}
+
+	if screen.scrStatus[:len("RESULT_")] == "RESULT_" {
+		desc = screen.TxResultSituationDesc()
 	}
 
 	basicLines := strings.Split(desc, "\n")
@@ -319,4 +170,109 @@ func (screen *GameScreen) renderUserSituation() {
 			break
 		}
 	}
+}
+
+func (screen *GameScreen) TxResultSituationDesc() string {
+	desc := ""
+	resDescMap := map[ScreenStatus]string{
+		RESULT_BUY_LOUD_REQUEST_CREATION:       "loud buy request creation",
+		RESULT_SELL_LOUD_REQUEST_CREATION:      "loud sell request creation",
+		RESULT_SELECT_DEF_CHAR:                 "selecting default character",
+		RESULT_SELECT_DEF_WEAPON:               "selecting default weapon",
+		RESULT_BUY_ITEM_FINISH:                 "buy item",
+		RESULT_BUY_CHARACTER_FINISH:            "buy character",
+		RESULT_HUNT_FINISH:                     "hunt",
+		RESULT_GET_INITIAL_COIN:                "get initial coin",
+		RESULT_GET_PYLONS:                      "get pylon",
+		RESULT_SWITCH_USER:                     "switch user",
+		RESULT_CREATE_COOKBOOK:                 "create cookbook",
+		RESULT_SELL_FINISH:                     "sell item",
+		RESULT_UPGRADE_FINISH:                  "upgrade item",
+		RESULT_SELL_SWORD_REQUEST_CREATION:     "sell sword request creation",
+		RESULT_BUY_SWORD_REQUEST_CREATION:      "buy sword request creation",
+		RESULT_SELL_CHARACTER_REQUEST_CREATION: "sell character request creation",
+		RESULT_BUY_CHARACTER_REQUEST_CREATION:  "buy character request creation",
+		RESULT_FULFILL_BUY_LOUD_REQUEST:        "sell loud", // for fullfill direction is reversed
+		RESULT_FULFILL_SELL_LOUD_REQUEST:       "buy loud",
+		RESULT_FULFILL_SELL_SWORD_REQUEST:      "buy sword",
+		RESULT_FULFILL_SELL_CHARACTER_REQUEST:  "buy character",
+		RESULT_FULFILL_BUY_SWORD_REQUEST:       "sell sword",
+		RESULT_FULFILL_BUY_CHARACTER_REQUEST:   "sell character",
+	}
+	if screen.txFailReason != "" {
+		desc = resDescMap[screen.scrStatus] + ": " + loud.Localize(screen.txFailReason)
+	} else {
+		switch screen.scrStatus {
+		case RESULT_BUY_LOUD_REQUEST_CREATION:
+			desc = loud.Localize("loud buy request was successfully created")
+			desc += screen.buyLoudDesc(screen.loudEnterValue, screen.pylonEnterValue)
+		case RESULT_SELL_LOUD_REQUEST_CREATION:
+			desc = loud.Localize("loud sell request was successfully created")
+			desc += screen.sellLoudDesc(screen.loudEnterValue, screen.pylonEnterValue)
+		case RESULT_SELECT_DEF_CHAR:
+			desc = loud.Localize("You have successfully set default character!")
+		case RESULT_SELECT_DEF_WEAPON:
+			desc = loud.Localize("You have successfully set default weapon!")
+		case RESULT_BUY_ITEM_FINISH:
+			desc = fmt.Sprintf("%s %s.\n%s", loud.Localize("result buy finish desc"), formatItem(screen.activeItem), loud.Localize("use for hunting"))
+		case RESULT_BUY_CHARACTER_FINISH:
+			desc = fmt.Sprintf("%s %s.\n%s", loud.Localize("result buy finish desc"), formatItem(screen.activeItem), loud.Localize("use for hunting"))
+		case RESULT_HUNT_FINISH:
+			respOutput := handlers.ExecuteRecipeSerialize{}
+			json.Unmarshal(screen.txResult, &respOutput)
+			// TODO: should visualize item lost result better after updating recipe structure for character catalyst item
+			desc = fmt.Sprintf("%s %d. Item losts %+v", loud.Localize("result hunt finish desc"), respOutput.Amount, respOutput.ItemLoseResult)
+		case RESULT_GET_INITIAL_COIN:
+			respOutput := handlers.ExecuteRecipeSerialize{}
+			json.Unmarshal(screen.txResult, &respOutput)
+			desc = fmt.Sprintf("%s %d.", loud.Localize("Got initial gold from pylons. Amount is"), respOutput.Amount)
+		case RESULT_GET_PYLONS:
+			desc = fmt.Sprintf("You got extra pylons for loud game")
+		case RESULT_SWITCH_USER:
+			desc = fmt.Sprintf("You switched user to %s", screen.user.GetUserName())
+		case RESULT_CREATE_COOKBOOK:
+			desc = fmt.Sprintf("You created a new cookbook for a new game build")
+		case RESULT_SELL_FINISH:
+			desc = fmt.Sprintf("%s %s.", loud.Localize("result sell finish desc"), formatItem(screen.activeItem))
+		case RESULT_UPGRADE_FINISH:
+			desc = fmt.Sprintf("%s: %s.", loud.Localize("result upgrade finish desc"), loud.Localize(screen.activeItem.Name))
+		case RESULT_SELL_SWORD_REQUEST_CREATION:
+			desc = loud.Localize("sword sell request was successfully created")
+			desc += screen.sellSwordDesc(screen.activeItem, screen.pylonEnterValue)
+		case RESULT_SELL_CHARACTER_REQUEST_CREATION:
+			desc = loud.Localize("character sell request was successfully created")
+			desc += screen.sellCharacterDesc(screen.activeCharacter, screen.pylonEnterValue)
+		case RESULT_BUY_SWORD_REQUEST_CREATION:
+			desc = loud.Localize("sword buy request was successfully created")
+			desc += screen.buySwordDesc(screen.activeItem, screen.pylonEnterValue)
+		case RESULT_BUY_CHARACTER_REQUEST_CREATION:
+			desc = loud.Localize("character buy request was successfully created")
+			desc += screen.buyCharacterDesc(screen.activeCharacter, screen.pylonEnterValue)
+		case RESULT_FULFILL_BUY_LOUD_REQUEST:
+			request := screen.activeTradeRequest
+			desc = loud.Localize("you have sold loud coin successfully from loud/pylon market") + fmt.Sprintf(" at %.4f.\n", request.Price)
+			desc += screen.sellLoudDesc(request.Amount, request.Total)
+		case RESULT_FULFILL_SELL_LOUD_REQUEST:
+			request := screen.activeTradeRequest
+			desc = loud.Localize("you have bought loud coin successfully from loud/pylon market") + fmt.Sprintf(" at %.4f.\n", request.Price)
+			desc += screen.buyLoudDesc(request.Amount, request.Total)
+		case RESULT_FULFILL_SELL_SWORD_REQUEST:
+			request := screen.activeItemTradeRequest
+			desc = loud.Localize("you have bought sword successfully from sword/pylon market") + fmt.Sprintf(" at %d.\n", request.Price)
+			desc += screen.buySwordDesc(request.TItem, fmt.Sprintf("%d", request.Price))
+		case RESULT_FULFILL_SELL_CHARACTER_REQUEST:
+			request := screen.activeCharacterTradeRequest
+			desc = loud.Localize("you have bought character successfully from character/pylon market") + fmt.Sprintf(" at %d.\n", request.Price)
+			desc += screen.buyCharacterDesc(request.TCharacter, fmt.Sprintf("%d", request.Price))
+		case RESULT_FULFILL_BUY_SWORD_REQUEST:
+			request := screen.activeItemTradeRequest
+			desc = loud.Localize("you have sold sword successfully from sword/pylon market") + fmt.Sprintf(" at %d.\n", request.Price)
+			desc += screen.sellSwordDesc(request.TItem, fmt.Sprintf("%d", request.Price))
+		case RESULT_FULFILL_BUY_CHARACTER_REQUEST:
+			request := screen.activeCharacterTradeRequest
+			desc = loud.Localize("you have sold character successfully from character/pylon market") + fmt.Sprintf(" at %d.\n", request.Price)
+			desc += screen.sellCharacterDesc(request.TCharacter, fmt.Sprintf("%d", request.Price))
+		}
+	}
+	return desc
 }
