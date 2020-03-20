@@ -15,7 +15,6 @@ import (
 func (screen *GameScreen) renderUserSituation() {
 	infoLines := []string{}
 	desc := ""
-	waitProcessEnd := loud.Localize("wait process to end")
 	switch screen.scrStatus {
 	case SHOW_LOCATION:
 		locationDescMap := map[loud.UserLocation]string{
@@ -77,79 +76,14 @@ func (screen *GameScreen) renderUserSituation() {
 		infoLines = screen.renderItemTable(loud.Localize("select hunt item desc"), screen.user.InventoryItems())
 	case SELECT_UPGRADE_ITEM:
 		infoLines = screen.renderItemTable(loud.Localize("select upgrade item desc"), screen.user.UpgradableItems())
-	case WAIT_BUY_LOUD_REQUEST_CREATION:
-		desc = loud.Localize("you are now waiting for loud buy request creation")
-		desc += screen.buyLoudDesc(screen.loudEnterValue, screen.pylonEnterValue)
-	case WAIT_SELL_LOUD_REQUEST_CREATION:
-		desc = loud.Localize("you are now waiting for loud sell request creation")
-		desc += screen.sellLoudDesc(screen.loudEnterValue, screen.pylonEnterValue)
-	case WAIT_BUY_ITEM_PROCESS:
-		desc = fmt.Sprintf("%s %s.\n", loud.Localize("wait buy item process desc"), formatItem(screen.activeItem))
-		desc += waitProcessEnd
-	case WAIT_BUY_CHARACTER_PROCESS:
-		desc = fmt.Sprintf("%s %s.\n", loud.Localize("wait buy character process desc"), formatItem(screen.activeItem))
-		desc += waitProcessEnd
-	case WAIT_HUNT_PROCESS:
-		if len(screen.activeItem.Name) > 0 {
-			desc = fmt.Sprintf("%s %s.\n", loud.Localize("You are now hunting with"), formatItem(screen.activeItem))
-		} else {
-			desc = fmt.Sprintf("%s\n", loud.Localize("hunting without weapon"))
-		}
-		desc += waitProcessEnd
-	case WAIT_GET_INITIAL_COIN:
-		desc = fmt.Sprintf("%s\n", loud.Localize("Getting initial gold from pylon"))
-		desc += waitProcessEnd
-	case WAIT_GET_PYLONS:
-		desc = loud.Localize("You are waiting for getting pylons process")
-	case WAIT_SWITCH_USER:
-		desc = loud.Localize("You are waiting for switching to new user")
-	case WAIT_CREATE_COOKBOOK:
-		desc = loud.Localize("You are waiting for creating cookbook")
-	case WAIT_SELL_PROCESS:
-		desc = fmt.Sprintf("%s %s.\n%s", loud.Localize("wait sell process desc"), formatItem(screen.activeItem), waitProcessEnd)
-	case WAIT_UPGRADE_PROCESS:
-		desc = fmt.Sprintf("%s %s.\n%s", loud.Localize("wait upgrade process desc"), loud.Localize(screen.activeItem.Name), waitProcessEnd)
-	case WAIT_SELL_SWORD_REQUEST_CREATION:
-		desc = loud.Localize("you are now waiting for sword sell request creation")
-		desc += screen.sellSwordDesc(screen.activeItem, screen.pylonEnterValue)
-	case WAIT_SELL_CHARACTER_REQUEST_CREATION:
-		desc = loud.Localize("you are now waiting for character sell request creation")
-		desc += screen.sellCharacterDesc(screen.activeCharacter, screen.pylonEnterValue)
-	case WAIT_BUY_SWORD_REQUEST_CREATION:
-		desc = loud.Localize("you are now waiting for sword buy request creation")
-		desc += screen.buySwordDesc(screen.activeItem, screen.pylonEnterValue)
-	case WAIT_BUY_CHARACTER_REQUEST_CREATION:
-		desc = loud.Localize("you are now waiting for character buy request creation")
-		desc += screen.buyCharacterDesc(screen.activeCharacter, screen.pylonEnterValue)
-	case WAIT_FULFILL_SELL_SWORD_REQUEST:
-		request := screen.activeItemTradeRequest
-		desc = loud.Localize("you are now buying sword ") + fmt.Sprintf(" at %d.\n", request.Price)
-		desc += screen.buySwordDesc(request.TItem, fmt.Sprintf("%d", request.Price))
-	case WAIT_FULFILL_SELL_CHARACTER_REQUEST:
-		request := screen.activeCharacterTradeRequest
-		desc = loud.Localize("you are now buying character ") + fmt.Sprintf(" at %d.\n", request.Price)
-		desc += screen.buyCharacterDesc(request.TCharacter, fmt.Sprintf("%d", request.Price))
-	case WAIT_FULFILL_BUY_SWORD_REQUEST:
-		request := screen.activeItemTradeRequest
-		desc = loud.Localize("you are now selling sword ") + fmt.Sprintf(" at %d.\n", request.Price)
-		desc += screen.sellSwordDesc(request.TItem, fmt.Sprintf("%d", request.Price))
-	case WAIT_FULFILL_BUY_CHARACTER_REQUEST:
-		request := screen.activeCharacterTradeRequest
-		desc = loud.Localize("you are now selling character ") + fmt.Sprintf(" at %d.\n", request.Price)
-		desc += screen.sellCharacterDesc(request.TCharacter, fmt.Sprintf("%d", request.Price))
-	// For FULFILL trades, msg should be reversed, since user is opposite
-	case WAIT_FULFILL_BUY_LOUD_REQUEST:
-		request := screen.activeTradeRequest
-		desc = loud.Localize("you are now selling loud for pylon") + fmt.Sprintf(" at %.4f.\n", request.Price)
-		desc += screen.sellLoudDesc(request.Amount, request.Total)
-	case WAIT_FULFILL_SELL_LOUD_REQUEST:
-		request := screen.activeTradeRequest
-		desc = loud.Localize("you are now buying loud from pylon") + fmt.Sprintf(" at %.4f.\n", request.Price)
-		desc += screen.buyLoudDesc(request.Amount, request.Total)
 	}
 
 	if screen.scrStatus[:len("RESULT_")] == "RESULT_" {
 		desc = screen.TxResultSituationDesc()
+	}
+
+	if screen.scrStatus[:len("WAIT_")] == "WAIT_" {
+		desc = screen.TxWaitSituationDesc()
 	}
 
 	basicLines := strings.Split(desc, "\n")
@@ -273,6 +207,85 @@ func (screen *GameScreen) TxResultSituationDesc() string {
 			desc = loud.Localize("you have sold character successfully from character/pylon market") + fmt.Sprintf(" at %d.\n", request.Price)
 			desc += screen.sellCharacterDesc(request.TCharacter, fmt.Sprintf("%d", request.Price))
 		}
+	}
+	return desc
+}
+
+func (screen *GameScreen) TxWaitSituationDesc() string {
+	desc := ""
+	WAIT_PROCESS_TO_END := loud.Localize("wait process to end")
+	switch screen.scrStatus {
+	case WAIT_BUY_LOUD_REQUEST_CREATION:
+		desc = loud.Localize("you are now waiting for loud buy request creation")
+		desc += screen.buyLoudDesc(screen.loudEnterValue, screen.pylonEnterValue)
+	case WAIT_SELL_LOUD_REQUEST_CREATION:
+		desc = loud.Localize("you are now waiting for loud sell request creation")
+		desc += screen.sellLoudDesc(screen.loudEnterValue, screen.pylonEnterValue)
+	case WAIT_BUY_ITEM_PROCESS:
+		desc = fmt.Sprintf("%s %s.\n", loud.Localize("wait buy item process desc"), formatItem(screen.activeItem))
+		desc += WAIT_PROCESS_TO_END
+	case WAIT_BUY_CHARACTER_PROCESS:
+		desc = fmt.Sprintf("%s %s.\n", loud.Localize("wait buy character process desc"), formatItem(screen.activeItem))
+		desc += WAIT_PROCESS_TO_END
+	case WAIT_HUNT_PROCESS:
+		if len(screen.activeItem.Name) > 0 {
+			desc = fmt.Sprintf("%s %s.\n", loud.Localize("You are now hunting with"), formatItem(screen.activeItem))
+		} else {
+			desc = fmt.Sprintf("%s\n", loud.Localize("hunting without weapon"))
+		}
+		desc += WAIT_PROCESS_TO_END
+	case WAIT_GET_INITIAL_COIN:
+		desc = fmt.Sprintf("%s\n", loud.Localize("Getting initial gold from pylon"))
+		desc += WAIT_PROCESS_TO_END
+	case WAIT_GET_PYLONS:
+		desc = loud.Localize("You are waiting for getting pylons process")
+	case WAIT_SWITCH_USER:
+		desc = loud.Localize("You are waiting for switching to new user")
+	case WAIT_CREATE_COOKBOOK:
+		desc = loud.Localize("You are waiting for creating cookbook")
+	case WAIT_SELL_PROCESS:
+		desc = fmt.Sprintf("%s %s.\n", loud.Localize("wait sell process desc"), formatItem(screen.activeItem))
+		desc += WAIT_PROCESS_TO_END
+	case WAIT_UPGRADE_PROCESS:
+		desc = fmt.Sprintf("%s %s.\n", loud.Localize("wait upgrade process desc"), loud.Localize(screen.activeItem.Name))
+		desc += WAIT_PROCESS_TO_END
+	case WAIT_SELL_SWORD_REQUEST_CREATION:
+		desc = loud.Localize("you are now waiting for sword sell request creation")
+		desc += screen.sellSwordDesc(screen.activeItem, screen.pylonEnterValue)
+	case WAIT_SELL_CHARACTER_REQUEST_CREATION:
+		desc = loud.Localize("you are now waiting for character sell request creation")
+		desc += screen.sellCharacterDesc(screen.activeCharacter, screen.pylonEnterValue)
+	case WAIT_BUY_SWORD_REQUEST_CREATION:
+		desc = loud.Localize("you are now waiting for sword buy request creation")
+		desc += screen.buySwordDesc(screen.activeItem, screen.pylonEnterValue)
+	case WAIT_BUY_CHARACTER_REQUEST_CREATION:
+		desc = loud.Localize("you are now waiting for character buy request creation")
+		desc += screen.buyCharacterDesc(screen.activeCharacter, screen.pylonEnterValue)
+	// For FULFILL trades, msg should be reversed, since user is opposite
+	case WAIT_FULFILL_SELL_SWORD_REQUEST:
+		request := screen.activeItemTradeRequest
+		desc = loud.Localize("you are now buying sword ") + fmt.Sprintf(" at %d.\n", request.Price)
+		desc += screen.buySwordDesc(request.TItem, fmt.Sprintf("%d", request.Price))
+	case WAIT_FULFILL_SELL_CHARACTER_REQUEST:
+		request := screen.activeCharacterTradeRequest
+		desc = loud.Localize("you are now buying character ") + fmt.Sprintf(" at %d.\n", request.Price)
+		desc += screen.buyCharacterDesc(request.TCharacter, fmt.Sprintf("%d", request.Price))
+	case WAIT_FULFILL_BUY_SWORD_REQUEST:
+		request := screen.activeItemTradeRequest
+		desc = loud.Localize("you are now selling sword ") + fmt.Sprintf(" at %d.\n", request.Price)
+		desc += screen.sellSwordDesc(request.TItem, fmt.Sprintf("%d", request.Price))
+	case WAIT_FULFILL_BUY_CHARACTER_REQUEST:
+		request := screen.activeCharacterTradeRequest
+		desc = loud.Localize("you are now selling character ") + fmt.Sprintf(" at %d.\n", request.Price)
+		desc += screen.sellCharacterDesc(request.TCharacter, fmt.Sprintf("%d", request.Price))
+	case WAIT_FULFILL_BUY_LOUD_REQUEST:
+		request := screen.activeTradeRequest
+		desc = loud.Localize("you are now selling loud for pylon") + fmt.Sprintf(" at %.4f.\n", request.Price)
+		desc += screen.sellLoudDesc(request.Amount, request.Total)
+	case WAIT_FULFILL_SELL_LOUD_REQUEST:
+		request := screen.activeTradeRequest
+		desc = loud.Localize("you are now buying loud from pylon") + fmt.Sprintf(" at %.4f.\n", request.Price)
+		desc += screen.buyLoudDesc(request.Amount, request.Total)
 	}
 	return desc
 }
