@@ -78,11 +78,11 @@ func (screen *GameScreen) renderUserSituation() {
 		infoLines = screen.renderItemTable(loud.Localize("select upgrade item desc"), screen.user.UpgradableItems())
 	}
 
-	if screen.scrStatus[:len("RESULT_")] == "RESULT_" {
+	if strings.HasPrefix(string(screen.scrStatus), "RESULT_") {
 		desc = screen.TxResultSituationDesc()
 	}
 
-	if screen.scrStatus[:len("WAIT_")] == "WAIT_" {
+	if strings.HasPrefix(string(screen.scrStatus), "WAIT_") {
 		desc = screen.TxWaitSituationDesc()
 	}
 
