@@ -523,3 +523,21 @@ func GetItemOutputFromActiveCharacter(activeCharacter Character) (types.ItemList
 	itemOutputs = append(itemOutputs, io)
 	return itemOutputs, err
 }
+
+func GetSDKAddrFromUserName(username string) sdk.AccAddress {
+	addr := pylonSDK.GetAccountAddr(username, nil)
+	sdkAddr, err := sdk.AccAddressFromBech32(addr)
+	if err != nil {
+		log.Fatal("sdkAddr, err := sdk.AccAddressFromBech32(addr)", sdkAddr, err)
+	}
+	return sdkAddr
+}
+
+func SendTxMsg(user User, txMsg sdk.Msg) (string, error) {
+	t := GetTestingT()
+	log.Println("started sending transaction", user.GetUserName(), txMsg)
+	txhash := pylonSDK.TestTxWithMsgWithNonce(t, txMsg, user.GetUserName(), false)
+	user.SetLastTransaction(txhash)
+	log.Println("ended sending transaction")
+	return txhash, nil
+}

@@ -7,7 +7,6 @@ import (
 	"strconv"
 	"time"
 
-	pylonSDK "github.com/Pylons-tech/pylons/cmd/test"
 	"github.com/Pylons-tech/pylons/x/pylons/msgs"
 	"github.com/Pylons-tech/pylons/x/pylons/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -16,9 +15,7 @@ import (
 func CreateCookbook(user User) (string, error) { // This is for afti develop mode automation test is only using
 	t := GetTestingT()
 	username := user.GetUserName()
-	addr := pylonSDK.GetAccountAddr(username, t)
-	sdkAddr, err := sdk.AccAddressFromBech32(addr)
-	log.Println("sdkAddr, err := sdk.AccAddressFromBech32(addr)", sdkAddr, err)
+	sdkAddr := GetSDKAddrFromUserName(username)
 
 	ccbMsg := msgs.NewMsgCreateCookbook(
 		"tst_cookbook_name",                  // cbType.Name,
@@ -31,7 +28,8 @@ func CreateCookbook(user User) (string, error) { // This is for afti develop mod
 		5,                                    // cbType.CostPerBlock,
 		sdkAddr,                              // cbType.Sender,
 	)
-	txhash := pylonSDK.TestTxWithMsgWithNonce(t, ccbMsg, username, false)
+
+	txhash, _ := SendTxMsg(user, ccbMsg)
 	if AutomateInput {
 		ok, err := CheckSignatureMatchWithAftiCli(t, txhash, user.GetPrivKey(), ccbMsg, username, false)
 		if !ok || err != nil {
@@ -39,22 +37,13 @@ func CreateCookbook(user User) (string, error) { // This is for afti develop mod
 			SomethingWentWrongMsg = "automation test failed, " + err.Error()
 		}
 	}
-	user.SetLastTransaction(txhash)
-	log.Println("ended sending transaction")
 	return txhash, nil
 }
 
 func GetExtraPylons(user User) (string, error) {
-	t := GetTestingT()
-	username := user.GetUserName()
-	addr := pylonSDK.GetAccountAddr(username, t)
-	sdkAddr, err := sdk.AccAddressFromBech32(addr)
-	log.Println("sdkAddr, err := sdk.AccAddressFromBech32(addr)", sdkAddr, err)
+	sdkAddr := GetSDKAddrFromUserName(user.GetUserName())
 	extraPylonsMsg := msgs.NewMsgGetPylons(types.PremiumTier.Fee, sdkAddr)
-	txhash := pylonSDK.TestTxWithMsgWithNonce(t, extraPylonsMsg, username, false)
-	user.SetLastTransaction(txhash)
-	log.Println("ended sending transaction")
-	return txhash, nil
+	return SendTxMsg(user, extraPylonsMsg)
 }
 
 func GetInitialCoin(user User) (string, error) {
@@ -150,7 +139,6 @@ func Upgrade(user User, item Item) (string, error) {
 }
 
 func CreateBuyLoudTradeRequest(user User, loudEnterValue string, pylonEnterValue string) (string, error) {
-	t := GetTestingT()
 	loudValue, err := strconv.Atoi(loudEnterValue)
 	if err != nil {
 		return "", err
@@ -160,8 +148,7 @@ func CreateBuyLoudTradeRequest(user User, loudEnterValue string, pylonEnterValue
 		return "", err
 	}
 
-	eugenAddr := pylonSDK.GetAccountAddr(user.GetUserName(), nil)
-	sdkAddr, err := sdk.AccAddressFromBech32(eugenAddr)
+	sdkAddr := GetSDKAddrFromUserName(user.GetUserName())
 
 	inputCoinList := types.GenCoinInputList("loudcoin", int64(loudValue))
 
@@ -175,15 +162,10 @@ func CreateBuyLoudTradeRequest(user User, loudEnterValue string, pylonEnterValue
 		nil,
 		extraInfo,
 		sdkAddr)
-	log.Println("started sending transaction", user.GetUserName(), createTrdMsg)
-	txhash := pylonSDK.TestTxWithMsgWithNonce(t, createTrdMsg, user.GetUserName(), false)
-	user.SetLastTransaction(txhash)
-	log.Println("ended sending transaction")
-	return txhash, nil
+	return SendTxMsg(user, createTrdMsg)
 }
 
 func CreateSellLoudTradeRequest(user User, loudEnterValue string, pylonEnterValue string) (string, error) {
-	t := GetTestingT()
 	loudValue, err := strconv.Atoi(loudEnterValue)
 	if err != nil {
 		return "", err
@@ -193,8 +175,7 @@ func CreateSellLoudTradeRequest(user User, loudEnterValue string, pylonEnterValu
 		return "", err
 	}
 
-	eugenAddr := pylonSDK.GetAccountAddr(user.GetUserName(), nil)
-	sdkAddr, _ := sdk.AccAddressFromBech32(eugenAddr)
+	sdkAddr := GetSDKAddrFromUserName(user.GetUserName())
 
 	inputCoinList := types.GenCoinInputList("pylon", int64(pylonValue))
 
@@ -208,16 +189,11 @@ func CreateSellLoudTradeRequest(user User, loudEnterValue string, pylonEnterValu
 		nil,
 		extraInfo,
 		sdkAddr)
-	log.Println("started sending transaction", user.GetUserName(), createTrdMsg)
-	txhash := pylonSDK.TestTxWithMsgWithNonce(t, createTrdMsg, user.GetUserName(), false)
-	user.SetLastTransaction(txhash)
-	log.Println("ended sending transaction")
-	return txhash, nil
+	return SendTxMsg(user, createTrdMsg)
 }
 
 func CreateBuySwordTradeRequest(user User, activeItem Item, pylonEnterValue string) (string, error) {
 	// trade creator will get sword from pylon
-	t := GetTestingT()
 
 	itemInputs := GetItemInputsFromActiveItem(activeItem)
 
@@ -226,8 +202,7 @@ func CreateBuySwordTradeRequest(user User, activeItem Item, pylonEnterValue stri
 		return "", err
 	}
 
-	eugenAddr := pylonSDK.GetAccountAddr(user.GetUserName(), nil)
-	sdkAddr, err := sdk.AccAddressFromBech32(eugenAddr)
+	sdkAddr := GetSDKAddrFromUserName(user.GetUserName())
 
 	outputCoins := sdk.Coins{sdk.NewInt64Coin("pylon", int64(pylonValue))}
 	extraInfo := "sword buy request created by loud game"
@@ -239,24 +214,18 @@ func CreateBuySwordTradeRequest(user User, activeItem Item, pylonEnterValue stri
 		nil,
 		extraInfo,
 		sdkAddr)
-	log.Println("started sending transaction", user.GetUserName(), createTrdMsg)
-	txhash := pylonSDK.TestTxWithMsgWithNonce(t, createTrdMsg, user.GetUserName(), false)
-	user.SetLastTransaction(txhash)
-	log.Println("ended sending transaction")
-	return txhash, nil
+	return SendTxMsg(user, createTrdMsg)
 }
 
 func CreateSellSwordTradeRequest(user User, activeItem Item, pylonEnterValue string) (string, error) {
 	// trade creator will get pylon from sword
-	t := GetTestingT()
 
 	pylonValue, err := strconv.Atoi(pylonEnterValue)
 	if err != nil {
 		return "", err
 	}
 
-	eugenAddr := pylonSDK.GetAccountAddr(user.GetUserName(), nil)
-	sdkAddr, _ := sdk.AccAddressFromBech32(eugenAddr)
+	sdkAddr := GetSDKAddrFromUserName(user.GetUserName())
 
 	inputCoinList := types.GenCoinInputList("pylon", int64(pylonValue))
 	itemOutputList, err := GetItemOutputFromActiveItem(activeItem)
@@ -273,16 +242,11 @@ func CreateSellSwordTradeRequest(user User, activeItem Item, pylonEnterValue str
 		itemOutputList,
 		extraInfo,
 		sdkAddr)
-	log.Println("started sending transaction", user.GetUserName(), createTrdMsg)
-	txhash := pylonSDK.TestTxWithMsgWithNonce(t, createTrdMsg, user.GetUserName(), false)
-	user.SetLastTransaction(txhash)
-	log.Println("ended sending transaction")
-	return txhash, nil
+	return SendTxMsg(user, createTrdMsg)
 }
 
 func CreateBuyCharacterTradeRequest(user User, activeCharacter Character, pylonEnterValue string) (string, error) {
 	// trade creator will get character from pylon
-	t := GetTestingT()
 
 	itemInputs := GetItemInputsFromActiveCharacter(activeCharacter)
 
@@ -291,8 +255,7 @@ func CreateBuyCharacterTradeRequest(user User, activeCharacter Character, pylonE
 		return "", err
 	}
 
-	eugenAddr := pylonSDK.GetAccountAddr(user.GetUserName(), nil)
-	sdkAddr, err := sdk.AccAddressFromBech32(eugenAddr)
+	sdkAddr := GetSDKAddrFromUserName(user.GetUserName())
 
 	outputCoins := sdk.Coins{sdk.NewInt64Coin("pylon", int64(pylonValue))}
 	extraInfo := "character buy request created by loud game"
@@ -304,24 +267,18 @@ func CreateBuyCharacterTradeRequest(user User, activeCharacter Character, pylonE
 		nil,
 		extraInfo,
 		sdkAddr)
-	log.Println("started sending transaction", user.GetUserName(), createTrdMsg)
-	txhash := pylonSDK.TestTxWithMsgWithNonce(t, createTrdMsg, user.GetUserName(), false)
-	user.SetLastTransaction(txhash)
-	log.Println("ended sending transaction")
-	return txhash, nil
+	return SendTxMsg(user, createTrdMsg)
 }
 
 func CreateSellCharacterTradeRequest(user User, activeCharacter Character, pylonEnterValue string) (string, error) {
 	// trade creator will get pylon from character
-	t := GetTestingT()
 
 	pylonValue, err := strconv.Atoi(pylonEnterValue)
 	if err != nil {
 		return "", err
 	}
 
-	eugenAddr := pylonSDK.GetAccountAddr(user.GetUserName(), nil)
-	sdkAddr, _ := sdk.AccAddressFromBech32(eugenAddr)
+	sdkAddr := GetSDKAddrFromUserName(user.GetUserName())
 
 	inputCoinList := types.GenCoinInputList("pylon", int64(pylonValue))
 	itemOutputList, err := GetItemOutputFromActiveCharacter(activeCharacter)
@@ -338,22 +295,12 @@ func CreateSellCharacterTradeRequest(user User, activeCharacter Character, pylon
 		itemOutputList,
 		extraInfo,
 		sdkAddr)
-	log.Println("started sending transaction", user.GetUserName(), createTrdMsg)
-	txhash := pylonSDK.TestTxWithMsgWithNonce(t, createTrdMsg, user.GetUserName(), false)
-	user.SetLastTransaction(txhash)
-	log.Println("ended sending transaction")
-	return txhash, nil
+	return SendTxMsg(user, createTrdMsg)
 }
 
 func FulfillTrade(user User, tradeID string) (string, error) {
-	t := GetTestingT()
-	eugenAddr := pylonSDK.GetAccountAddr(user.GetUserName(), nil)
-	sdkAddr, _ := sdk.AccAddressFromBech32(eugenAddr)
+	sdkAddr := GetSDKAddrFromUserName(user.GetUserName())
 	ffTrdMsg := msgs.NewMsgFulfillTrade(tradeID, sdkAddr, []string{})
 
-	log.Println("started sending transaction", user.GetUserName(), ffTrdMsg)
-	txhash := pylonSDK.TestTxWithMsgWithNonce(t, ffTrdMsg, user.GetUserName(), false)
-	user.SetLastTransaction(txhash)
-	log.Println("ended sending transaction")
-	return txhash, nil
+	return SendTxMsg(user, ffTrdMsg)
 }
