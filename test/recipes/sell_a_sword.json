@@ -7,10 +7,15 @@
     "Entries": {
         "CoinOutputs": [{
             "Coin":"loudcoin",
-            "Program": "int(attack * double(randi(2)+20))",
-            "Weight":1
+            "Program": "int(attack * double(randi(2)+20))"
         }]
     },
+    "Outputs": [
+        {
+            "Result": ["0"],
+            "Weight": "1"
+        }
+    ],
     "ExtraInfo":"",
     "Sender":"eugen",
     "Name": "LOUD's sword sell recipe",

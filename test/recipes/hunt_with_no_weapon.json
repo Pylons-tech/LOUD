@@ -7,11 +7,25 @@
     "Entries":{
         "CoinOutputs":[{
             "Coin":"loudcoin",
-            "Program": "randi(2)+1",
-            "Weight": 1
+            "Program": "randi(2)+1"
         }],
-        "ItemOutputs":[]
+        "ItemOutputs":[
+            {
+                "ItemInputRef": 0,
+                "ToModifyRef": "./recipes/upgrader/character_after_hunt.json"
+            }
+        ]
     },
+    "Outputs": [
+        {
+            "Result": ["0", "1"],
+            "Weight": "90"
+        },
+        {
+            "Result": [],
+            "Weight": "10"
+        }
+    ],
     "ExtraInfo":"",
     "Sender":"eugen",
     "Name": "LOUD's hunt without sword recipe",

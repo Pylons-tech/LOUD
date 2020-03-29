@@ -5,7 +5,5 @@
         {"Key": "HP", "MinValue": "1", "MaxValue": "1000"},
         {"Key": "MaxHP", "MinValue": "1", "MaxValue": "1000"}
     ],
-    "Strings": [{"Key": "Type", "Value": "Character"}],
-    "AlivePercent": "90",
-    "ToUpgradeRef": "./recipes/upgrader/character_after_hunt.json"
+    "Strings": [{"Key": "Type", "Value": "Character"}]
 }

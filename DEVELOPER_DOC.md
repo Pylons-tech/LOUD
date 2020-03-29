@@ -11,7 +11,6 @@ Lv1 wooden sword
     "Longs": [{ "Key": "level", "Value": "1" }],
     "Strings": [{ "Key": "Name","Value": "Wooden sword" }],
     "CookbookName": "Legend of Undead Dragon",
-    "Sender": "michael"
 }
 ```
 Lv2 wooden sword
@@ -21,7 +20,6 @@ Lv2 wooden sword
     "Longs": [{ "Key": "level", "Value": "2" }],
     "Strings": [{ "Key": "Name","Value": "Wooden sword" }],
     "CookbookName": "Legend of Undead Dragon",
-    "Sender": "michael"
 }
 ```
 Lv1 copper sword
@@ -31,7 +29,6 @@ Lv1 copper sword
     "Longs": [{ "Key": "level", "Value": "1" }],
     "Strings": [{ "Key": "Name","Value": "Copper sword" }],
     "CookbookName": "Legend of Undead Dragon",
-    "Sender": "michael"
 }
 ```
 
@@ -42,13 +39,11 @@ Lv2 copper sword
     "Longs": [{ "Key": "level", "Value": "2" }],
     "Strings": [{ "Key": "Name","Value": "Copper sword" }],
     "CookbookName": "Legend of Undead Dragon",
-    "Sender": "michael"
 }
 ```
 
 
 ## Recipes
-
 
 ### Hunt recipe without sword (1 or 2)
 ```
@@ -59,8 +54,7 @@ Lv2 copper sword
     "Entries":{
         "CoinOutputs":[{
             "Coin":"loudcoin",
-            "Program": "randi(2)+1",
-            "Weight": 1
+            "Program": "randi(2)+1"
         }],
         "ItemOutputs":[]
     },
@@ -86,8 +80,7 @@ Lv2 copper sword
     "Entries":{
         "CoinOutputs":[{
             "Coin":"loudcoin",
-            "Program": "int(attack * double(randi(2)+4))",
-            "Weight": 1
+            "Program": "int(attack * double(randi(2)+4))"
         }],
         "ItemOutputs":[]
     },
@@ -119,8 +112,7 @@ Lv2 copper sword
                         "WeightRanges":[{ "Lower": 1, "Upper":1,"Weight":1 }]
                     }
                 ],
-                "Strings":[{ "Key":"Name", "Value":"Wooden sword", "Rate":"1.0" }],
-                "Weight":1
+                "Strings":[{ "Key":"Name", "Value":"Wooden sword", "Rate":"1.0" }]
             }
         ]
     },
@@ -183,8 +175,7 @@ Lv2 copper sword
                         "WeightRanges":[{ "Lower": 1, "Upper":1,"Weight":1 }]
                     }
                 ],
-                "Strings":[{ "Key":"Name", "Value":"Copper sword", "Rate":"1.0" }],
-                "Weight":1
+                "Strings":[{ "Key":"Name", "Value":"Copper sword", "Rate":"1.0" }]
             }
         ]
     },
@@ -238,8 +229,7 @@ Lv2 copper sword
     "Entries": {
         "CoinOutputs": [{
             "Coin":"loudcoin",
-            "Program": "int(attack * double(randi(2)+20))",
-            "Weight":1
+            "Program": "int(attack * double(randi(2)+20))"
         }]
     },
     "ExtraInfo":"",
