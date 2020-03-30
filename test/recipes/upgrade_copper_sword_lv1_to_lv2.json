@@ -11,14 +11,16 @@
         "CoinOutputs":[],
         "ItemOutputs":[
             {
-                "ItemInputRef": 0,
-                "ToModifyRef": "./recipes/upgrader/level.json"
+                "ModifyItem": {
+                    "ItemInputRef": 0,
+                    "ToModifyRef": "./recipes/upgrader/level.json"
+                }
             }
         ]
     },
     "Outputs": [
         {
-            "Result": ["0"],
+            "ResultEntries": ["0"],
             "Weight": "1"
         }
     ],

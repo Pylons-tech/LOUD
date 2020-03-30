@@ -11,18 +11,20 @@
         }],
         "ItemOutputs":[
             {
-                "ItemInputRef": 0,
-                "ToModifyRef": "./recipes/upgrader/character_after_hunt.json"
+                "ModifyItem": {
+                    "ItemInputRef": 0,
+                    "ModifyParamsRef": "./recipes/upgrader/character_after_hunt.json"
+                }
             }
         ]
     },
     "Outputs": [
         {
-            "Result": ["0", "1"],
+            "ResultEntries": ["0", "1"],
             "Weight": "90"
         },
         {
-            "Result": [],
+            "ResultEntries": [],
             "Weight": "10"
         }
     ],

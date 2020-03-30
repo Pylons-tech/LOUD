@@ -12,23 +12,29 @@
         }],
         "ItemOutputs":[
             {
-                "ItemInputRef": 0,
-                "ToModifyRef": "./recipes/upgrader/character_after_hunt.json"
+                "ModifyItem": {
+                    "ItemInputRef": 0,
+                    "ModifyParamsRef": "./recipes/upgrader/character_after_hunt.json"
+                }
             },
-            { "ItemInputRef": 1 }
+            {
+                "ModifyItem": {
+                    "ItemInputRef": 1 
+                }
+            }
         ]
     },
     "Outputs": [
         {
-            "Result": ["0", "1", "2"],
+            "ResultEntries": ["0", "1", "2"],
             "Weight": "90"
         },
         {
-            "Result": ["0", "1"],
+            "ResultEntries": ["0", "1"],
             "Weight": "5"
         },
         {
-            "Result": [],
+            "ResultEntries": [],
             "Weight": "5"
         }
     ],
