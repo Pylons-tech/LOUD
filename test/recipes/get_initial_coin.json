@@ -8,7 +8,7 @@
     "Entries":{
         "CoinOutputs":[ {
             "Coin":"loudcoin",
-            "Count": 5000
+            "Count": "5000"
         }],
         "ItemOutputs":[]
     },

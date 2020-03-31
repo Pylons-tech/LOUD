@@ -6,6 +6,5 @@
     "Longs": [{
         "Key": "level", 
         "Program": "level + int(XP / double(level * 10))"
-    }],
-    "Strings": []
+    }]
 }

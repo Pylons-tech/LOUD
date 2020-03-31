@@ -13,7 +13,7 @@
             {
                 "ModifyItem": {
                     "ItemInputRef": 0,
-                    "ToModifyRef": "./recipes/upgrader/level.json"
+                    "ModifyParamsRef": "./recipes/upgrader/level.json"
                 }
             }
         ]

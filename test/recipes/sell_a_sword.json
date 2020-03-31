@@ -7,7 +7,7 @@
     "Entries": {
         "CoinOutputs": [{
             "Coin":"loudcoin",
-            "Program": "int(attack * double(randi(2)+20))"
+            "Count": "int(attack * double(randi(2)+20))"
         }]
     },
     "Outputs": [
