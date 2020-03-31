@@ -1,7 +1,7 @@
 {
     "Doubles": [{
         "Key": "XP",
-        "Program": "XP + 2.0 + double(randi(3))"
+        "Program": "XP + 2.0 + double(rand_int(3))"
     }],
     "Longs": [{
         "Key": "level", 

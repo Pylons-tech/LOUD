@@ -152,14 +152,23 @@ func (screen *GameScreen) TxResultSituationDesc() string {
 		case RESULT_BUY_CHARACTER_FINISH:
 			desc = fmt.Sprintf("%s %s.\n%s", loud.Localize("result buy finish desc"), formatItem(screen.activeItem), loud.Localize("use for hunting"))
 		case RESULT_HUNT_FINISH:
-			respOutput := handlers.ExecuteRecipeSerialize{}
+			respOutput := []handlers.ExecuteRecipeSerialize{}
+			earnedAmount := int64(0)
 			json.Unmarshal(screen.txResult, &respOutput)
-			// TODO: should visualize item lost result better after updating recipe structure for character catalyst item
-			desc = fmt.Sprintf("%s %d. Item losts %+v", loud.Localize("result hunt finish desc"), respOutput.Amount, respOutput.ItemLoseResult)
+			if len(respOutput) > 0 {
+				earnedAmount = respOutput[0].Amount
+			}
+			resultTexts := []string{"gold", "character", "weapon"}
+			// TODO: should visualize item lost result better
+			desc = fmt.Sprintf("%s %d. Results %+v", loud.Localize("result hunt finish desc"), earnedAmount, resultTexts[:len(respOutput)])
 		case RESULT_GET_INITIAL_COIN:
-			respOutput := handlers.ExecuteRecipeSerialize{}
+			respOutput := []handlers.ExecuteRecipeSerialize{}
 			json.Unmarshal(screen.txResult, &respOutput)
-			desc = fmt.Sprintf("%s %d.", loud.Localize("Got initial gold from pylons. Amount is"), respOutput.Amount)
+			earnedAmount := int64(0)
+			if len(respOutput) > 0 {
+				earnedAmount = respOutput[0].Amount
+			}
+			desc = fmt.Sprintf("%s %d.", loud.Localize("Got initial gold from pylons. Amount is"), earnedAmount)
 		case RESULT_GET_PYLONS:
 			desc = fmt.Sprintf("You got extra pylons for loud game")
 		case RESULT_SWITCH_USER:
