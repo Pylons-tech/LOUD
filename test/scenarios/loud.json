@@ -158,6 +158,66 @@
         }
     },
     {
+        "ID": "CREATE_MAKE_BRONZE_SWORD_LV1_RECIPE",
+        "runAfter": {
+            "precondition": ["CREATE_LOUD_COOKBOOK"],
+            "blockWait": 0
+        },
+        "action": "create_recipe",
+        "paramsRef": "./recipes/make_bronze_sword_lv1.json",
+        "output": {
+            "txResult": {
+                "status": "Success"
+            },
+            "property": [
+                {
+                    "owner": "eugen",
+                    "recipes": ["LOUD's Bronze sword lv1 make recipe"]
+                }
+            ]
+        }
+    },
+    {
+        "ID": "CREATE_MAKE_IRON_SWORD_LV1_RECIPE",
+        "runAfter": {
+            "precondition": ["CREATE_LOUD_COOKBOOK"],
+            "blockWait": 0
+        },
+        "action": "create_recipe",
+        "paramsRef": "./recipes/make_iron_sword_lv1.json",
+        "output": {
+            "txResult": {
+                "status": "Success"
+            },
+            "property": [
+                {
+                    "owner": "eugen",
+                    "recipes": ["LOUD's Iron sword lv1 make recipe"]
+                }
+            ]
+        }
+    },
+    {
+        "ID": "CREATE_MAKE_SILVER_SWORD_LV1_RECIPE",
+        "runAfter": {
+            "precondition": ["CREATE_LOUD_COOKBOOK"],
+            "blockWait": 0
+        },
+        "action": "create_recipe",
+        "paramsRef": "./recipes/make_silver_sword_lv1.json",
+        "output": {
+            "txResult": {
+                "status": "Success"
+            },
+            "property": [
+                {
+                    "owner": "eugen",
+                    "recipes": ["LOUD's Silver sword lv1 make recipe"]
+                }
+            ]
+        }
+    },
+    {
         "ID": "CREATE_HUNT_WITH_A_SWORD_RECIPE",
         "runAfter": {
             "precondition": ["CREATE_LOUD_COOKBOOK"],
@@ -193,6 +253,86 @@
                 {
                     "owner": "eugen",
                     "recipes": ["LOUD's hunt without sword recipe"]
+                }
+            ]
+        }
+    },
+    {
+        "ID": "CREATE_FIGHT_GIANT_WITH_IRON_SWORD_RECIPE",
+        "runAfter": {
+            "precondition": ["CREATE_LOUD_COOKBOOK"],
+            "blockWait": 0
+        },
+        "action": "create_recipe",
+        "paramsRef": "./recipes/fight_giant_with_iron_sword.json",
+        "output": {
+            "txResult": {
+                "status": "Success"
+            },
+            "property": [
+                {
+                    "owner": "eugen",
+                    "recipes": ["LOUD's fight with giant with a sword recipe"]
+                }
+            ]
+        }
+    },
+    {
+        "ID": "CREATE_FIGHT_GOBLIN_WITH_SWORD_RECIPE",
+        "runAfter": {
+            "precondition": ["CREATE_LOUD_COOKBOOK"],
+            "blockWait": 0
+        },
+        "action": "create_recipe",
+        "paramsRef": "./recipes/fight_goblin_with_sword.json",
+        "output": {
+            "txResult": {
+                "status": "Success"
+            },
+            "property": [
+                {
+                    "owner": "eugen",
+                    "recipes": ["LOUD's fight with goblin with a sword recipe"]
+                }
+            ]
+        }
+    },
+    {
+        "ID": "CREATE_FIGHT_TROLL_WITH_SWORD_RECIPE",
+        "runAfter": {
+            "precondition": ["CREATE_LOUD_COOKBOOK"],
+            "blockWait": 0
+        },
+        "action": "create_recipe",
+        "paramsRef": "./recipes/fight_troll_with_sword.json",
+        "output": {
+            "txResult": {
+                "status": "Success"
+            },
+            "property": [
+                {
+                    "owner": "eugen",
+                    "recipes": ["LOUD's fight with troll with a sword recipe"]
+                }
+            ]
+        }
+    },
+    {
+        "ID": "CREATE_FIGHT_WOLF_WITH_SWORD_RECIPE",
+        "runAfter": {
+            "precondition": ["CREATE_LOUD_COOKBOOK"],
+            "blockWait": 0
+        },
+        "action": "create_recipe",
+        "paramsRef": "./recipes/fight_wolf_with_sword.json",
+        "output": {
+            "txResult": {
+                "status": "Success"
+            },
+            "property": [
+                {
+                    "owner": "eugen",
+                    "recipes": ["LOUD's fight with wolf with a sword recipe"]
                 }
             ]
         }
