@@ -46,6 +46,8 @@ var RcpIDs map[string]string = map[string]string{
 	"LOUD's Bronze sword lv1 make recipe":          "LOUD-bronze-sword-lv1-make-recipe-v0.0.0-1579053457",
 	"LOUD's Iron sword lv1 make recipe":            "LOUD-iron-sword-lv1-make-recipe-v0.0.0-1579053457",
 	"LOUD's Silver sword lv1 make recipe":          "LOUD-silver-sword-lv1-make-recipe-v0.0.0-1579053457",
+
+	"LOUD's Dev Get Test Items recipe": "LOUD-dev-get-test-items-recipe-v0.0.0-1583801800",
 }
 
 // Remote mode

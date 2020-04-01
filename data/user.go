@@ -22,6 +22,7 @@ type User interface {
 	SetLocation(UserLocation)
 	SetLastTransaction(string)
 	InventoryItems() []Item
+	InventoryItemIDByName(string) string
 	InventoryIronSwords() []Item
 	InventorySwords() []Item
 	InventoryCharacters() []Character

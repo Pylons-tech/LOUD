@@ -176,7 +176,7 @@ func (screen *GameScreen) TxResultSituationDesc() string {
 			if len(respOutput) > 0 {
 				earnedAmount = respOutput[0].Amount
 			}
-			resultTexts := []string{"gold", "character", "weapon", "goblin ear"}
+			resultTexts := []string{"gold", "character", "weapon", "Goblin ear"}
 			// TODO: should visualize result better
 			desc = fmt.Sprintf("%s %d. Results %+v", loud.Localize("result fight goblin finish desc"), earnedAmount, resultTexts[:len(respOutput)])
 		case RESULT_FIGHT_TROLL_FINISH:
@@ -186,7 +186,7 @@ func (screen *GameScreen) TxResultSituationDesc() string {
 			if len(respOutput) > 0 {
 				earnedAmount = respOutput[0].Amount
 			}
-			resultTexts := []string{"gold", "character", "weapon", "troll toes"}
+			resultTexts := []string{"gold", "character", "weapon", "Troll toes"}
 			// TODO: should visualize result better
 			desc = fmt.Sprintf("%s %d. Results %+v", loud.Localize("result fight troll finish desc"), earnedAmount, resultTexts[:len(respOutput)])
 		case RESULT_FIGHT_WOLF_FINISH:
@@ -196,7 +196,7 @@ func (screen *GameScreen) TxResultSituationDesc() string {
 			if len(respOutput) > 0 {
 				earnedAmount = respOutput[0].Amount
 			}
-			resultTexts := []string{"gold", "character", "weapon", "wolf tail"}
+			resultTexts := []string{"gold", "character", "weapon", "Wolf tail"}
 			// TODO: should visualize result better
 			desc = fmt.Sprintf("%s %d. Results %+v", loud.Localize("result fight wolf finish desc"), earnedAmount, resultTexts[:len(respOutput)])
 		case RESULT_FIGHT_GIANT_FINISH:
@@ -217,6 +217,11 @@ func (screen *GameScreen) TxResultSituationDesc() string {
 				earnedAmount = respOutput[0].Amount
 			}
 			desc = fmt.Sprintf("%s %d.", loud.Localize("Got initial gold from pylons. Amount is"), earnedAmount)
+		case RESULT_DEV_GET_TEST_ITEMS:
+			respOutput := []handlers.ExecuteRecipeSerialize{}
+			json.Unmarshal(screen.txResult, &respOutput)
+			resultTexts := []string{"Wolf tail", "Troll toes", "Goblin ear"}
+			desc = loud.Localize("Finished getting developer test items.") + fmt.Sprintf("Results %+v", resultTexts[:len(respOutput)])
 		case RESULT_GET_PYLONS:
 			desc = fmt.Sprintf("You got extra pylons for loud game")
 		case RESULT_SWITCH_USER:
@@ -301,6 +306,9 @@ func (screen *GameScreen) TxWaitSituationDesc() string {
 		desc = fmt.Sprintf("%s %s.\n", loud.Localize("You are now fighting with wolf with"), formatItem(screen.activeItem))
 	case WAIT_GET_INITIAL_COIN:
 		desc = fmt.Sprintf("%s\n", loud.Localize("Getting initial gold from pylon"))
+		desc += WAIT_PROCESS_TO_END
+	case WAIT_DEV_GET_TEST_ITEMS:
+		desc = fmt.Sprintf("%s\n", loud.Localize("Getting dev test items from pylon"))
 		desc += WAIT_PROCESS_TO_END
 	case WAIT_GET_PYLONS:
 		desc = loud.Localize("You are waiting for getting pylons process")

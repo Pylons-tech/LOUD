@@ -231,6 +231,10 @@ func (screen *GameScreen) HandleFirstClassInputKeys(input termbox.Event) bool {
 		screen.RunTxProcess(WAIT_GET_INITIAL_COIN, RESULT_GET_INITIAL_COIN, func() (string, error) {
 			return loud.GetInitialCoin(screen.user)
 		})
+	case "T":
+		screen.RunTxProcess(WAIT_DEV_GET_TEST_ITEMS, RESULT_DEV_GET_TEST_ITEMS, func() (string, error) {
+			return loud.DevGetTestItems(screen.user)
+		})
 	case "E": // REFRESH
 		screen.Resync()
 		return true
@@ -479,15 +483,27 @@ func (screen *GameScreen) HandleThirdClassInputKeys(input termbox.Event) bool {
 				screen.RunActiveItemHunt()
 			case SELECT_FIGHT_GIANT_ITEM:
 				screen.activeItem = loud.GetIronSwordItemFromKey(screen.user, Key)
+				if len(screen.activeItem.Name) == 0 {
+					return false
+				}
 				screen.RunActiveItemFightGiant()
 			case SELECT_FIGHT_TROLL_ITEM:
 				screen.activeItem = loud.GetSwordItemFromKey(screen.user, Key)
+				if len(screen.activeItem.Name) == 0 {
+					return false
+				}
 				screen.RunActiveItemFightTroll()
 			case SELECT_FIGHT_WOLF_ITEM:
 				screen.activeItem = loud.GetSwordItemFromKey(screen.user, Key)
+				if len(screen.activeItem.Name) == 0 {
+					return false
+				}
 				screen.RunActiveItemFightWolf()
 			case SELECT_FIGHT_GOBLIN_ITEM:
 				screen.activeItem = loud.GetSwordItemFromKey(screen.user, Key)
+				if len(screen.activeItem.Name) == 0 {
+					return false
+				}
 				screen.RunActiveItemFightGoblin()
 			case SELECT_SELL_ITEM:
 				screen.activeItem = loud.GetToSellItemFromKey(screen.user, Key)

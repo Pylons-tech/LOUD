@@ -194,6 +194,16 @@ func (user *dbUser) InventoryItems() []Item {
 	return user.UserData.Items
 }
 
+func (user *dbUser) InventoryItemIDByName(name string) string {
+	iis := user.InventoryItems()
+	for _, ii := range iis {
+		if strings.EqualFold(ii.Name, name) {
+			return ii.ID
+		}
+	}
+	return ""
+}
+
 func (user *dbUser) InventoryIronSwords() []Item {
 	iis := user.InventoryItems()
 	uis := []Item{}

@@ -53,6 +53,13 @@ func GetInitialCoin(user User) (string, error) {
 	return ExecuteRecipe(user, rcpName, itemIDs)
 }
 
+func DevGetTestItems(user User) (string, error) {
+	rcpName := "LOUD's Dev Get Test Items recipe"
+	itemIDs := []string{}
+
+	return ExecuteRecipe(user, rcpName, itemIDs)
+}
+
 func Hunt(user User, item Item) (string, error) {
 
 	defaultCharacter := user.GetDefaultCharacter()
@@ -146,6 +153,7 @@ func BuyCharacter(user User, item Character) (string, error) {
 
 func Buy(user User, item Item) (string, error) {
 	rcpName := ""
+	itemIDs := []string{}
 	switch item.Name {
 	case WOODEN_SWORD:
 		if item.Level == 1 {
@@ -155,13 +163,28 @@ func Buy(user User, item Item) (string, error) {
 		if item.Level == 1 {
 			rcpName = "LOUD's Copper sword lv1 buy recipe"
 		}
+	case SILVER_SWORD:
+		if item.Level == 1 {
+			rcpName = "LOUD's Silver sword lv1 make recipe"
+			itemIDs = []string{user.InventoryItemIDByName(GOBLIN_EAR)}
+		}
+	case BRONZE_SWORD:
+		if item.Level == 1 {
+			rcpName = "LOUD's Bronze sword lv1 make recipe"
+			itemIDs = []string{user.InventoryItemIDByName(WOLF_TAIL)}
+		}
+	case IRON_SWORD:
+		if item.Level == 1 {
+			rcpName = "LOUD's Iron sword lv1 make recipe"
+			itemIDs = []string{user.InventoryItemIDByName(TROLL_TOES)}
+		}
 	default:
 		return "", errors.New("You are trying to buy item which is not in shop")
 	}
 	if item.Price > user.GetGold() {
 		return "", errors.New("You don't have enough gold to buy this item")
 	}
-	return ExecuteRecipe(user, rcpName, []string{})
+	return ExecuteRecipe(user, rcpName, itemIDs)
 }
 
 func Sell(user User, item Item) (string, error) {
