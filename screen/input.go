@@ -231,7 +231,7 @@ func (screen *GameScreen) HandleFirstClassInputKeys(input termbox.Event) bool {
 		screen.RunTxProcess(WAIT_GET_INITIAL_COIN, RESULT_GET_INITIAL_COIN, func() (string, error) {
 			return loud.GetInitialCoin(screen.user)
 		})
-	case "T":
+	case "B":
 		screen.RunTxProcess(WAIT_DEV_GET_TEST_ITEMS, RESULT_DEV_GET_TEST_ITEMS, func() (string, error) {
 			return loud.DevGetTestItems(screen.user)
 		})

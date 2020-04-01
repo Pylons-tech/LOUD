@@ -176,7 +176,7 @@ func (screen *GameScreen) TxResultSituationDesc() string {
 			if len(respOutput) > 0 {
 				earnedAmount = respOutput[0].Amount
 			}
-			resultTexts := []string{"gold", "character", "weapon", "Goblin ear"}
+			resultTexts := []string{"gold", "character", "weapon", loud.GOBLIN_EAR}
 			// TODO: should visualize result better
 			desc = fmt.Sprintf("%s %d. Results %+v", loud.Localize("result fight goblin finish desc"), earnedAmount, resultTexts[:len(respOutput)])
 		case RESULT_FIGHT_TROLL_FINISH:
@@ -186,7 +186,7 @@ func (screen *GameScreen) TxResultSituationDesc() string {
 			if len(respOutput) > 0 {
 				earnedAmount = respOutput[0].Amount
 			}
-			resultTexts := []string{"gold", "character", "weapon", "Troll toes"}
+			resultTexts := []string{"gold", "character", "weapon", loud.TROLL_TOES}
 			// TODO: should visualize result better
 			desc = fmt.Sprintf("%s %d. Results %+v", loud.Localize("result fight troll finish desc"), earnedAmount, resultTexts[:len(respOutput)])
 		case RESULT_FIGHT_WOLF_FINISH:
@@ -196,7 +196,7 @@ func (screen *GameScreen) TxResultSituationDesc() string {
 			if len(respOutput) > 0 {
 				earnedAmount = respOutput[0].Amount
 			}
-			resultTexts := []string{"gold", "character", "weapon", "Wolf tail"}
+			resultTexts := []string{"gold", "character", "weapon", loud.WOLF_TAIL}
 			// TODO: should visualize result better
 			desc = fmt.Sprintf("%s %d. Results %+v", loud.Localize("result fight wolf finish desc"), earnedAmount, resultTexts[:len(respOutput)])
 		case RESULT_FIGHT_GIANT_FINISH:
@@ -220,7 +220,7 @@ func (screen *GameScreen) TxResultSituationDesc() string {
 		case RESULT_DEV_GET_TEST_ITEMS:
 			respOutput := []handlers.ExecuteRecipeSerialize{}
 			json.Unmarshal(screen.txResult, &respOutput)
-			resultTexts := []string{"Wolf tail", "Troll toes", "Goblin ear"}
+			resultTexts := []string{loud.WOLF_TAIL, loud.TROLL_TOES, loud.GOBLIN_EAR}
 			desc = loud.Localize("Finished getting developer test items.") + fmt.Sprintf("Results %+v", resultTexts[:len(respOutput)])
 		case RESULT_GET_PYLONS:
 			desc = fmt.Sprintf("You got extra pylons for loud game")
