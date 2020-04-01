@@ -65,7 +65,7 @@ func (screen *GameScreen) renderUserSituation() {
 	case SELECT_DEFAULT_CHAR:
 		infoLines = screen.renderCharacterTable(loud.Localize("Please select default character"), screen.user.InventoryCharacters())
 	case SELECT_DEFAULT_WEAPON:
-		infoLines = screen.renderItemTable(loud.Localize("Please select default weapon"), screen.user.InventoryItems())
+		infoLines = screen.renderItemTable(loud.Localize("Please select default weapon"), screen.user.InventorySwords())
 	case SELECT_BUY_ITEM:
 		infoLines = screen.renderItemTable(loud.Localize("select buy item desc"), loud.ShopItems)
 	case SELECT_BUY_CHARACTER:
@@ -73,7 +73,15 @@ func (screen *GameScreen) renderUserSituation() {
 	case SELECT_SELL_ITEM:
 		infoLines = screen.renderItemTable(loud.Localize("select sell item desc"), screen.user.InventoryItems())
 	case SELECT_HUNT_ITEM:
-		infoLines = screen.renderItemTable(loud.Localize("select hunt item desc"), screen.user.InventoryItems())
+		infoLines = screen.renderItemTable(loud.Localize("select hunt item desc"), screen.user.InventorySwords())
+	case SELECT_FIGHT_GOBLIN_ITEM:
+		infoLines = screen.renderItemTable(loud.Localize("select fight goblin item desc"), screen.user.InventorySwords())
+	case SELECT_FIGHT_WOLF_ITEM:
+		infoLines = screen.renderItemTable(loud.Localize("select fight wolf item desc"), screen.user.InventorySwords())
+	case SELECT_FIGHT_TROLL_ITEM:
+		infoLines = screen.renderItemTable(loud.Localize("select fight troll item desc"), screen.user.InventorySwords())
+	case SELECT_FIGHT_GIANT_ITEM:
+		infoLines = screen.renderItemTable(loud.Localize("select fight giant item desc"), screen.user.InventoryIronSwords())
 	case SELECT_UPGRADE_ITEM:
 		infoLines = screen.renderItemTable(loud.Localize("select upgrade item desc"), screen.user.UpgradableItems())
 	}
@@ -159,8 +167,48 @@ func (screen *GameScreen) TxResultSituationDesc() string {
 				earnedAmount = respOutput[0].Amount
 			}
 			resultTexts := []string{"gold", "character", "weapon"}
-			// TODO: should visualize item lost result better
+			// TODO: should visualize result better
 			desc = fmt.Sprintf("%s %d. Results %+v", loud.Localize("result hunt finish desc"), earnedAmount, resultTexts[:len(respOutput)])
+		case RESULT_FIGHT_GOBLIN_FINISH:
+			respOutput := []handlers.ExecuteRecipeSerialize{}
+			earnedAmount := int64(0)
+			json.Unmarshal(screen.txResult, &respOutput)
+			if len(respOutput) > 0 {
+				earnedAmount = respOutput[0].Amount
+			}
+			resultTexts := []string{"gold", "character", "weapon", "goblin ear"}
+			// TODO: should visualize result better
+			desc = fmt.Sprintf("%s %d. Results %+v", loud.Localize("result fight goblin finish desc"), earnedAmount, resultTexts[:len(respOutput)])
+		case RESULT_FIGHT_TROLL_FINISH:
+			respOutput := []handlers.ExecuteRecipeSerialize{}
+			earnedAmount := int64(0)
+			json.Unmarshal(screen.txResult, &respOutput)
+			if len(respOutput) > 0 {
+				earnedAmount = respOutput[0].Amount
+			}
+			resultTexts := []string{"gold", "character", "weapon", "troll toes"}
+			// TODO: should visualize result better
+			desc = fmt.Sprintf("%s %d. Results %+v", loud.Localize("result fight troll finish desc"), earnedAmount, resultTexts[:len(respOutput)])
+		case RESULT_FIGHT_WOLF_FINISH:
+			respOutput := []handlers.ExecuteRecipeSerialize{}
+			earnedAmount := int64(0)
+			json.Unmarshal(screen.txResult, &respOutput)
+			if len(respOutput) > 0 {
+				earnedAmount = respOutput[0].Amount
+			}
+			resultTexts := []string{"gold", "character", "weapon", "wolf tail"}
+			// TODO: should visualize result better
+			desc = fmt.Sprintf("%s %d. Results %+v", loud.Localize("result fight wolf finish desc"), earnedAmount, resultTexts[:len(respOutput)])
+		case RESULT_FIGHT_GIANT_FINISH:
+			respOutput := []handlers.ExecuteRecipeSerialize{}
+			earnedAmount := int64(0)
+			json.Unmarshal(screen.txResult, &respOutput)
+			if len(respOutput) > 0 {
+				earnedAmount = respOutput[0].Amount
+			}
+			resultTexts := []string{"gold", "character", "weapon"}
+			// TODO: should visualize result better
+			desc = fmt.Sprintf("%s %d. Results %+v", loud.Localize("result fight giant finish desc"), earnedAmount, resultTexts[:len(respOutput)])
 		case RESULT_GET_INITIAL_COIN:
 			respOutput := []handlers.ExecuteRecipeSerialize{}
 			json.Unmarshal(screen.txResult, &respOutput)
@@ -243,6 +291,14 @@ func (screen *GameScreen) TxWaitSituationDesc() string {
 			desc = fmt.Sprintf("%s\n", loud.Localize("hunting without weapon"))
 		}
 		desc += WAIT_PROCESS_TO_END
+	case WAIT_FIGHT_GIANT_PROCESS:
+		desc = fmt.Sprintf("%s %s.\n", loud.Localize("You are now fighting with giant with"), formatItem(screen.activeItem))
+	case WAIT_FIGHT_GOBLIN_PROCESS:
+		desc = fmt.Sprintf("%s %s.\n", loud.Localize("You are now fighting with goblin with"), formatItem(screen.activeItem))
+	case WAIT_FIGHT_TROLL_PROCESS:
+		desc = fmt.Sprintf("%s %s.\n", loud.Localize("You are now fighting with troll with"), formatItem(screen.activeItem))
+	case WAIT_FIGHT_WOLF_PROCESS:
+		desc = fmt.Sprintf("%s %s.\n", loud.Localize("You are now fighting with wolf with"), formatItem(screen.activeItem))
 	case WAIT_GET_INITIAL_COIN:
 		desc = fmt.Sprintf("%s\n", loud.Localize("Getting initial gold from pylon"))
 		desc += WAIT_PROCESS_TO_END

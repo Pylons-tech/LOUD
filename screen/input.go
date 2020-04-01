@@ -106,6 +106,10 @@ func (screen *GameScreen) HandleInputKeyForestEntryPoint(input termbox.Event) bo
 
 	tarStusMap := map[string]ScreenStatus{
 		"1": SELECT_HUNT_ITEM,
+		"2": SELECT_FIGHT_GOBLIN_ITEM,
+		"3": SELECT_FIGHT_WOLF_ITEM,
+		"4": SELECT_FIGHT_TROLL_ITEM,
+		"5": SELECT_FIGHT_GIANT_ITEM,
 	}
 
 	if newStus, ok := tarStusMap[Key]; ok {
@@ -139,6 +143,10 @@ func (screen *GameScreen) HandleInputKeyShopEntryPoint(input termbox.Event) bool
 func (screen *GameScreen) MoveToNextStep() {
 	nextMapper := map[ScreenStatus]ScreenStatus{
 		RESULT_HUNT_FINISH:                     SELECT_HUNT_ITEM,
+		RESULT_FIGHT_GOBLIN_FINISH:             SELECT_FIGHT_GOBLIN_ITEM,
+		RESULT_FIGHT_TROLL_FINISH:              SELECT_FIGHT_TROLL_ITEM,
+		RESULT_FIGHT_WOLF_FINISH:               SELECT_FIGHT_WOLF_ITEM,
+		RESULT_FIGHT_GIANT_FINISH:              SELECT_FIGHT_GIANT_ITEM,
 		RESULT_BUY_LOUD_REQUEST_CREATION:       SHOW_LOUD_BUY_REQUESTS,
 		RESULT_FULFILL_BUY_LOUD_REQUEST:        SHOW_LOUD_BUY_REQUESTS,
 		RESULT_SELL_LOUD_REQUEST_CREATION:      SHOW_LOUD_SELL_REQUESTS,
@@ -449,7 +457,7 @@ func (screen *GameScreen) HandleThirdClassInputKeys(input termbox.Event) bool {
 				screen.RunActiveCharacterSelect()
 			case SELECT_DEFAULT_WEAPON:
 				screen.activeLine = loud.GetIndexFromString(Key)
-				items := screen.user.InventoryItems()
+				items := screen.user.InventorySwords()
 				if len(items) <= screen.activeLine || screen.activeLine < 0 {
 					return false
 				}
@@ -469,6 +477,18 @@ func (screen *GameScreen) HandleThirdClassInputKeys(input termbox.Event) bool {
 			case SELECT_HUNT_ITEM:
 				screen.activeItem = loud.GetWeaponItemFromKey(screen.user, Key)
 				screen.RunActiveItemHunt()
+			case SELECT_FIGHT_GIANT_ITEM:
+				screen.activeItem = loud.GetIronSwordItemFromKey(screen.user, Key)
+				screen.RunActiveItemFightGiant()
+			case SELECT_FIGHT_TROLL_ITEM:
+				screen.activeItem = loud.GetSwordItemFromKey(screen.user, Key)
+				screen.RunActiveItemFightTroll()
+			case SELECT_FIGHT_WOLF_ITEM:
+				screen.activeItem = loud.GetSwordItemFromKey(screen.user, Key)
+				screen.RunActiveItemFightWolf()
+			case SELECT_FIGHT_GOBLIN_ITEM:
+				screen.activeItem = loud.GetSwordItemFromKey(screen.user, Key)
+				screen.RunActiveItemFightGoblin()
 			case SELECT_SELL_ITEM:
 				screen.activeItem = loud.GetToSellItemFromKey(screen.user, Key)
 				if len(screen.activeItem.Name) == 0 {
@@ -548,7 +568,7 @@ func (screen *GameScreen) HandleThirdClassKeyEnterEvent() bool {
 			screen.RunActiveCharacterSelect()
 			log.Println("SELECT_DEFAULT_CHAR", screen.activeItem)
 		case SELECT_DEFAULT_WEAPON:
-			items := screen.user.InventoryItems()
+			items := screen.user.InventorySwords()
 			if len(items) <= screen.activeLine || screen.activeLine < 0 {
 				return false
 			}
@@ -572,12 +592,40 @@ func (screen *GameScreen) HandleThirdClassKeyEnterEvent() bool {
 			screen.RunActiveCharacterBuy()
 			log.Println("SELECT_BUY_CHARACTER", screen.activeCharacter)
 		case SELECT_HUNT_ITEM:
-			items := screen.user.InventoryItems()
+			items := screen.user.InventorySwords()
 			if len(items) <= screen.activeLine || screen.activeLine < 0 {
 				return false
 			}
 			screen.activeItem = items[screen.activeLine]
 			screen.RunActiveItemHunt()
+		case SELECT_FIGHT_GOBLIN_ITEM:
+			items := screen.user.InventorySwords()
+			if len(items) <= screen.activeLine || screen.activeLine < 0 {
+				return false
+			}
+			screen.activeItem = items[screen.activeLine]
+			screen.RunActiveItemFightGoblin()
+		case SELECT_FIGHT_WOLF_ITEM:
+			items := screen.user.InventorySwords()
+			if len(items) <= screen.activeLine || screen.activeLine < 0 {
+				return false
+			}
+			screen.activeItem = items[screen.activeLine]
+			screen.RunActiveItemFightWolf()
+		case SELECT_FIGHT_TROLL_ITEM:
+			items := screen.user.InventorySwords()
+			if len(items) <= screen.activeLine || screen.activeLine < 0 {
+				return false
+			}
+			screen.activeItem = items[screen.activeLine]
+			screen.RunActiveItemFightTroll()
+		case SELECT_FIGHT_GIANT_ITEM:
+			items := screen.user.InventoryIronSwords()
+			if len(items) <= screen.activeLine || screen.activeLine < 0 {
+				return false
+			}
+			screen.activeItem = items[screen.activeLine]
+			screen.RunActiveItemFightGiant()
 		case SELECT_SELL_ITEM:
 			items := screen.user.InventoryItems()
 			if len(items) <= screen.activeLine || screen.activeLine < 0 {

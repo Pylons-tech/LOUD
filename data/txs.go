@@ -74,6 +74,62 @@ func Hunt(user User, item Item) (string, error) {
 	return ExecuteRecipe(user, rcpName, itemIDs)
 }
 
+func FightTroll(user User, item Item) (string, error) {
+	defaultCharacter := user.GetDefaultCharacter()
+	defaultCharacterID := ""
+	if defaultCharacter != nil {
+		defaultCharacterID = defaultCharacter.ID
+	} else {
+		return "", errors.New("character is required to fight!")
+	}
+	rcpName := "LOUD's fight with troll with a sword recipe"
+	itemIDs := []string{defaultCharacterID, item.ID}
+
+	return ExecuteRecipe(user, rcpName, itemIDs)
+}
+
+func FightWolf(user User, item Item) (string, error) {
+	defaultCharacter := user.GetDefaultCharacter()
+	defaultCharacterID := ""
+	if defaultCharacter != nil {
+		defaultCharacterID = defaultCharacter.ID
+	} else {
+		return "", errors.New("character is required to fight!")
+	}
+	rcpName := "LOUD's fight with wolf with a sword recipe"
+	itemIDs := []string{defaultCharacterID, item.ID}
+
+	return ExecuteRecipe(user, rcpName, itemIDs)
+}
+
+func FightGoblin(user User, item Item) (string, error) {
+	defaultCharacter := user.GetDefaultCharacter()
+	defaultCharacterID := ""
+	if defaultCharacter != nil {
+		defaultCharacterID = defaultCharacter.ID
+	} else {
+		return "", errors.New("character is required to fight!")
+	}
+	rcpName := "LOUD's fight with goblin with a sword recipe"
+	itemIDs := []string{defaultCharacterID, item.ID}
+
+	return ExecuteRecipe(user, rcpName, itemIDs)
+}
+
+func FightGiant(user User, item Item) (string, error) {
+	defaultCharacter := user.GetDefaultCharacter()
+	defaultCharacterID := ""
+	if defaultCharacter != nil {
+		defaultCharacterID = defaultCharacter.ID
+	} else {
+		return "", errors.New("character is required to fight!")
+	}
+	rcpName := "LOUD's fight with giant with a sword recipe"
+	itemIDs := []string{defaultCharacterID, item.ID}
+
+	return ExecuteRecipe(user, rcpName, itemIDs)
+}
+
 func BuyCharacter(user User, item Character) (string, error) {
 	rcpName := ""
 	switch item.Name {

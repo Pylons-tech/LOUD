@@ -118,6 +118,18 @@
   "select hunt item desc": {
     "one": "Te estás preparando para cazar.\nPor favor selecciona un artículo a llevar."
   },
+  "select fight goblin item desc": {
+    "one": "You are preparing for fighting goblin.\nPlease select an item to carry."
+  },
+  "select fight troll item desc": {
+    "one": "You are preparing for fighting troll.\nPlease select an item to carry."
+  },
+  "select fight wolf item desc": {
+    "one": "You are preparing for fighting wolf.\nPlease select an item to carry."
+  },
+  "select fight giant item desc": {
+    "one": "You are preparing for fighting giant.\nPlease select an item to carry."
+  },
   "select upgrade item desc": {
     "one": "Vas a mejorar un artículo.\nPor favor selecciona un artículo para mejorar."
   },

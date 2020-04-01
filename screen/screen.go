@@ -734,6 +734,30 @@ func (screen *GameScreen) RunActiveItemHunt() {
 	})
 }
 
+func (screen *GameScreen) RunActiveItemFightGiant() {
+	screen.RunTxProcess(WAIT_FIGHT_GIANT_PROCESS, RESULT_FIGHT_GIANT_FINISH, func() (string, error) {
+		return loud.FightGiant(screen.user, screen.activeItem)
+	})
+}
+
+func (screen *GameScreen) RunActiveItemFightTroll() {
+	screen.RunTxProcess(WAIT_FIGHT_TROLL_PROCESS, RESULT_FIGHT_TROLL_FINISH, func() (string, error) {
+		return loud.FightTroll(screen.user, screen.activeItem)
+	})
+}
+
+func (screen *GameScreen) RunActiveItemFightWolf() {
+	screen.RunTxProcess(WAIT_FIGHT_WOLF_PROCESS, RESULT_FIGHT_WOLF_FINISH, func() (string, error) {
+		return loud.FightWolf(screen.user, screen.activeItem)
+	})
+}
+
+func (screen *GameScreen) RunActiveItemFightGoblin() {
+	screen.RunTxProcess(WAIT_FIGHT_GOBLIN_PROCESS, RESULT_FIGHT_GOBLIN_FINISH, func() (string, error) {
+		return loud.FightGoblin(screen.user, screen.activeItem)
+	})
+}
+
 func (screen *GameScreen) RunSelectedLoudBuyTrade() {
 	if len(loud.BuyTradeRequests) <= screen.activeLine || screen.activeLine < 0 {
 		// when activeLine is not refering to real request but when it is refering to nil request

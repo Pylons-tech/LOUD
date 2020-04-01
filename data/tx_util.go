@@ -437,7 +437,27 @@ func GetIndexFromString(key string) int {
 }
 
 func GetWeaponItemFromKey(user User, key string) Item {
-	items := user.InventoryItems()
+	items := user.InventorySwords()
+	useItem := Item{}
+	itemKey := GetIndexFromString(key)
+	if itemKey >= 0 && itemKey < len(items) {
+		useItem = items[itemKey]
+	}
+	return useItem
+}
+
+func GetSwordItemFromKey(user User, key string) Item {
+	items := user.InventorySwords()
+	useItem := Item{}
+	itemKey := GetIndexFromString(key)
+	if itemKey >= 0 && itemKey < len(items) {
+		useItem = items[itemKey]
+	}
+	return useItem
+}
+
+func GetIronSwordItemFromKey(user User, key string) Item {
+	items := user.InventoryIronSwords()
 	useItem := Item{}
 	itemKey := GetIndexFromString(key)
 	if itemKey >= 0 && itemKey < len(items) {
