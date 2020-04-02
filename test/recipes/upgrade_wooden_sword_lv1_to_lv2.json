@@ -5,7 +5,24 @@
         "Count": "100"
     }],
     "ItemInputRefs":[
-        "./recipes/item_input/wooden_sword_lv1_upgrade.json"
+        "./recipes/item_input/wooden_sword_lv1.json"
+    ],
+    "Entries":{
+        "CoinOutputs":[],
+        "ItemOutputs":[
+            {
+                "ModifyItem": {
+                    "ItemInputRef": 0,
+                    "ModifyParamsRef": "./recipes/upgrader/level.json"
+                }
+            }
+        ]
+    },
+    "Outputs": [
+        {
+            "ResultEntries": ["0"],
+            "Weight": "1"
+        }
     ],
     "ExtraInfo":"",
     "Sender":"eugen",

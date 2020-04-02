@@ -10,6 +10,7 @@ var ShopCharacters = []Character{
 		Name:  TIGER_CHARACTER,
 		Level: 1,
 		XP:    1,
+		HP:    100,
 		Price: 1, // in pylon
 	},
 }

@@ -61,5 +61,5 @@ func formatItem(item loud.Item) string {
 }
 
 func formatCharacter(ch loud.Character) string {
-	return fmt.Sprintf("%s Lv%d XP=%.0f", loud.Localize(ch.Name), ch.Level, ch.XP)
+	return fmt.Sprintf("%s Lv%d XP=%.0f HP=%d", loud.Localize(ch.Name), ch.Level, ch.XP, ch.HP)
 }

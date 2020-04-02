@@ -38,6 +38,17 @@ var RcpIDs map[string]string = map[string]string{
 	"LOUD's Wooden sword lv1 to lv2 upgrade recipe": "LOUD-upgrade-wooden-sword-lv1-to-lv2-recipe-v0.0.0-1579053457",
 	"LOUD's Wooden sword lv1 buy recipe":            "LOUD-wooden-sword-lv1-buy-recipe-v0.0.0-1579053457",
 	"LOUD's Copper sword lv1 buy recipe":            "LOUD-copper-sword-lv1-buy-recipe-v0.0.0-1579053457",
+
+	"LOUD's fight with giant with a sword recipe":  "LOUD-fight-giant-with-iron-sword-recipe-v0.0.0-1583631194",
+	"LOUD's fight with goblin with a sword recipe": "LOUD-fight-goblin-with-a-sword-recipe-v0.0.0-1583631194",
+	"LOUD's fight with troll with a sword recipe":  "LOUD-fight-troll-with-a-sword-recipe-v0.0.0-1583631194",
+	"LOUD's fight with wolf with a sword recipe":   "LOUD-fight-wolf-with-a-sword-recipe-v0.0.0-1583631194",
+	"LOUD's Bronze sword lv1 make recipe":          "LOUD-bronze-sword-lv1-make-recipe-v0.0.0-1579053457",
+	"LOUD's Iron sword lv1 make recipe":            "LOUD-iron-sword-lv1-make-recipe-v0.0.0-1579053457",
+	"LOUD's Silver sword lv1 make recipe":          "LOUD-silver-sword-lv1-make-recipe-v0.0.0-1579053457",
+
+	"LOUD's Dev Get Test Items recipe": "LOUD-dev-get-test-items-recipe-v0.0.0-1583801800",
+	"LOUD's health restore recipe":     "LOUD-health-restore-recipe-v0.0.1-1579652622",
 }
 
 // Remote mode
@@ -429,7 +440,27 @@ func GetIndexFromString(key string) int {
 }
 
 func GetWeaponItemFromKey(user User, key string) Item {
-	items := user.InventoryItems()
+	items := user.InventorySwords()
+	useItem := Item{}
+	itemKey := GetIndexFromString(key)
+	if itemKey >= 0 && itemKey < len(items) {
+		useItem = items[itemKey]
+	}
+	return useItem
+}
+
+func GetSwordItemFromKey(user User, key string) Item {
+	items := user.InventorySwords()
+	useItem := Item{}
+	itemKey := GetIndexFromString(key)
+	if itemKey >= 0 && itemKey < len(items) {
+		useItem = items[itemKey]
+	}
+	return useItem
+}
+
+func GetIronSwordItemFromKey(user User, key string) Item {
+	items := user.InventoryIronSwords()
 	useItem := Item{}
 	itemKey := GetIndexFromString(key)
 	if itemKey >= 0 && itemKey < len(items) {

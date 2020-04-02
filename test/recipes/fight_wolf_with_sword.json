@@ -1,0 +1,58 @@
+{
+    "ID": "LOUD-fight-wolf-with-a-sword-recipe-v0.0.0-1583631194",
+    "CoinInputs":[],
+    "ItemInputRefs":[
+        "./recipes/item_input/character.json",
+        "./recipes/item_input/sword.json"
+    ],
+    "Entries":{
+        "CoinOutputs":[{
+            "Coin":"loudcoin",
+            "Count": "10 * int(input1.attack * double(rand_int(2)+4))"
+        }],
+        "ItemOutputs":[
+            {
+                "ModifyItem": {
+                    "ItemInputRef": 0,
+                    "ModifyParamsRef": "./recipes/upgrader/character_after_fighting_wolf.json"
+                }
+            },
+            {
+                "ModifyItem": {
+                    "ItemInputRef": 1 
+                }
+            },
+            {
+                "Ref": "./recipes/item_output/wolf_tail.json"  
+            }
+        ]
+    },
+    "Outputs": [
+        {
+            "ResultEntries": [],
+            "Weight": "100 - HP"
+        },
+        {
+            "ResultEntries": ["1"],
+            "Weight": "5"
+        },
+        {
+            "ResultEntries": ["1", "2"],
+            "Weight": "5"
+        },
+        {
+            "ResultEntries": ["0", "1", "2"],
+            "Weight": "5"
+        },
+        {
+            "ResultEntries": ["0", "1", "2", "3"],
+            "Weight": "20 - HP + int(input1.attack)"
+        }
+    ],
+    "ExtraInfo":"",
+    "Sender":"eugen",
+    "Name": "LOUD's fight with wolf with a sword recipe",
+    "CookbookName": "Legend of Undead Dragon",
+    "Description": "this recipe is used to fight with wolf with a sword.",
+    "BlockInterval":"0"
+}

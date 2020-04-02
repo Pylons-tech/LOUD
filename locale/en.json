@@ -33,7 +33,7 @@
     "one": "You don't have enough gold to upgrade this item"
   },
   "home": {
-    "one": "1) Select default character\n2) Select default weapon\n"
+    "one": "1) Select default character\n2) Select default weapon\n3) Restore character health\n"
   },
   "forest": {
     "one": "1) Hunt\n2) Goblin\n3) Wolf\n4) Troll\n5) Giant\n"
@@ -48,7 +48,7 @@
     "one": "Language:\n1) English\n2) Español\n"
   },
   "develop": {
-    "one": "Create cookbook(j)\nSwitch user(z)\nGet initial py)lons\nGet I)nitial Loud Coin\n"
+    "one": "Create cookbook(j)\nSwitch user(z)\nGet initial py)lons\nGet I)nitial Loud Coin\nDevMode Test Items(b)\n"
   },
   "go to home": {
     "one": "H)ome"
@@ -118,6 +118,18 @@
   "select hunt item desc": {
     "one": "You are preparing for hunt.\nPlease select an item to carry."
   },
+  "select fight goblin item desc": {
+    "one": "You are preparing for fighting goblin.\nPlease select an item to carry."
+  },
+  "select fight troll item desc": {
+    "one": "You are preparing for fighting troll.\nPlease select an item to carry."
+  },
+  "select fight wolf item desc": {
+    "one": "You are preparing for fighting wolf.\nPlease select an item to carry."
+  },
+  "select fight giant item desc": {
+    "one": "You are preparing for fighting giant.\nPlease select an item to carry."
+  },
   "select upgrade item desc": {
     "one": "You are gonna upgrade an item.\nPlease select an item to upgrade."
   },
@@ -127,29 +139,41 @@
   "you are now selling loud for pylon": {
     "one": "You are now selling loud coin for pylon"
   },
-  "wait process to end": {
+  "Please wait for a moment to finish the process": {
     "one": "Please wait for a moment to finish the process."
   },
-  "wait buy item process desc": {
-    "one": "You are now buying an item at the shop"
+  "You are now buying %s at the shop": {
+    "one": "You are now buying \"%s\" at the shop"
   },
-  "wait buy character process desc": {
-    "one": "You are now buying a character at the shop"
+  "You are now hunting with %s": {
+    "one": "You are now hunting with \"%s\"."
   },
-  "You are now hunting with": {
-    "one": "You are now hunting with"
-  },
-  "hunting without weapon": {
+  "You are now hunting without weapon": {
     "one": "You are now hunting without weapon."
   },
-  "wait sell process desc": {
-    "one": "You are now selling for gold"
+  "You are now fighting with giant with %s": {
+    "one": "You are now fighting with giant with \"%s\"\n"
   },
-  "wait upgrade process desc": {
-    "one": "You are now upgrading"
+  "You are now fighting with goblin with %s": {
+    "one": "You are now fighting with goblin with \"%s\"\n"
   },
-  "result buy finish desc": {
-    "one": "You have bought from the shop.\nPlease use it for hunting."
+  "You are now fighting with troll with %s": {
+    "one": "You are now fighting with troll with \"%s\"\n"
+  },
+  "You are now fighting with wolf with %s": {
+    "one": "You are now fighting with wolf with \"%s\"\n"
+  },
+  "You are now selling %s for gold": {
+    "one": "You are now selling \"%s\" for gold."
+  },
+  "You are now upgrading %s": {
+    "one": "You are now upgrading %s."
+  },
+  "You have bought %s from the shop": {
+    "one": "You have bought \"%s\" from the shop"
+  },
+  "You are now buying sword at %d": {
+    "one": "You are now buying sword at %d.\n"
   },
   "you have bought loud coin successfully from loud/pylon market": {
     "one": "You have bought loud coin successfully from loud/pylon market"
@@ -157,10 +181,10 @@
   "you have sold loud coin successfully from loud/pylon market": {
     "one": "You have sold loud coin successfully from loud/pylon market"
   },
-  "you are now waiting for loud buy request creation": {
+  "You are now waiting for loud buy request creation": {
     "one": "You are now waiting for loud buy request creation"
   },
-  "you are now waiting for loud sell request creation": {
+  "You are now waiting for loud sell request creation": {
     "one": "You are now waiting for loud sell request creation"
   },
   "loud buy request was successfully created": {
@@ -169,17 +193,38 @@
   "loud sell request was successfully created": {
     "one": "Loud sell request was successfully created."
   },
-  "use for hunting": {
+  "Please use it for hunting": {
     "one": "Please use it for hunting."
   },
-  "result hunt finish desc": {
-    "one": "You did hunt animals and sold it for gold"
+  "You did hunt animals and earned %d. Detailed result: %+v": {
+    "one": "You did hunt animals and earned %d. Detailed result: %+v"
   },
-  "result sell finish desc": {
-    "one": "You sold for gold"
+  "You did fight with goblin and earned %d. Detailed result: %+v": {
+    "one": "You did fight with goblin and earned %d. Detailed result: %+v"
   },
-  "result upgrade finish desc": {
-    "one": "You have upgraded from Lv1 to Lv2 to get better hunt result"
+  "You did fight with troll and earned %d. Detailed result: %+v": {
+    "one": "You did fight with troll and earned %d. Detailed result: %+v"
+  },
+  "You did fight with wolf and earned %d. Detailed result: %+v": {
+    "one": "You did fight with wolf and earned %d. Detailed result: %+v"
+  },
+  "You did fight with giant and earned %d. Detailed result: %+v": {
+    "one": "You did fight with giant and earned %d. Detailed result: %+v"
+  },
+  "Got initial gold from pylons. Amount is %d.": {
+    "one": "Got initial gold from pylons. Amount is %d."
+  },
+  "result fight wolf finish desc": {
+    "one": "You did fight with wolf"
+  },
+  "result fight giant finish desc": {
+    "one": "You did fight with giant"
+  },
+  "You sold %s for gold.": {
+    "one": "You sold \"%s\" for gold."
+  },
+  "You have upgraded %s to get better hunt result": {
+    "one": "You have upgraded \"%s\" from Lv1 to Lv2 to get better hunt result"
   },
   "health low warning": {
     "one": " (Health low) "

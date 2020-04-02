@@ -8,11 +8,16 @@
     "Entries":{
         "CoinOutputs":[ {
             "Coin":"loudcoin",
-            "Count": 5000,
-            "Weight": 1
+            "Count": "5000"
         }],
         "ItemOutputs":[]
     },
+    "Outputs": [
+        {
+            "ResultEntries": ["0"],
+            "Weight": "1"
+        }
+    ],
     "ExtraInfo":"",
     "Sender":"eugen",
     "Name": "LOUD's get initial coin recipe",

@@ -2,16 +2,32 @@
     "ID": "LOUD-hunt-with-no-weapon-recipe-v0.0.0-1579053457",
     "CoinInputs":[],    
     "ItemInputRefs":[
-        "./recipes/item_input/character_hunt.json"
+        "./recipes/item_input/character.json"
     ],
     "Entries":{
         "CoinOutputs":[{
             "Coin":"loudcoin",
-            "Program": "randi(2)+1",
-            "Weight": 1
+            "Count": "rand_int(2)+1"
         }],
-        "ItemOutputs":[]
+        "ItemOutputs":[
+            {
+                "ModifyItem": {
+                    "ItemInputRef": 0,
+                    "ModifyParamsRef": "./recipes/upgrader/character_after_hunt.json"
+                }
+            }
+        ]
     },
+    "Outputs": [
+        {
+            "ResultEntries": ["0", "1"],
+            "Weight": "90"
+        },
+        {
+            "ResultEntries": [],
+            "Weight": "10"
+        }
+    ],
     "ExtraInfo":"",
     "Sender":"eugen",
     "Name": "LOUD's hunt without sword recipe",

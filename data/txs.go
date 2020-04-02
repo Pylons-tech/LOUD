@@ -53,6 +53,20 @@ func GetInitialCoin(user User) (string, error) {
 	return ExecuteRecipe(user, rcpName, itemIDs)
 }
 
+func DevGetTestItems(user User) (string, error) {
+	rcpName := "LOUD's Dev Get Test Items recipe"
+	itemIDs := []string{}
+
+	return ExecuteRecipe(user, rcpName, itemIDs)
+}
+
+func RestoreHealth(user User, char Character) (string, error) {
+	rcpName := "LOUD's health restore recipe"
+	itemIDs := []string{char.ID}
+
+	return ExecuteRecipe(user, rcpName, itemIDs)
+}
+
 func Hunt(user User, item Item) (string, error) {
 
 	defaultCharacter := user.GetDefaultCharacter()
@@ -74,6 +88,62 @@ func Hunt(user User, item Item) (string, error) {
 	return ExecuteRecipe(user, rcpName, itemIDs)
 }
 
+func FightTroll(user User, item Item) (string, error) {
+	defaultCharacter := user.GetDefaultCharacter()
+	defaultCharacterID := ""
+	if defaultCharacter != nil {
+		defaultCharacterID = defaultCharacter.ID
+	} else {
+		return "", errors.New("character is required to fight!")
+	}
+	rcpName := "LOUD's fight with troll with a sword recipe"
+	itemIDs := []string{defaultCharacterID, item.ID}
+
+	return ExecuteRecipe(user, rcpName, itemIDs)
+}
+
+func FightWolf(user User, item Item) (string, error) {
+	defaultCharacter := user.GetDefaultCharacter()
+	defaultCharacterID := ""
+	if defaultCharacter != nil {
+		defaultCharacterID = defaultCharacter.ID
+	} else {
+		return "", errors.New("character is required to fight!")
+	}
+	rcpName := "LOUD's fight with wolf with a sword recipe"
+	itemIDs := []string{defaultCharacterID, item.ID}
+
+	return ExecuteRecipe(user, rcpName, itemIDs)
+}
+
+func FightGoblin(user User, item Item) (string, error) {
+	defaultCharacter := user.GetDefaultCharacter()
+	defaultCharacterID := ""
+	if defaultCharacter != nil {
+		defaultCharacterID = defaultCharacter.ID
+	} else {
+		return "", errors.New("character is required to fight!")
+	}
+	rcpName := "LOUD's fight with goblin with a sword recipe"
+	itemIDs := []string{defaultCharacterID, item.ID}
+
+	return ExecuteRecipe(user, rcpName, itemIDs)
+}
+
+func FightGiant(user User, item Item) (string, error) {
+	defaultCharacter := user.GetDefaultCharacter()
+	defaultCharacterID := ""
+	if defaultCharacter != nil {
+		defaultCharacterID = defaultCharacter.ID
+	} else {
+		return "", errors.New("character is required to fight!")
+	}
+	rcpName := "LOUD's fight with giant with a sword recipe"
+	itemIDs := []string{defaultCharacterID, item.ID}
+
+	return ExecuteRecipe(user, rcpName, itemIDs)
+}
+
 func BuyCharacter(user User, item Character) (string, error) {
 	rcpName := ""
 	switch item.Name {
@@ -90,6 +160,7 @@ func BuyCharacter(user User, item Character) (string, error) {
 
 func Buy(user User, item Item) (string, error) {
 	rcpName := ""
+	itemIDs := []string{}
 	switch item.Name {
 	case WOODEN_SWORD:
 		if item.Level == 1 {
@@ -99,13 +170,28 @@ func Buy(user User, item Item) (string, error) {
 		if item.Level == 1 {
 			rcpName = "LOUD's Copper sword lv1 buy recipe"
 		}
+	case SILVER_SWORD:
+		if item.Level == 1 {
+			rcpName = "LOUD's Silver sword lv1 make recipe"
+			itemIDs = []string{user.InventoryItemIDByName(GOBLIN_EAR)}
+		}
+	case BRONZE_SWORD:
+		if item.Level == 1 {
+			rcpName = "LOUD's Bronze sword lv1 make recipe"
+			itemIDs = []string{user.InventoryItemIDByName(WOLF_TAIL)}
+		}
+	case IRON_SWORD:
+		if item.Level == 1 {
+			rcpName = "LOUD's Iron sword lv1 make recipe"
+			itemIDs = []string{user.InventoryItemIDByName(TROLL_TOES)}
+		}
 	default:
 		return "", errors.New("You are trying to buy item which is not in shop")
 	}
 	if item.Price > user.GetGold() {
 		return "", errors.New("You don't have enough gold to buy this item")
 	}
-	return ExecuteRecipe(user, rcpName, []string{})
+	return ExecuteRecipe(user, rcpName, itemIDs)
 }
 
 func Sell(user User, item Item) (string, error) {

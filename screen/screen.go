@@ -172,7 +172,7 @@ func (screen *GameScreen) buySwordDesc(activeItem loud.Item, pylonValue interfac
 		screen.pylonIcon(),
 		fmt.Sprintf("%v", pylonValue),
 		"\n  ↓\n",
-		fmt.Sprintf("%s", formatItem(activeItem)),
+		formatItem(activeItem),
 	}, "")
 	return desc
 }
@@ -183,7 +183,7 @@ func (screen *GameScreen) buyCharacterDesc(activeCharacter loud.Character, pylon
 		screen.pylonIcon(),
 		fmt.Sprintf("%v", pylonValue),
 		"\n  ↓\n",
-		fmt.Sprintf("%s", formatCharacter(activeCharacter)),
+		formatCharacter(activeCharacter),
 	}, "")
 	return desc
 }
@@ -191,7 +191,7 @@ func (screen *GameScreen) buyCharacterDesc(activeCharacter loud.Character, pylon
 func (screen *GameScreen) sellSwordDesc(activeItem loud.Item, pylonValue interface{}) string {
 	var desc = strings.Join([]string{
 		"\n",
-		fmt.Sprintf("%s", formatItem(activeItem)),
+		formatItem(activeItem),
 		"\n  ↓\n",
 		screen.pylonIcon(),
 		fmt.Sprintf("%v", pylonValue),
@@ -202,7 +202,7 @@ func (screen *GameScreen) sellSwordDesc(activeItem loud.Item, pylonValue interfa
 func (screen *GameScreen) sellCharacterDesc(activeCharacter loud.Character, pylonValue interface{}) string {
 	var desc = strings.Join([]string{
 		"\n",
-		fmt.Sprintf("%s", formatCharacter(activeCharacter)),
+		formatCharacter(activeCharacter),
 		"\n  ↓\n",
 		screen.pylonIcon(),
 		fmt.Sprintf("%v", pylonValue),
@@ -645,7 +645,7 @@ func (screen *GameScreen) renderCharacterSheet() {
 	infoLines = append(infoLines, centerText(loud.Localize("inventory items"), "─", width))
 	items := screen.user.InventoryItems()
 	for idx, item := range items {
-		itemInfo := truncateRight(fmt.Sprintf("%s", formatItem(item)), width)
+		itemInfo := truncateRight(formatItem(item), width)
 		if idx == screen.user.GetDefaultItemIndex() {
 			itemInfo = screen.blueBoldFont()(itemInfo)
 		}
@@ -655,7 +655,7 @@ func (screen *GameScreen) renderCharacterSheet() {
 	infoLines = append(infoLines, centerText(loud.Localize("inventory chracters"), "─", width))
 	characters := screen.user.InventoryCharacters()
 	for idx, character := range characters {
-		characterInfo := truncateRight(fmt.Sprintf("%s", formatCharacter(character)), width)
+		characterInfo := truncateRight(formatCharacter(character), width)
 		if idx == screen.user.GetDefaultCharacterIndex() {
 			characterInfo = screen.blueBoldFont()(characterInfo)
 		}
@@ -704,6 +704,12 @@ func (screen *GameScreen) RunActiveWeaponSelect() {
 	screen.SetScreenStatusAndRefresh(RESULT_SELECT_DEF_WEAPON)
 }
 
+func (screen *GameScreen) RunCharacterHealthRestore() {
+	screen.RunTxProcess(WAIT_HEALTH_RESTORE_CHAR, RESULT_HEALTH_RESTORE_CHAR, func() (string, error) {
+		return loud.RestoreHealth(screen.user, screen.activeCharacter)
+	})
+}
+
 func (screen *GameScreen) RunActiveItemBuy() {
 	screen.RunTxProcess(WAIT_BUY_ITEM_PROCESS, RESULT_BUY_ITEM_FINISH, func() (string, error) {
 		return loud.Buy(screen.user, screen.activeItem)
@@ -731,6 +737,30 @@ func (screen *GameScreen) RunActiveItemUpgrade() {
 func (screen *GameScreen) RunActiveItemHunt() {
 	screen.RunTxProcess(WAIT_HUNT_PROCESS, RESULT_HUNT_FINISH, func() (string, error) {
 		return loud.Hunt(screen.user, screen.activeItem)
+	})
+}
+
+func (screen *GameScreen) RunActiveItemFightGiant() {
+	screen.RunTxProcess(WAIT_FIGHT_GIANT_PROCESS, RESULT_FIGHT_GIANT_FINISH, func() (string, error) {
+		return loud.FightGiant(screen.user, screen.activeItem)
+	})
+}
+
+func (screen *GameScreen) RunActiveItemFightTroll() {
+	screen.RunTxProcess(WAIT_FIGHT_TROLL_PROCESS, RESULT_FIGHT_TROLL_FINISH, func() (string, error) {
+		return loud.FightTroll(screen.user, screen.activeItem)
+	})
+}
+
+func (screen *GameScreen) RunActiveItemFightWolf() {
+	screen.RunTxProcess(WAIT_FIGHT_WOLF_PROCESS, RESULT_FIGHT_WOLF_FINISH, func() (string, error) {
+		return loud.FightWolf(screen.user, screen.activeItem)
+	})
+}
+
+func (screen *GameScreen) RunActiveItemFightGoblin() {
+	screen.RunTxProcess(WAIT_FIGHT_GOBLIN_PROCESS, RESULT_FIGHT_GOBLIN_FINISH, func() (string, error) {
+		return loud.FightGoblin(screen.user, screen.activeItem)
 	})
 }
 

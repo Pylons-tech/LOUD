@@ -84,13 +84,14 @@ func (screen *GameScreen) renderUserCommands() {
 		infoLines = append(infoLines,
 			SELECT_CMD,
 			"Go bac)k( ⌫ )")
-	case SELECT_DEFAULT_CHAR:
+	case SELECT_DEFAULT_CHAR,
+		SELECT_HEALTH_RESTORE_CHAR:
 		for idx, char := range screen.user.InventoryCharacters() {
 			infoLines = append(infoLines, fmt.Sprintf("%d) %s  ", idx+1, formatCharacter(char)))
 		}
 		infoLines = appendSelectCancelCmds(infoLines)
 	case SELECT_DEFAULT_WEAPON:
-		for idx, item := range screen.user.InventoryItems() {
+		for idx, item := range screen.user.InventorySwords() {
 			infoLines = append(infoLines, fmt.Sprintf("%d) %s  ", idx+1, formatItem(item)))
 		}
 		infoLines = appendSelectCancelCmds(infoLines)
@@ -113,7 +114,19 @@ func (screen *GameScreen) renderUserCommands() {
 	case SELECT_HUNT_ITEM:
 		infoLines = append(infoLines, loud.Localize("No item"))
 		infoLines = append(infoLines, loud.Localize("Get I)nitial Coin"))
-		for idx, item := range screen.user.InventoryItems() {
+		for idx, item := range screen.user.InventorySwords() {
+			infoLines = append(infoLines, fmt.Sprintf("%d) %s", idx+1, formatItem(item)))
+		}
+		infoLines = appendSelectCancelCmds(infoLines)
+	case SELECT_FIGHT_GOBLIN_ITEM,
+		SELECT_FIGHT_TROLL_ITEM,
+		SELECT_FIGHT_WOLF_ITEM:
+		for idx, item := range screen.user.InventorySwords() {
+			infoLines = append(infoLines, fmt.Sprintf("%d) %s", idx+1, formatItem(item)))
+		}
+		infoLines = appendSelectCancelCmds(infoLines)
+	case SELECT_FIGHT_GIANT_ITEM:
+		for idx, item := range screen.user.InventoryIronSwords() {
 			infoLines = append(infoLines, fmt.Sprintf("%d) %s", idx+1, formatItem(item)))
 		}
 		infoLines = appendSelectCancelCmds(infoLines)

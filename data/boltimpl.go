@@ -2,6 +2,7 @@ package loud
 
 import (
 	"log"
+	"strings"
 
 	bolt "github.com/coreos/bbolt"
 )
@@ -191,6 +192,38 @@ func (user *dbUser) GetDefaultCharacter() *Character {
 
 func (user *dbUser) InventoryItems() []Item {
 	return user.UserData.Items
+}
+
+func (user *dbUser) InventoryItemIDByName(name string) string {
+	iis := user.InventoryItems()
+	for _, ii := range iis {
+		if strings.EqualFold(ii.Name, name) {
+			return ii.ID
+		}
+	}
+	return ""
+}
+
+func (user *dbUser) InventoryIronSwords() []Item {
+	iis := user.InventoryItems()
+	uis := []Item{}
+	for _, ii := range iis {
+		if strings.Contains(ii.Name, "Iron sword") {
+			uis = append(uis, ii)
+		}
+	}
+	return uis
+}
+
+func (user *dbUser) InventorySwords() []Item {
+	iis := user.InventoryItems()
+	uis := []Item{}
+	for _, ii := range iis {
+		if strings.Contains(ii.Name, "sword") {
+			uis = append(uis, ii)
+		}
+	}
+	return uis
 }
 
 func (user *dbUser) InventoryCharacters() []Character {
