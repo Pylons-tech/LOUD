@@ -172,7 +172,7 @@ func (screen *GameScreen) buySwordDesc(activeItem loud.Item, pylonValue interfac
 		screen.pylonIcon(),
 		fmt.Sprintf("%v", pylonValue),
 		"\n  ↓\n",
-		fmt.Sprintf("%s", formatItem(activeItem)),
+		formatItem(activeItem),
 	}, "")
 	return desc
 }
@@ -183,7 +183,7 @@ func (screen *GameScreen) buyCharacterDesc(activeCharacter loud.Character, pylon
 		screen.pylonIcon(),
 		fmt.Sprintf("%v", pylonValue),
 		"\n  ↓\n",
-		fmt.Sprintf("%s", formatCharacter(activeCharacter)),
+		formatCharacter(activeCharacter),
 	}, "")
 	return desc
 }
@@ -191,7 +191,7 @@ func (screen *GameScreen) buyCharacterDesc(activeCharacter loud.Character, pylon
 func (screen *GameScreen) sellSwordDesc(activeItem loud.Item, pylonValue interface{}) string {
 	var desc = strings.Join([]string{
 		"\n",
-		fmt.Sprintf("%s", formatItem(activeItem)),
+		formatItem(activeItem),
 		"\n  ↓\n",
 		screen.pylonIcon(),
 		fmt.Sprintf("%v", pylonValue),
@@ -202,7 +202,7 @@ func (screen *GameScreen) sellSwordDesc(activeItem loud.Item, pylonValue interfa
 func (screen *GameScreen) sellCharacterDesc(activeCharacter loud.Character, pylonValue interface{}) string {
 	var desc = strings.Join([]string{
 		"\n",
-		fmt.Sprintf("%s", formatCharacter(activeCharacter)),
+		formatCharacter(activeCharacter),
 		"\n  ↓\n",
 		screen.pylonIcon(),
 		fmt.Sprintf("%v", pylonValue),
@@ -645,7 +645,7 @@ func (screen *GameScreen) renderCharacterSheet() {
 	infoLines = append(infoLines, centerText(loud.Localize("inventory items"), "─", width))
 	items := screen.user.InventoryItems()
 	for idx, item := range items {
-		itemInfo := truncateRight(fmt.Sprintf("%s", formatItem(item)), width)
+		itemInfo := truncateRight(formatItem(item), width)
 		if idx == screen.user.GetDefaultItemIndex() {
 			itemInfo = screen.blueBoldFont()(itemInfo)
 		}
@@ -655,7 +655,7 @@ func (screen *GameScreen) renderCharacterSheet() {
 	infoLines = append(infoLines, centerText(loud.Localize("inventory chracters"), "─", width))
 	characters := screen.user.InventoryCharacters()
 	for idx, character := range characters {
-		characterInfo := truncateRight(fmt.Sprintf("%s", formatCharacter(character)), width)
+		characterInfo := truncateRight(formatCharacter(character), width)
 		if idx == screen.user.GetDefaultCharacterIndex() {
 			characterInfo = screen.blueBoldFont()(characterInfo)
 		}

@@ -161,11 +161,11 @@ func (screen *GameScreen) TxResultSituationDesc() string {
 		case RESULT_SELECT_DEF_WEAPON:
 			desc = loud.Localize("You have successfully set default weapon!")
 		case RESULT_BUY_ITEM_FINISH:
-			desc = fmt.Sprintf(loud.Localize("You have bought %s from the shop"), formatItem(screen.activeItem))
+			desc = loud.Sprintf("You have bought %s from the shop", formatItem(screen.activeItem))
 			desc += "\n"
 			desc += loud.Localize("Please use it for hunting")
 		case RESULT_BUY_CHARACTER_FINISH:
-			desc = fmt.Sprintf(loud.Localize("You have bought %s from the shop"), formatCharacter(screen.activeCharacter))
+			desc = loud.Sprintf("You have bought %s from the shop", formatCharacter(screen.activeCharacter))
 			desc += "\n"
 			desc += loud.Localize("Please use it for hunting")
 		case RESULT_HUNT_FINISH:
@@ -176,7 +176,7 @@ func (screen *GameScreen) TxResultSituationDesc() string {
 				earnedAmount = respOutput[0].Amount
 			}
 			resultTexts := []string{"gold", "character", "weapon"}
-			desc = fmt.Sprintf(loud.Localize("You did hunt animals and earned %d. Detailed result: %+v"), earnedAmount, resultTexts[:len(respOutput)])
+			desc = loud.Sprintf("You did hunt animals and earned %d. Detailed result: %+v", earnedAmount, resultTexts[:len(respOutput)])
 		case RESULT_FIGHT_GOBLIN_FINISH:
 			respOutput := []handlers.ExecuteRecipeSerialize{}
 			earnedAmount := int64(0)
@@ -185,7 +185,7 @@ func (screen *GameScreen) TxResultSituationDesc() string {
 				earnedAmount = respOutput[0].Amount
 			}
 			resultTexts := []string{"gold", "character", "weapon", loud.GOBLIN_EAR}
-			desc = fmt.Sprintf(loud.Localize("You did fight with goblin and earned %d. Detailed result: %+v"), earnedAmount, resultTexts[:len(respOutput)])
+			desc = loud.Sprintf("You did fight with goblin and earned %d. Detailed result: %+v", earnedAmount, resultTexts[:len(respOutput)])
 		case RESULT_FIGHT_TROLL_FINISH:
 			respOutput := []handlers.ExecuteRecipeSerialize{}
 			earnedAmount := int64(0)
@@ -194,7 +194,7 @@ func (screen *GameScreen) TxResultSituationDesc() string {
 				earnedAmount = respOutput[0].Amount
 			}
 			resultTexts := []string{"gold", "character", "weapon", loud.TROLL_TOES}
-			desc = fmt.Sprintf(loud.Localize("You did fight with troll and earned %d. Detailed result: %+v"), earnedAmount, resultTexts[:len(respOutput)])
+			desc = loud.Sprintf("You did fight with troll and earned %d. Detailed result: %+v", earnedAmount, resultTexts[:len(respOutput)])
 		case RESULT_FIGHT_WOLF_FINISH:
 			respOutput := []handlers.ExecuteRecipeSerialize{}
 			earnedAmount := int64(0)
@@ -203,7 +203,7 @@ func (screen *GameScreen) TxResultSituationDesc() string {
 				earnedAmount = respOutput[0].Amount
 			}
 			resultTexts := []string{"gold", "character", "weapon", loud.WOLF_TAIL}
-			desc = fmt.Sprintf(loud.Localize("You did fight with wolf and earned %d. Detailed result: %+v"), earnedAmount, resultTexts[:len(respOutput)])
+			desc = loud.Sprintf("You did fight with wolf and earned %d. Detailed result: %+v", earnedAmount, resultTexts[:len(respOutput)])
 		case RESULT_FIGHT_GIANT_FINISH:
 			respOutput := []handlers.ExecuteRecipeSerialize{}
 			earnedAmount := int64(0)
@@ -212,7 +212,7 @@ func (screen *GameScreen) TxResultSituationDesc() string {
 				earnedAmount = respOutput[0].Amount
 			}
 			resultTexts := []string{"gold", "character", "weapon"}
-			desc = fmt.Sprintf(loud.Localize("You did fight with giant and earned %d. Detailed result: %+v"), earnedAmount, resultTexts[:len(respOutput)])
+			desc = loud.Sprintf("You did fight with giant and earned %d. Detailed result: %+v", earnedAmount, resultTexts[:len(respOutput)])
 		case RESULT_GET_INITIAL_COIN:
 			respOutput := []handlers.ExecuteRecipeSerialize{}
 			json.Unmarshal(screen.txResult, &respOutput)
@@ -220,22 +220,22 @@ func (screen *GameScreen) TxResultSituationDesc() string {
 			if len(respOutput) > 0 {
 				earnedAmount = respOutput[0].Amount
 			}
-			desc = fmt.Sprintf(loud.Localize("Got initial gold from pylons. Amount is %d."), earnedAmount)
+			desc = loud.Sprintf("Got initial gold from pylons. Amount is %d.", earnedAmount)
 		case RESULT_DEV_GET_TEST_ITEMS:
 			respOutput := []handlers.ExecuteRecipeSerialize{}
 			json.Unmarshal(screen.txResult, &respOutput)
 			resultTexts := []string{loud.WOLF_TAIL, loud.TROLL_TOES, loud.GOBLIN_EAR}
-			desc = fmt.Sprintf(loud.Localize("Finished getting developer test items. Detailed result %+v"), resultTexts[:len(respOutput)])
+			desc = loud.Sprintf("Finished getting developer test items. Detailed result %+v", resultTexts[:len(respOutput)])
 		case RESULT_GET_PYLONS:
 			desc = loud.Localize("You got extra pylons for loud game")
 		case RESULT_SWITCH_USER:
-			desc = fmt.Sprintf("You switched user to %s", screen.user.GetUserName())
+			desc = loud.Sprintf("You switched user to %s", screen.user.GetUserName())
 		case RESULT_CREATE_COOKBOOK:
 			desc = loud.Localize("You created a new cookbook for a new game build")
 		case RESULT_SELL_FINISH:
-			desc = fmt.Sprintf(loud.Localize("You sold %s for gold."), formatItem(screen.activeItem))
+			desc = loud.Sprintf("You sold %s for gold.", formatItem(screen.activeItem))
 		case RESULT_UPGRADE_FINISH:
-			desc = fmt.Sprintf(loud.Localize("You have upgraded %s to get better hunt result"), screen.activeItem.Name)
+			desc = loud.Sprintf("You have upgraded %s to get better hunt result", screen.activeItem.Name)
 		case RESULT_SELL_SWORD_REQUEST_CREATION:
 			desc = loud.Localize("sword sell request was successfully created")
 			desc += screen.sellSwordDesc(screen.activeItem, screen.pylonEnterValue)
@@ -288,26 +288,26 @@ func (screen *GameScreen) TxWaitSituationDesc() string {
 		desc = loud.Localize("You are now waiting for loud sell request creation")
 		desc += screen.sellLoudDesc(screen.loudEnterValue, screen.pylonEnterValue)
 	case WAIT_BUY_ITEM_PROCESS:
-		desc = fmt.Sprintf(loud.Localize("You are now buying %s at the shop"), formatItem(screen.activeItem))
+		desc = loud.Sprintf("You are now buying %s at the shop", formatItem(screen.activeItem))
 		desc += WAIT_PROCESS_TO_END
 	case WAIT_BUY_CHARACTER_PROCESS:
-		desc = fmt.Sprintf(loud.Localize("You are now buying %s at the shop"), formatCharacter(screen.activeCharacter))
+		desc = loud.Sprintf("You are now buying %s at the shop", formatCharacter(screen.activeCharacter))
 		desc += WAIT_PROCESS_TO_END
 	case WAIT_HUNT_PROCESS:
 		if len(screen.activeItem.Name) > 0 {
-			desc = fmt.Sprintf(loud.Localize("You are now hunting with %s"), formatItem(screen.activeItem))
+			desc = loud.Sprintf("You are now hunting with %s", formatItem(screen.activeItem))
 		} else {
 			desc = loud.Localize("You are now hunting without weapon")
 		}
 		desc += WAIT_PROCESS_TO_END
 	case WAIT_FIGHT_GIANT_PROCESS:
-		desc = fmt.Sprintf(loud.Localize("You are now fighting with giant with %s"), formatItem(screen.activeItem))
+		desc = loud.Sprintf("You are now fighting with giant with %s", formatItem(screen.activeItem))
 	case WAIT_FIGHT_GOBLIN_PROCESS:
-		desc = fmt.Sprintf(loud.Localize("You are now fighting with goblin with %s"), formatItem(screen.activeItem))
+		desc = loud.Sprintf("You are now fighting with goblin with %s", formatItem(screen.activeItem))
 	case WAIT_FIGHT_TROLL_PROCESS:
-		desc = fmt.Sprintf(loud.Localize("You are now fighting with troll with %s"), formatItem(screen.activeItem))
+		desc = loud.Sprintf("You are now fighting with troll with %s", formatItem(screen.activeItem))
 	case WAIT_FIGHT_WOLF_PROCESS:
-		desc = fmt.Sprintf(loud.Localize("You are now fighting with wolf with %s"), formatItem(screen.activeItem))
+		desc = loud.Sprintf("You are now fighting with wolf with %s", formatItem(screen.activeItem))
 	case WAIT_GET_INITIAL_COIN:
 		desc = loud.Localize("Getting initial gold from pylon")
 		desc += WAIT_PROCESS_TO_END
@@ -324,10 +324,10 @@ func (screen *GameScreen) TxWaitSituationDesc() string {
 	case WAIT_CREATE_COOKBOOK:
 		desc = loud.Localize("You are waiting for creating cookbook")
 	case WAIT_SELL_PROCESS:
-		desc = fmt.Sprintf(loud.Localize("You are now selling %s for gold"), formatItem(screen.activeItem))
+		desc = loud.Sprintf("You are now selling %s for gold", formatItem(screen.activeItem))
 		desc += WAIT_PROCESS_TO_END
 	case WAIT_UPGRADE_PROCESS:
-		desc = fmt.Sprintf(loud.Localize("You are now upgrading %s"), loud.Localize(screen.activeItem.Name))
+		desc = loud.Sprintf("You are now upgrading %s", loud.Localize(screen.activeItem.Name))
 		desc += WAIT_PROCESS_TO_END
 	case WAIT_SELL_SWORD_REQUEST_CREATION:
 		desc = loud.Localize("You are now waiting for sword sell request creation")
@@ -344,7 +344,7 @@ func (screen *GameScreen) TxWaitSituationDesc() string {
 	// For FULFILL trades, msg should be reversed, since user is opposite
 	case WAIT_FULFILL_SELL_SWORD_REQUEST:
 		request := screen.activeItemTradeRequest
-		desc = fmt.Sprintf(loud.Localize("You are now buying sword at %d"), request.Price)
+		desc = loud.Sprintf("You are now buying sword at %d", request.Price)
 		desc += screen.buySwordDesc(request.TItem, fmt.Sprintf("%d", request.Price))
 	case WAIT_FULFILL_SELL_CHARACTER_REQUEST:
 		request := screen.activeCharacterTradeRequest

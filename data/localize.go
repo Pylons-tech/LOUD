@@ -2,6 +2,7 @@ package loud
 
 import (
 	"encoding/json"
+	"fmt"
 
 	"github.com/nicksnyder/go-i18n/v2/i18n"
 	"golang.org/x/text/language"
@@ -26,4 +27,8 @@ func Localize(key string) string {
 		return key
 	}
 	return translate
+}
+
+func Sprintf(format string, a ...interface{}) string {
+	return fmt.Sprintf(Localize(format), a...)
 }
