@@ -139,29 +139,29 @@
   "you are now selling loud for pylon": {
     "one": "You are now selling loud coin for pylon"
   },
-  "wait process to end": {
+  "Please wait for a moment to finish the process": {
     "one": "Please wait for a moment to finish the process."
   },
-  "wait buy item process desc": {
-    "one": "You are now buying an item at the shop"
+  "You are now buying %s at the shop": {
+    "one": "You are now buying \"%s\" at the shop"
   },
-  "wait buy character process desc": {
-    "one": "You are now buying a character at the shop"
+  "You are now hunting with %s": {
+    "one": "You are now hunting with \"%s\"."
   },
-  "You are now hunting with": {
-    "one": "You are now hunting with"
-  },
-  "hunting without weapon": {
+  "You are now hunting without weapon": {
     "one": "You are now hunting without weapon."
   },
-  "wait sell process desc": {
-    "one": "You are now selling for gold"
+  "You are now selling %s for gold": {
+    "one": "You are now selling \"%s\" for gold."
   },
-  "wait upgrade process desc": {
-    "one": "You are now upgrading"
+  "You are now upgrading %s": {
+    "one": "You are now upgrading %s."
   },
-  "result buy finish desc": {
-    "one": "You have bought from the shop.\nPlease use it for hunting."
+  "You have bought %s from the shop": {
+    "one": "You have bought \"%s\" from the shop"
+  },
+  "You are now buying sword at %d": {
+    "one": "You are now buying sword at %d.\n"
   },
   "you have bought loud coin successfully from loud/pylon market": {
     "one": "You have bought loud coin successfully from loud/pylon market"
@@ -169,10 +169,10 @@
   "you have sold loud coin successfully from loud/pylon market": {
     "one": "You have sold loud coin successfully from loud/pylon market"
   },
-  "you are now waiting for loud buy request creation": {
+  "You are now waiting for loud buy request creation": {
     "one": "You are now waiting for loud buy request creation"
   },
-  "you are now waiting for loud sell request creation": {
+  "You are now waiting for loud sell request creation": {
     "one": "You are now waiting for loud sell request creation"
   },
   "loud buy request was successfully created": {
@@ -181,17 +181,26 @@
   "loud sell request was successfully created": {
     "one": "Loud sell request was successfully created."
   },
-  "use for hunting": {
+  "Please use it for hunting": {
     "one": "Please use it for hunting."
   },
-  "result hunt finish desc": {
-    "one": "You did hunt animals"
+  "You did hunt animals and earned %d. Detailed result: %+v": {
+    "one": "You did hunt animals and earned %d. Detailed result: %+v"
   },
-  "result fight goblin finish desc": {
-    "one": "You did fight with goblin"
+  "You did fight with goblin and earned %d. Detailed result: %+v": {
+    "one": "You did fight with goblin and earned %d. Detailed result: %+v"
   },
-  "result fight troll finish desc": {
-    "one": "You did fight with troll"
+  "You did fight with troll and earned %d. Detailed result: %+v": {
+    "one": "You did fight with troll and earned %d. Detailed result: %+v"
+  },
+  "You did fight with wolf and earned %d. Detailed result: %+v": {
+    "one": "You did fight with wolf and earned %d. Detailed result: %+v"
+  },
+  "You did fight with giant and earned %d. Detailed result: %+v": {
+    "one": "You did fight with giant and earned %d. Detailed result: %+v"
+  },
+  "Got initial gold from pylons. Amount is %d.": {
+    "one": "Got initial gold from pylons. Amount is %d."
   },
   "result fight wolf finish desc": {
     "one": "You did fight with wolf"
@@ -199,11 +208,11 @@
   "result fight giant finish desc": {
     "one": "You did fight with giant"
   },
-  "result sell finish desc": {
-    "one": "You sold for gold"
+  "You sold %s for gold.": {
+    "one": "You sold \"%s\" for gold."
   },
-  "result upgrade finish desc": {
-    "one": "You have upgraded from Lv1 to Lv2 to get better hunt result"
+  "You have upgraded %s to get better hunt result": {
+    "one": "You have upgraded \"%s\" from Lv1 to Lv2 to get better hunt result"
   },
   "health low warning": {
     "one": " (Health low) "
