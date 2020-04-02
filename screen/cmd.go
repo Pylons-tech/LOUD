@@ -84,7 +84,8 @@ func (screen *GameScreen) renderUserCommands() {
 		infoLines = append(infoLines,
 			SELECT_CMD,
 			"Go bac)k( ⌫ )")
-	case SELECT_DEFAULT_CHAR:
+	case SELECT_DEFAULT_CHAR,
+		SELECT_HEALTH_RESTORE_CHAR:
 		for idx, char := range screen.user.InventoryCharacters() {
 			infoLines = append(infoLines, fmt.Sprintf("%d) %s  ", idx+1, formatCharacter(char)))
 		}

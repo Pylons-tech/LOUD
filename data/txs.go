@@ -60,6 +60,13 @@ func DevGetTestItems(user User) (string, error) {
 	return ExecuteRecipe(user, rcpName, itemIDs)
 }
 
+func RestoreHealth(user User, char Character) (string, error) {
+	rcpName := "LOUD's health restore recipe"
+	itemIDs := []string{char.ID}
+
+	return ExecuteRecipe(user, rcpName, itemIDs)
+}
+
 func Hunt(user User, item Item) (string, error) {
 
 	defaultCharacter := user.GetDefaultCharacter()

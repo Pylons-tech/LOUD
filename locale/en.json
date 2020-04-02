@@ -33,7 +33,7 @@
     "one": "You don't have enough gold to upgrade this item"
   },
   "home": {
-    "one": "1) Select default character\n2) Select default weapon\n"
+    "one": "1) Select default character\n2) Select default weapon\n3) Restore character health\n"
   },
   "forest": {
     "one": "1) Hunt\n2) Goblin\n3) Wolf\n4) Troll\n5) Giant\n"

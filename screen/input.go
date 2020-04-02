@@ -53,6 +53,7 @@ func (screen *GameScreen) HandleInputKeyHomeEntryPoint(input termbox.Event) bool
 	tarStusMap := map[string]ScreenStatus{
 		"1": SELECT_DEFAULT_CHAR,
 		"2": SELECT_DEFAULT_WEAPON,
+		"3": SELECT_HEALTH_RESTORE_CHAR,
 	}
 
 	if newStus, ok := tarStusMap[Key]; ok {
@@ -159,6 +160,7 @@ func (screen *GameScreen) MoveToNextStep() {
 		RESULT_FULFILL_SELL_CHARACTER_REQUEST:  SHOW_SELL_CHARACTER_REQUESTS,
 		RESULT_BUY_CHARACTER_REQUEST_CREATION:  SHOW_BUY_CHARACTER_REQUESTS,
 		RESULT_FULFILL_BUY_CHARACTER_REQUEST:   SHOW_BUY_CHARACTER_REQUESTS,
+		RESULT_HEALTH_RESTORE_CHAR:             SELECT_HEALTH_RESTORE_CHAR,
 		RESULT_SELECT_DEF_CHAR:                 SELECT_DEFAULT_CHAR,
 		RESULT_SELECT_DEF_WEAPON:               SELECT_DEFAULT_WEAPON,
 		RESULT_BUY_ITEM_FINISH:                 SELECT_BUY_ITEM,
@@ -459,6 +461,14 @@ func (screen *GameScreen) HandleThirdClassInputKeys(input termbox.Event) bool {
 					return false
 				}
 				screen.RunActiveCharacterSelect()
+			case SELECT_HEALTH_RESTORE_CHAR:
+				screen.activeLine = loud.GetIndexFromString(Key)
+				characters := screen.user.InventoryCharacters()
+				if len(characters) <= screen.activeLine || screen.activeLine < 0 {
+					return false
+				}
+				screen.activeCharacter = characters[screen.activeLine]
+				screen.RunCharacterHealthRestore()
 			case SELECT_DEFAULT_WEAPON:
 				screen.activeLine = loud.GetIndexFromString(Key)
 				items := screen.user.InventorySwords()
@@ -582,7 +592,13 @@ func (screen *GameScreen) HandleThirdClassKeyEnterEvent() bool {
 			}
 			screen.activeCharacter = characters[screen.activeLine]
 			screen.RunActiveCharacterSelect()
-			log.Println("SELECT_DEFAULT_CHAR", screen.activeItem)
+		case SELECT_HEALTH_RESTORE_CHAR:
+			characters := screen.user.InventoryCharacters()
+			if len(characters) <= screen.activeLine || screen.activeLine < 0 {
+				return false
+			}
+			screen.activeCharacter = characters[screen.activeLine]
+			screen.RunCharacterHealthRestore()
 		case SELECT_DEFAULT_WEAPON:
 			items := screen.user.InventorySwords()
 			if len(items) <= screen.activeLine || screen.activeLine < 0 {
@@ -590,7 +606,6 @@ func (screen *GameScreen) HandleThirdClassKeyEnterEvent() bool {
 			}
 			screen.activeItem = items[screen.activeLine]
 			screen.RunActiveWeaponSelect()
-			log.Println("SELECT_DEFAULT_WEAPON", screen.activeItem)
 		case SELECT_BUY_ITEM:
 			items := loud.ShopItems
 			if len(items) <= screen.activeLine || screen.activeLine < 0 {

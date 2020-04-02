@@ -704,6 +704,12 @@ func (screen *GameScreen) RunActiveWeaponSelect() {
 	screen.SetScreenStatusAndRefresh(RESULT_SELECT_DEF_WEAPON)
 }
 
+func (screen *GameScreen) RunCharacterHealthRestore() {
+	screen.RunTxProcess(WAIT_HEALTH_RESTORE_CHAR, RESULT_HEALTH_RESTORE_CHAR, func() (string, error) {
+		return loud.RestoreHealth(screen.user, screen.activeCharacter)
+	})
+}
+
 func (screen *GameScreen) RunActiveItemBuy() {
 	screen.RunTxProcess(WAIT_BUY_ITEM_PROCESS, RESULT_BUY_ITEM_FINISH, func() (string, error) {
 		return loud.Buy(screen.user, screen.activeItem)

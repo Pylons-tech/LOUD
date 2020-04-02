@@ -358,6 +358,26 @@
         }
     },
     {
+        "ID": "CREATE_RESTORE_HEALTH_RECIPE",
+        "runAfter": {
+            "precondition": ["CREATE_LOUD_COOKBOOK"],
+            "blockWait": 0
+        },
+        "action": "create_recipe",
+        "paramsRef": "./recipes/health_restore_lv1.json",
+        "output": {
+            "txResult": {
+                "status": "Success"
+            },
+            "property": [
+                {
+                    "owner": "eugen",
+                    "recipes": ["LOUD's health restore recipe"]
+                }
+            ]
+        }
+    },
+    {
         "ID": "CREATE_SELL_A_SWORD_RECIPE",
         "runAfter": {
             "precondition": ["CREATE_LOUD_COOKBOOK"],

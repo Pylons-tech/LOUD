@@ -14,6 +14,7 @@ type Character struct {
 	Level int
 	Price int
 	XP    float64
+	HP    int
 }
 
 const (

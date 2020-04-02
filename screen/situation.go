@@ -64,6 +64,8 @@ func (screen *GameScreen) renderUserSituation() {
 		desc = "Please enter pylon amount to use (should be integer value)" // TODO should add Localize
 	case SELECT_DEFAULT_CHAR:
 		infoLines = screen.renderCharacterTable(loud.Localize("Please select default character"), screen.user.InventoryCharacters())
+	case SELECT_HEALTH_RESTORE_CHAR:
+		infoLines = screen.renderCharacterTable(loud.Localize("Please select character to restore health"), screen.user.InventoryCharacters())
 	case SELECT_DEFAULT_WEAPON:
 		infoLines = screen.renderItemTable(loud.Localize("Please select default weapon"), screen.user.InventorySwords())
 	case SELECT_BUY_ITEM:
@@ -120,6 +122,7 @@ func (screen *GameScreen) TxResultSituationDesc() string {
 		RESULT_BUY_LOUD_REQUEST_CREATION:       "loud buy request creation",
 		RESULT_SELL_LOUD_REQUEST_CREATION:      "loud sell request creation",
 		RESULT_SELECT_DEF_CHAR:                 "selecting default character",
+		RESULT_HEALTH_RESTORE_CHAR:             "selecting character to restore health",
 		RESULT_SELECT_DEF_WEAPON:               "selecting default weapon",
 		RESULT_BUY_ITEM_FINISH:                 "buy item",
 		RESULT_BUY_CHARACTER_FINISH:            "buy character",
@@ -153,6 +156,8 @@ func (screen *GameScreen) TxResultSituationDesc() string {
 			desc += screen.sellLoudDesc(screen.loudEnterValue, screen.pylonEnterValue)
 		case RESULT_SELECT_DEF_CHAR:
 			desc = loud.Localize("You have successfully set default character!")
+		case RESULT_HEALTH_RESTORE_CHAR:
+			desc = loud.Localize("You have successfully restored character's health!")
 		case RESULT_SELECT_DEF_WEAPON:
 			desc = loud.Localize("You have successfully set default weapon!")
 		case RESULT_BUY_ITEM_FINISH:
@@ -309,6 +314,9 @@ func (screen *GameScreen) TxWaitSituationDesc() string {
 		desc += WAIT_PROCESS_TO_END
 	case WAIT_DEV_GET_TEST_ITEMS:
 		desc = fmt.Sprintf("%s\n", loud.Localize("Getting dev test items from pylon"))
+		desc += WAIT_PROCESS_TO_END
+	case WAIT_HEALTH_RESTORE_CHAR:
+		desc = fmt.Sprintf("%s\n", loud.Localize("Waiting for Health restoring"))
 		desc += WAIT_PROCESS_TO_END
 	case WAIT_GET_PYLONS:
 		desc = loud.Localize("You are waiting for getting pylons process")

@@ -25,6 +25,7 @@ func SyncFromNode(user User) {
 	myCharacters := []Character{}
 	for _, rawItem := range rawItems {
 		XP, _ := rawItem.FindDouble("XP")
+		HP, _ := rawItem.FindLong("HP")
 		Level, _ := rawItem.FindLong("level")
 		Name, _ := rawItem.FindString("Name")
 		itemType, _ := rawItem.FindString("Type")
@@ -35,6 +36,7 @@ func SyncFromNode(user User) {
 				Name:  Name,
 				ID:    rawItem.ID,
 				XP:    XP,
+				HP:    HP,
 			})
 		} else {
 			myItems = append(myItems, Item{
