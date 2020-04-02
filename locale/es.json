@@ -151,6 +151,18 @@
   "You are now hunting without weapon": {
     "one": "Estás cazando sin arma."
   },
+  "You are now fighting with giant with %s": {
+    "one": "You are now fighting with giant with \"%s\"\n"
+  },
+  "You are now fighting with goblin with %s": {
+    "one": "You are now fighting with goblin with \"%s\"\n"
+  },
+  "You are now fighting with troll with %s": {
+    "one": "You are now fighting with troll with \"%s\"\n"
+  },
+  "You are now fighting with wolf with %s": {
+    "one": "You are now fighting with wolf with \"%s\"\n"
+  },
   "You are now selling %s for gold": {
     "one": "Estás vendiendo \"%s\" por oro."
   },

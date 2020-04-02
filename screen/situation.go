@@ -225,13 +225,13 @@ func (screen *GameScreen) TxResultSituationDesc() string {
 			respOutput := []handlers.ExecuteRecipeSerialize{}
 			json.Unmarshal(screen.txResult, &respOutput)
 			resultTexts := []string{loud.WOLF_TAIL, loud.TROLL_TOES, loud.GOBLIN_EAR}
-			desc = loud.Localize("Finished getting developer test items.") + fmt.Sprintf("Results %+v", resultTexts[:len(respOutput)])
+			desc = fmt.Sprintf(loud.Localize("Finished getting developer test items. Detailed result %+v"), resultTexts[:len(respOutput)])
 		case RESULT_GET_PYLONS:
-			desc = fmt.Sprintf("You got extra pylons for loud game")
+			desc = loud.Localize("You got extra pylons for loud game")
 		case RESULT_SWITCH_USER:
 			desc = fmt.Sprintf("You switched user to %s", screen.user.GetUserName())
 		case RESULT_CREATE_COOKBOOK:
-			desc = fmt.Sprintf("You created a new cookbook for a new game build")
+			desc = loud.Localize("You created a new cookbook for a new game build")
 		case RESULT_SELL_FINISH:
 			desc = fmt.Sprintf(loud.Localize("You sold %s for gold."), formatItem(screen.activeItem))
 		case RESULT_UPGRADE_FINISH:
@@ -291,7 +291,7 @@ func (screen *GameScreen) TxWaitSituationDesc() string {
 		desc = fmt.Sprintf(loud.Localize("You are now buying %s at the shop"), formatItem(screen.activeItem))
 		desc += WAIT_PROCESS_TO_END
 	case WAIT_BUY_CHARACTER_PROCESS:
-		desc = fmt.Sprintf(loud.Localize("You are now buying %s at the shop"), formatItem(screen.activeItem))
+		desc = fmt.Sprintf(loud.Localize("You are now buying %s at the shop"), formatCharacter(screen.activeCharacter))
 		desc += WAIT_PROCESS_TO_END
 	case WAIT_HUNT_PROCESS:
 		if len(screen.activeItem.Name) > 0 {
@@ -301,13 +301,13 @@ func (screen *GameScreen) TxWaitSituationDesc() string {
 		}
 		desc += WAIT_PROCESS_TO_END
 	case WAIT_FIGHT_GIANT_PROCESS:
-		desc = fmt.Sprintf("%s %s.\n", loud.Localize("You are now fighting with giant with"), formatItem(screen.activeItem))
+		desc = fmt.Sprintf(loud.Localize("You are now fighting with giant with %s"), formatItem(screen.activeItem))
 	case WAIT_FIGHT_GOBLIN_PROCESS:
-		desc = fmt.Sprintf("%s %s.\n", loud.Localize("You are now fighting with goblin with"), formatItem(screen.activeItem))
+		desc = fmt.Sprintf(loud.Localize("You are now fighting with goblin with %s"), formatItem(screen.activeItem))
 	case WAIT_FIGHT_TROLL_PROCESS:
-		desc = fmt.Sprintf("%s %s.\n", loud.Localize("You are now fighting with troll with"), formatItem(screen.activeItem))
+		desc = fmt.Sprintf(loud.Localize("You are now fighting with troll with %s"), formatItem(screen.activeItem))
 	case WAIT_FIGHT_WOLF_PROCESS:
-		desc = fmt.Sprintf("%s %s.\n", loud.Localize("You are now fighting with wolf with"), formatItem(screen.activeItem))
+		desc = fmt.Sprintf(loud.Localize("You are now fighting with wolf with %s"), formatItem(screen.activeItem))
 	case WAIT_GET_INITIAL_COIN:
 		desc = loud.Localize("Getting initial gold from pylon")
 		desc += WAIT_PROCESS_TO_END
