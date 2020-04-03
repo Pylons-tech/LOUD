@@ -614,8 +614,8 @@ func (screen *GameScreen) renderInputValue() {
 }
 
 func (screen *GameScreen) renderCharacterSheet() {
-	var HP uint64 = 10
-	var MaxHP uint64 = 10
+	var HP uint64 = 0
+	var MaxHP uint64 = 0
 
 	characters := screen.user.InventoryCharacters()
 	dfc := screen.user.GetDefaultCharacterIndex()
