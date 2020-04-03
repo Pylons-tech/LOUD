@@ -4,238 +4,152 @@
 loudcoin
 
 ## Items
-Lv1 wooden sword
-```
-{
-    "Doubles": [],
-    "Longs": [{ "Key": "level", "Value": "1" }],
-    "Strings": [{ "Key": "Name","Value": "Wooden sword" }],
-    "CookbookName": "Legend of Undead Dragon",
-}
-```
-Lv2 wooden sword
-```
-{
-    "Doubles": [],
-    "Longs": [{ "Key": "level", "Value": "2" }],
-    "Strings": [{ "Key": "Name","Value": "Wooden sword" }],
-    "CookbookName": "Legend of Undead Dragon",
-}
-```
-Lv1 copper sword
-```
-{
-    "Doubles": [],
-    "Longs": [{ "Key": "level", "Value": "1" }],
-    "Strings": [{ "Key": "Name","Value": "Copper sword" }],
-    "CookbookName": "Legend of Undead Dragon",
-}
-```
-
-Lv2 copper sword
-```
-{
-    "Doubles": [],
-    "Longs": [{ "Key": "level", "Value": "2" }],
-    "Strings": [{ "Key": "Name","Value": "Copper sword" }],
-    "CookbookName": "Legend of Undead Dragon",
-}
-```
-
-
+- Lv1 wooden sword
+    attack: 3
+    level: 1
+    Name: Wooden sword
+- Lv2 wooden sword
+    attack: 6
+    level: 2
+    Name: Wooden sword
+- Lv1 copper sword
+    attack: 10
+    level: 1
+    Name: Copper sword
+- Lv2 copper sword
+    attack: 20
+    level: 2
+    Name: Copper sword
+- Lv1 silver sword
+    attack: 30
+    level: 1
+    Name: Silver sword
+- Lv1 bronze sword
+    attack: 50
+    level: 1
+    Name: Bronze sword
+- Lv1 iron sword
+    attack: 100
+    level: 1
+    Name: Iron sword
 ## Recipes
 
-### Hunt recipe without sword (1 or 2)
-```
-{
-    "ID": "LOUD-hunt-with-no-weapon-recipe-v0.0.0-1579053457",
-    "CoinInputs":[],    
-    "ItemInput": [],
-    "Entries":{
-        "CoinOutputs":[{
-            "Coin":"loudcoin",
-            "Program": "randi(2)+1"
-        }],
-        "ItemOutputs":[]
-    },
-    "ExtraInfo":"",
-    "Sender":"eugen",
-    "Name": "LOUD's hunt without sword recipe",
-    "CookbookName": "Legend of Undead Dragon",
-    "Description": "this recipe is used to hunt without sword.",
-    "BlockInterval":"0"
-}
-```
+### Buy Wooden sword lv1
+Output: Lv1 wooden sword
+Price: 100 loudcoin
 
-### Hunt recipe with a sword (attack *4 or attack *5 )
-```
-{
-    "ID": "LOUD-hunt-with-a-sword-recipe-v0.0.0-1583631194",
-    "CoinInputs":[],
-    "ItemInputs":[{
-        "Doubles": [{"Key": "attack", "MinValue": "1.0", "MaxValue": "1000.0"}],
-        "Longs": [{"Key": "level", "MinValue": "1", "MaxValue": "1000"}],
-        "Strings": []
-    }],
-    "Entries":{
-        "CoinOutputs":[{
-            "Coin":"loudcoin",
-            "Program": "int(attack * double(randi(2)+4))"
-        }],
-        "ItemOutputs":[]
-    },
-    "ExtraInfo":"",
-    "Sender":"eugen",
-    "Name": "LOUD's hunt with a sword recipe",
-    "CookbookName": "Legend of Undead Dragon",
-    "Description": "this recipe is used to hunt with a sword.",
-    "BlockInterval":"0"
-}
-```
-### Buy Wooden sword lv1 price: 100 gold 
-```
-{
-    "CoinInputs":[{
-        "Coin": "loudcoin",
-        "Count": "100"
-    }],
-    "ItemInput": [],
-    "Entries":{
-        "CoinOutputs":[],
-        "ItemOutputs":[
-            {
-                "Doubles":[],
-                "Longs":[
-                    {
-                        "Rate":"1.0",
-                        "Key":"level",
-                        "WeightRanges":[{ "Lower": 1, "Upper":1,"Weight":1 }]
-                    }
-                ],
-                "Strings":[{ "Key":"Name", "Value":"Wooden sword", "Rate":"1.0" }]
-            }
-        ]
-    },
-    "ExtraInfo":"",
-    "Sender":"eugen",
-    "Name": "LOUD's Wooden sword lv1 buy recipe",
-    "CookbookName": "Legend of Undead Dragon",
-    "Description": "this recipe is used to buy wooden sword lv1.",
-    "BlockInterval":"0"
-}
-```
+### Wooden sword lv1 to lv2 upgrade
+Output: Lv2 wooden sword
+Price: 100 loudcoin
+Input item: Lv1 wooden sword
 
-### Wooden sword lv1 to lv2 upgrade price: 100 gold
-```
-{
-    "CoinInputs":[{
-        "Coin": "loudcoin",
-        "Count": "100"
-    }],
-    "ItemInput": [{
-        "Doubles": [],
-        "Longs": [{"Key": "level", "MinValue": "1", "MaxValue": "1"}],
-        "Strings": [{"Key": "Name", "Value": "Wooden sword"}]
-    }],
-    "ToUpgrade": {
-        "Doubles": [],
-        "Longs": [{
-            "Key": "level", 
-            "WeightRanges":[{ "Lower": 1, "Upper":1,"Weight":1 }]
-        }],
-        "Strings": []
-    },
-    "ExtraInfo":"",
-    "Sender":"eugen",
-    "Name": "LOUD's Wooden sword lv1 to lv2 upgrade recipe",
-    "CookbookName": "Legend of Undead Dragon",
-    "Description": "this recipe is used to upgrade wooden sword level.",
-    "BlockInterval":"0"
-}
-```
+### Buy Copper sword lv1
+Output: Lv1 copper sword
+Price: 250 loudcoin
 
+### Copper sword lv1 to lv2 upgrade
+Output: Lv2 copper sword
+Price: 100 loudcoin
+Input item: Lv1 copper sword
 
-### Buy Copper sword lv1 price: 250 gold
-```
-{
-    "CoinInputs":[{
-        "Coin": "loudcoin",
-        "Count": "250"
-    }],
-    "ItemInput": [],
-    "Entries":{
-        "CoinOutputs":[],
-        "ItemOutputs":[
-            {
-                "Doubles":[],
-                "Longs":[
-                    {
-                        "Rate":"1.0",
-                        "Key":"level",
-                        "WeightRanges":[{ "Lower": 1, "Upper":1,"Weight":1 }]
-                    }
-                ],
-                "Strings":[{ "Key":"Name", "Value":"Copper sword", "Rate":"1.0" }]
-            }
-        ]
-    },
-    "ExtraInfo":"",
-    "Sender":"eugen",
-    "Name": "LOUD's Copper sword lv1 buy recipe",
-    "CookbookName": "Legend of Undead Dragon",
-    "Description": "this recipe is used to buy copper sword lv1.",
-    "BlockInterval":"0"
-}
-```
+### Make silver sword
 
-### Copper sword lv1 to lv2 upgrade price: 250 gold
-```
-{
-    "CoinInputs":[{
-        "Coin": "loudcoin",
-        "Count": "250"
-    }],
-    "ItemInput": [{
-        "Doubles": [],
-        "Longs": [{"Key": "level", "MinValue": "1", "MaxValue": "1"}],
-        "Strings": [{"Key": "Name", "Value": "Copper sword"}]
-    }],
-    "ToUpgrade": {
-        "Doubles": [],
-        "Longs": [{
-            "Key": "level", 
-            "WeightRanges":[{ "Lower": 1, "Upper":1,"Weight":1 }]
-        }],
-        "Strings": []
-    },
-    "ExtraInfo":"",
-    "Sender":"eugen",
-    "Name": "LOUD's Copper sword lv1 to lv2 upgrade recipe",
-    "CookbookName": "Legend of Undead Dragon",
-    "Description": "this recipe is used to upgrade copper sword level.",
-    "BlockInterval":"0"
-}
-```
+Input item: Goblin ear
+Price: 250 loudcoin
+Output: Lv1 silver sword
+
+### Make bronze sword
+
+Input item: Wolf tail
+Price: 250 loudcoin
+Output: Lv1 bronze sword
+
+### Make iron sword
+
+Input item: Troll toes
+Price: 250 loudcoin
+Output: Lv1 iron sword
 
 ### Sword sell recipe, attack * (randi(2)+20) gold
-{
-    "ID": "LOUD-hunt-with-a-sword-recipe-v0.0.0-1583631194",
-    "CoinInputs":[],
-    "ItemInputs":[{
-        "Doubles": [{"Key": "attack", "MinValue": "1.0", "MaxValue": "1000.0"}],
-        "Longs": [{"Key": "level", "MinValue": "1", "MaxValue": "1000"}],
-        "Strings": []
-    }],
-    "Entries": {
-        "CoinOutputs": [{
-            "Coin":"loudcoin",
-            "Program": "int(attack * double(randi(2)+20))"
-        }]
-    },
-    "ExtraInfo":"",
-    "Sender":"eugen",
-    "Name": "LOUD's sword sell recipe",
-    "CookbookName": "Legend of Undead Dragon",
-    "Description": "this recipe is used to sell a sword.",
-    "BlockInterval":"0"
-}
+Output: `attack * (randi(2)+20)` loudcoin
+Input: Any item which has `attack` and `level` attributes
+
+### Hunt recipe without sword
+Output gold: 1 or 2
+Character die percent: 10%
+When character die, no gold is returned.
+
+### Hunt recipe with a sword
+
+Output gold: `attack*4` or `attack*5`
+Character dying percent: 5%
+Sword lose percent: 5%
+When character die, no gold is returned.
+
+### Fight Goblin
+
+Goblin HP: 10
+Goblin attack: 1
+Award: 50 loudcoin
+
+character should carry sword to fight goblin.
+Total received damage you get from Goblin is calculated by using `EnemyHP * EnemyAttack / SwordAttack`, and dying percentage is related to Total received damage you get from Goblin.
+
+Character Dying percent: `(Total received damage - HP) / Total received damage`
+Character Alive percent: `HP / Total received damage`
+Sword lose percent: `HP / Total received damage * 0.1`
+Goblin ear bonus item percent: `HP / Total received damage * 0.1`
+
+When character die, no gold is returned.
+
+### Fight Wolf
+
+Wolf HP: 15
+Wolf attack: 3
+Award: 150 loudcoin
+
+character should carry sword to fight wolf.
+Total received damage you get from Wolf is calculated by using `EnemyHP * EnemyAttack / SwordAttack`, and dying percentage is related to Total received damage you get from Wolf.
+
+Character Dying percent: `(Total received damage - HP) / Total received damage`
+Character Alive percent: `HP / Total received damage`
+Sword lose percent: `HP / Total received damage * 0.1`
+Wolf tail bonus item percent: `HP / Total received damage * 0.1`
+
+When character die, no gold is returned.
+
+### Fight Troll
+
+Troll HP: 20
+Troll attack: 5
+Award: 300 loudcoin
+
+character should carry sword to fight troll.
+Total received damage you get from Troll is calculated by using `EnemyHP * EnemyAttack / SwordAttack`, and dying percentage is related to Total received damage you get from Troll.
+
+Character Dying percent: `(Total received damage - HP) / Total received damage`
+Character Alive percent: `HP / Total received damage`
+Sword lose percent: `HP / Total received damage * 0.1`
+Troll toes bonus item percent: `HP / Total received damage * 0.1`
+
+When character die, no gold is returned.
+
+### Fight Giant
+
+Troll HP: 100
+Troll attack: 10
+Award: 3000 loudcoin
+
+character should carry iron sword to fight giant.
+Total received damage you get from Giant is calculated by using `EnemyHP * EnemyAttack / SwordAttack`, and dying percentage is related to Total received damage you get from Giant.
+
+Character Dying percent: `(Total received damage - HP) / Total received damage`
+Character Alive percent: `HP / Total received damage`
+Sword lose percent: `HP / Total received damage * 0.1`
+
+When character die, no gold is returned.
+
+### Restore health
+
+HP: +20
+Price: 10 loudcoin
