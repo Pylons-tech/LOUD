@@ -242,7 +242,7 @@
     "one": " Inventory Characters "
   },
   "screen size warning": {
-    "one": "Screen is too small. Make your terminal larger. (60x20 minimum)"
+    "one": "Screen is too small. Make your terminal larger. (120x38 minimum)"
   },
   "dead": {
     "one": "You died. Respawning..."

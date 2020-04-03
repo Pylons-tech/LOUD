@@ -55,10 +55,10 @@ func SyncFromNode(user User) {
 
 	nBuyTradeRequests := []TradeRequest{}
 	nSellTradeRequests := []TradeRequest{}
-	nBuySwordTradeRequests := []ItemTradeRequest{}
-	nSellSwordTradeRequests := []ItemTradeRequest{}
-	nBuyCharacterTradeRequests := []CharacterTradeRequest{}
-	nSellCharacterTradeRequests := []CharacterTradeRequest{}
+	nBuySwordTradeRequests := []ItemBuyTradeRequest{}
+	nSellSwordTradeRequests := []ItemSellTradeRequest{}
+	nBuyCharacterTradeRequests := []CharacterBuyTradeRequest{}
+	nSellCharacterTradeRequests := []CharacterSellTradeRequest{}
 	rawTrades, _ := pylonSDK.ListTradeViaCLI("")
 	for _, tradeItem := range rawTrades {
 		if tradeItem.Completed == false && strings.Contains(tradeItem.ExtraInfo, "created by loud game") {
@@ -91,30 +91,33 @@ func SyncFromNode(user User) {
 					IsMyTradeRequest: isMyTradeRequest,
 				})
 			} else if itemInputLen > 0 { // buy sword trade
-				Level := tradeItem.ItemInputs[0].Longs[0].MinValue
+				MinLevel := tradeItem.ItemInputs[0].Longs[0].MinValue
+				MaxLevel := tradeItem.ItemInputs[0].Longs[0].MaxValue
 				Name := tradeItem.ItemInputs[0].Strings[0].Value
 				if tradeItem.ExtraInfo == "sword buy request created by loud game" {
-					tItem := Item{
-						Level: Level,
+					tItem := ItemSpec{
+						Level: [2]int{MinLevel, MaxLevel},
 						Name:  Name,
 					}
-					nBuySwordTradeRequests = append(nBuySwordTradeRequests, ItemTradeRequest{
+					nBuySwordTradeRequests = append(nBuySwordTradeRequests, ItemBuyTradeRequest{
 						ID:               tradeItem.ID,
 						TItem:            tItem,
 						Price:            int(pylonOutputAmount),
 						IsMyTradeRequest: isMyTradeRequest,
 					})
 				} else { // character buy request created by loud game
-					XP := 0.0
+					MinXP := 0.0
+					MaxXP := 0.0
 					if len(tradeItem.ItemInputs[0].Doubles) > 0 {
-						XP = tradeItem.ItemInputs[0].Doubles[0].MinValue.Float()
+						MinXP = tradeItem.ItemInputs[0].Doubles[0].MinValue.Float()
+						MaxXP = tradeItem.ItemInputs[0].Doubles[0].MaxValue.Float()
 					}
-					tCharacter := Character{
-						Level: Level,
+					tCharacter := CharacterSpec{
+						Level: [2]int{MinLevel, MaxLevel},
 						Name:  Name,
-						XP:    XP,
+						XP:    [2]float64{MinXP, MaxXP},
 					}
-					nBuyCharacterTradeRequests = append(nBuyCharacterTradeRequests, CharacterTradeRequest{
+					nBuyCharacterTradeRequests = append(nBuyCharacterTradeRequests, CharacterBuyTradeRequest{
 						ID:               tradeItem.ID,
 						TCharacter:       tCharacter,
 						Price:            int(pylonOutputAmount),
@@ -131,7 +134,7 @@ func SyncFromNode(user User) {
 						Level: level,
 						Name:  name,
 					}
-					nSellSwordTradeRequests = append(nSellSwordTradeRequests, ItemTradeRequest{
+					nSellSwordTradeRequests = append(nSellSwordTradeRequests, ItemSellTradeRequest{
 						ID:               tradeItem.ID,
 						TItem:            tItem,
 						Price:            int(inputPylonAmount),
@@ -145,7 +148,7 @@ func SyncFromNode(user User) {
 						Name:  name,
 						XP:    XP,
 					}
-					nSellCharacterTradeRequests = append(nSellCharacterTradeRequests, CharacterTradeRequest{
+					nSellCharacterTradeRequests = append(nSellCharacterTradeRequests, CharacterSellTradeRequest{
 						ID:               tradeItem.ID,
 						TCharacter:       tCharacter,
 						Price:            int(inputPylonAmount),

@@ -355,7 +355,7 @@ func (screen *GameScreen) HandleThirdClassInputKeys(input termbox.Event) bool {
 				screen.scrStatus = WAIT_BUY_SWORD_REQUEST_CREATION
 				screen.pylonEnterValue = screen.inputText
 				screen.SetInputTextAndRender("")
-				txhash, err := loud.CreateBuySwordTradeRequest(screen.user, screen.activeItem, screen.pylonEnterValue)
+				txhash, err := loud.CreateBuySwordTradeRequest(screen.user, screen.activeItSpec, screen.pylonEnterValue)
 				log.Println("ended sending request for creating sword -> pylon request")
 				if err != nil {
 					screen.txFailReason = err.Error()
@@ -386,7 +386,7 @@ func (screen *GameScreen) HandleThirdClassInputKeys(input termbox.Event) bool {
 				screen.scrStatus = WAIT_BUY_CHARACTER_REQUEST_CREATION
 				screen.pylonEnterValue = screen.inputText
 				screen.SetInputTextAndRender("")
-				txhash, err := loud.CreateBuyCharacterTradeRequest(screen.user, screen.activeCharacter, screen.pylonEnterValue)
+				txhash, err := loud.CreateBuyCharacterTradeRequest(screen.user, screen.activeChSpec, screen.pylonEnterValue)
 				log.Println("ended sending request for creating character -> pylon request")
 				if err != nil {
 					screen.txFailReason = err.Error()
@@ -561,10 +561,10 @@ func (screen *GameScreen) HandleThirdClassKeyEnterEvent() bool {
 			screen.inputText = ""
 			screen.refreshed = false
 		case CREATE_BUY_SWORD_REQUEST_SELECT_SWORD:
-			if len(loud.WorldItems) <= screen.activeLine || screen.activeLine < 0 {
+			if len(loud.WorldItemSpecs) <= screen.activeLine || screen.activeLine < 0 {
 				return false
 			}
-			screen.activeItem = loud.WorldItems[screen.activeLine]
+			screen.activeItSpec = loud.WorldItemSpecs[screen.activeLine]
 			screen.scrStatus = CREATE_BUY_SWORD_REQUEST_ENTER_PYLON_VALUE
 			screen.inputText = ""
 			screen.refreshed = false
@@ -578,10 +578,10 @@ func (screen *GameScreen) HandleThirdClassKeyEnterEvent() bool {
 			screen.inputText = ""
 			screen.refreshed = false
 		case CREATE_BUY_CHARACTER_REQUEST_SELECT_CHARACTER:
-			if len(loud.WorldCharacters) <= screen.activeLine || screen.activeLine < 0 {
+			if len(loud.WorldCharacterSpecs) <= screen.activeLine || screen.activeLine < 0 {
 				return false
 			}
-			screen.activeCharacter = loud.WorldCharacters[screen.activeLine]
+			screen.activeChSpec = loud.WorldCharacterSpecs[screen.activeLine]
 			screen.scrStatus = CREATE_BUY_CHARACTER_REQUEST_ENTER_PYLON_VALUE
 			screen.inputText = ""
 			screen.refreshed = false

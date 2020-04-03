@@ -4,8 +4,16 @@ type Item struct {
 	ID      string `json:""`
 	Name    string `json:""`
 	Level   int
+	Attack  int
 	Price   int
 	PreItem string `json:""`
+}
+
+type ItemSpec struct {
+	Name   string `json:""`
+	Level  [2]int
+	Attack [2]int
+	Price  int
 }
 
 type Character struct {
@@ -16,6 +24,14 @@ type Character struct {
 	XP    float64
 	HP    int
 	MaxHP int
+}
+type CharacterSpec struct {
+	Name  string `json:""`
+	Level [2]int
+	Price int
+	XP    [2]float64
+	HP    [2]int
+	MaxHP [2]int
 }
 
 const (
@@ -65,59 +81,59 @@ var ShopItems = []Item{
 	},
 }
 
-var WorldItems = []Item{
-	Item{
+var WorldItemSpecs = []ItemSpec{
+	ItemSpec{
 		Name:  WOODEN_SWORD,
-		Level: 1,
+		Level: [2]int{1, 1},
 	},
-	Item{
+	ItemSpec{
 		Name:  WOODEN_SWORD,
-		Level: 2,
+		Level: [2]int{2, 2},
 	},
-	Item{
+	ItemSpec{
 		Name:  COPPER_SWORD,
-		Level: 1,
+		Level: [2]int{1, 1},
 	},
-	Item{
+	ItemSpec{
 		Name:  COPPER_SWORD,
-		Level: 2,
+		Level: [2]int{2, 2},
 	},
-	Item{
+	ItemSpec{
 		Name:  TROLL_TOES,
-		Level: 1,
+		Level: [2]int{1, 1},
 	},
-	Item{
+	ItemSpec{
 		Name:  WOLF_TAIL,
-		Level: 1,
+		Level: [2]int{1, 1},
 	},
-	Item{
+	ItemSpec{
 		Name:  GOBLIN_EAR,
-		Level: 1,
+		Level: [2]int{1, 1},
 	},
-	Item{
+	ItemSpec{
 		Name:  SILVER_SWORD,
-		Level: 1,
+		Level: [2]int{1, 1},
 	},
-	Item{
+	ItemSpec{
 		Name:  BRONZE_SWORD,
-		Level: 1,
+		Level: [2]int{1, 1},
 	},
-	Item{
+	ItemSpec{
 		Name:  IRON_SWORD,
-		Level: 1,
+		Level: [2]int{1, 1},
 	},
 }
 
-var WorldCharacters = []Character{
-	Character{
+var WorldCharacterSpecs = []CharacterSpec{
+	CharacterSpec{
 		Name:  "Lion",
-		Level: 1,
-		XP:    1,
+		Level: [2]int{1, 2},
+		XP:    [2]float64{1, 1000},
 	},
-	Character{
+	CharacterSpec{
 		Name:  "Liger",
-		Level: 2,
-		XP:    1,
+		Level: [2]int{2, 1000},
+		XP:    [2]float64{1, 1000},
 	},
 }
 

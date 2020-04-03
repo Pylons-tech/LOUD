@@ -43,26 +43,27 @@ type Screen interface {
 }
 
 type GameScreen struct {
-	world                       loud.World
-	user                        loud.User
-	screenSize                  ssh.Window
-	activeItem                  loud.Item
-	activeCharacter             loud.Character
-	activeLine                  int
-	activeTradeRequest          loud.TradeRequest
-	activeItemTradeRequest      loud.ItemTradeRequest
-	activeCharacterTradeRequest loud.CharacterTradeRequest
-	pylonEnterValue             string
-	loudEnterValue              string
-	inputText                   string
-	refreshingDaemonStatus      bool
-	syncingData                 bool
-	blockHeight                 int64
-	txFailReason                string
-	txResult                    []byte
-	refreshed                   bool
-	scrStatus                   ScreenStatus
-	colorCodeCache              map[string](func(string) string)
+	world                  loud.World
+	user                   loud.User
+	screenSize             ssh.Window
+	activeItem             loud.Item
+	activeItSpec           loud.ItemSpec
+	activeCharacter        loud.Character
+	activeChSpec           loud.CharacterSpec
+	activeLine             int
+	activeTradeRequest     loud.TradeRequest
+	activeItemTradeRequest interface{}
+	pylonEnterValue        string
+	loudEnterValue         string
+	inputText              string
+	refreshingDaemonStatus bool
+	syncingData            bool
+	blockHeight            int64
+	txFailReason           string
+	txResult               []byte
+	refreshed              bool
+	scrStatus              ScreenStatus
+	colorCodeCache         map[string](func(string) string)
 }
 
 // NewScreen manages the window rendering for game
@@ -210,6 +211,28 @@ func (screen *GameScreen) sellCharacterDesc(activeCharacter loud.Character, pylo
 	return desc
 }
 
+func (screen *GameScreen) sellSwordSpecDesc(activeItem loud.ItemSpec, pylonValue interface{}) string {
+	var desc = strings.Join([]string{
+		"\n",
+		formatItemSpec(activeItem),
+		"\n  ↓\n",
+		screen.pylonIcon(),
+		fmt.Sprintf("%v", pylonValue),
+	}, "")
+	return desc
+}
+
+func (screen *GameScreen) sellCharacterSpecDesc(activeCharacter loud.CharacterSpec, pylonValue interface{}) string {
+	var desc = strings.Join([]string{
+		"\n",
+		formatCharacterSpec(activeCharacter),
+		"\n  ↓\n",
+		screen.pylonIcon(),
+		fmt.Sprintf("%v", pylonValue),
+	}, "")
+	return desc
+}
+
 func (screen *GameScreen) tradeTableColorDesc() []string {
 	var infoLines = []string{}
 	infoLines = append(infoLines, "white     ➝ other's request")
@@ -247,26 +270,11 @@ func (screen *GameScreen) brownFont() func(string) string {
 	return screen.colorFunc(fmt.Sprintf("%v:%v", 181, 232))
 }
 
-func (screen *GameScreen) renderTradeRequestTableLine(text1 string, text2 string, text3 string, isActiveLine bool, isDisabledLine bool) string {
-	calcText := "│" + centerText(text1, " ", 20) + "│" + centerText(text2, " ", 15) + "│" + centerText(text3, " ", 15) + "│"
-	if isActiveLine && isDisabledLine {
-		onColor := screen.brownBoldFont()
-		return onColor(calcText)
-	} else if isActiveLine {
-		onColor := screen.blueBoldFont()
-		return onColor(calcText)
-	} else if isDisabledLine {
-		onColor := screen.brownFont()
-		return onColor(calcText)
-	}
-	return calcText
-}
-
-func (screen *GameScreen) renderTradeRequestTable(requests []loud.TradeRequest) []string {
+func (screen *GameScreen) renderTRTable(requests []loud.TradeRequest) []string {
 	infoLines := []string{}
 	infoLines = append(infoLines, "╭────────────────────┬───────────────┬───────────────╮")
 	// infoLines = append(infoLines, "│ LOUD price (pylon) │ Amount (loud) │ Total (pylon) │")
-	infoLines = append(infoLines, screen.renderTradeRequestTableLine("LOUD price (pylon)", "Amount (loud)", "Total (pylon)", false, false))
+	infoLines = append(infoLines, screen.renderTRLine("LOUD price (pylon)", "Amount (loud)", "Total (pylon)", false, false))
 	infoLines = append(infoLines, "├────────────────────┼───────────────┼───────────────┤")
 	numLines := screen.screenSize.Height/2 - 7
 	if screen.activeLine >= len(requests) {
@@ -284,7 +292,7 @@ func (screen *GameScreen) renderTradeRequestTable(requests []loud.TradeRequest) 
 	for li, request := range requests[startLine:endLine] {
 		infoLines = append(
 			infoLines,
-			screen.renderTradeRequestTableLine(
+			screen.renderTRLine(
 				fmt.Sprintf("%.4f", request.Price),
 				fmt.Sprintf("%d", request.Amount),
 				fmt.Sprintf("%d", request.Total),
@@ -297,27 +305,13 @@ func (screen *GameScreen) renderTradeRequestTable(requests []loud.TradeRequest) 
 	return infoLines
 }
 
-func (screen *GameScreen) renderItemTradeRequestTableLine(text1 string, text2 string, isActiveLine bool, isDisabledLine bool) string {
-	calcText := "│" + centerText(text1, " ", 36) + "│" + centerText(text2, " ", 15) + "│"
-	if isActiveLine && isDisabledLine {
-		onColor := screen.brownBoldFont()
-		return onColor(calcText)
-	} else if isActiveLine {
-		onColor := screen.blueBoldFont()
-		return onColor(calcText)
-	} else if isDisabledLine {
-		onColor := screen.brownFont()
-		return onColor(calcText)
-	}
-	return calcText
-}
-
-func (screen *GameScreen) renderItemTradeRequestTable(header string, requests []loud.ItemTradeRequest) []string {
-	infoLines := strings.Split(header, "\n")
+func (screen *GameScreen) renderITRTable(title string, theads [2]string, requestsSlice interface{}) []string {
+	requests := InterfaceSlice(requestsSlice)
+	infoLines := strings.Split(title, "\n")
 	numHeaderLines := len(infoLines)
 	infoLines = append(infoLines, "╭────────────────────────────────────┬───────────────╮")
 	// infoLines = append(infoLines, "│ Item                │ Price (pylon) │")
-	infoLines = append(infoLines, screen.renderItemTradeRequestTableLine("Item", "Price (pylon)", false, false))
+	infoLines = append(infoLines, screen.renderItemTradeRequestTableLine(theads[0], theads[1], false, false))
 	infoLines = append(infoLines, "├────────────────────────────────────┼───────────────┤")
 	numLines := screen.screenSize.Height/2 - 7 - numHeaderLines
 	if screen.activeLine >= len(requests) {
@@ -333,70 +327,54 @@ func (screen *GameScreen) renderItemTradeRequestTable(header string, requests []
 		endLine = len(requests)
 	}
 	for li, request := range requests[startLine:endLine] {
-		infoLines = append(
-			infoLines,
-			screen.renderItemTradeRequestTableLine(
-				fmt.Sprintf("%s  ", formatItem(request.TItem)),
-				fmt.Sprintf("%d", request.Price),
+		line := ""
+		switch request.(type) {
+		case loud.ItemBuyTradeRequest:
+			itr := request.(loud.ItemBuyTradeRequest)
+			line = screen.renderItemTradeRequestTableLine(
+				fmt.Sprintf("%s  ", formatItemSpec(itr.TItem)),
+				fmt.Sprintf("%d", itr.Price),
 				startLine+li == activeLine,
-				request.IsMyTradeRequest,
-			),
-		)
+				itr.IsMyTradeRequest,
+			)
+		case loud.ItemSellTradeRequest:
+			itr := request.(loud.ItemSellTradeRequest)
+			line = screen.renderItemTradeRequestTableLine(
+				fmt.Sprintf("%s  ", formatItem(itr.TItem)),
+				fmt.Sprintf("%d", itr.Price),
+				startLine+li == activeLine,
+				itr.IsMyTradeRequest,
+			)
+		case loud.CharacterBuyTradeRequest:
+			itr := request.(loud.CharacterBuyTradeRequest)
+			line = screen.renderItemTradeRequestTableLine(
+				fmt.Sprintf("%s  ", formatCharacterSpec(itr.TCharacter)),
+				fmt.Sprintf("%d", itr.Price),
+				startLine+li == activeLine,
+				itr.IsMyTradeRequest,
+			)
+		case loud.CharacterSellTradeRequest:
+			itr := request.(loud.CharacterSellTradeRequest)
+			line = screen.renderItemTradeRequestTableLine(
+				fmt.Sprintf("%s  ", formatCharacter(itr.TCharacter)),
+				fmt.Sprintf("%d", itr.Price),
+				startLine+li == activeLine,
+				itr.IsMyTradeRequest,
+			)
+		}
+		infoLines = append(infoLines, line)
 	}
 	infoLines = append(infoLines, "╰────────────────────────────────────┴───────────────╯")
 	return infoLines
 }
 
-func (screen *GameScreen) renderCharacterTradeRequestTable(header string, requests []loud.CharacterTradeRequest) []string {
-	infoLines := strings.Split(header, "\n")
-	numHeaderLines := len(infoLines)
-	infoLines = append(infoLines, "╭────────────────────────────────────┬───────────────╮")
-	// infoLines = append(infoLines, "│ Character                │ Price (pylon) │")
-	infoLines = append(infoLines, screen.renderItemTradeRequestTableLine("Character", "Price (pylon)", false, false))
-	infoLines = append(infoLines, "├────────────────────────────────────┼───────────────┤")
-	numLines := screen.screenSize.Height/2 - 7 - numHeaderLines
-	if screen.activeLine >= len(requests) {
-		screen.activeLine = len(requests) - 1
-	}
-	activeLine := screen.activeLine
-	startLine := activeLine - numLines + 1
-	if startLine < 0 {
-		startLine = 0
-	}
-	endLine := startLine + numLines
-	if endLine > len(requests) {
-		endLine = len(requests)
-	}
-	for li, request := range requests[startLine:endLine] {
-		infoLines = append(
-			infoLines,
-			screen.renderItemTradeRequestTableLine(
-				fmt.Sprintf("%s  ", formatCharacter(request.TCharacter)),
-				fmt.Sprintf("%d", request.Price),
-				startLine+li == activeLine,
-				request.IsMyTradeRequest,
-			),
-		)
-	}
-	infoLines = append(infoLines, "╰────────────────────────────────────┴───────────────╯")
-	return infoLines
-}
-
-func (screen *GameScreen) renderItemTableLine(text1 string, isActiveLine bool) string {
-	calcText := "│" + centerText(text1, " ", 52) + "│"
-	if isActiveLine {
-		onColor := screen.blueBoldFont()
-		return onColor(calcText)
-	}
-	return calcText
-}
-
-func (screen *GameScreen) renderItemTable(header string, items []loud.Item) []string {
-	infoLines := strings.Split(header, "\n")
+func (screen *GameScreen) renderITTable(header string, th string, itemSlice interface{}) []string {
+	items := InterfaceSlice(itemSlice)
+	infoLines := strings.Split(loud.Localize(header), "\n")
 	numHeaderLines := len(infoLines)
 	infoLines = append(infoLines, "╭────────────────────────────────────────────────────╮")
 	// infoLines = append(infoLines, "│ Item                            │")
-	infoLines = append(infoLines, screen.renderItemTableLine("Item", false))
+	infoLines = append(infoLines, screen.renderItemTableLine(th, false))
 	infoLines = append(infoLines, "├────────────────────────────────────────────────────┤")
 	numLines := screen.screenSize.Height/2 - 7 - numHeaderLines
 	if screen.activeLine >= len(items) {
@@ -412,46 +390,34 @@ func (screen *GameScreen) renderItemTable(header string, items []loud.Item) []st
 		endLine = len(items)
 	}
 	for li, item := range items[startLine:endLine] {
-		infoLines = append(
-			infoLines,
-			screen.renderItemTableLine(
-				fmt.Sprintf("%s  ", formatItem(item)),
+		line := ""
+		switch item.(type) {
+		case loud.Item:
+			itemT := item.(loud.Item)
+			line = screen.renderItemTableLine(
+				fmt.Sprintf("%s  ", formatItem(itemT)),
 				startLine+li == activeLine,
-			),
-		)
-	}
-	infoLines = append(infoLines, "╰────────────────────────────────────────────────────╯")
-	return infoLines
-}
-
-func (screen *GameScreen) renderCharacterTable(header string, characters []loud.Character) []string {
-	infoLines := strings.Split(header, "\n")
-	numHeaderLines := len(infoLines)
-	infoLines = append(infoLines, "╭────────────────────────────────────────────────────╮")
-	// infoLines = append(infoLines, "│ Item                            │")
-	infoLines = append(infoLines, screen.renderItemTableLine("Character", false))
-	infoLines = append(infoLines, "├────────────────────────────────────────────────────┤")
-	numLines := screen.screenSize.Height/2 - 7 - numHeaderLines
-	if screen.activeLine >= len(characters) {
-		screen.activeLine = len(characters) - 1
-	}
-	activeLine := screen.activeLine
-	startLine := activeLine - numLines + 1
-	if startLine < 0 {
-		startLine = 0
-	}
-	endLine := startLine + numLines
-	if endLine > len(characters) {
-		endLine = len(characters)
-	}
-	for li, character := range characters[startLine:endLine] {
-		infoLines = append(
-			infoLines,
-			screen.renderItemTableLine(
-				fmt.Sprintf("%s  ", formatCharacter(character)),
+			)
+		case loud.Character:
+			itemT := item.(loud.Character)
+			line = screen.renderItemTableLine(
+				fmt.Sprintf("%s  ", formatCharacter(itemT)),
 				startLine+li == activeLine,
-			),
-		)
+			)
+		case loud.ItemSpec:
+			itemT := item.(loud.ItemSpec)
+			line = screen.renderItemTableLine(
+				fmt.Sprintf("%s  ", formatItemSpec(itemT)),
+				startLine+li == activeLine,
+			)
+		case loud.CharacterSpec:
+			itemT := item.(loud.CharacterSpec)
+			line = screen.renderItemTableLine(
+				fmt.Sprintf("%s  ", formatCharacterSpec(itemT)),
+				startLine+li == activeLine,
+			)
+		}
+		infoLines = append(infoLines, line)
 	}
 	infoLines = append(infoLines, "╰────────────────────────────────────────────────────╯")
 	return infoLines
@@ -801,9 +767,10 @@ func (screen *GameScreen) RunSelectedSwordBuyTradeRequest() {
 		screen.txFailReason = loud.Localize("you haven't selected any buy item request")
 		screen.SetScreenStatusAndRefresh(RESULT_FULFILL_BUY_SWORD_REQUEST)
 	} else {
-		screen.activeItemTradeRequest = loud.SwordBuyTradeRequests[screen.activeLine]
+		atir := loud.SwordBuyTradeRequests[screen.activeLine]
+		screen.activeItemTradeRequest = atir
 		screen.RunTxProcess(WAIT_FULFILL_BUY_SWORD_REQUEST, RESULT_FULFILL_BUY_SWORD_REQUEST, func() (string, error) {
-			return loud.FulfillTrade(screen.user, screen.activeItemTradeRequest.ID)
+			return loud.FulfillTrade(screen.user, atir.ID)
 		})
 	}
 }
@@ -813,9 +780,10 @@ func (screen *GameScreen) RunSelectedSwordSellTradeRequest() {
 		screen.txFailReason = loud.Localize("you haven't selected any sell item request")
 		screen.SetScreenStatusAndRefresh(RESULT_FULFILL_SELL_SWORD_REQUEST)
 	} else {
-		screen.activeItemTradeRequest = loud.SwordSellTradeRequests[screen.activeLine]
+		sstr := loud.SwordSellTradeRequests[screen.activeLine]
+		screen.activeItemTradeRequest = sstr
 		screen.RunTxProcess(WAIT_FULFILL_SELL_SWORD_REQUEST, RESULT_FULFILL_SELL_SWORD_REQUEST, func() (string, error) {
-			return loud.FulfillTrade(screen.user, screen.activeItemTradeRequest.ID)
+			return loud.FulfillTrade(screen.user, sstr.ID)
 		})
 	}
 }
@@ -825,9 +793,10 @@ func (screen *GameScreen) RunSelectedCharacterBuyTradeRequest() {
 		screen.txFailReason = loud.Localize("you haven't selected any buy character request")
 		screen.SetScreenStatusAndRefresh(RESULT_FULFILL_BUY_CHARACTER_REQUEST)
 	} else {
-		screen.activeCharacterTradeRequest = loud.CharacterBuyTradeRequests[screen.activeLine]
+		cbtr := loud.CharacterBuyTradeRequests[screen.activeLine]
+		screen.activeItemTradeRequest = cbtr
 		screen.RunTxProcess(WAIT_FULFILL_BUY_CHARACTER_REQUEST, RESULT_FULFILL_BUY_CHARACTER_REQUEST, func() (string, error) {
-			return loud.FulfillTrade(screen.user, screen.activeCharacterTradeRequest.ID)
+			return loud.FulfillTrade(screen.user, cbtr.ID)
 		})
 	}
 }
@@ -837,9 +806,10 @@ func (screen *GameScreen) RunSelectedCharacterSellTradeRequest() {
 		screen.txFailReason = loud.Localize("you haven't selected any sell character request")
 		screen.SetScreenStatusAndRefresh(RESULT_FULFILL_SELL_CHARACTER_REQUEST)
 	} else {
-		screen.activeCharacterTradeRequest = loud.CharacterSellTradeRequests[screen.activeLine]
+		cstr := loud.CharacterSellTradeRequests[screen.activeLine]
+		screen.activeItemTradeRequest = cstr
 		screen.RunTxProcess(WAIT_FULFILL_SELL_CHARACTER_REQUEST, RESULT_FULFILL_SELL_CHARACTER_REQUEST, func() (string, error) {
-			return loud.FulfillTrade(screen.user, screen.activeCharacterTradeRequest.ID)
+			return loud.FulfillTrade(screen.user, cstr.ID)
 		})
 	}
 }
@@ -891,7 +861,7 @@ func (screen *GameScreen) Render() {
 	}
 	var HP uint64 = 10
 
-	if screen.screenSize.Height < 20 || screen.screenSize.Width < 60 {
+	if screen.screenSize.Height < 38 || screen.screenSize.Width < 120 {
 		clear := cursor.ClearEntireScreen()
 		move := cursor.MoveTo(1, 1)
 		io.WriteString(os.Stdout,
