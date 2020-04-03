@@ -75,13 +75,13 @@ Output: `attack * (randi(2)+20)` loudcoin
 Input: Any item which has `attack` and `level` attributes
 
 ### Hunt recipe without sword
-Output gold: 1 or 2
+Reward: 1 or 2
 Character die percent: 10%
 When character die, no gold is returned.
 
 ### Hunt recipe with a sword
 
-Output gold: `attack*4` or `attack*5`
+Reward: 1 + `attack / 2`
 Character dying percent: 5%
 Sword lose percent: 5%
 When character die, no gold is returned.
@@ -90,7 +90,7 @@ When character die, no gold is returned.
 
 Goblin HP: 10
 Goblin attack: 1
-Award: 50 loudcoin
+Reward: 50 loudcoin
 
 character should carry sword to fight goblin.
 Total received damage you get from Goblin is calculated by using `EnemyHP * EnemyAttack / SwordAttack`, and dying percentage is related to Total received damage you get from Goblin.
@@ -106,7 +106,7 @@ When character die, no gold is returned.
 
 Wolf HP: 15
 Wolf attack: 3
-Award: 150 loudcoin
+Reward: 150 loudcoin
 
 character should carry sword to fight wolf.
 Total received damage you get from Wolf is calculated by using `EnemyHP * EnemyAttack / SwordAttack`, and dying percentage is related to Total received damage you get from Wolf.
@@ -122,7 +122,7 @@ When character die, no gold is returned.
 
 Troll HP: 20
 Troll attack: 5
-Award: 300 loudcoin
+Reward: 300 loudcoin
 
 character should carry sword to fight troll.
 Total received damage you get from Troll is calculated by using `EnemyHP * EnemyAttack / SwordAttack`, and dying percentage is related to Total received damage you get from Troll.
@@ -138,7 +138,7 @@ When character die, no gold is returned.
 
 Troll HP: 100
 Troll attack: 10
-Award: 3000 loudcoin
+Reward: 3000 loudcoin
 
 character should carry iron sword to fight giant.
 Total received damage you get from Giant is calculated by using `EnemyHP * EnemyAttack / SwordAttack`, and dying percentage is related to Total received damage you get from Giant.

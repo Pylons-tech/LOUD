@@ -1,5 +1,7 @@
 package loud
 
+import "strings"
+
 type Item struct {
 	ID      string `json:""`
 	Name    string `json:""`
@@ -7,6 +9,10 @@ type Item struct {
 	Attack  int
 	Price   int
 	PreItem string `json:""`
+}
+
+func (item Item) IsSword() bool {
+	return strings.Contains(item.Name, "sword")
 }
 
 type ItemSpec struct {
@@ -83,20 +89,24 @@ var ShopItems = []Item{
 
 var WorldItemSpecs = []ItemSpec{
 	ItemSpec{
-		Name:  WOODEN_SWORD,
-		Level: [2]int{1, 1},
+		Name:   WOODEN_SWORD,
+		Level:  [2]int{1, 1},
+		Attack: [2]int{3, 3},
 	},
 	ItemSpec{
-		Name:  WOODEN_SWORD,
-		Level: [2]int{2, 2},
+		Name:   WOODEN_SWORD,
+		Level:  [2]int{2, 2},
+		Attack: [2]int{6, 6},
 	},
 	ItemSpec{
-		Name:  COPPER_SWORD,
-		Level: [2]int{1, 1},
+		Name:   COPPER_SWORD,
+		Level:  [2]int{1, 1},
+		Attack: [2]int{10, 10},
 	},
 	ItemSpec{
-		Name:  COPPER_SWORD,
-		Level: [2]int{2, 2},
+		Name:   COPPER_SWORD,
+		Level:  [2]int{2, 2},
+		Attack: [2]int{20, 20},
 	},
 	ItemSpec{
 		Name:  TROLL_TOES,
@@ -111,16 +121,19 @@ var WorldItemSpecs = []ItemSpec{
 		Level: [2]int{1, 1},
 	},
 	ItemSpec{
-		Name:  SILVER_SWORD,
-		Level: [2]int{1, 1},
+		Name:   SILVER_SWORD,
+		Level:  [2]int{1, 1},
+		Attack: [2]int{30, 30},
 	},
 	ItemSpec{
-		Name:  BRONZE_SWORD,
-		Level: [2]int{1, 1},
+		Name:   BRONZE_SWORD,
+		Level:  [2]int{1, 1},
+		Attack: [2]int{50, 50},
 	},
 	ItemSpec{
-		Name:  IRON_SWORD,
-		Level: [2]int{1, 1},
+		Name:   IRON_SWORD,
+		Level:  [2]int{1, 1},
+		Attack: [2]int{100, 100},
 	},
 }
 
@@ -129,11 +142,15 @@ var WorldCharacterSpecs = []CharacterSpec{
 		Name:  "Lion",
 		Level: [2]int{1, 2},
 		XP:    [2]float64{1, 1000},
+		HP:    [2]int{1, 100},
+		MaxHP: [2]int{100, 100},
 	},
 	CharacterSpec{
 		Name:  "Liger",
 		Level: [2]int{2, 1000},
 		XP:    [2]float64{1, 1000},
+		HP:    [2]int{1, 100},
+		MaxHP: [2]int{100, 100},
 	},
 }
 

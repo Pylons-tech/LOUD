@@ -665,7 +665,7 @@ func (screen *GameScreen) HandleThirdClassKeyEnterEvent() bool {
 			screen.activeItem = items[screen.activeLine]
 			screen.RunActiveItemSell()
 		case SELECT_UPGRADE_ITEM:
-			items := screen.user.UpgradableItems()
+			items := screen.user.InventoryUpgradableItems()
 			if len(items) <= screen.activeLine || screen.activeLine < 0 {
 				return false
 			}

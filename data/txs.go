@@ -79,8 +79,7 @@ func Hunt(user User, item Item) (string, error) {
 	rcpName := "LOUD's hunt without sword recipe"
 	itemIDs := []string{defaultCharacterID}
 
-	switch item.Name {
-	case WOODEN_SWORD, COPPER_SWORD:
+	if item.IsSword() {
 		rcpName = "LOUD's hunt with a sword recipe"
 		itemIDs = []string{defaultCharacterID, item.ID}
 	}

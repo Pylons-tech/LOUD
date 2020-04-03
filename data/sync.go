@@ -30,6 +30,7 @@ func SyncFromNode(user User) {
 		Level, _ := rawItem.FindLong("level")
 		Name, _ := rawItem.FindString("Name")
 		itemType, _ := rawItem.FindString("Type")
+		Attack, _ := rawItem.FindDouble("attack")
 
 		if itemType == "Character" {
 			myCharacters = append(myCharacters, Character{
@@ -42,9 +43,10 @@ func SyncFromNode(user User) {
 			})
 		} else {
 			myItems = append(myItems, Item{
-				Level: Level,
-				Name:  Name,
-				ID:    rawItem.ID,
+				Level:  Level,
+				Name:   Name,
+				Attack: int(Attack),
+				ID:     rawItem.ID,
 			})
 		}
 	}
@@ -90,7 +92,7 @@ func SyncFromNode(user User) {
 					Price:            float64(inputPylonAmount) / float64(loudOutputAmount),
 					IsMyTradeRequest: isMyTradeRequest,
 				})
-			} else if itemInputLen > 0 { // buy sword trade
+			} else if itemInputLen > 0 { // buy item trade
 				MinLevel := tradeItem.ItemInputs[0].Longs[0].MinValue
 				MaxLevel := tradeItem.ItemInputs[0].Longs[0].MaxValue
 				Name := tradeItem.ItemInputs[0].Strings[0].Value
@@ -105,7 +107,7 @@ func SyncFromNode(user User) {
 						Price:            int(pylonOutputAmount),
 						IsMyTradeRequest: isMyTradeRequest,
 					})
-				} else { // character buy request created by loud game
+				} else if tradeItem.ExtraInfo == "character buy request created by loud game" { // character buy request created by loud game
 					MinXP := 0.0
 					MaxXP := 0.0
 					if len(tradeItem.ItemInputs[0].Doubles) > 0 {
@@ -124,7 +126,7 @@ func SyncFromNode(user User) {
 						IsMyTradeRequest: isMyTradeRequest,
 					})
 				}
-			} else if itemOutputLen > 0 { // sell sword trade
+			} else if itemOutputLen > 0 { // sell item trade
 				inputPylonAmount := tradeItem.CoinInputs[0].Count
 				level, _ := tradeItem.ItemOutputs[0].FindLong("level")
 				name, _ := tradeItem.ItemOutputs[0].FindString("Name")
@@ -140,13 +142,17 @@ func SyncFromNode(user User) {
 						Price:            int(inputPylonAmount),
 						IsMyTradeRequest: isMyTradeRequest,
 					})
-				} else { // character sell request created by loud game
+				} else if tradeItem.ExtraInfo == "character sell request created by loud game" { // character sell request created by loud game
 					XP, _ := tradeItem.ItemOutputs[0].FindDouble("XP")
+					HP, _ := tradeItem.ItemOutputs[0].FindLong("HP")
+					MaxHP, _ := tradeItem.ItemOutputs[0].FindLong("MaxHP")
 					tCharacter := Character{
 						ID:    tradeItem.ItemOutputs[0].ID,
 						Level: level,
 						Name:  name,
 						XP:    XP,
+						HP:    HP,
+						MaxHP: MaxHP,
 					}
 					nSellCharacterTradeRequests = append(nSellCharacterTradeRequests, CharacterSellTradeRequest{
 						ID:               tradeItem.ID,

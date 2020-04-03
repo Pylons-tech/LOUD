@@ -498,7 +498,7 @@ func GetToSellItemFromKey(user User, key string) Item {
 }
 
 func GetToUpgradeItemFromKey(user User, key string) Item {
-	items := user.UpgradableItems()
+	items := user.InventoryUpgradableItems()
 	useItem := Item{}
 	itemKey := GetIndexFromString(key)
 	if itemKey >= 0 && itemKey < len(items) {

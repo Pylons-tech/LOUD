@@ -97,7 +97,7 @@ func (screen *GameScreen) renderUserSituation() {
 	case SELECT_FIGHT_GIANT_ITEM:
 		infoLines = screen.renderITTable("select fight giant item desc", "Item", screen.user.InventoryIronSwords())
 	case SELECT_UPGRADE_ITEM:
-		infoLines = screen.renderITTable("select upgrade item desc", "Item", screen.user.UpgradableItems())
+		infoLines = screen.renderITTable("select upgrade item desc", "Item", screen.user.InventoryUpgradableItems())
 	}
 
 	if strings.HasPrefix(string(screen.scrStatus), "RESULT_") {
