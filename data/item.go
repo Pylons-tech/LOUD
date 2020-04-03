@@ -15,6 +15,7 @@ type Character struct {
 	Price int
 	XP    float64
 	HP    int
+	MaxHP int
 }
 
 const (

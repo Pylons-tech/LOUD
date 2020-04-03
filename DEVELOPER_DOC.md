@@ -153,3 +153,5 @@ When character die, no gold is returned.
 
 HP: +20
 Price: 10 loudcoin
+
+If HP is bigger than MaxHP, it is set to MaxHP automatically.

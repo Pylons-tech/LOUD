@@ -616,6 +616,14 @@ func (screen *GameScreen) renderInputValue() {
 func (screen *GameScreen) renderCharacterSheet() {
 	var HP uint64 = 10
 	var MaxHP uint64 = 10
+
+	characters := screen.user.InventoryCharacters()
+	dfc := screen.user.GetDefaultCharacterIndex()
+	if dfc >= 0 && dfc < len(characters) {
+		DFC := characters[dfc]
+		HP = uint64(DFC.HP)
+		MaxHP = uint64(DFC.MaxHP)
+	}
 	bgcolor := uint64(bgcolor)
 	warning := ""
 	if float32(HP) < float32(MaxHP)*.25 {
@@ -653,7 +661,6 @@ func (screen *GameScreen) renderCharacterSheet() {
 	}
 
 	infoLines = append(infoLines, centerText(loud.Localize("inventory chracters"), "─", width))
-	characters := screen.user.InventoryCharacters()
 	for idx, character := range characters {
 		characterInfo := truncateRight(formatCharacter(character), width)
 		if idx == screen.user.GetDefaultCharacterIndex() {
