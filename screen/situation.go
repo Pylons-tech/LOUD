@@ -27,17 +27,29 @@ func (screen *GameScreen) renderUserSituation() {
 		}
 		desc = locationDescMap[screen.user.GetLocation()]
 	case SHOW_LOUD_BUY_REQUESTS:
-		infoLines = screen.renderTradeRequestTable(loud.BuyTradeRequests)
+		infoLines = screen.renderTRTable(loud.BuyTradeRequests)
 	case SHOW_LOUD_SELL_REQUESTS:
-		infoLines = screen.renderTradeRequestTable(loud.SellTradeRequests)
+		infoLines = screen.renderTRTable(loud.SellTradeRequests)
 	case SHOW_BUY_SWORD_REQUESTS:
-		infoLines = screen.renderItemTradeRequestTable("Buy sword requests", loud.SwordBuyTradeRequests)
+		infoLines = screen.renderITRTable(
+			"Buy sword requests",
+			[2]string{"Item", "Price (pylon)"},
+			loud.SwordBuyTradeRequests)
 	case SHOW_SELL_SWORD_REQUESTS:
-		infoLines = screen.renderItemTradeRequestTable("Sell sword requests", loud.SwordSellTradeRequests)
+		infoLines = screen.renderITRTable(
+			"Sell sword requests",
+			[2]string{"Item", "Price (pylon)"},
+			loud.SwordSellTradeRequests)
 	case SHOW_SELL_CHARACTER_REQUESTS:
-		infoLines = screen.renderCharacterTradeRequestTable("Sell character requests", loud.CharacterSellTradeRequests)
+		infoLines = screen.renderITRTable(
+			"Sell character requests",
+			[2]string{"Character", "Price (pylon)"},
+			loud.CharacterSellTradeRequests)
 	case SHOW_BUY_CHARACTER_REQUESTS:
-		infoLines = screen.renderCharacterTradeRequestTable("Buy character requests", loud.CharacterBuyTradeRequests)
+		infoLines = screen.renderITRTable(
+			"Buy character requests",
+			[2]string{"Character", "Price (pylon)"},
+			loud.CharacterBuyTradeRequests)
 	case CREATE_BUY_LOUD_REQUEST_ENTER_PYLON_VALUE:
 		desc = "Please enter pylon amount to use (should be integer value)" // TODO should add Localize
 	case CREATE_SELL_LOUD_REQUEST_ENTER_PYLON_VALUE:
@@ -47,45 +59,45 @@ func (screen *GameScreen) renderUserSituation() {
 	case CREATE_SELL_LOUD_REQUEST_ENTER_LOUD_VALUE:
 		desc = "Please enter loud amount to sell (should be integer value)" // TODO should add Localize
 	case CREATE_SELL_SWORD_REQUEST_SELECT_SWORD:
-		infoLines = screen.renderItemTable("Select sword to sell", screen.user.InventoryItems())
+		infoLines = screen.renderITTable("Select sword to sell", "Item", screen.user.InventoryItems())
 	case CREATE_SELL_CHARACTER_REQUEST_SELECT_CHARACTER:
-		infoLines = screen.renderCharacterTable("Select character to sell", screen.user.InventoryCharacters())
+		infoLines = screen.renderITTable("Select character to sell", "Character", screen.user.InventoryCharacters())
 	case CREATE_SELL_SWORD_REQUEST_ENTER_PYLON_VALUE:
 		desc = "Please enter pylon amount to use (should be integer value)" // TODO should add Localize
 	case CREATE_SELL_CHARACTER_REQUEST_ENTER_PYLON_VALUE:
 		desc = "Please enter pylon amount to use (should be integer value)" // TODO should add Localize
 	case CREATE_BUY_SWORD_REQUEST_SELECT_SWORD:
-		infoLines = screen.renderItemTable("Select sword to buy", loud.WorldItems)
+		infoLines = screen.renderITTable("Select sword to buy", "Item", loud.WorldItemSpecs)
 	case CREATE_BUY_CHARACTER_REQUEST_SELECT_CHARACTER:
-		infoLines = screen.renderCharacterTable("Select character to buy", loud.WorldCharacters)
+		infoLines = screen.renderITTable("Select character specs to get", "Character", loud.WorldCharacterSpecs)
 	case CREATE_BUY_SWORD_REQUEST_ENTER_PYLON_VALUE:
 		desc = "Please enter pylon amount to use (should be integer value)" // TODO should add Localize
 	case CREATE_BUY_CHARACTER_REQUEST_ENTER_PYLON_VALUE:
 		desc = "Please enter pylon amount to use (should be integer value)" // TODO should add Localize
 	case SELECT_DEFAULT_CHAR:
-		infoLines = screen.renderCharacterTable(loud.Localize("Please select default character"), screen.user.InventoryCharacters())
+		infoLines = screen.renderITTable("Please select default character", "Character", screen.user.InventoryCharacters())
 	case SELECT_HEALTH_RESTORE_CHAR:
-		infoLines = screen.renderCharacterTable(loud.Localize("Please select character to restore health"), screen.user.InventoryCharacters())
+		infoLines = screen.renderITTable("Please select character to restore health", "Character", screen.user.InventoryCharacters())
 	case SELECT_DEFAULT_WEAPON:
-		infoLines = screen.renderItemTable(loud.Localize("Please select default weapon"), screen.user.InventorySwords())
+		infoLines = screen.renderITTable("Please select default weapon", "Item", screen.user.InventorySwords())
 	case SELECT_BUY_ITEM:
-		infoLines = screen.renderItemTable(loud.Localize("select buy item desc"), loud.ShopItems)
+		infoLines = screen.renderITTable("select buy item desc", "Item", loud.ShopItems)
 	case SELECT_BUY_CHARACTER:
-		infoLines = screen.renderCharacterTable(loud.Localize("select buy character desc"), loud.ShopCharacters)
+		infoLines = screen.renderITTable("select buy character desc", "Character", loud.ShopCharacters)
 	case SELECT_SELL_ITEM:
-		infoLines = screen.renderItemTable(loud.Localize("select sell item desc"), screen.user.InventoryItems())
+		infoLines = screen.renderITTable("select sell item desc", "Item", screen.user.InventoryItems())
 	case SELECT_HUNT_ITEM:
-		infoLines = screen.renderItemTable(loud.Localize("select hunt item desc"), screen.user.InventorySwords())
+		infoLines = screen.renderITTable("select hunt item desc", "Item", screen.user.InventorySwords())
 	case SELECT_FIGHT_GOBLIN_ITEM:
-		infoLines = screen.renderItemTable(loud.Localize("select fight goblin item desc"), screen.user.InventorySwords())
+		infoLines = screen.renderITTable("select fight goblin item desc", "Item", screen.user.InventorySwords())
 	case SELECT_FIGHT_WOLF_ITEM:
-		infoLines = screen.renderItemTable(loud.Localize("select fight wolf item desc"), screen.user.InventorySwords())
+		infoLines = screen.renderITTable("select fight wolf item desc", "Item", screen.user.InventorySwords())
 	case SELECT_FIGHT_TROLL_ITEM:
-		infoLines = screen.renderItemTable(loud.Localize("select fight troll item desc"), screen.user.InventorySwords())
+		infoLines = screen.renderITTable("select fight troll item desc", "Item", screen.user.InventorySwords())
 	case SELECT_FIGHT_GIANT_ITEM:
-		infoLines = screen.renderItemTable(loud.Localize("select fight giant item desc"), screen.user.InventoryIronSwords())
+		infoLines = screen.renderITTable("select fight giant item desc", "Item", screen.user.InventoryIronSwords())
 	case SELECT_UPGRADE_ITEM:
-		infoLines = screen.renderItemTable(loud.Localize("select upgrade item desc"), screen.user.UpgradableItems())
+		infoLines = screen.renderITTable("select upgrade item desc", "Item", screen.user.InventoryUpgradableItems())
 	}
 
 	if strings.HasPrefix(string(screen.scrStatus), "RESULT_") {
@@ -257,21 +269,21 @@ func (screen *GameScreen) TxResultSituationDesc() string {
 			desc = loud.Localize("you have bought loud coin successfully from loud/pylon market") + fmt.Sprintf(" at %.4f.\n", request.Price)
 			desc += screen.buyLoudDesc(request.Amount, request.Total)
 		case RESULT_FULFILL_SELL_SWORD_REQUEST:
-			request := screen.activeItemTradeRequest
+			request := screen.activeItemTradeRequest.(loud.ItemSellTradeRequest)
 			desc = loud.Localize("you have bought sword successfully from sword/pylon market") + fmt.Sprintf(" at %d.\n", request.Price)
 			desc += screen.buySwordDesc(request.TItem, fmt.Sprintf("%d", request.Price))
 		case RESULT_FULFILL_SELL_CHARACTER_REQUEST:
-			request := screen.activeCharacterTradeRequest
+			request := screen.activeItemTradeRequest.(loud.CharacterSellTradeRequest)
 			desc = loud.Localize("you have bought character successfully from character/pylon market") + fmt.Sprintf(" at %d.\n", request.Price)
 			desc += screen.buyCharacterDesc(request.TCharacter, fmt.Sprintf("%d", request.Price))
 		case RESULT_FULFILL_BUY_SWORD_REQUEST:
-			request := screen.activeItemTradeRequest
+			request := screen.activeItemTradeRequest.(loud.ItemBuyTradeRequest)
 			desc = loud.Localize("you have sold sword successfully from sword/pylon market") + fmt.Sprintf(" at %d.\n", request.Price)
-			desc += screen.sellSwordDesc(request.TItem, fmt.Sprintf("%d", request.Price))
+			desc += screen.sellSwordSpecDesc(request.TItem, fmt.Sprintf("%d", request.Price))
 		case RESULT_FULFILL_BUY_CHARACTER_REQUEST:
-			request := screen.activeCharacterTradeRequest
+			request := screen.activeItemTradeRequest.(loud.CharacterBuyTradeRequest)
 			desc = loud.Localize("you have sold character successfully from character/pylon market") + fmt.Sprintf(" at %d.\n", request.Price)
-			desc += screen.sellCharacterDesc(request.TCharacter, fmt.Sprintf("%d", request.Price))
+			desc += screen.sellCharacterSpecDesc(request.TCharacter, fmt.Sprintf("%d", request.Price))
 		}
 	}
 	return desc
@@ -343,21 +355,21 @@ func (screen *GameScreen) TxWaitSituationDesc() string {
 		desc += screen.buyCharacterDesc(screen.activeCharacter, screen.pylonEnterValue)
 	// For FULFILL trades, msg should be reversed, since user is opposite
 	case WAIT_FULFILL_SELL_SWORD_REQUEST:
-		request := screen.activeItemTradeRequest
+		request := screen.activeItemTradeRequest.(loud.ItemSellTradeRequest)
 		desc = loud.Sprintf("You are now buying sword at %d", request.Price)
 		desc += screen.buySwordDesc(request.TItem, fmt.Sprintf("%d", request.Price))
 	case WAIT_FULFILL_SELL_CHARACTER_REQUEST:
-		request := screen.activeCharacterTradeRequest
+		request := screen.activeItemTradeRequest.(loud.CharacterSellTradeRequest)
 		desc = loud.Localize("you are now buying character ") + fmt.Sprintf(" at %d.\n", request.Price)
 		desc += screen.buyCharacterDesc(request.TCharacter, fmt.Sprintf("%d", request.Price))
 	case WAIT_FULFILL_BUY_SWORD_REQUEST:
-		request := screen.activeItemTradeRequest
+		request := screen.activeItemTradeRequest.(loud.ItemBuyTradeRequest)
 		desc = loud.Localize("you are now selling sword ") + fmt.Sprintf(" at %d.\n", request.Price)
-		desc += screen.sellSwordDesc(request.TItem, fmt.Sprintf("%d", request.Price))
+		desc += screen.sellSwordSpecDesc(request.TItem, fmt.Sprintf("%d", request.Price))
 	case WAIT_FULFILL_BUY_CHARACTER_REQUEST:
-		request := screen.activeCharacterTradeRequest
+		request := screen.activeItemTradeRequest.(loud.CharacterBuyTradeRequest)
 		desc = loud.Localize("you are now selling character ") + fmt.Sprintf(" at %d.\n", request.Price)
-		desc += screen.sellCharacterDesc(request.TCharacter, fmt.Sprintf("%d", request.Price))
+		desc += screen.sellCharacterSpecDesc(request.TCharacter, fmt.Sprintf("%d", request.Price))
 	case WAIT_FULFILL_BUY_LOUD_REQUEST:
 		request := screen.activeTradeRequest
 		desc = loud.Localize("you are now selling loud for pylon") + fmt.Sprintf(" at %.4f.\n", request.Price)

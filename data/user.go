@@ -26,7 +26,8 @@ type User interface {
 	InventoryIronSwords() []Item
 	InventorySwords() []Item
 	InventoryCharacters() []Character
-	UpgradableItems() []Item
+	InventoryUpgradableItems() []Item
+	InventorySellableItems() []Item
 	GetLocation() UserLocation
 	GetPrivKey() string
 	GetDefaultItemIndex() int

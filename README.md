@@ -3,9 +3,9 @@
 You need a correctly set up Golang environment over 1.11; this proejct uses `go mod`.
 
 Run make.
-
+```
     make
-
+```
 ## Running
 
 Then run `bin/loud` from this folder.
@@ -104,22 +104,27 @@ Build game
 ```
 make
 ```
+
 Create eugen account by running
 ```
 make ARGS="eugen" run
 ```
+
 After creating eugen account on remote, check eugen account created correctly on node by running
 ```
 pylonscli query account $(pylonscli keys show -a eugen) --node 35.223.7.2:26657
 ```
+
 Create recipes and cookbooks by running
 ```
 make fixture_tests ARGS="-runserial"
 ```
+
 Check if cookbook and all recipes are created by using
 ```
 pylonscli query pylons list_recipe --node 35.223.7.2:26657
 ```
+
 If something went wrong, just create the remaining recipes by editing `scenario/loud.json`.
 
 Run game with name "michael"
@@ -131,6 +136,7 @@ Run game with rest endpoint with name "michael"
 ```
 make ARGS="michael -userest" run
 ```
+
 Development channel is available and to do automation process on remote node
 ```
 make ARGS="afti -userest -automate" run

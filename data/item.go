@@ -1,11 +1,25 @@
 package loud
 
+import "strings"
+
 type Item struct {
 	ID      string `json:""`
 	Name    string `json:""`
 	Level   int
+	Attack  int
 	Price   int
 	PreItem string `json:""`
+}
+
+func (item Item) IsSword() bool {
+	return strings.Contains(item.Name, "sword")
+}
+
+type ItemSpec struct {
+	Name   string `json:""`
+	Level  [2]int
+	Attack [2]int
+	Price  int
 }
 
 type Character struct {
@@ -15,6 +29,15 @@ type Character struct {
 	Price int
 	XP    float64
 	HP    int
+	MaxHP int
+}
+type CharacterSpec struct {
+	Name  string `json:""`
+	Level [2]int
+	Price int
+	XP    [2]float64
+	HP    [2]int
+	MaxHP [2]int
 }
 
 const (
@@ -64,59 +87,70 @@ var ShopItems = []Item{
 	},
 }
 
-var WorldItems = []Item{
-	Item{
-		Name:  WOODEN_SWORD,
-		Level: 1,
+var WorldItemSpecs = []ItemSpec{
+	ItemSpec{
+		Name:   WOODEN_SWORD,
+		Level:  [2]int{1, 1},
+		Attack: [2]int{3, 3},
 	},
-	Item{
-		Name:  WOODEN_SWORD,
-		Level: 2,
+	ItemSpec{
+		Name:   WOODEN_SWORD,
+		Level:  [2]int{2, 2},
+		Attack: [2]int{6, 6},
 	},
-	Item{
-		Name:  COPPER_SWORD,
-		Level: 1,
+	ItemSpec{
+		Name:   COPPER_SWORD,
+		Level:  [2]int{1, 1},
+		Attack: [2]int{10, 10},
 	},
-	Item{
-		Name:  COPPER_SWORD,
-		Level: 2,
+	ItemSpec{
+		Name:   COPPER_SWORD,
+		Level:  [2]int{2, 2},
+		Attack: [2]int{20, 20},
 	},
-	Item{
+	ItemSpec{
 		Name:  TROLL_TOES,
-		Level: 1,
+		Level: [2]int{1, 1},
 	},
-	Item{
+	ItemSpec{
 		Name:  WOLF_TAIL,
-		Level: 1,
+		Level: [2]int{1, 1},
 	},
-	Item{
+	ItemSpec{
 		Name:  GOBLIN_EAR,
-		Level: 1,
+		Level: [2]int{1, 1},
 	},
-	Item{
-		Name:  SILVER_SWORD,
-		Level: 1,
+	ItemSpec{
+		Name:   SILVER_SWORD,
+		Level:  [2]int{1, 1},
+		Attack: [2]int{30, 30},
 	},
-	Item{
-		Name:  BRONZE_SWORD,
-		Level: 1,
+	ItemSpec{
+		Name:   BRONZE_SWORD,
+		Level:  [2]int{1, 1},
+		Attack: [2]int{50, 50},
 	},
-	Item{
-		Name:  IRON_SWORD,
-		Level: 1,
+	ItemSpec{
+		Name:   IRON_SWORD,
+		Level:  [2]int{1, 1},
+		Attack: [2]int{100, 100},
 	},
 }
 
-var WorldCharacters = []Character{
-	Character{
+var WorldCharacterSpecs = []CharacterSpec{
+	CharacterSpec{
 		Name:  "Lion",
-		Level: 1,
-		XP:    1,
+		Level: [2]int{1, 2},
+		XP:    [2]float64{1, 1000},
+		HP:    [2]int{1, 100},
+		MaxHP: [2]int{100, 100},
 	},
-	Character{
+	CharacterSpec{
 		Name:  "Liger",
-		Level: 2,
-		XP:    1,
+		Level: [2]int{2, 1000},
+		XP:    [2]float64{1, 1000},
+		HP:    [2]int{1, 100},
+		MaxHP: [2]int{100, 100},
 	},
 }
 

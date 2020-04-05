@@ -8,23 +8,37 @@ type TradeRequest struct {
 	IsMyTradeRequest bool
 }
 
-type ItemTradeRequest struct {
+type ItemSellTradeRequest struct {
 	ID               string
 	TItem            Item
 	Price            int
 	IsMyTradeRequest bool
 }
 
-type CharacterTradeRequest struct {
+type ItemBuyTradeRequest struct {
+	ID               string
+	TItem            ItemSpec
+	Price            int
+	IsMyTradeRequest bool
+}
+
+type CharacterSellTradeRequest struct {
 	ID               string
 	TCharacter       Character
 	Price            int
 	IsMyTradeRequest bool
 }
 
+type CharacterBuyTradeRequest struct {
+	ID               string
+	TCharacter       CharacterSpec
+	Price            int
+	IsMyTradeRequest bool
+}
+
 var BuyTradeRequests = []TradeRequest{}
 var SellTradeRequests = []TradeRequest{}
-var SwordBuyTradeRequests = []ItemTradeRequest{}
-var SwordSellTradeRequests = []ItemTradeRequest{}
-var CharacterBuyTradeRequests = []CharacterTradeRequest{}
-var CharacterSellTradeRequests = []CharacterTradeRequest{}
+var SwordBuyTradeRequests = []ItemBuyTradeRequest{}
+var SwordSellTradeRequests = []ItemSellTradeRequest{}
+var CharacterBuyTradeRequests = []CharacterBuyTradeRequest{}
+var CharacterSellTradeRequests = []CharacterSellTradeRequest{}

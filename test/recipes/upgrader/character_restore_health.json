@@ -1,6 +1,6 @@
 {
     "Longs": [{
         "Key": "HP", 
-        "Program": "HP + 20"
+        "Program": "min_int(HP + 20, MaxHP)"
     }]
 }

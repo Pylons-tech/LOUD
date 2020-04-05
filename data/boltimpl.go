@@ -219,7 +219,7 @@ func (user *dbUser) InventorySwords() []Item {
 	iis := user.InventoryItems()
 	uis := []Item{}
 	for _, ii := range iis {
-		if strings.Contains(ii.Name, "sword") {
+		if ii.IsSword() {
 			uis = append(uis, ii)
 		}
 	}
@@ -230,11 +230,22 @@ func (user *dbUser) InventoryCharacters() []Character {
 	return user.UserData.Characters
 }
 
-func (user *dbUser) UpgradableItems() []Item {
+func (user *dbUser) InventoryUpgradableItems() []Item {
 	iis := user.InventoryItems()
 	uis := []Item{}
 	for _, ii := range iis {
-		if ii.Level == 1 {
+		if ii.Level == 1 && (ii.Name == COPPER_SWORD || ii.Name == WOODEN_SWORD) {
+			uis = append(uis, ii)
+		}
+	}
+	return uis
+}
+
+func (user *dbUser) InventorySellableItems() []Item {
+	iis := user.InventoryItems()
+	uis := []Item{}
+	for _, ii := range iis {
+		if ii.Name == COPPER_SWORD || ii.Name == WOODEN_SWORD {
 			uis = append(uis, ii)
 		}
 	}

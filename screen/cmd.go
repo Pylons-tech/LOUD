@@ -106,7 +106,7 @@ func (screen *GameScreen) renderUserCommands() {
 		}
 		infoLines = appendSelectCancelCmds(infoLines)
 	case SELECT_SELL_ITEM:
-		userItems := screen.user.InventoryItems()
+		userItems := screen.user.InventorySellableItems()
 		for idx, item := range userItems {
 			infoLines = append(infoLines, fmt.Sprintf("%d) %s  ", idx+1, formatItem(item))+screen.loudIcon()+fmt.Sprintf(" %d", item.GetSellPrice()))
 		}
@@ -131,7 +131,7 @@ func (screen *GameScreen) renderUserCommands() {
 		}
 		infoLines = appendSelectCancelCmds(infoLines)
 	case SELECT_UPGRADE_ITEM:
-		for idx, item := range screen.user.UpgradableItems() {
+		for idx, item := range screen.user.InventoryUpgradableItems() {
 			infoLines = append(infoLines, fmt.Sprintf("%d) %s ", idx+1, formatItem(item))+screen.loudIcon()+fmt.Sprintf(" %d", item.GetUpgradePrice()))
 		}
 		infoLines = appendSelectCancelCmds(infoLines)

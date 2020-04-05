@@ -79,8 +79,7 @@ func Hunt(user User, item Item) (string, error) {
 	rcpName := "LOUD's hunt without sword recipe"
 	itemIDs := []string{defaultCharacterID}
 
-	switch item.Name {
-	case WOODEN_SWORD, COPPER_SWORD:
+	if item.IsSword() {
 		rcpName = "LOUD's hunt with a sword recipe"
 		itemIDs = []string{defaultCharacterID, item.ID}
 	}
@@ -278,10 +277,10 @@ func CreateSellLoudTradeRequest(user User, loudEnterValue string, pylonEnterValu
 	return SendTxMsg(user, createTrdMsg)
 }
 
-func CreateBuySwordTradeRequest(user User, activeItem Item, pylonEnterValue string) (string, error) {
+func CreateBuySwordTradeRequest(user User, itspec ItemSpec, pylonEnterValue string) (string, error) {
 	// trade creator will get sword from pylon
 
-	itemInputs := GetItemInputsFromActiveItem(activeItem)
+	itemInputs := GetItemInputsFromItemSpec(itspec)
 
 	pylonValue, err := strconv.Atoi(pylonEnterValue)
 	if err != nil {
@@ -331,10 +330,10 @@ func CreateSellSwordTradeRequest(user User, activeItem Item, pylonEnterValue str
 	return SendTxMsg(user, createTrdMsg)
 }
 
-func CreateBuyCharacterTradeRequest(user User, activeCharacter Character, pylonEnterValue string) (string, error) {
+func CreateBuyCharacterTradeRequest(user User, chspec CharacterSpec, pylonEnterValue string) (string, error) {
 	// trade creator will get character from pylon
 
-	itemInputs := GetItemInputsFromActiveCharacter(activeCharacter)
+	itemInputs := GetItemInputsFromCharacterSpec(chspec)
 
 	pylonValue, err := strconv.Atoi(pylonEnterValue)
 	if err != nil {
