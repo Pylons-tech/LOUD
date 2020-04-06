@@ -189,6 +189,12 @@ func (screen *GameScreen) TxResultSituationDesc() string {
 			}
 			resultTexts := []string{"gold", "character", "weapon"}
 			desc = loud.Sprintf("You did hunt animals and earned %d. Detailed result: %+v", earnedAmount, resultTexts[:len(respOutput)])
+			switch len(respOutput) {
+			case 0:
+				desc += "\nYour character is dead during hunt accidently"
+			case 2:
+				desc += "\nYou have lost your weapon accidently"
+			}
 		case RESULT_FIGHT_GOBLIN_FINISH:
 			respOutput := []handlers.ExecuteRecipeSerialize{}
 			earnedAmount := int64(0)
@@ -198,6 +204,14 @@ func (screen *GameScreen) TxResultSituationDesc() string {
 			}
 			resultTexts := []string{"gold", "character", "weapon", loud.GOBLIN_EAR}
 			desc = loud.Sprintf("You did fight with goblin and earned %d. Detailed result: %+v", earnedAmount, resultTexts[:len(respOutput)])
+			switch len(respOutput) {
+			case 0:
+				desc += "\nYour character is dead during fighting goblin accidently"
+			case 2:
+				desc += "\nYou have lost your weapon accidently"
+			case 4:
+				desc += fmt.Sprintf("\nYou got bonus item called %s", loud.GOBLIN_EAR)
+			}
 		case RESULT_FIGHT_TROLL_FINISH:
 			respOutput := []handlers.ExecuteRecipeSerialize{}
 			earnedAmount := int64(0)
@@ -207,6 +221,14 @@ func (screen *GameScreen) TxResultSituationDesc() string {
 			}
 			resultTexts := []string{"gold", "character", "weapon", loud.TROLL_TOES}
 			desc = loud.Sprintf("You did fight with troll and earned %d. Detailed result: %+v", earnedAmount, resultTexts[:len(respOutput)])
+			switch len(respOutput) {
+			case 0:
+				desc += "\nYour character is dead during fighting troll accidently"
+			case 2:
+				desc += "\nYou have lost your weapon accidently"
+			case 4:
+				desc += fmt.Sprintf("\nYou got bonus item called %s", loud.TROLL_TOES)
+			}
 		case RESULT_FIGHT_WOLF_FINISH:
 			respOutput := []handlers.ExecuteRecipeSerialize{}
 			earnedAmount := int64(0)
@@ -216,6 +238,14 @@ func (screen *GameScreen) TxResultSituationDesc() string {
 			}
 			resultTexts := []string{"gold", "character", "weapon", loud.WOLF_TAIL}
 			desc = loud.Sprintf("You did fight with wolf and earned %d. Detailed result: %+v", earnedAmount, resultTexts[:len(respOutput)])
+			switch len(respOutput) {
+			case 0:
+				desc += "\nYour character is dead during fighting wolf accidently"
+			case 2:
+				desc += "\nYou have lost your weapon accidently"
+			case 4:
+				desc += fmt.Sprintf("\nYou got bonus item called %s", loud.WOLF_TAIL)
+			}
 		case RESULT_FIGHT_GIANT_FINISH:
 			respOutput := []handlers.ExecuteRecipeSerialize{}
 			earnedAmount := int64(0)
@@ -225,6 +255,12 @@ func (screen *GameScreen) TxResultSituationDesc() string {
 			}
 			resultTexts := []string{"gold", "character", "weapon"}
 			desc = loud.Sprintf("You did fight with giant and earned %d. Detailed result: %+v", earnedAmount, resultTexts[:len(respOutput)])
+			switch len(respOutput) {
+			case 0:
+				desc += "\nYour character is dead during fighting wolf accidently"
+			case 2:
+				desc += "\nYou have lost your weapon accidently"
+			}
 		case RESULT_GET_INITIAL_COIN:
 			respOutput := []handlers.ExecuteRecipeSerialize{}
 			json.Unmarshal(screen.txResult, &respOutput)
