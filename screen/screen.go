@@ -535,11 +535,11 @@ func (screen *GameScreen) colorFunc(color string) func(string) string {
 }
 
 func (screen *GameScreen) IsResultScreen() bool {
-	return IsResultScreen(screen.scrStatus)
+	return screen.scrStatus.IsResultScreen()
 }
 
 func (screen *GameScreen) IsWaitScreen() bool {
-	return IsWaitScreen(screen.scrStatus)
+	return screen.scrStatus.IsWaitScreen()
 }
 
 func (screen *GameScreen) InputActive() bool {

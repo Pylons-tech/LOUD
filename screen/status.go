@@ -116,10 +116,10 @@ const (
 	RSLT_FULFILL_BUYCHR_TRDREQ   = "RSLT_FULFILL_BUYCHR_TRDREQ"
 )
 
-func IsWaitScreen(status ScreenStatus) bool {
+func (status ScreenStatus) IsWaitScreen() bool {
 	return strings.Contains(string(status), "W8_")
 }
 
-func IsResultScreen(status ScreenStatus) bool {
+func (status ScreenStatus) IsResultScreen() bool {
 	return strings.Contains(string(status), "RSLT_")
 }
