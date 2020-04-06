@@ -535,8 +535,13 @@ func (screen *GameScreen) colorFunc(color string) func(string) string {
 }
 
 func (screen *GameScreen) IsResultScreen() bool {
-	return strings.Contains(string(screen.scrStatus), "RSLT_")
+	return IsResultScreen(screen.scrStatus)
 }
+
+func (screen *GameScreen) IsWaitScreen() bool {
+	return IsWaitScreen(screen.scrStatus)
+}
+
 func (screen *GameScreen) InputActive() bool {
 	switch screen.scrStatus {
 	case CR8_BUY_LOUD_TRDREQ_ENT_LUDVAL:

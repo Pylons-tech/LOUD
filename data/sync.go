@@ -63,7 +63,7 @@ func SyncFromNode(user User) {
 	nSellCharacterTrdReqs := []CharacterSellTrdReq{}
 	rawTrades, _ := pylonSDK.ListTradeViaCLI("")
 	for _, tradeItem := range rawTrades {
-		if tradeItem.Completed == false && strings.Contains(tradeItem.ExtraInfo, "created by loud game") {
+		if tradeItem.Completed == false && strings.Contains(tradeItem.ExtraInfo, CR8BY_LOUD) {
 			inputCoin := ""
 			if len(tradeItem.CoinInputs) > 0 {
 				inputCoin = tradeItem.CoinInputs[0].Coin

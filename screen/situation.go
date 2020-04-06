@@ -100,11 +100,11 @@ func (screen *GameScreen) renderUserSituation() {
 		infoLines = screen.renderITTable("select upgrade item desc", "Item", screen.user.InventoryUpgradableItems())
 	}
 
-	if strings.HasPrefix(string(screen.scrStatus), "RSLT_") {
+	if screen.IsResultScreen() {
 		desc = screen.TxResultSituationDesc()
 	}
 
-	if strings.HasPrefix(string(screen.scrStatus), "W8_") {
+	if screen.IsWaitScreen() {
 		desc = screen.TxWaitSituationDesc()
 	}
 

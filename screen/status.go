@@ -1,5 +1,7 @@
 package screen
 
+import "strings"
+
 type ScreenStatus string
 
 const (
@@ -113,3 +115,11 @@ const (
 	W8_FULFILL_BUYCHR_TRDREQ     = "W8_FULFILL_BUYCHR_TRDREQ"
 	RSLT_FULFILL_BUYCHR_TRDREQ   = "RSLT_FULFILL_BUYCHR_TRDREQ"
 )
+
+func IsWaitScreen(status ScreenStatus) bool {
+	return strings.Contains(string(status), "W8_")
+}
+
+func IsResultScreen(status ScreenStatus) bool {
+	return strings.Contains(string(status), "RSLT_")
+}

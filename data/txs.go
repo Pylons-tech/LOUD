@@ -12,6 +12,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
+const CR8BY_LOUD = "created by loud game"
 const ITEM_BUYREQ_TRDINFO = "sword buy request created by loud game"
 const CHAR_BUYREQ_TRDINFO = "character buy request created by loud game"
 const ITEM_SELREQ_TRDINFO = "sword sell request created by loud game"
@@ -243,7 +244,7 @@ func CreateBuyLoudTrdReq(user User, loudEnterValue string, pylonEnterValue strin
 	inputCoinList := types.GenCoinInputList("loudcoin", int64(loudValue))
 
 	outputCoins := sdk.Coins{sdk.NewInt64Coin("pylon", int64(pylonValue))}
-	extraInfo := "created by loud game"
+	extraInfo := CR8BY_LOUD
 
 	createTrdMsg := msgs.NewMsgCreateTrade(
 		inputCoinList,
@@ -270,7 +271,7 @@ func CreateSellLoudTrdReq(user User, loudEnterValue string, pylonEnterValue stri
 	inputCoinList := types.GenCoinInputList("pylon", int64(pylonValue))
 
 	outputCoins := sdk.Coins{sdk.NewInt64Coin("loudcoin", int64(loudValue))}
-	extraInfo := "created by loud game"
+	extraInfo := CR8BY_LOUD
 
 	createTrdMsg := msgs.NewMsgCreateTrade(
 		inputCoinList,
