@@ -38,7 +38,7 @@ type CharacterBuyTradeRequest struct {
 
 var BuyTradeRequests = []TradeRequest{}
 var SellTradeRequests = []TradeRequest{}
-var SwordBuyTradeRequests = []ItemBuyTradeRequest{}
-var SwordSellTradeRequests = []ItemSellTradeRequest{}
+var ItemBuyTradeRequests = []ItemBuyTradeRequest{}
+var ItemSellTradeRequests = []ItemSellTradeRequest{}
 var CharacterBuyTradeRequests = []CharacterBuyTradeRequest{}
 var CharacterSellTradeRequests = []CharacterSellTradeRequest{}
