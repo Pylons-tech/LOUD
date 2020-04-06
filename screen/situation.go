@@ -193,7 +193,9 @@ func (screen *GameScreen) TxResultSituationDesc() string {
 			case 0:
 				desc += "\nYour character is dead during hunt accidently"
 			case 2:
-				desc += "\nYou have lost your weapon accidently"
+				if len(screen.activeItem.Name) > 0 {
+					desc += "\nYou have lost your weapon accidently"
+				}
 			}
 		case RSLT_FIGHT_GOBLIN:
 			respOutput := []handlers.ExecuteRecipeSerialize{}
