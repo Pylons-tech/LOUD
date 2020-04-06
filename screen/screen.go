@@ -689,55 +689,55 @@ func (screen *GameScreen) RunCharacterHealthRestore() {
 }
 
 func (screen *GameScreen) RunActiveItemBuy() {
-	screen.RunTxProcess(W8_BUYITM_PROC, RSLT_BUYITM, func() (string, error) {
+	screen.RunTxProcess(W8_BUYITM, RSLT_BUYITM, func() (string, error) {
 		return loud.Buy(screen.user, screen.activeItem)
 	})
 }
 
 func (screen *GameScreen) RunActiveCharacterBuy() {
-	screen.RunTxProcess(W8_BUYCHR_PROC, RSLT_BUYCHR, func() (string, error) {
+	screen.RunTxProcess(W8_BUYCHR, RSLT_BUYCHR, func() (string, error) {
 		return loud.BuyCharacter(screen.user, screen.activeCharacter)
 	})
 }
 
 func (screen *GameScreen) RunActiveItemSell() {
-	screen.RunTxProcess(W8_SELLITM_PROC, RSLT_SELLITM, func() (string, error) {
+	screen.RunTxProcess(W8_SELLITM, RSLT_SELLITM, func() (string, error) {
 		return loud.Sell(screen.user, screen.activeItem)
 	})
 }
 
 func (screen *GameScreen) RunActiveItemUpgrade() {
-	screen.RunTxProcess(W8_UPGITM_PROC, RSLT_UPGITM, func() (string, error) {
+	screen.RunTxProcess(W8_UPGITM, RSLT_UPGITM, func() (string, error) {
 		return loud.Upgrade(screen.user, screen.activeItem)
 	})
 }
 
 func (screen *GameScreen) RunActiveItemHunt() {
-	screen.RunTxProcess(W8_HUNT_PROC, RSLT_HUNT, func() (string, error) {
+	screen.RunTxProcess(W8_HUNT, RSLT_HUNT, func() (string, error) {
 		return loud.Hunt(screen.user, screen.activeItem)
 	})
 }
 
 func (screen *GameScreen) RunActiveItemFightGiant() {
-	screen.RunTxProcess(W8_FIGHT_GIANT_PROC, RSLT_FIGHT_GIANT, func() (string, error) {
+	screen.RunTxProcess(W8_FIGHT_GIANT, RSLT_FIGHT_GIANT, func() (string, error) {
 		return loud.FightGiant(screen.user, screen.activeItem)
 	})
 }
 
 func (screen *GameScreen) RunActiveItemFightTroll() {
-	screen.RunTxProcess(W8_FIGHT_TROLL_PROC, RSLT_FIGHT_TROLL, func() (string, error) {
+	screen.RunTxProcess(W8_FIGHT_TROLL, RSLT_FIGHT_TROLL, func() (string, error) {
 		return loud.FightTroll(screen.user, screen.activeItem)
 	})
 }
 
 func (screen *GameScreen) RunActiveItemFightWolf() {
-	screen.RunTxProcess(W8_FIGHT_WOLF_PROC, RSLT_FIGHT_WOLF, func() (string, error) {
+	screen.RunTxProcess(W8_FIGHT_WOLF, RSLT_FIGHT_WOLF, func() (string, error) {
 		return loud.FightWolf(screen.user, screen.activeItem)
 	})
 }
 
 func (screen *GameScreen) RunActiveItemFightGoblin() {
-	screen.RunTxProcess(W8_FIGHT_GOBLIN_PROC, RSLT_FIGHT_GOBLIN, func() (string, error) {
+	screen.RunTxProcess(W8_FIGHT_GOBLIN, RSLT_FIGHT_GOBLIN, func() (string, error) {
 		return loud.FightGoblin(screen.user, screen.activeItem)
 	})
 }

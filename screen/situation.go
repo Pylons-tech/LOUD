@@ -327,7 +327,7 @@ func (screen *GameScreen) TxResultSituationDesc() string {
 
 func (screen *GameScreen) TxWaitSituationDesc() string {
 	desc := ""
-	W8_PROC_TO_END := "\n" + loud.Localize("Please wait for a moment to finish the process")
+	W8_TO_END := "\n" + loud.Localize("Please wait for a moment to finish the process")
 	switch screen.scrStatus {
 	case W8_BUY_LOUD_TRDREQ_CREATION:
 		desc = loud.Localize("You are now waiting for loud buy request creation")
@@ -335,48 +335,48 @@ func (screen *GameScreen) TxWaitSituationDesc() string {
 	case W8_SELL_LOUD_TRDREQ_CREATION:
 		desc = loud.Localize("You are now waiting for loud sell request creation")
 		desc += screen.sellLoudDesc(screen.loudEnterValue, screen.pylonEnterValue)
-	case W8_BUYITM_PROC:
+	case W8_BUYITM:
 		desc = loud.Sprintf("You are now buying %s at the shop", formatItem(screen.activeItem))
-		desc += W8_PROC_TO_END
-	case W8_BUYCHR_PROC:
+		desc += W8_TO_END
+	case W8_BUYCHR:
 		desc = loud.Sprintf("You are now buying %s at the shop", formatCharacter(screen.activeCharacter))
-		desc += W8_PROC_TO_END
-	case W8_HUNT_PROC:
+		desc += W8_TO_END
+	case W8_HUNT:
 		if len(screen.activeItem.Name) > 0 {
 			desc = loud.Sprintf("You are now hunting with %s", formatItem(screen.activeItem))
 		} else {
 			desc = loud.Localize("You are now hunting without weapon")
 		}
-		desc += W8_PROC_TO_END
-	case W8_FIGHT_GIANT_PROC:
+		desc += W8_TO_END
+	case W8_FIGHT_GIANT:
 		desc = loud.Sprintf("You are now fighting with giant with %s", formatItem(screen.activeItem))
-	case W8_FIGHT_GOBLIN_PROC:
+	case W8_FIGHT_GOBLIN:
 		desc = loud.Sprintf("You are now fighting with goblin with %s", formatItem(screen.activeItem))
-	case W8_FIGHT_TROLL_PROC:
+	case W8_FIGHT_TROLL:
 		desc = loud.Sprintf("You are now fighting with troll with %s", formatItem(screen.activeItem))
-	case W8_FIGHT_WOLF_PROC:
+	case W8_FIGHT_WOLF:
 		desc = loud.Sprintf("You are now fighting with wolf with %s", formatItem(screen.activeItem))
 	case W8_GET_INITIAL_COIN:
 		desc = loud.Localize("Getting initial gold from pylon")
-		desc += W8_PROC_TO_END
+		desc += W8_TO_END
 	case W8_DEV_GET_TEST_ITEMS:
 		desc = loud.Localize("Getting dev test items from pylon")
-		desc += W8_PROC_TO_END
+		desc += W8_TO_END
 	case W8_HEALTH_RESTORE_CHAR:
 		desc = loud.Localize("Waiting for Health restoring")
-		desc += W8_PROC_TO_END
+		desc += W8_TO_END
 	case W8_GET_PYLONS:
 		desc = loud.Localize("You are waiting for getting pylons process")
 	case W8_SWITCH_USER:
 		desc = loud.Localize("You are waiting for switching to new user")
 	case W8_CREATE_COOKBOOK:
 		desc = loud.Localize("You are waiting for creating cookbook")
-	case W8_SELLITM_PROC:
+	case W8_SELLITM:
 		desc = loud.Sprintf("You are now selling %s for gold", formatItem(screen.activeItem))
-		desc += W8_PROC_TO_END
-	case W8_UPGITM_PROC:
+		desc += W8_TO_END
+	case W8_UPGITM:
 		desc = loud.Sprintf("You are now upgrading %s", loud.Localize(screen.activeItem.Name))
-		desc += W8_PROC_TO_END
+		desc += W8_TO_END
 	case W8_SELLITM_TRDREQ_CREATION:
 		desc = loud.Localize("You are now waiting for item sell request creation")
 		desc += screen.sellItemDesc(screen.activeItem, screen.pylonEnterValue)
