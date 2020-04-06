@@ -305,7 +305,7 @@ func (screen *GameScreen) HandleThirdClassInputKeys(input termbox.Event) bool {
 				screen.scrStatus = W8_BUY_LOUD_TRDREQ_CREATION
 				screen.pylonEnterValue = screen.inputText
 				screen.SetInputTextAndRender("")
-				txhash, err := loud.CreateBuyLoudTradeRequest(screen.user, screen.loudEnterValue, screen.pylonEnterValue)
+				txhash, err := loud.CreateBuyLoudTrdReq(screen.user, screen.loudEnterValue, screen.pylonEnterValue)
 				log.Println("ended sending request for creating buy loud request")
 				if err != nil {
 					screen.txFailReason = err.Error()
@@ -324,7 +324,7 @@ func (screen *GameScreen) HandleThirdClassInputKeys(input termbox.Event) bool {
 				screen.scrStatus = W8_SELL_LOUD_TRDREQ_CREATION
 				screen.pylonEnterValue = screen.inputText
 				screen.SetInputTextAndRender("")
-				txhash, err := loud.CreateSellLoudTradeRequest(screen.user, screen.loudEnterValue, screen.pylonEnterValue)
+				txhash, err := loud.CreateSellLoudTrdReq(screen.user, screen.loudEnterValue, screen.pylonEnterValue)
 
 				log.Println("ended sending request for creating buy loud request")
 				if err != nil {
@@ -340,7 +340,7 @@ func (screen *GameScreen) HandleThirdClassInputKeys(input termbox.Event) bool {
 				screen.scrStatus = W8_SELLITM_TRDREQ_CREATION
 				screen.pylonEnterValue = screen.inputText
 				screen.SetInputTextAndRender("")
-				txhash, err := loud.CreateSellItemTradeRequest(screen.user, screen.activeItem, screen.pylonEnterValue)
+				txhash, err := loud.CreateSellItemTrdReq(screen.user, screen.activeItem, screen.pylonEnterValue)
 				log.Println("ended sending request for creating sword -> pylon request")
 				if err != nil {
 					screen.txFailReason = err.Error()
@@ -355,7 +355,7 @@ func (screen *GameScreen) HandleThirdClassInputKeys(input termbox.Event) bool {
 				screen.scrStatus = W8_BUYITM_TRDREQ_CREATION
 				screen.pylonEnterValue = screen.inputText
 				screen.SetInputTextAndRender("")
-				txhash, err := loud.CreateBuyItemTradeRequest(screen.user, screen.activeItSpec, screen.pylonEnterValue)
+				txhash, err := loud.CreateBuyItemTrdReq(screen.user, screen.activeItSpec, screen.pylonEnterValue)
 				log.Println("ended sending request for creating sword -> pylon request")
 				if err != nil {
 					screen.txFailReason = err.Error()
@@ -371,7 +371,7 @@ func (screen *GameScreen) HandleThirdClassInputKeys(input termbox.Event) bool {
 				screen.scrStatus = W8_SELLCHR_TRDREQ_CREATION
 				screen.pylonEnterValue = screen.inputText
 				screen.SetInputTextAndRender("")
-				txhash, err := loud.CreateSellCharacterTradeRequest(screen.user, screen.activeCharacter, screen.pylonEnterValue)
+				txhash, err := loud.CreateSellCharacterTrdReq(screen.user, screen.activeCharacter, screen.pylonEnterValue)
 				log.Println("ended sending request for creating character -> pylon request")
 				if err != nil {
 					screen.txFailReason = err.Error()
@@ -386,7 +386,7 @@ func (screen *GameScreen) HandleThirdClassInputKeys(input termbox.Event) bool {
 				screen.scrStatus = W8_BUYCHR_TRDREQ_CREATION
 				screen.pylonEnterValue = screen.inputText
 				screen.SetInputTextAndRender("")
-				txhash, err := loud.CreateBuyCharacterTradeRequest(screen.user, screen.activeChSpec, screen.pylonEnterValue)
+				txhash, err := loud.CreateBuyCharacterTrdReq(screen.user, screen.activeChSpec, screen.pylonEnterValue)
 				log.Println("ended sending request for creating character -> pylon request")
 				if err != nil {
 					screen.txFailReason = err.Error()
@@ -544,13 +544,13 @@ func (screen *GameScreen) HandleThirdClassKeyEnterEvent() bool {
 		case SHW_LOUD_SELL_TRDREQS:
 			screen.RunSelectedLoudSellTrade()
 		case SHW_BUYITM_TRDREQS:
-			screen.RunSelectedItemBuyTradeRequest()
+			screen.RunSelectedItemBuyTrdReq()
 		case SHW_SELLITM_TRDREQS:
-			screen.RunSelectedItemSellTradeRequest()
+			screen.RunSelectedItemSellTrdReq()
 		case SHW_BUYCHR_TRDREQS:
-			screen.RunSelectedCharacterBuyTradeRequest()
+			screen.RunSelectedCharacterBuyTrdReq()
 		case SHW_SELLCHR_TRDREQS:
-			screen.RunSelectedCharacterSellTradeRequest()
+			screen.RunSelectedCharacterSellTrdReq()
 		case CR8_SELLITM_TRDREQ_SEL_ITEM:
 			userItems := screen.user.InventoryItems()
 			if len(userItems) <= screen.activeLine || screen.activeLine < 0 {

@@ -228,7 +228,7 @@ func Upgrade(user User, item Item) (string, error) {
 	return ExecuteRecipe(user, rcpName, itemIDs)
 }
 
-func CreateBuyLoudTradeRequest(user User, loudEnterValue string, pylonEnterValue string) (string, error) {
+func CreateBuyLoudTrdReq(user User, loudEnterValue string, pylonEnterValue string) (string, error) {
 	loudValue, err := strconv.Atoi(loudEnterValue)
 	if err != nil {
 		return "", err
@@ -255,7 +255,7 @@ func CreateBuyLoudTradeRequest(user User, loudEnterValue string, pylonEnterValue
 	return SendTxMsg(user, createTrdMsg)
 }
 
-func CreateSellLoudTradeRequest(user User, loudEnterValue string, pylonEnterValue string) (string, error) {
+func CreateSellLoudTrdReq(user User, loudEnterValue string, pylonEnterValue string) (string, error) {
 	loudValue, err := strconv.Atoi(loudEnterValue)
 	if err != nil {
 		return "", err
@@ -282,7 +282,7 @@ func CreateSellLoudTradeRequest(user User, loudEnterValue string, pylonEnterValu
 	return SendTxMsg(user, createTrdMsg)
 }
 
-func CreateBuyItemTradeRequest(user User, itspec ItemSpec, pylonEnterValue string) (string, error) {
+func CreateBuyItemTrdReq(user User, itspec ItemSpec, pylonEnterValue string) (string, error) {
 	// trade creator will get sword from pylon
 
 	itemInputs := GetItemInputsFromItemSpec(itspec)
@@ -307,7 +307,7 @@ func CreateBuyItemTradeRequest(user User, itspec ItemSpec, pylonEnterValue strin
 	return SendTxMsg(user, createTrdMsg)
 }
 
-func CreateSellItemTradeRequest(user User, activeItem Item, pylonEnterValue string) (string, error) {
+func CreateSellItemTrdReq(user User, activeItem Item, pylonEnterValue string) (string, error) {
 	// trade creator will get pylon from sword
 
 	pylonValue, err := strconv.Atoi(pylonEnterValue)
@@ -335,7 +335,7 @@ func CreateSellItemTradeRequest(user User, activeItem Item, pylonEnterValue stri
 	return SendTxMsg(user, createTrdMsg)
 }
 
-func CreateBuyCharacterTradeRequest(user User, chspec CharacterSpec, pylonEnterValue string) (string, error) {
+func CreateBuyCharacterTrdReq(user User, chspec CharacterSpec, pylonEnterValue string) (string, error) {
 	// trade creator will get character from pylon
 
 	itemInputs := GetItemInputsFromCharacterSpec(chspec)
@@ -360,7 +360,7 @@ func CreateBuyCharacterTradeRequest(user User, chspec CharacterSpec, pylonEnterV
 	return SendTxMsg(user, createTrdMsg)
 }
 
-func CreateSellCharacterTradeRequest(user User, activeCharacter Character, pylonEnterValue string) (string, error) {
+func CreateSellCharacterTrdReq(user User, activeCharacter Character, pylonEnterValue string) (string, error) {
 	// trade creator will get pylon from character
 
 	pylonValue, err := strconv.Atoi(pylonEnterValue)

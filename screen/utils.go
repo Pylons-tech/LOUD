@@ -178,7 +178,7 @@ func (screen *GameScreen) renderItemTableLine(text1 string, isActiveLine bool) s
 	return calcText
 }
 
-func (screen *GameScreen) renderItemTradeRequestTableLine(text1 string, text2 string, isActiveLine bool, isDisabledLine bool) string {
+func (screen *GameScreen) renderItemTrdReqTableLine(text1 string, text2 string, isActiveLine bool, isDisabledLine bool) string {
 	calcText := "│" + centerText(text1, " ", 36) + "│" + centerText(text2, " ", 15) + "│"
 	if isActiveLine && isDisabledLine {
 		onColor := screen.brownBoldFont()
