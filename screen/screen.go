@@ -649,7 +649,7 @@ func (screen *GameScreen) renderCharacterSheet() {
 	}
 
 	nodeLines := []string{
-		centerText(loud.Localize("pylons network status"), " ", width),
+		centerText(loud.Localize("pylons network status")+" [Copy to Clipboard(L)]", " ", width),
 		centerText(screen.user.GetLastTransaction(), " ", width),
 	}
 

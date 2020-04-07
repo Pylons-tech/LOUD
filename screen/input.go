@@ -8,6 +8,7 @@ import (
 	"time"
 
 	loud "github.com/Pylons-tech/LOUD/data"
+	"github.com/atotto/clipboard"
 	"github.com/nsf/termbox-go"
 )
 
@@ -236,10 +237,12 @@ func (screen *GameScreen) HandleFirstClassInputKeys(input termbox.Event) bool {
 		screen.RunTxProcess(W8_GET_INITIAL_COIN, RSLT_GET_INITIAL_COIN, func() (string, error) {
 			return loud.GetInitialCoin(screen.user)
 		})
-	case "B":
+	case "B": // DEV ITEMS GET (troll toes, goblin ear, wolf tail)
 		screen.RunTxProcess(W8_DEV_GET_TEST_ITEMS, RSLT_DEV_GET_TEST_ITEMS, func() (string, error) {
 			return loud.DevGetTestItems(screen.user)
 		})
+	case "L": // CLIPBOARD
+		clipboard.WriteAll(screen.user.GetLastTransaction())
 	case "E": // REFRESH
 		screen.Resync()
 		return true
