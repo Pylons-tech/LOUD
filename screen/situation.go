@@ -301,10 +301,10 @@ func (screen *GameScreen) TxResultSituationDesc() string {
 			desc += screen.sellCharacterDesc(screen.activeCharacter, screen.pylonEnterValue)
 		case RSLT_BUYITM_TRDREQ_CREATION:
 			desc = loud.Localize("item buy request was successfully created")
-			desc += screen.buyItemDesc(screen.activeItem, screen.pylonEnterValue)
+			desc += screen.buyItemSpecDesc(screen.activeItSpec, screen.pylonEnterValue)
 		case RSLT_BUYCHR_TRDREQ_CREATION:
 			desc = loud.Localize("character buy request was successfully created")
-			desc += screen.buyCharacterDesc(screen.activeCharacter, screen.pylonEnterValue)
+			desc += screen.buyCharacterSpecDesc(screen.activeChSpec, screen.pylonEnterValue)
 		case RSLT_CANCEL_TRDREQ:
 			desc = loud.Localize("successfully cancelled trade request")
 		case RSLT_FULFILL_BUY_LOUD_TRDREQ:
@@ -396,10 +396,10 @@ func (screen *GameScreen) TxWaitSituationDesc() string {
 		desc += screen.sellCharacterDesc(screen.activeCharacter, screen.pylonEnterValue)
 	case W8_BUYITM_TRDREQ_CREATION:
 		desc = loud.Localize("You are now waiting for item buy request creation")
-		desc += screen.buyItemDesc(screen.activeItem, screen.pylonEnterValue)
+		desc += screen.buyItemSpecDesc(screen.activeItSpec, screen.pylonEnterValue)
 	case W8_BUYCHR_TRDREQ_CREATION:
 		desc = loud.Localize("You are now waiting for character buy request creation")
-		desc += screen.buyCharacterDesc(screen.activeCharacter, screen.pylonEnterValue)
+		desc += screen.buyCharacterSpecDesc(screen.activeChSpec, screen.pylonEnterValue)
 	case W8_CANCEL_TRDREQ:
 		desc = loud.Localize("You are now waiting for cancelling one of your trades")
 	// For FULFILL trades, msg should be reversed, since user is opposite

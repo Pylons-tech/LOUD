@@ -12,7 +12,7 @@ type Item struct {
 }
 
 func (item Item) IsSword() bool {
-	return strings.Contains(item.Name, "sword")
+	return IsSword(item.Name)
 }
 
 type ItemSpec struct {
@@ -50,6 +50,10 @@ const (
 	WOLF_TAIL           = "Wolf tail"
 	TROLL_TOES          = "Troll toes"
 )
+
+func IsSword(name string) bool {
+	return strings.Contains(name, "sword")
+}
 
 var ShopItems = []Item{
 	Item{

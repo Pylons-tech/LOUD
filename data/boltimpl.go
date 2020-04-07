@@ -208,7 +208,7 @@ func (user *dbUser) InventoryIronSwords() []Item {
 	iis := user.InventoryItems()
 	uis := []Item{}
 	for _, ii := range iis {
-		if strings.Contains(ii.Name, "Iron sword") {
+		if ii.Name == IRON_SWORD {
 			uis = append(uis, ii)
 		}
 	}

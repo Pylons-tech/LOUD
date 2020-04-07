@@ -178,6 +178,17 @@ func (screen *GameScreen) buyItemDesc(activeItem loud.Item, pylonValue interface
 	return desc
 }
 
+func (screen *GameScreen) buyItemSpecDesc(itemSpec loud.ItemSpec, pylonValue interface{}) string {
+	var desc = strings.Join([]string{
+		"\n",
+		screen.pylonIcon(),
+		fmt.Sprintf("%v", pylonValue),
+		"\n  ↓\n",
+		formatItemSpec(itemSpec),
+	}, "")
+	return desc
+}
+
 func (screen *GameScreen) buyCharacterDesc(activeCharacter loud.Character, pylonValue interface{}) string {
 	var desc = strings.Join([]string{
 		"\n",
@@ -185,6 +196,17 @@ func (screen *GameScreen) buyCharacterDesc(activeCharacter loud.Character, pylon
 		fmt.Sprintf("%v", pylonValue),
 		"\n  ↓\n",
 		formatCharacter(activeCharacter),
+	}, "")
+	return desc
+}
+
+func (screen *GameScreen) buyCharacterSpecDesc(charSpec loud.CharacterSpec, pylonValue interface{}) string {
+	var desc = strings.Join([]string{
+		"\n",
+		screen.pylonIcon(),
+		fmt.Sprintf("%v", pylonValue),
+		"\n  ↓\n",
+		formatCharacterSpec(charSpec),
 	}, "")
 	return desc
 }
