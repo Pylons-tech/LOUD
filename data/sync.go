@@ -84,18 +84,25 @@ func SyncFromNode(user User) {
 					IsMyTrdReq: isMyTrdReq,
 				})
 			} else if loudOutputAmount > 0 { // loud buy trade
-				inputPylonAmount := tradeItem.CoinInputs[0].Count
-				nSellTrdReqs = append(nSellTrdReqs, TrdReq{
-					ID:         tradeItem.ID,
-					Amount:     int(loudOutputAmount),
-					Total:      int(inputPylonAmount),
-					Price:      float64(inputPylonAmount) / float64(loudOutputAmount),
-					IsMyTrdReq: isMyTrdReq,
-				})
+				if len(tradeItem.CoinInputs) > 0 {
+					inputPylonAmount := tradeItem.CoinInputs[0].Count
+					nSellTrdReqs = append(nSellTrdReqs, TrdReq{
+						ID:         tradeItem.ID,
+						Amount:     int(loudOutputAmount),
+						Total:      int(inputPylonAmount),
+						Price:      float64(inputPylonAmount) / float64(loudOutputAmount),
+						IsMyTrdReq: isMyTrdReq,
+					})
+				}
 			} else if itemInputLen > 0 { // buy item trade
-				MinLevel := tradeItem.ItemInputs[0].Longs[0].MinValue
-				MaxLevel := tradeItem.ItemInputs[0].Longs[0].MaxValue
-				Name := tradeItem.ItemInputs[0].Strings[0].Value
+				MinLevel := 0
+				MaxLevel := 0
+				firstItemInput := tradeItem.ItemInputs[0]
+				if len(firstItemInput.Longs) > 0 {
+					MinLevel = firstItemInput.Longs[0].MinValue
+					MaxLevel = firstItemInput.Longs[0].MaxValue
+				}
+				Name := firstItemInput.Strings[0].Value
 				if tradeItem.ExtraInfo == ITEM_BUYREQ_TRDINFO {
 					tItem := ItemSpec{
 						Level: [2]int{MinLevel, MaxLevel},
@@ -110,9 +117,9 @@ func SyncFromNode(user User) {
 				} else if tradeItem.ExtraInfo == CHAR_BUYREQ_TRDINFO { // character buy request created by loud game
 					MinXP := 0.0
 					MaxXP := 0.0
-					if len(tradeItem.ItemInputs[0].Doubles) > 0 {
-						MinXP = tradeItem.ItemInputs[0].Doubles[0].MinValue.Float()
-						MaxXP = tradeItem.ItemInputs[0].Doubles[0].MaxValue.Float()
+					if len(firstItemInput.Doubles) > 0 {
+						MinXP = firstItemInput.Doubles[0].MinValue.Float()
+						MaxXP = firstItemInput.Doubles[0].MaxValue.Float()
 					}
 					tCharacter := CharacterSpec{
 						Level: [2]int{MinLevel, MaxLevel},
@@ -127,12 +134,16 @@ func SyncFromNode(user User) {
 					})
 				}
 			} else if itemOutputLen > 0 { // sell item trade
-				inputPylonAmount := tradeItem.CoinInputs[0].Count
-				level, _ := tradeItem.ItemOutputs[0].FindLong("level")
-				name, _ := tradeItem.ItemOutputs[0].FindString("Name")
+				firstItemOutput := tradeItem.ItemOutputs[0]
+				inputPylonAmount := int64(0)
+				if len(tradeItem.CoinInputs) > 0 {
+					inputPylonAmount = tradeItem.CoinInputs[0].Count
+				}
+				level, _ := firstItemOutput.FindLong("level")
+				name, _ := firstItemOutput.FindString("Name")
 				if tradeItem.ExtraInfo == ITEM_SELREQ_TRDINFO {
 					tItem := Item{
-						ID:    tradeItem.ItemOutputs[0].ID,
+						ID:    firstItemOutput.ID,
 						Level: level,
 						Name:  name,
 					}
@@ -143,11 +154,11 @@ func SyncFromNode(user User) {
 						IsMyTrdReq: isMyTrdReq,
 					})
 				} else if tradeItem.ExtraInfo == CHAR_SELREQ_TRDINFO { // character sell request created by loud game
-					XP, _ := tradeItem.ItemOutputs[0].FindDouble("XP")
-					HP, _ := tradeItem.ItemOutputs[0].FindLong("HP")
-					MaxHP, _ := tradeItem.ItemOutputs[0].FindLong("MaxHP")
+					XP, _ := firstItemOutput.FindDouble("XP")
+					HP, _ := firstItemOutput.FindLong("HP")
+					MaxHP, _ := firstItemOutput.FindLong("MaxHP")
 					tCharacter := Character{
-						ID:    tradeItem.ItemOutputs[0].ID,
+						ID:    firstItemOutput.ID,
 						Level: level,
 						Name:  name,
 						XP:    XP,
