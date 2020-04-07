@@ -299,10 +299,12 @@ func (screen *GameScreen) HandleThirdClassInputKeys(input termbox.Event) bool {
 			switch screen.scrStatus {
 			case CR8_BUY_LOUD_TRDREQ_ENT_LUDVAL:
 				screen.scrStatus = CR8_BUY_LOUD_TRDREQ_ENT_PYLVAL
+				screen.refreshed = false
 				screen.loudEnterValue = screen.inputText
 				screen.inputText = ""
 			case CR8_BUY_LOUD_TRDREQ_ENT_PYLVAL:
 				screen.scrStatus = W8_BUY_LOUD_TRDREQ_CREATION
+				screen.refreshed = false
 				screen.pylonEnterValue = screen.inputText
 				screen.SetInputTextAndRender("")
 				txhash, err := loud.CreateBuyLoudTrdReq(screen.user, screen.loudEnterValue, screen.pylonEnterValue)
@@ -318,10 +320,12 @@ func (screen *GameScreen) HandleThirdClassInputKeys(input termbox.Event) bool {
 				}
 			case CR8_SELL_LOUD_TRDREQ_ENT_LUDVAL:
 				screen.scrStatus = CR8_SELL_LOUD_TRDREQ_ENT_PYLVAL
+				screen.refreshed = false
 				screen.loudEnterValue = screen.inputText
 				screen.inputText = ""
 			case CR8_SELL_LOUD_TRDREQ_ENT_PYLVAL:
 				screen.scrStatus = W8_SELL_LOUD_TRDREQ_CREATION
+				screen.refreshed = false
 				screen.pylonEnterValue = screen.inputText
 				screen.SetInputTextAndRender("")
 				txhash, err := loud.CreateSellLoudTrdReq(screen.user, screen.loudEnterValue, screen.pylonEnterValue)
@@ -338,6 +342,7 @@ func (screen *GameScreen) HandleThirdClassInputKeys(input termbox.Event) bool {
 				}
 			case CR8_SELLITM_TRDREQ_ENT_PYLVAL:
 				screen.scrStatus = W8_SELLITM_TRDREQ_CREATION
+				screen.refreshed = false
 				screen.pylonEnterValue = screen.inputText
 				screen.SetInputTextAndRender("")
 				txhash, err := loud.CreateSellItemTrdReq(screen.user, screen.activeItem, screen.pylonEnterValue)
@@ -353,6 +358,7 @@ func (screen *GameScreen) HandleThirdClassInputKeys(input termbox.Event) bool {
 				}
 			case CR8_BUYITM_TRDREQ_ENT_PYLVAL:
 				screen.scrStatus = W8_BUYITM_TRDREQ_CREATION
+				screen.refreshed = false
 				screen.pylonEnterValue = screen.inputText
 				screen.SetInputTextAndRender("")
 				txhash, err := loud.CreateBuyItemTrdReq(screen.user, screen.activeItSpec, screen.pylonEnterValue)
@@ -369,6 +375,7 @@ func (screen *GameScreen) HandleThirdClassInputKeys(input termbox.Event) bool {
 
 			case CR8_SELLCHR_TRDREQ_ENT_PYLVAL:
 				screen.scrStatus = W8_SELLCHR_TRDREQ_CREATION
+				screen.refreshed = false
 				screen.pylonEnterValue = screen.inputText
 				screen.SetInputTextAndRender("")
 				txhash, err := loud.CreateSellCharacterTrdReq(screen.user, screen.activeCharacter, screen.pylonEnterValue)
@@ -384,6 +391,7 @@ func (screen *GameScreen) HandleThirdClassInputKeys(input termbox.Event) bool {
 				}
 			case CR8_BUYCHR_TRDREQ_ENT_PYLVAL:
 				screen.scrStatus = W8_BUYCHR_TRDREQ_CREATION
+				screen.refreshed = false
 				screen.pylonEnterValue = screen.inputText
 				screen.SetInputTextAndRender("")
 				txhash, err := loud.CreateBuyCharacterTrdReq(screen.user, screen.activeChSpec, screen.pylonEnterValue)
