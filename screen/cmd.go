@@ -108,7 +108,7 @@ func (screen *GameScreen) renderUserCommands() {
 	case SEL_SELLITM:
 		userItems := screen.user.InventorySellableItems()
 		for idx, item := range userItems {
-			infoLines = append(infoLines, fmt.Sprintf("%d) %s  ", idx+1, formatItem(item))+screen.loudIcon()+fmt.Sprintf(" %d", item.GetSellPrice()))
+			infoLines = append(infoLines, fmt.Sprintf("%d) %s  ", idx+1, formatItem(item))+screen.loudIcon()+fmt.Sprintf(" %s", item.GetSellPriceRange()))
 		}
 		infoLines = appendSelectCancelCmds(infoLines)
 	case SEL_HUNT_ITEM:

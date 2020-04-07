@@ -154,22 +154,22 @@ var WorldCharacterSpecs = []CharacterSpec{
 	},
 }
 
-func (item *Item) GetSellPrice() int {
+func (item *Item) GetSellPriceRange() string {
 	switch item.Name {
 	case WOODEN_SWORD:
-		if item.Level == 1 {
-			return 80
-		} else if item.Level == 2 {
-			return 160
+		if item.Level == 1 { // attack 3
+			return "60-63"
+		} else if item.Level == 2 { // attack 6
+			return "120-126"
 		}
 	case COPPER_SWORD:
-		if item.Level == 1 {
-			return 200
-		} else if item.Level == 2 {
-			return 400
+		if item.Level == 1 { // attack 10
+			return "200-210"
+		} else if item.Level == 2 { // attack 20
+			return "400-440"
 		}
 	}
-	return -1
+	return "-1"
 }
 
 func (item *Item) GetUpgradePrice() int {

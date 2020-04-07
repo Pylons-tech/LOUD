@@ -85,7 +85,7 @@ func (screen *GameScreen) renderUserSituation() {
 	case SEL_BUYCHR:
 		infoLines = screen.renderITTable("select buy character desc", "Character", loud.ShopCharacters)
 	case SEL_SELLITM:
-		infoLines = screen.renderITTable("select sell item desc", "Item", screen.user.InventoryItems())
+		infoLines = screen.renderITTable("select sell item desc", "Item", screen.user.InventorySellableItems())
 	case SEL_HUNT_ITEM:
 		infoLines = screen.renderITTable("select hunt item desc", "Item", screen.user.InventorySwords())
 	case SEL_FIGHT_GOBLIN_ITEM:
@@ -283,7 +283,13 @@ func (screen *GameScreen) TxResultSituationDesc() string {
 		case RSLT_CREATE_COOKBOOK:
 			desc = loud.Localize("You created a new cookbook for a new game build")
 		case RSLT_SELLITM:
-			desc = loud.Sprintf("You sold %s for gold.", formatItem(screen.activeItem))
+			respOutput := []handlers.ExecuteRecipeSerialize{}
+			earnedAmount := int64(0)
+			json.Unmarshal(screen.txResult, &respOutput)
+			if len(respOutput) > 0 {
+				earnedAmount = respOutput[0].Amount
+			}
+			desc = loud.Sprintf("You sold %s for %d gold.", formatItem(screen.activeItem), earnedAmount)
 		case RSLT_UPGITM:
 			desc = loud.Sprintf("You have upgraded %s to get better hunt result", screen.activeItem.Name)
 		case RSLT_SELLITM_TRDREQ_CREATION:

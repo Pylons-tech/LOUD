@@ -215,7 +215,7 @@
     "one": "Got initial gold from pylons. Amount is %d."
   },
   "You sold %s for gold.": {
-    "one": "You sold \"%s\" for gold."
+    "one": "You sold \"%s\" for %d gold."
   },
   "You have upgraded %s to get better hunt result": {
     "one": "You have upgraded \"%s\" from Lv1 to Lv2 to get better hunt result"
