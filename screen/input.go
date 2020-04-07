@@ -12,6 +12,9 @@ import (
 )
 
 func (screen *GameScreen) HandleInputKey(input termbox.Event) {
+	if screen.IsWaitScreen() {
+		return
+	}
 	Key := strings.ToUpper(string(input.Ch))
 	log.Println("Handling Key \"", Key, "\"", input.Ch)
 	if screen.HandleFirstClassInputKeys(input) {
