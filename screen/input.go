@@ -163,6 +163,7 @@ func (screen *GameScreen) MoveToNextStep() {
 		RSLT_SELLCHR_TRDREQ_CREATION:   SHW_SELLCHR_TRDREQS,
 		RSLT_FULFILL_SELLCHR_TRDREQ:    SHW_SELLCHR_TRDREQS,
 		RSLT_BUYCHR_TRDREQ_CREATION:    SHW_BUYCHR_TRDREQS,
+		RSLT_CANCEL_TRDREQ:             SHW_LOCATION,
 		RSLT_FULFILL_BUYCHR_TRDREQ:     SHW_BUYCHR_TRDREQS,
 		RSLT_HEALTH_RESTORE_CHAR:       SEL_HEALTH_RESTORE_CHAR,
 		RSLT_SEL_DEF_CHAR:              SEL_DEFAULT_CHAR,
@@ -554,9 +555,9 @@ func (screen *GameScreen) HandleThirdClassKeyEnterEvent() bool {
 	case loud.HOME, loud.MARKET, loud.SHOP, loud.FOREST:
 		switch screen.scrStatus {
 		case SHW_LOUD_BUY_TRDREQS:
-			screen.RunSelectedLoudBuyTrade()
+			screen.RunSelectedLoudBuyTrdReq()
 		case SHW_LOUD_SELL_TRDREQS:
-			screen.RunSelectedLoudSellTrade()
+			screen.RunSelectedLoudSellTrdReq()
 		case SHW_BUYITM_TRDREQS:
 			screen.RunSelectedItemBuyTrdReq()
 		case SHW_SELLITM_TRDREQS:

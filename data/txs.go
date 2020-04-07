@@ -395,3 +395,10 @@ func FulfillTrade(user User, tradeID string) (string, error) {
 
 	return SendTxMsg(user, ffTrdMsg)
 }
+
+func CancelTrade(user User, tradeID string) (string, error) {
+	sdkAddr := GetSDKAddrFromUserName(user.GetUserName())
+	ccTrdMsg := msgs.NewMsgDisableTrade(tradeID, sdkAddr)
+
+	return SendTxMsg(user, ccTrdMsg)
+}

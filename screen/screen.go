@@ -742,28 +742,40 @@ func (screen *GameScreen) RunActiveItemFightGoblin() {
 	})
 }
 
-func (screen *GameScreen) RunSelectedLoudBuyTrade() {
+func (screen *GameScreen) RunSelectedLoudBuyTrdReq() {
 	if len(loud.BuyTrdReqs) <= screen.activeLine || screen.activeLine < 0 {
 		// when activeLine is not refering to real request but when it is refering to nil request
 		screen.txFailReason = loud.Localize("you haven't selected any buy request")
 		screen.SetScreenStatusAndRefresh(RSLT_FULFILL_BUY_LOUD_TRDREQ)
 	} else {
 		screen.activeTrdReq = loud.BuyTrdReqs[screen.activeLine]
-		screen.RunTxProcess(W8_FULFILL_BUY_LOUD_TRDREQ, RSLT_FULFILL_BUY_LOUD_TRDREQ, func() (string, error) {
-			return loud.FulfillTrade(screen.user, screen.activeTrdReq.ID)
-		})
+		if screen.activeTrdReq.IsMyTrdReq {
+			screen.RunTxProcess(W8_CANCEL_TRDREQ, RSLT_CANCEL_TRDREQ, func() (string, error) {
+				return loud.CancelTrade(screen.user, screen.activeTrdReq.ID)
+			})
+		} else {
+			screen.RunTxProcess(W8_FULFILL_BUY_LOUD_TRDREQ, RSLT_FULFILL_BUY_LOUD_TRDREQ, func() (string, error) {
+				return loud.FulfillTrade(screen.user, screen.activeTrdReq.ID)
+			})
+		}
 	}
 }
 
-func (screen *GameScreen) RunSelectedLoudSellTrade() {
+func (screen *GameScreen) RunSelectedLoudSellTrdReq() {
 	if len(loud.SellTrdReqs) <= screen.activeLine || screen.activeLine < 0 {
 		screen.txFailReason = loud.Localize("you haven't selected any sell request")
 		screen.SetScreenStatusAndRefresh(RSLT_FULFILL_SELL_LOUD_TRDREQ)
 	} else {
 		screen.activeTrdReq = loud.SellTrdReqs[screen.activeLine]
-		screen.RunTxProcess(W8_FULFILL_SELL_LOUD_TRDREQ, RSLT_FULFILL_SELL_LOUD_TRDREQ, func() (string, error) {
-			return loud.FulfillTrade(screen.user, screen.activeTrdReq.ID)
-		})
+		if screen.activeTrdReq.IsMyTrdReq {
+			screen.RunTxProcess(W8_CANCEL_TRDREQ, RSLT_CANCEL_TRDREQ, func() (string, error) {
+				return loud.CancelTrade(screen.user, screen.activeTrdReq.ID)
+			})
+		} else {
+			screen.RunTxProcess(W8_FULFILL_SELL_LOUD_TRDREQ, RSLT_FULFILL_SELL_LOUD_TRDREQ, func() (string, error) {
+				return loud.FulfillTrade(screen.user, screen.activeTrdReq.ID)
+			})
+		}
 	}
 }
 
@@ -774,9 +786,15 @@ func (screen *GameScreen) RunSelectedItemBuyTrdReq() {
 	} else {
 		atir := loud.ItemBuyTrdReqs[screen.activeLine]
 		screen.activeItemTrdReq = atir
-		screen.RunTxProcess(W8_FULFILL_BUYITM_TRDREQ, RSLT_FULFILL_BUYITM_TRDREQ, func() (string, error) {
-			return loud.FulfillTrade(screen.user, atir.ID)
-		})
+		if atir.IsMyTrdReq {
+			screen.RunTxProcess(W8_CANCEL_TRDREQ, RSLT_CANCEL_TRDREQ, func() (string, error) {
+				return loud.CancelTrade(screen.user, atir.ID)
+			})
+		} else {
+			screen.RunTxProcess(W8_FULFILL_BUYITM_TRDREQ, RSLT_FULFILL_BUYITM_TRDREQ, func() (string, error) {
+				return loud.FulfillTrade(screen.user, atir.ID)
+			})
+		}
 	}
 }
 
@@ -787,9 +805,15 @@ func (screen *GameScreen) RunSelectedItemSellTrdReq() {
 	} else {
 		sstr := loud.ItemSellTrdReqs[screen.activeLine]
 		screen.activeItemTrdReq = sstr
-		screen.RunTxProcess(W8_FULFILL_SELLITM_TRDREQ, RSLT_FULFILL_SELLITM_TRDREQ, func() (string, error) {
-			return loud.FulfillTrade(screen.user, sstr.ID)
-		})
+		if sstr.IsMyTrdReq {
+			screen.RunTxProcess(W8_CANCEL_TRDREQ, RSLT_CANCEL_TRDREQ, func() (string, error) {
+				return loud.CancelTrade(screen.user, sstr.ID)
+			})
+		} else {
+			screen.RunTxProcess(W8_FULFILL_SELLITM_TRDREQ, RSLT_FULFILL_SELLITM_TRDREQ, func() (string, error) {
+				return loud.FulfillTrade(screen.user, sstr.ID)
+			})
+		}
 	}
 }
 
@@ -800,9 +824,15 @@ func (screen *GameScreen) RunSelectedCharacterBuyTrdReq() {
 	} else {
 		cbtr := loud.CharacterBuyTrdReqs[screen.activeLine]
 		screen.activeItemTrdReq = cbtr
-		screen.RunTxProcess(W8_FULFILL_BUYCHR_TRDREQ, RSLT_FULFILL_BUYCHR_TRDREQ, func() (string, error) {
-			return loud.FulfillTrade(screen.user, cbtr.ID)
-		})
+		if cbtr.IsMyTrdReq {
+			screen.RunTxProcess(W8_CANCEL_TRDREQ, RSLT_CANCEL_TRDREQ, func() (string, error) {
+				return loud.CancelTrade(screen.user, cbtr.ID)
+			})
+		} else {
+			screen.RunTxProcess(W8_FULFILL_BUYCHR_TRDREQ, RSLT_FULFILL_BUYCHR_TRDREQ, func() (string, error) {
+				return loud.FulfillTrade(screen.user, cbtr.ID)
+			})
+		}
 	}
 }
 
@@ -813,9 +843,15 @@ func (screen *GameScreen) RunSelectedCharacterSellTrdReq() {
 	} else {
 		cstr := loud.CharacterSellTrdReqs[screen.activeLine]
 		screen.activeItemTrdReq = cstr
-		screen.RunTxProcess(W8_FULFILL_SELLCHR_TRDREQ, RSLT_FULFILL_SELLCHR_TRDREQ, func() (string, error) {
-			return loud.FulfillTrade(screen.user, cstr.ID)
-		})
+		if cstr.IsMyTrdReq {
+			screen.RunTxProcess(W8_CANCEL_TRDREQ, RSLT_CANCEL_TRDREQ, func() (string, error) {
+				return loud.CancelTrade(screen.user, cstr.ID)
+			})
+		} else {
+			screen.RunTxProcess(W8_FULFILL_SELLCHR_TRDREQ, RSLT_FULFILL_SELLCHR_TRDREQ, func() (string, error) {
+				return loud.FulfillTrade(screen.user, cstr.ID)
+			})
+		}
 	}
 }
 

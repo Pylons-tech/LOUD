@@ -149,6 +149,7 @@ func (screen *GameScreen) TxResultSituationDesc() string {
 		RSLT_BUYITM_TRDREQ_CREATION:    "buy item request creation",
 		RSLT_SELLCHR_TRDREQ_CREATION:   "sell character request creation",
 		RSLT_BUYCHR_TRDREQ_CREATION:    "buy character request creation",
+		RSLT_CANCEL_TRDREQ:             "cancel trade",
 		RSLT_FULFILL_BUY_LOUD_TRDREQ:   "sell loud", // for fullfill direction is reversed
 		RSLT_FULFILL_SELL_LOUD_TRDREQ:  "buy loud",
 		RSLT_FULFILL_SELLITM_TRDREQ:    "buy item",
@@ -304,6 +305,8 @@ func (screen *GameScreen) TxResultSituationDesc() string {
 		case RSLT_BUYCHR_TRDREQ_CREATION:
 			desc = loud.Localize("character buy request was successfully created")
 			desc += screen.buyCharacterDesc(screen.activeCharacter, screen.pylonEnterValue)
+		case RSLT_CANCEL_TRDREQ:
+			desc = loud.Localize("successfully cancelled trade request")
 		case RSLT_FULFILL_BUY_LOUD_TRDREQ:
 			request := screen.activeTrdReq
 			desc = loud.Localize("you have sold loud coin successfully from loud/pylon market") + fmt.Sprintf(" at %.4f.\n", request.Price)
@@ -397,6 +400,8 @@ func (screen *GameScreen) TxWaitSituationDesc() string {
 	case W8_BUYCHR_TRDREQ_CREATION:
 		desc = loud.Localize("You are now waiting for character buy request creation")
 		desc += screen.buyCharacterDesc(screen.activeCharacter, screen.pylonEnterValue)
+	case W8_CANCEL_TRDREQ:
+		desc = loud.Localize("You are now waiting for cancelling one of your trades")
 	// For FULFILL trades, msg should be reversed, since user is opposite
 	case W8_FULFILL_SELLITM_TRDREQ:
 		request := screen.activeItemTrdReq.(loud.ItemSellTrdReq)
