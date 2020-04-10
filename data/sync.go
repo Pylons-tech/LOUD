@@ -31,22 +31,26 @@ func SyncFromNode(user User) {
 		Name, _ := rawItem.FindString("Name")
 		itemType, _ := rawItem.FindString("Type")
 		Attack, _ := rawItem.FindDouble("attack")
+		// TODO should correct this code after merging timed field feature on pylon repo
+		LastUpdate := uint64(0) // rawItem.LastUpdate
 
 		if itemType == "Character" {
 			myCharacters = append(myCharacters, Character{
-				Level: Level,
-				Name:  Name,
-				ID:    rawItem.ID,
-				XP:    XP,
-				HP:    HP,
-				MaxHP: MaxHP,
+				Level:      Level,
+				Name:       Name,
+				ID:         rawItem.ID,
+				XP:         XP,
+				HP:         HP,
+				MaxHP:      MaxHP,
+				LastUpdate: LastUpdate,
 			})
 		} else {
 			myItems = append(myItems, Item{
-				Level:  Level,
-				Name:   Name,
-				Attack: int(Attack),
-				ID:     rawItem.ID,
+				Level:      Level,
+				Name:       Name,
+				Attack:     int(Attack),
+				ID:         rawItem.ID,
+				LastUpdate: LastUpdate,
 			})
 		}
 	}

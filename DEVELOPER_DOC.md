@@ -205,3 +205,6 @@ Price: 10 loudcoin
 ```
 
 If HP is bigger than MaxHP, it is set to MaxHP automatically.
+
+Warn: When a character fight or hunt, automatic health increaser just work to restore the health gained during relax.
+For every block, the HP is increased by +1.

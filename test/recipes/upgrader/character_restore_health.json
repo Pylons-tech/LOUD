@@ -1,6 +1,6 @@
 {
     "Longs": [{
         "Key": "HP", 
-        "Program": "min_int(HP + 20, MaxHP)"
+        "Program": "min_int(HP + block_since(lastUpdate) + 20, MaxHP)"
     }]
 }

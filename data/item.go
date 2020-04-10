@@ -3,12 +3,13 @@ package loud
 import "strings"
 
 type Item struct {
-	ID      string `json:""`
-	Name    string `json:""`
-	Level   int
-	Attack  int
-	Price   int
-	PreItem string `json:""`
+	ID         string `json:""`
+	Name       string `json:""`
+	Level      int
+	Attack     int
+	Price      int
+	PreItem    string `json:""`
+	LastUpdate uint64
 }
 
 func (item Item) IsSword() bool {
@@ -23,13 +24,14 @@ type ItemSpec struct {
 }
 
 type Character struct {
-	ID    string `json:""`
-	Name  string `json:""`
-	Level int
-	Price int
-	XP    float64
-	HP    int
-	MaxHP int
+	ID         string `json:""`
+	Name       string `json:""`
+	Level      int
+	Price      int
+	XP         float64
+	HP         int
+	MaxHP      int
+	LastUpdate uint64
 }
 type CharacterSpec struct {
 	Name  string `json:""`
