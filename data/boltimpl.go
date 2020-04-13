@@ -77,12 +77,13 @@ type UserData struct {
 	Characters            []Character
 	DefaultCharacterIndex int
 	PrivKey               string
+	lastTransaction       string
+	lastUpdate            int64
 }
 
 type dbUser struct {
 	UserData
-	world           *dbWorld
-	lastTransaction string
+	world *dbWorld
 }
 
 func (user *dbUser) GetPrivKey() string {
@@ -253,11 +254,19 @@ func (user *dbUser) InventorySellableItems() []Item {
 }
 
 func (user *dbUser) GetLastTransaction() string {
-	return user.lastTransaction
+	return user.UserData.lastTransaction
 }
 
-func (user *dbUser) SetLastTransaction(trans string) {
-	user.lastTransaction = trans
+func (user *dbUser) SetLastTransaction(tx string) {
+	user.UserData.lastTransaction = tx
+}
+
+func (user *dbUser) SetLatestBlockHeight(h int64) {
+	user.UserData.lastUpdate = h
+}
+
+func (user dbUser) GetLatestBlockHeight() int64 {
+	return user.UserData.lastUpdate
 }
 
 func getUserFromDB(world *dbWorld, username string) User {

@@ -21,6 +21,8 @@ type User interface {
 	SetDefaultCharacterIndex(idx int)
 	SetLocation(UserLocation)
 	SetLastTransaction(string)
+	SetLatestBlockHeight(int64)
+	GetLatestBlockHeight() int64
 	InventoryItems() []Item
 	InventoryItemIDByName(string) string
 	InventoryIronSwords() []Item

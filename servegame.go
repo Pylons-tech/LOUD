@@ -13,8 +13,6 @@ import (
 
 	data "github.com/Pylons-tech/LOUD/data"
 	screen "github.com/Pylons-tech/LOUD/screen"
-	pylonSDK "github.com/Pylons-tech/pylons/cmd/test"
-	ctypes "github.com/tendermint/tendermint/rpc/core/types"
 )
 
 var terminalCloseSignal chan os.Signal = make(chan os.Signal, 2)
@@ -43,9 +41,8 @@ func SetupScreenAndEvents(world data.World, logFile *os.File) {
 
 	log.Println("setting up screen and events")
 
-	tick := time.Tick(50 * time.Millisecond)
-	daemonStatusRefreshTick := time.Tick(10 * time.Second)
-	daemonFetchResult := make(chan *ctypes.ResultStatus)
+	tick := time.Tick(300 * time.Millisecond)
+	regRefreshTick := time.Tick(2 * time.Second)
 
 	if data.AutomateInput {
 		screenInstance.SetScreenStatus(screen.RSLT_SWITCH_USER)
@@ -112,28 +109,14 @@ eventloop:
 			panic(ev.Err)
 		}
 		select {
-		case <-tick:
-			screenInstance.Render()
-			continue
-		case <-daemonStatusRefreshTick:
-			go func() {
-				screenInstance.SetDaemonFetchingFlag(true)
-				screenInstance.Render()
-				ds, err := pylonSDK.GetDaemonStatus()
-				if err != nil {
-					log.Println("couldn't get daemon status", err)
-				} else {
-					log.Println("success getting daemon status", err)
-					daemonFetchResult <- ds
-				}
-				screenInstance.Resync()
-			}()
-		case ds := <-daemonFetchResult:
-			screenInstance.SetDaemonFetchingFlag(false)
-			screenInstance.UpdateBlockHeight(ds.SyncInfo.LatestBlockHeight)
+		case <-regRefreshTick:
+			screenInstance.Resync()
 		case <-terminalCloseSignal:
 			screenInstance.Reset()
 			break eventloop
+		case <-tick:
+			screenInstance.Render()
+			continue
 		}
 	}
 }

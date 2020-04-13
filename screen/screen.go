@@ -29,7 +29,6 @@ const bgcolor = 232
 
 // Screen represents a UI screen.
 type Screen interface {
-	SetDaemonFetchingFlag(bool)
 	SaveGame()
 	UpdateBlockHeight(int64)
 	SetScreenSize(int, int)
@@ -43,27 +42,26 @@ type Screen interface {
 }
 
 type GameScreen struct {
-	world                  loud.World
-	user                   loud.User
-	screenSize             ssh.Window
-	activeItem             loud.Item
-	activeItSpec           loud.ItemSpec
-	activeCharacter        loud.Character
-	activeChSpec           loud.CharacterSpec
-	activeLine             int
-	activeTrdReq           loud.TrdReq
-	activeItemTrdReq       interface{}
-	pylonEnterValue        string
-	loudEnterValue         string
-	inputText              string
-	refreshingDaemonStatus bool
-	syncingData            bool
-	blockHeight            int64
-	txFailReason           string
-	txResult               []byte
-	refreshed              bool
-	scrStatus              ScreenStatus
-	colorCodeCache         map[string](func(string) string)
+	world            loud.World
+	user             loud.User
+	screenSize       ssh.Window
+	activeItem       loud.Item
+	activeItSpec     loud.ItemSpec
+	activeCharacter  loud.Character
+	activeChSpec     loud.CharacterSpec
+	activeLine       int
+	activeTrdReq     loud.TrdReq
+	activeItemTrdReq interface{}
+	pylonEnterValue  string
+	loudEnterValue   string
+	inputText        string
+	syncingData      bool
+	blockHeight      int64
+	txFailReason     string
+	txResult         []byte
+	refreshed        bool
+	scrStatus        ScreenStatus
+	colorCodeCache   map[string](func(string) string)
 }
 
 // NewScreen manages the window rendering for game
@@ -121,17 +119,12 @@ func (screen *GameScreen) SaveGame() {
 	screen.user.Save()
 }
 
-func (screen *GameScreen) SetDaemonFetchingFlag(flag bool) {
-	screen.refreshingDaemonStatus = flag
-}
-
 func (screen *GameScreen) UpdateBlockHeight(blockHeight int64) {
 	screen.blockHeight = blockHeight
 	screen.FreshRender()
 }
 
 func (screen *GameScreen) BlockSince(baseBlockHeight int64) uint64 {
-	// TODO should correct this code after merging timed field feature on pylon repo
 	return uint64(screen.blockHeight - baseBlockHeight)
 }
 
@@ -615,6 +608,10 @@ func (screen *GameScreen) renderCharacterSheet() {
 	var HP uint64 = 0
 	var MaxHP uint64 = 0
 
+	if lbh := screen.user.GetLatestBlockHeight(); lbh > screen.blockHeight {
+		screen.blockHeight = lbh
+	}
+
 	characters := screen.user.InventoryCharacters()
 	dfc := screen.user.GetDefaultCharacterIndex()
 	if dfc >= 0 && dfc < len(characters) {
@@ -682,7 +679,7 @@ func (screen *GameScreen) renderCharacterSheet() {
 	}
 
 	blockHeightText := centerText(loud.Localize("block height")+": "+strconv.FormatInt(screen.blockHeight, 10), " ", width)
-	if screen.refreshingDaemonStatus {
+	if screen.syncingData {
 		nodeLines = append(nodeLines, screen.blueBoldFont()(blockHeightText))
 	} else {
 		nodeLines = append(nodeLines, blockHeightText)
