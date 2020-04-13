@@ -12,10 +12,6 @@ type Item struct {
 	LastUpdate uint64
 }
 
-func (item Item) IsSword() bool {
-	return IsSword(item.Name)
-}
-
 type ItemSpec struct {
 	Name   string `json:""`
 	Level  [2]int
@@ -53,8 +49,8 @@ const (
 	TROLL_TOES          = "Troll toes"
 )
 
-func IsSword(name string) bool {
-	return strings.Contains(name, "sword")
+func (item Item) IsSword() bool {
+	return strings.Contains(item.Name, "sword")
 }
 
 var ShopItems = []Item{
