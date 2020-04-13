@@ -1,0 +1,253 @@
+{
+  "block height": {
+    "one": "Block Height"
+  },
+  "buy item failed reason": {
+    "one": "Buy Item Failed Reason"
+  },
+  "buy character failed reason": {
+    "one": "Buy Character Failed Reason"
+  },
+  "hunt failed reason": {
+    "one": "Hunt Failed Reason"
+  },
+  "sell failed reason": {
+    "one": "Sell Failed Reason"
+  },
+  "upgrade failed reason": {
+    "one": "Upgrade Failed Reason"
+  },
+  "Recipe Name does not exist!": {
+    "one": "Recipe Name does not exist!"
+  },
+  "You are trying to buy item which is not in shop": {
+    "one": "You are trying to buy item which is not in shop"
+  },
+  "You are trying to buy character which is not in shop": {
+    "one": "You are trying to buy character which is not in shop"
+  },
+  "You don't have enough gold to buy this item": {
+    "one": "You don't have enough gold to buy this item"
+  },
+  "You don't have enough gold to upgrade this item": {
+    "one": "You don't have enough gold to upgrade this item"
+  },
+  "home": {
+    "one": "1) Select default character\n2) Select default weapon\n3) Restore character health\n"
+  },
+  "forest": {
+    "one": "1) Hunt\n2) Goblin\n3) Wolf\n4) Troll\n5) Giant\n"
+  },
+  "shop": {
+    "one": "1) Buy Items\n2) Sell Items\n3) Upgrade Items\n4) Buy Characters\n"
+  },
+  "market": {
+    "one": "1) Sell Loud from orderbook / Create an order to buy Loud\n2) Buy Loud from orderbook / Create an order to Sell Loud\n3) Sell sword from orderbook / Create an order to buy sword\n4) Buy sword from orderbook / Create an order to sell sword\n5) Sell character from orderbook / Create an order to buy character\n6) Buy character from orderbook / Create an order to sell character\n"
+  },
+  "settings": {
+    "one": "Language:\n1) English\n2) Español\n"
+  },
+  "develop": {
+    "one": "Create cookbook(j)\nSwitch user(z)\nGet initial py)lons\nGet I)nitial Loud Coin\nDevMode Test Items(b)\n"
+  },
+  "go to home": {
+    "one": "H)ome"
+  },
+  "go to forest": {
+    "one": "F)orest"
+  },
+  "go to shop": {
+    "one": "S)hop"
+  },
+  "go to market": {
+    "one": "M)arket"
+  },
+  "go to settings": {
+    "one": "Set)tings"
+  },
+  "go to develop": {
+    "one": "D)evelop"
+  },
+  "Wooden sword": {
+    "one": "Wooden sword",
+    "other": "Wooden swords"
+  },
+  "Copper sword": {
+    "one": "Copper sword",
+    "other": "Copper swords"
+  },
+  "C)ancel": {
+    "one": "C)ancel"
+  },
+  "No item": {
+    "one": "No Item(0)"
+  },
+  "Get I)nitial Coin": {
+    "one": "Get I)nitial Coin"
+  },
+  "Go) on": {
+    "one": "Go) on"
+  },
+  "home desc": {
+    "one": "You are now at home.\nIf you like to hunt something go to forest.\nAnd if you like to buy/sell something go to shop."
+  },
+  "forest desc": {
+    "one": "You are now at forest.\nYou can hunt here or go back to home."
+  },
+  "shop desc": {
+    "one": "You are now at a shop.\nIf you want you can buy or sell items here."
+  },
+  "market desc": {
+    "one": "You are now at a marketplace.\nYou can do trading here for coin and items."
+  }, 
+  "settings desc": {
+    "one": "Settings"
+  },
+  "develop desc": {
+    "one": "You are now testing things for development. Please enter commands you want to try"
+  },
+  "select buy character desc": {
+    "one": "You are gonna buy a character.\nPlease select a character to buy."
+  },
+  "select buy item desc": {
+    "one": "You are gonna buy an item.\nPlease select an item to buy."
+  },
+  "select sell item desc": {
+    "one": "You are gonna sell an item.\nPlease select an item to sell."
+  },
+  "select hunt item desc": {
+    "one": "You are preparing for hunt.\nPlease select an item to carry."
+  },
+  "select fight goblin item desc": {
+    "one": "You are preparing for fighting goblin.\nPlease select an item to carry."
+  },
+  "select fight troll item desc": {
+    "one": "You are preparing for fighting troll.\nPlease select an item to carry."
+  },
+  "select fight wolf item desc": {
+    "one": "You are preparing for fighting wolf.\nPlease select an item to carry."
+  },
+  "select fight giant item desc": {
+    "one": "You are preparing for fighting giant.\nPlease select an item to carry."
+  },
+  "select upgrade item desc": {
+    "one": "You are gonna upgrade an item.\nPlease select an item to upgrade."
+  },
+  "you are now buying loud from pylon": {
+    "one": "You are now buying loud coin from pylon"
+  },
+  "you are now selling loud for pylon": {
+    "one": "You are now selling loud coin for pylon"
+  },
+  "Please wait for a moment to finish the process": {
+    "one": "Please wait for a moment to finish the process."
+  },
+  "You are now buying %s at the shop": {
+    "one": "You are now buying \"%s\" at the shop"
+  },
+  "You are now hunting with %s": {
+    "one": "You are now hunting with \"%s\"."
+  },
+  "You are now hunting without weapon": {
+    "one": "You are now hunting without weapon."
+  },
+  "You are now fighting with giant with %s": {
+    "one": "You are now fighting with giant with \"%s\"\n"
+  },
+  "You are now fighting with goblin with %s": {
+    "one": "You are now fighting with goblin with \"%s\"\n"
+  },
+  "You are now fighting with troll with %s": {
+    "one": "You are now fighting with troll with \"%s\"\n"
+  },
+  "You are now fighting with wolf with %s": {
+    "one": "You are now fighting with wolf with \"%s\"\n"
+  },
+  "You are now selling %s for gold": {
+    "one": "You are now selling \"%s\" for gold."
+  },
+  "You are now upgrading %s": {
+    "one": "You are now upgrading %s."
+  },
+  "You have bought %s from the shop": {
+    "one": "You have bought \"%s\" from the shop"
+  },
+  "You are now buying sword at %d": {
+    "one": "You are now buying sword at %d.\n"
+  },
+  "you have bought loud coin successfully from loud/pylon market": {
+    "one": "You have bought loud coin successfully from loud/pylon market"
+  },
+  "you have sold loud coin successfully from loud/pylon market": {
+    "one": "You have sold loud coin successfully from loud/pylon market"
+  },
+  "You are now waiting for loud buy request creation": {
+    "one": "You are now waiting for loud buy request creation"
+  },
+  "You are now waiting for loud sell request creation": {
+    "one": "You are now waiting for loud sell request creation"
+  },
+  "loud buy request was successfully created": {
+    "one": "Loud buy request was successfully created."
+  },
+  "loud sell request was successfully created": {
+    "one": "Loud sell request was successfully created."
+  },
+  "Please use it for hunting": {
+    "one": "Please use it for hunting."
+  },
+  "You did hunt animals and earned %d. Detailed result: %+v": {
+    "one": "You did hunt animals and earned %d. Detailed result: %+v"
+  },
+  "You did fight with goblin and earned %d. Detailed result: %+v": {
+    "one": "You did fight with goblin and earned %d. Detailed result: %+v"
+  },
+  "You did fight with troll and earned %d. Detailed result: %+v": {
+    "one": "You did fight with troll and earned %d. Detailed result: %+v"
+  },
+  "You did fight with wolf and earned %d. Detailed result: %+v": {
+    "one": "You did fight with wolf and earned %d. Detailed result: %+v"
+  },
+  "You did fight with giant and earned %d. Detailed result: %+v": {
+    "one": "You did fight with giant and earned %d. Detailed result: %+v"
+  },
+  "Got initial gold from pylons. Amount is %d.": {
+    "one": "Got initial gold from pylons. Amount is %d."
+  },
+  "result fight wolf finish desc": {
+    "one": "You did fight with wolf"
+  },
+  "result fight giant finish desc": {
+    "one": "You did fight with giant"
+  },
+  "You sold %s for %d gold.": {
+    "one": "You sold \"%s\" for %d gold."
+  },
+  "You have upgraded %s to get better hunt result": {
+    "one": "You have upgraded \"%s\" from Lv1 to Lv2 to get better hunt result"
+  },
+  "health low warning": {
+    "one": " (Health low) "
+  },
+  "health critical warning": {
+    "one": " (Health CRITICAL) "
+  },
+  "gold": {
+    "one": "Gold"
+  },
+  "inventory items": {
+    "one": " Inventory Items "
+  },
+  "inventory chracters": {
+    "one": " Inventory Characters "
+  },
+  "screen size warning": {
+    "one": "Screen is too small. Make your terminal larger. (120x38 minimum)"
+  },
+  "dead": {
+    "one": "You died. Respawning..."
+  },
+  "pylons network status": {
+    "one": "Pylons Network Status"
+  }
+}

@@ -8,7 +8,16 @@ import (
 	pylonSDK "github.com/Pylons-tech/pylons/cmd/test"
 )
 
+var IsSyncingFromNode = false
+
 func SyncFromNode(user User) {
+	if IsSyncingFromNode {
+		return
+	}
+	IsSyncingFromNode = true
+	defer func() {
+		IsSyncingFromNode = false
+	}()
 	log.Println("SyncFromNode Function Body")
 	log.Println("username=", user.GetUserName())
 	log.Println("userinfo=", pylonSDK.GetAccountAddr(user.GetUserName(), GetTestingT()))
@@ -31,8 +40,7 @@ func SyncFromNode(user User) {
 		Name, _ := rawItem.FindString("Name")
 		itemType, _ := rawItem.FindString("Type")
 		Attack, _ := rawItem.FindDouble("attack")
-		// TODO should correct this code after merging timed field feature on pylon repo
-		LastUpdate := uint64(0) // rawItem.LastUpdate
+		LastUpdate := rawItem.LastUpdate
 
 		if itemType == "Character" {
 			myCharacters = append(myCharacters, Character{
@@ -195,4 +203,9 @@ func SyncFromNode(user User) {
 	CharacterSellTrdReqs = nSellCharacterTrdReqs
 	log.Println("BuyTrdReqs=", BuyTrdReqs)
 	log.Println("SellTrdReqs=", SellTrdReqs)
+
+	ds, err := pylonSDK.GetDaemonStatus()
+	if err == nil {
+		user.SetLatestBlockHeight(ds.SyncInfo.LatestBlockHeight)
+	}
 }

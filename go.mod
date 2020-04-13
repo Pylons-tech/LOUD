@@ -5,7 +5,7 @@ go 1.13
 require (
 	github.com/FactomProject/basen v0.0.0-20150613233007-fe3947df716e // indirect
 	github.com/FactomProject/btcutilecc v0.0.0-20130527213604-d3a63a5752ec // indirect
-	github.com/Pylons-tech/pylons v0.0.0-20200403184129-4525988205b5
+	github.com/Pylons-tech/pylons v0.0.0-20200413033134-84004e2db180
 	github.com/ahmetb/go-cursor v0.0.0-20131010032410-8136607ea412
 	github.com/anmitsu/go-shlex v0.0.0-20161002113705-648efa622239 // indirect
 	github.com/atotto/clipboard v0.1.2

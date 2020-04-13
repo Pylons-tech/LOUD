@@ -5,6 +5,7 @@
 *.dylib
 id_rsa
 /bin/
+/release/bin/
 vendor/
 *.db
 *.zip
