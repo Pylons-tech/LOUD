@@ -32,7 +32,7 @@ func SyncFromNode(user User) {
 		itemType, _ := rawItem.FindString("Type")
 		Attack, _ := rawItem.FindDouble("attack")
 		// TODO should correct this code after merging timed field feature on pylon repo
-		LastUpdate := uint64(0) // rawItem.LastUpdate
+		LastUpdate := rawItem.LastUpdate
 
 		if itemType == "Character" {
 			myCharacters = append(myCharacters, Character{

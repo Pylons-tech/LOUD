@@ -9,7 +9,7 @@ type Item struct {
 	Attack     int
 	Price      int
 	PreItem    string `json:""`
-	LastUpdate uint64
+	LastUpdate int64
 }
 
 type ItemSpec struct {
@@ -27,7 +27,7 @@ type Character struct {
 	XP         float64
 	HP         int
 	MaxHP      int
-	LastUpdate uint64
+	LastUpdate int64
 }
 type CharacterSpec struct {
 	Name  string `json:""`

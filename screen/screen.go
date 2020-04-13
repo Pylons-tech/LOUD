@@ -130,10 +130,9 @@ func (screen *GameScreen) UpdateBlockHeight(blockHeight int64) {
 	screen.FreshRender()
 }
 
-func (screen *GameScreen) BlockSince(baseBlockHeight uint64) uint64 {
+func (screen *GameScreen) BlockSince(baseBlockHeight int64) uint64 {
 	// TODO should correct this code after merging timed field feature on pylon repo
-	// return uint64(screen.blockHeight - int64(baseBlockHeight))
-	return 0
+	return uint64(screen.blockHeight - baseBlockHeight)
 }
 
 func (screen *GameScreen) SetInputTextAndRender(text string) {
