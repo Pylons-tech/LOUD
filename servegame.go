@@ -48,14 +48,14 @@ func SetupScreenAndEvents(world data.World, logFile *os.File) {
 	daemonFetchResult := make(chan *ctypes.ResultStatus)
 
 	if data.AutomateInput {
-		screenInstance.SetScreenStatus(screen.RESULT_SWITCH_USER)
+		screenInstance.SetScreenStatus(screen.RSLT_SWITCH_USER)
 		time.AfterFunc(2*time.Second, func() {
 
 		automateloop:
 			for {
 				log.Println("<-automateTick")
 				switch screenInstance.GetScreenStatus() {
-				case screen.RESULT_CREATE_COOKBOOK:
+				case screen.RSLT_CREATE_COOKBOOK:
 					if screenInstance.GetTxFailReason() != "" {
 						data.SomethingWentWrongMsg = "create cookbook failed, " + screenInstance.GetTxFailReason()
 						break automateloop
@@ -63,11 +63,11 @@ func SetupScreenAndEvents(world data.World, logFile *os.File) {
 					screenInstance.HandleInputKey(termbox.Event{
 						Ch: 122, // "z" 122 Switch user
 					})
-				case screen.RESULT_GET_PYLONS:
+				case screen.RSLT_GET_PYLONS:
 					screenInstance.HandleInputKey(termbox.Event{
 						Ch: 106, // "j" 106 Create cookbook
 					})
-				case screen.RESULT_SWITCH_USER:
+				case screen.RSLT_SWITCH_USER:
 					screenInstance.HandleInputKey(termbox.Event{
 						Ch: 121, // "y" 121 get initial pylons
 					})

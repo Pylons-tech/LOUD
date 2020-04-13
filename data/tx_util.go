@@ -488,7 +488,7 @@ func GetToBuyCharacterFromKey(key string) Character {
 }
 
 func GetToSellItemFromKey(user User, key string) Item {
-	items := user.InventoryItems()
+	items := user.InventorySellableItems()
 	useItem := Item{}
 	itemKey := GetIndexFromString(key)
 	if itemKey >= 0 && itemKey < len(items) {

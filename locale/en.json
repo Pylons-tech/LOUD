@@ -220,8 +220,8 @@
   "result fight giant finish desc": {
     "one": "You did fight with giant"
   },
-  "You sold %s for gold.": {
-    "one": "You sold \"%s\" for gold."
+  "You sold %s for %d gold.": {
+    "one": "You sold \"%s\" for %d gold."
   },
   "You have upgraded %s to get better hunt result": {
     "one": "You have upgraded \"%s\" from Lv1 to Lv2 to get better hunt result"

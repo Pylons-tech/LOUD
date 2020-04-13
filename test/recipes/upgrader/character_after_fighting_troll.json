@@ -8,6 +8,6 @@
         "Program": "level + int(XP / double(level * 10))"
     }, {
         "Key": "HP", 
-        "Program": "max_int(HP - 20 * 5 / int(input1.attack), 1)"
+        "Program": "max_int(min_int(HP + block_since(lastUpdate), MaxHP) - 20 * 5 / int(input1.attack), 1)"
     }]
 }

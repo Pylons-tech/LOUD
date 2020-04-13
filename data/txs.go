@@ -12,6 +12,12 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
+const CR8BY_LOUD = "created by loud game"
+const ITEM_BUYREQ_TRDINFO = "sword buy request created by loud game"
+const CHAR_BUYREQ_TRDINFO = "character buy request created by loud game"
+const ITEM_SELREQ_TRDINFO = "sword sell request created by loud game"
+const CHAR_SELREQ_TRDINFO = "character sell request created by loud game"
+
 func CreateCookbook(user User) (string, error) { // This is for afti develop mode automation test is only using
 	t := GetTestingT()
 	username := user.GetUserName()
@@ -146,7 +152,7 @@ func FightGiant(user User, item Item) (string, error) {
 func BuyCharacter(user User, item Character) (string, error) {
 	rcpName := ""
 	switch item.Name {
-	case TIGER_CHARACTER:
+	case TIGER_CHR:
 		rcpName = "LOUD's Get Character recipe"
 	default:
 		return "", errors.New("You are trying to buy character which is not in shop")
@@ -223,7 +229,7 @@ func Upgrade(user User, item Item) (string, error) {
 	return ExecuteRecipe(user, rcpName, itemIDs)
 }
 
-func CreateBuyLoudTradeRequest(user User, loudEnterValue string, pylonEnterValue string) (string, error) {
+func CreateBuyLoudTrdReq(user User, loudEnterValue string, pylonEnterValue string) (string, error) {
 	loudValue, err := strconv.Atoi(loudEnterValue)
 	if err != nil {
 		return "", err
@@ -238,7 +244,7 @@ func CreateBuyLoudTradeRequest(user User, loudEnterValue string, pylonEnterValue
 	inputCoinList := types.GenCoinInputList("loudcoin", int64(loudValue))
 
 	outputCoins := sdk.Coins{sdk.NewInt64Coin("pylon", int64(pylonValue))}
-	extraInfo := "created by loud game"
+	extraInfo := CR8BY_LOUD
 
 	createTrdMsg := msgs.NewMsgCreateTrade(
 		inputCoinList,
@@ -250,7 +256,7 @@ func CreateBuyLoudTradeRequest(user User, loudEnterValue string, pylonEnterValue
 	return SendTxMsg(user, createTrdMsg)
 }
 
-func CreateSellLoudTradeRequest(user User, loudEnterValue string, pylonEnterValue string) (string, error) {
+func CreateSellLoudTrdReq(user User, loudEnterValue string, pylonEnterValue string) (string, error) {
 	loudValue, err := strconv.Atoi(loudEnterValue)
 	if err != nil {
 		return "", err
@@ -265,7 +271,7 @@ func CreateSellLoudTradeRequest(user User, loudEnterValue string, pylonEnterValu
 	inputCoinList := types.GenCoinInputList("pylon", int64(pylonValue))
 
 	outputCoins := sdk.Coins{sdk.NewInt64Coin("loudcoin", int64(loudValue))}
-	extraInfo := "created by loud game"
+	extraInfo := CR8BY_LOUD
 
 	createTrdMsg := msgs.NewMsgCreateTrade(
 		inputCoinList,
@@ -277,7 +283,7 @@ func CreateSellLoudTradeRequest(user User, loudEnterValue string, pylonEnterValu
 	return SendTxMsg(user, createTrdMsg)
 }
 
-func CreateBuySwordTradeRequest(user User, itspec ItemSpec, pylonEnterValue string) (string, error) {
+func CreateBuyItemTrdReq(user User, itspec ItemSpec, pylonEnterValue string) (string, error) {
 	// trade creator will get sword from pylon
 
 	itemInputs := GetItemInputsFromItemSpec(itspec)
@@ -290,7 +296,7 @@ func CreateBuySwordTradeRequest(user User, itspec ItemSpec, pylonEnterValue stri
 	sdkAddr := GetSDKAddrFromUserName(user.GetUserName())
 
 	outputCoins := sdk.Coins{sdk.NewInt64Coin("pylon", int64(pylonValue))}
-	extraInfo := "sword buy request created by loud game"
+	extraInfo := ITEM_BUYREQ_TRDINFO
 
 	createTrdMsg := msgs.NewMsgCreateTrade(
 		nil,
@@ -302,7 +308,7 @@ func CreateBuySwordTradeRequest(user User, itspec ItemSpec, pylonEnterValue stri
 	return SendTxMsg(user, createTrdMsg)
 }
 
-func CreateSellSwordTradeRequest(user User, activeItem Item, pylonEnterValue string) (string, error) {
+func CreateSellItemTrdReq(user User, activeItem Item, pylonEnterValue string) (string, error) {
 	// trade creator will get pylon from sword
 
 	pylonValue, err := strconv.Atoi(pylonEnterValue)
@@ -318,7 +324,7 @@ func CreateSellSwordTradeRequest(user User, activeItem Item, pylonEnterValue str
 		return "", err
 	}
 
-	extraInfo := "sword sell request created by loud game"
+	extraInfo := ITEM_SELREQ_TRDINFO
 
 	createTrdMsg := msgs.NewMsgCreateTrade(
 		inputCoinList,
@@ -330,7 +336,7 @@ func CreateSellSwordTradeRequest(user User, activeItem Item, pylonEnterValue str
 	return SendTxMsg(user, createTrdMsg)
 }
 
-func CreateBuyCharacterTradeRequest(user User, chspec CharacterSpec, pylonEnterValue string) (string, error) {
+func CreateBuyCharacterTrdReq(user User, chspec CharacterSpec, pylonEnterValue string) (string, error) {
 	// trade creator will get character from pylon
 
 	itemInputs := GetItemInputsFromCharacterSpec(chspec)
@@ -343,7 +349,7 @@ func CreateBuyCharacterTradeRequest(user User, chspec CharacterSpec, pylonEnterV
 	sdkAddr := GetSDKAddrFromUserName(user.GetUserName())
 
 	outputCoins := sdk.Coins{sdk.NewInt64Coin("pylon", int64(pylonValue))}
-	extraInfo := "character buy request created by loud game"
+	extraInfo := CHAR_BUYREQ_TRDINFO
 
 	createTrdMsg := msgs.NewMsgCreateTrade(
 		nil,
@@ -355,7 +361,7 @@ func CreateBuyCharacterTradeRequest(user User, chspec CharacterSpec, pylonEnterV
 	return SendTxMsg(user, createTrdMsg)
 }
 
-func CreateSellCharacterTradeRequest(user User, activeCharacter Character, pylonEnterValue string) (string, error) {
+func CreateSellCharacterTrdReq(user User, activeCharacter Character, pylonEnterValue string) (string, error) {
 	// trade creator will get pylon from character
 
 	pylonValue, err := strconv.Atoi(pylonEnterValue)
@@ -371,7 +377,7 @@ func CreateSellCharacterTradeRequest(user User, activeCharacter Character, pylon
 		return "", err
 	}
 
-	extraInfo := "character sell request created by loud game"
+	extraInfo := CHAR_SELREQ_TRDINFO
 
 	createTrdMsg := msgs.NewMsgCreateTrade(
 		inputCoinList,
@@ -388,4 +394,11 @@ func FulfillTrade(user User, tradeID string) (string, error) {
 	ffTrdMsg := msgs.NewMsgFulfillTrade(tradeID, sdkAddr, []string{})
 
 	return SendTxMsg(user, ffTrdMsg)
+}
+
+func CancelTrade(user User, tradeID string) (string, error) {
+	sdkAddr := GetSDKAddrFromUserName(user.GetUserName())
+	ccTrdMsg := msgs.NewMsgDisableTrade(tradeID, sdkAddr)
+
+	return SendTxMsg(user, ccTrdMsg)
 }

@@ -11,12 +11,12 @@ import (
 )
 
 const (
-	SELECT_CMD string = "Select ( ↵ )"
+	SEL_CMD string = "Select ( ↵ )"
 )
 
 func appendSelectCancelCmds(infoLines []string) []string {
 	return append(infoLines,
-		SELECT_CMD,
+		SEL_CMD,
 		loud.Localize("C)ancel"))
 }
 
@@ -24,7 +24,7 @@ func (screen *GameScreen) renderUserCommands() {
 
 	infoLines := []string{}
 	switch screen.scrStatus {
-	case SHOW_LOCATION:
+	case SHW_LOCATION:
 		cmdMap := map[loud.UserLocation]string{
 			loud.HOME:     "home",
 			loud.FOREST:   "forest",
@@ -40,105 +40,105 @@ func (screen *GameScreen) renderUserCommands() {
 				infoLines = append(infoLines, loud.Localize("go to "+cmdMap[loc]))
 			}
 		}
-	case SHOW_LOUD_BUY_REQUESTS:
+	case SHW_LOUD_BUY_TRDREQS:
 		infoLines = append(infoLines, screen.tradeTableColorDesc()...)
 		infoLines = append(infoLines,
 			"Sell loud to fulfill selected request( ↵ )",
 			"Create an order to buy loud(R)",
 			"Go bac)k( ⌫ )")
-	case SHOW_LOUD_SELL_REQUESTS:
+	case SHW_LOUD_SELL_TRDREQS:
 		infoLines = append(infoLines, screen.tradeTableColorDesc()...)
 		infoLines = append(infoLines,
 			"Buy loud to fulfill selected request( ↵ )",
 			"Create an order to sell loud(R)",
 			"Go bac)k( ⌫ )")
-	case SHOW_BUY_SWORD_REQUESTS:
+	case SHW_BUYITM_TRDREQS:
 		infoLines = append(infoLines, screen.tradeTableColorDesc()...)
 		infoLines = append(infoLines,
 			"Sell item to fulfill selected request( ↵ )",
 			"Create an order to buy item(R)",
 			"Go bac)k( ⌫ )")
-	case SHOW_SELL_SWORD_REQUESTS:
+	case SHW_SELLITM_TRDREQS:
 		infoLines = append(infoLines, screen.tradeTableColorDesc()...)
 		infoLines = append(infoLines,
 			"Buy item to fulfill selected request( ↵ )",
 			"Create an order to sell item(R)",
 			"Go bac)k( ⌫ )")
-	case SHOW_BUY_CHARACTER_REQUESTS:
+	case SHW_BUYCHR_TRDREQS:
 		infoLines = append(infoLines, screen.tradeTableColorDesc()...)
 		infoLines = append(infoLines,
 			"Sell character to fulfill selected request( ↵ )",
 			"Create an order to buy character(R)",
 			"Go bac)k( ⌫ )")
-	case SHOW_SELL_CHARACTER_REQUESTS:
+	case SHW_SELLCHR_TRDREQS:
 		infoLines = append(infoLines, screen.tradeTableColorDesc()...)
 		infoLines = append(infoLines,
 			"Buy character to fulfill selected request( ↵ )",
 			"Create an order to sell character(R)",
 			"Go bac)k( ⌫ )")
 
-	case CREATE_BUY_CHARACTER_REQUEST_SELECT_CHARACTER,
-		CREATE_SELL_CHARACTER_REQUEST_SELECT_CHARACTER,
-		CREATE_SELL_SWORD_REQUEST_SELECT_SWORD,
-		CREATE_BUY_SWORD_REQUEST_SELECT_SWORD:
+	case CR8_BUYCHR_TRDREQ_SEL_CHR,
+		CR8_SELLCHR_TRDREQ_SEL_CHR,
+		CR8_SELLITM_TRDREQ_SEL_ITEM,
+		CR8_BUYITM_TRDREQ_SEL_ITEM:
 		infoLines = append(infoLines,
-			SELECT_CMD,
+			SEL_CMD,
 			"Go bac)k( ⌫ )")
-	case SELECT_DEFAULT_CHAR,
-		SELECT_HEALTH_RESTORE_CHAR:
+	case SEL_DEFAULT_CHAR,
+		SEL_HEALTH_RESTORE_CHAR:
 		for idx, char := range screen.user.InventoryCharacters() {
 			infoLines = append(infoLines, fmt.Sprintf("%d) %s  ", idx+1, formatCharacter(char)))
 		}
 		infoLines = appendSelectCancelCmds(infoLines)
-	case SELECT_DEFAULT_WEAPON:
+	case SEL_DEFAULT_WEAPON:
 		for idx, item := range screen.user.InventorySwords() {
 			infoLines = append(infoLines, fmt.Sprintf("%d) %s  ", idx+1, formatItem(item)))
 		}
 		infoLines = appendSelectCancelCmds(infoLines)
-	case SELECT_BUY_ITEM:
+	case SEL_BUYITM:
 		for idx, item := range loud.ShopItems {
 			infoLines = append(infoLines, fmt.Sprintf("%d) %s  ", idx+1, formatItem(item))+screen.loudIcon()+fmt.Sprintf(" %d", item.Price))
 		}
 		infoLines = appendSelectCancelCmds(infoLines)
-	case SELECT_BUY_CHARACTER:
+	case SEL_BUYCHR:
 		for idx, item := range loud.ShopCharacters {
 			infoLines = append(infoLines, fmt.Sprintf("%d) %s  ", idx+1, formatCharacter(item))+screen.pylonIcon()+fmt.Sprintf(" %d", item.Price))
 		}
 		infoLines = appendSelectCancelCmds(infoLines)
-	case SELECT_SELL_ITEM:
+	case SEL_SELLITM:
 		userItems := screen.user.InventorySellableItems()
 		for idx, item := range userItems {
-			infoLines = append(infoLines, fmt.Sprintf("%d) %s  ", idx+1, formatItem(item))+screen.loudIcon()+fmt.Sprintf(" %d", item.GetSellPrice()))
+			infoLines = append(infoLines, fmt.Sprintf("%d) %s  ", idx+1, formatItem(item))+screen.loudIcon()+fmt.Sprintf(" %s", item.GetSellPriceRange()))
 		}
 		infoLines = appendSelectCancelCmds(infoLines)
-	case SELECT_HUNT_ITEM:
+	case SEL_HUNT_ITEM:
 		infoLines = append(infoLines, loud.Localize("No item"))
 		infoLines = append(infoLines, loud.Localize("Get I)nitial Coin"))
 		for idx, item := range screen.user.InventorySwords() {
 			infoLines = append(infoLines, fmt.Sprintf("%d) %s", idx+1, formatItem(item)))
 		}
 		infoLines = appendSelectCancelCmds(infoLines)
-	case SELECT_FIGHT_GOBLIN_ITEM,
-		SELECT_FIGHT_TROLL_ITEM,
-		SELECT_FIGHT_WOLF_ITEM:
+	case SEL_FIGHT_GOBLIN_ITEM,
+		SEL_FIGHT_TROLL_ITEM,
+		SEL_FIGHT_WOLF_ITEM:
 		for idx, item := range screen.user.InventorySwords() {
 			infoLines = append(infoLines, fmt.Sprintf("%d) %s", idx+1, formatItem(item)))
 		}
 		infoLines = appendSelectCancelCmds(infoLines)
-	case SELECT_FIGHT_GIANT_ITEM:
+	case SEL_FIGHT_GIANT_ITEM:
 		for idx, item := range screen.user.InventoryIronSwords() {
 			infoLines = append(infoLines, fmt.Sprintf("%d) %s", idx+1, formatItem(item)))
 		}
 		infoLines = appendSelectCancelCmds(infoLines)
-	case SELECT_UPGRADE_ITEM:
+	case SEL_UPGITM:
 		for idx, item := range screen.user.InventoryUpgradableItems() {
 			infoLines = append(infoLines, fmt.Sprintf("%d) %s ", idx+1, formatItem(item))+screen.loudIcon()+fmt.Sprintf(" %d", item.GetUpgradePrice()))
 		}
 		infoLines = appendSelectCancelCmds(infoLines)
 	default:
-		if screen.IsResultScreen() { // eg. RESULT_BUY_LOUD_REQUEST_CREATION
+		if screen.IsResultScreen() { // eg. RSLT_BUY_LOUD_TRDREQ_CREATION
 			infoLines = append(infoLines, loud.Localize("Go) on( ↵ )"))
-		} else if screen.InputActive() { // eg. CREATE_BUY_SWORD_REQUEST_ENTER_PYLON_VALUE
+		} else if screen.InputActive() { // eg. CR8_BUYITM_TRDREQ_ENT_PYLVAL
 			infoLines = append(infoLines,
 				loud.Localize("Finish Enter ( ↵ )"),
 				loud.Localize("Go bac)k( ⌫ )"))

@@ -1,44 +1,44 @@
 package loud
 
-type TradeRequest struct {
-	ID               string
-	Price            float64
-	Amount           int
-	Total            int
-	IsMyTradeRequest bool
+type TrdReq struct {
+	ID         string
+	Price      float64
+	Amount     int
+	Total      int
+	IsMyTrdReq bool
 }
 
-type ItemSellTradeRequest struct {
-	ID               string
-	TItem            Item
-	Price            int
-	IsMyTradeRequest bool
+type ItemSellTrdReq struct {
+	ID         string
+	TItem      Item
+	Price      int
+	IsMyTrdReq bool
 }
 
-type ItemBuyTradeRequest struct {
-	ID               string
-	TItem            ItemSpec
-	Price            int
-	IsMyTradeRequest bool
+type ItemBuyTrdReq struct {
+	ID         string
+	TItem      ItemSpec
+	Price      int
+	IsMyTrdReq bool
 }
 
-type CharacterSellTradeRequest struct {
-	ID               string
-	TCharacter       Character
-	Price            int
-	IsMyTradeRequest bool
+type CharacterSellTrdReq struct {
+	ID         string
+	TCharacter Character
+	Price      int
+	IsMyTrdReq bool
 }
 
-type CharacterBuyTradeRequest struct {
-	ID               string
-	TCharacter       CharacterSpec
-	Price            int
-	IsMyTradeRequest bool
+type CharacterBuyTrdReq struct {
+	ID         string
+	TCharacter CharacterSpec
+	Price      int
+	IsMyTrdReq bool
 }
 
-var BuyTradeRequests = []TradeRequest{}
-var SellTradeRequests = []TradeRequest{}
-var SwordBuyTradeRequests = []ItemBuyTradeRequest{}
-var SwordSellTradeRequests = []ItemSellTradeRequest{}
-var CharacterBuyTradeRequests = []CharacterBuyTradeRequest{}
-var CharacterSellTradeRequests = []CharacterSellTradeRequest{}
+var BuyTrdReqs = []TrdReq{}
+var SellTrdReqs = []TrdReq{}
+var ItemBuyTrdReqs = []ItemBuyTrdReq{}
+var ItemSellTrdReqs = []ItemSellTrdReq{}
+var CharacterBuyTrdReqs = []CharacterBuyTrdReq{}
+var CharacterSellTrdReqs = []CharacterSellTrdReq{}
