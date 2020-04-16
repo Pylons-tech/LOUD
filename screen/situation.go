@@ -56,6 +56,8 @@ func (screen *GameScreen) renderUserSituation() {
 		desc = "Please enter pylon amount to get (should be integer value)" // TODO should add Localize
 	case CR8_BUY_LOUD_TRDREQ_ENT_LUDVAL:
 		desc = "Please enter loud amount to buy (should be integer value)" // TODO should add Localize
+	case RENAME_CHAR_ENT_NEWNAME:
+		desc = "Please enter new character's name - it's costing pylons per letter."
 	case CR8_SELL_LOUD_TRDREQ_ENT_LUDVAL:
 		desc = "Please enter loud amount to sell (should be integer value)" // TODO should add Localize
 	case CR8_SELLITM_TRDREQ_SEL_ITEM:
@@ -78,6 +80,8 @@ func (screen *GameScreen) renderUserSituation() {
 		infoLines = screen.renderITTable("Please select default character", "Character", screen.user.InventoryCharacters())
 	case SEL_HEALTH_RESTORE_CHAR:
 		infoLines = screen.renderITTable("Please select character to restore health", "Character", screen.user.InventoryCharacters())
+	case SEL_RENAME_CHAR:
+		infoLines = screen.renderITTable("Please select character to rename", "Character", screen.user.InventoryCharacters())
 	case SEL_DEFAULT_WEAPON:
 		infoLines = screen.renderITTable("Please select default weapon", "Item", screen.user.InventorySwords())
 	case SEL_BUYITM:
@@ -135,6 +139,7 @@ func (screen *GameScreen) TxResultSituationDesc() string {
 		RSLT_SELL_LOUD_TRDREQ_CREATION: "loud sell request creation",
 		RSLT_SEL_DEF_CHAR:              "selecting default character",
 		RSLT_HEALTH_RESTORE_CHAR:       "selecting character to restore health",
+		RSLT_RENAME_CHAR:               "renaming character",
 		RSLT_SEL_DEF_WEAPON:            "selecting default weapon",
 		RSLT_BUYITM:                    "buy item",
 		RSLT_BUYCHR:                    "buy character",
@@ -171,6 +176,8 @@ func (screen *GameScreen) TxResultSituationDesc() string {
 			desc = loud.Localize("You have successfully set default character!")
 		case RSLT_HEALTH_RESTORE_CHAR:
 			desc = loud.Localize("You have successfully restored character's health!")
+		case RSLT_RENAME_CHAR:
+			desc = loud.Localize("You have successfully updated character's name!")
 		case RSLT_SEL_DEF_WEAPON:
 			desc = loud.Localize("You have successfully set default weapon!")
 		case RSLT_BUYITM:
@@ -340,6 +347,8 @@ func (screen *GameScreen) TxWaitSituationDesc() string {
 	desc := ""
 	W8_TO_END := "\n" + loud.Localize("Please wait for a moment to finish the process")
 	switch screen.scrStatus {
+	case W8_RENAME_CHAR:
+		desc = loud.Localize("You are now waiting to rename character")
 	case W8_BUY_LOUD_TRDREQ_CREATION:
 		desc = loud.Localize("You are now waiting for loud buy request creation")
 		desc += screen.buyLoudDesc(screen.loudEnterValue, screen.pylonEnterValue)

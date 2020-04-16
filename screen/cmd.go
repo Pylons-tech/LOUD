@@ -85,7 +85,8 @@ func (screen *GameScreen) renderUserCommands() {
 			SEL_CMD,
 			"Go bac)k( ⌫ )")
 	case SEL_DEFAULT_CHAR,
-		SEL_HEALTH_RESTORE_CHAR:
+		SEL_HEALTH_RESTORE_CHAR,
+		SEL_RENAME_CHAR:
 		for idx, char := range screen.user.InventoryCharacters() {
 			infoLines = append(infoLines, fmt.Sprintf("%d) %s  ", idx+1, formatCharacter(char)))
 		}

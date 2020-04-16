@@ -564,21 +564,15 @@ func (screen *GameScreen) IsWaitScreen() bool {
 
 func (screen *GameScreen) InputActive() bool {
 	switch screen.scrStatus {
-	case CR8_BUY_LOUD_TRDREQ_ENT_LUDVAL:
-		return true
-	case CR8_BUY_LOUD_TRDREQ_ENT_PYLVAL:
-		return true
-	case CR8_SELL_LOUD_TRDREQ_ENT_LUDVAL:
-		return true
-	case CR8_SELL_LOUD_TRDREQ_ENT_PYLVAL:
-		return true
-	case CR8_SELLITM_TRDREQ_ENT_PYLVAL:
-		return true
-	case CR8_BUYITM_TRDREQ_ENT_PYLVAL:
-		return true
-	case CR8_SELLCHR_TRDREQ_ENT_PYLVAL:
-		return true
-	case CR8_BUYCHR_TRDREQ_ENT_PYLVAL:
+	case CR8_BUY_LOUD_TRDREQ_ENT_LUDVAL,
+		CR8_BUY_LOUD_TRDREQ_ENT_PYLVAL,
+		CR8_SELL_LOUD_TRDREQ_ENT_LUDVAL,
+		CR8_SELL_LOUD_TRDREQ_ENT_PYLVAL,
+		CR8_SELLITM_TRDREQ_ENT_PYLVAL,
+		CR8_BUYITM_TRDREQ_ENT_PYLVAL,
+		CR8_SELLCHR_TRDREQ_ENT_PYLVAL,
+		CR8_BUYCHR_TRDREQ_ENT_PYLVAL,
+		RENAME_CHAR_ENT_NEWNAME:
 		return true
 	}
 	return false
@@ -710,6 +704,12 @@ func (screen *GameScreen) RunActiveWeaponSelect() {
 func (screen *GameScreen) RunCharacterHealthRestore() {
 	screen.RunTxProcess(W8_HEALTH_RESTORE_CHAR, RSLT_HEALTH_RESTORE_CHAR, func() (string, error) {
 		return loud.RestoreHealth(screen.user, screen.activeCharacter)
+	})
+}
+
+func (screen *GameScreen) RunCharacterRename(newName string) {
+	screen.RunTxProcess(W8_RENAME_CHAR, RSLT_RENAME_CHAR, func() (string, error) {
+		return loud.RenameCharacter(screen.user, screen.activeCharacter, newName)
 	})
 }
 

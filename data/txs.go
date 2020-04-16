@@ -149,18 +149,31 @@ func FightGiant(user User, item Item) (string, error) {
 	return ExecuteRecipe(user, rcpName, itemIDs)
 }
 
-func BuyCharacter(user User, item Character) (string, error) {
+func BuyCharacter(user User, ch Character) (string, error) {
 	rcpName := ""
-	switch item.Name {
+	switch ch.Name {
 	case TIGER_CHR:
 		rcpName = "LOUD's Get Character recipe"
 	default:
 		return "", errors.New("You are trying to buy character which is not in shop")
 	}
-	if item.Price > user.GetPylonAmount() {
+	if ch.Price > user.GetPylonAmount() {
 		return "", errors.New("You don't have enough pylon to buy this character")
 	}
 	return ExecuteRecipe(user, rcpName, []string{})
+}
+
+func RenameCharacter(user User, ch Character, newName string) (string, error) {
+	// t := GetTestingT()
+	// addr := pylonSDK.GetAccountAddr(user.GetUserName(), nil)
+	// sdkAddr, _ := sdk.AccAddressFromBech32(addr)
+	// renameMsg := msgs.NewMsgUpdateItemString(ch.ID, "Name", newName, sdkAddr)
+	// log.Println("started sending transaction", user.GetUserName(), renameMsg)
+	// txhash := pylonSDK.TestTxWithMsgWithNonce(t, renameMsg, user.GetUserName(), false)
+	// user.SetLastTransaction(txhash)
+	// log.Println("ended sending transaction")
+	// return txhash, nil
+	return "", nil
 }
 
 func Buy(user User, item Item) (string, error) {

@@ -58,6 +58,7 @@ func (screen *GameScreen) HandleInputKeyHomeEntryPoint(input termbox.Event) bool
 		"1": SEL_DEFAULT_CHAR,
 		"2": SEL_DEFAULT_WEAPON,
 		"3": SEL_HEALTH_RESTORE_CHAR,
+		"4": SEL_RENAME_CHAR,
 	}
 
 	if newStus, ok := tarStusMap[Key]; ok {
@@ -166,6 +167,7 @@ func (screen *GameScreen) MoveToNextStep() {
 		RSLT_CANCEL_TRDREQ:             SHW_LOCATION,
 		RSLT_FULFILL_BUYCHR_TRDREQ:     SHW_BUYCHR_TRDREQS,
 		RSLT_HEALTH_RESTORE_CHAR:       SEL_HEALTH_RESTORE_CHAR,
+		RSLT_RENAME_CHAR:               SEL_RENAME_CHAR,
 		RSLT_SEL_DEF_CHAR:              SEL_DEFAULT_CHAR,
 		RSLT_SEL_DEF_WEAPON:            SEL_DEFAULT_WEAPON,
 		RSLT_BUYITM:                    SEL_BUYITM,
@@ -304,6 +306,8 @@ func (screen *GameScreen) HandleThirdClassInputKeys(input termbox.Event) bool {
 			return true
 		case termbox.KeyEnter:
 			switch screen.scrStatus {
+			case RENAME_CHAR_ENT_NEWNAME:
+				screen.RunCharacterRename(screen.inputText)
 			case CR8_BUY_LOUD_TRDREQ_ENT_LUDVAL:
 				screen.scrStatus = CR8_BUY_LOUD_TRDREQ_ENT_PYLVAL
 				screen.refreshed = false
@@ -417,7 +421,9 @@ func (screen *GameScreen) HandleThirdClassInputKeys(input termbox.Event) bool {
 			}
 			return true
 		default:
-			if _, err := strconv.Atoi(Key); err == nil {
+			if screen.scrStatus == RENAME_CHAR_ENT_NEWNAME {
+				screen.SetInputTextAndRender(screen.inputText + Key)
+			} else if _, err := strconv.Atoi(Key); err == nil {
 				// If user entered number, just use it
 				screen.SetInputTextAndRender(screen.inputText + Key)
 			}
@@ -437,7 +443,7 @@ func (screen *GameScreen) HandleThirdClassInputKeys(input termbox.Event) bool {
 			return true
 		}
 		if input.Key == termbox.KeyEnter {
-			return screen.HandleThirdClassKeyEnterEvent()
+			return screen.HandleThirdClassKeyEnterEventForNoInputMode()
 		}
 
 		if input.Key == termbox.KeyBackspace2 || input.Key == termbox.KeyBackspace {
@@ -484,6 +490,16 @@ func (screen *GameScreen) HandleThirdClassInputKeys(input termbox.Event) bool {
 				}
 				screen.activeCharacter = characters[screen.activeLine]
 				screen.RunCharacterHealthRestore()
+			case SEL_RENAME_CHAR:
+				screen.activeLine = loud.GetIndexFromString(Key)
+				characters := screen.user.InventoryCharacters()
+				if len(characters) <= screen.activeLine || screen.activeLine < 0 {
+					return false
+				}
+				screen.activeCharacter = characters[screen.activeLine]
+				screen.scrStatus = RENAME_CHAR_ENT_NEWNAME
+				screen.inputText = ""
+				screen.FreshRender()
 			case SEL_DEFAULT_WEAPON:
 				screen.activeLine = loud.GetIndexFromString(Key)
 				items := screen.user.InventorySwords()
@@ -550,7 +566,7 @@ func (screen *GameScreen) HandleThirdClassInputKeys(input termbox.Event) bool {
 	return false
 }
 
-func (screen *GameScreen) HandleThirdClassKeyEnterEvent() bool {
+func (screen *GameScreen) HandleThirdClassKeyEnterEventForNoInputMode() bool {
 	switch screen.user.GetLocation() {
 	case loud.HOME, loud.MARKET, loud.SHOP, loud.FOREST:
 		switch screen.scrStatus {
@@ -614,6 +630,15 @@ func (screen *GameScreen) HandleThirdClassKeyEnterEvent() bool {
 			}
 			screen.activeCharacter = characters[screen.activeLine]
 			screen.RunCharacterHealthRestore()
+		case SEL_RENAME_CHAR:
+			characters := screen.user.InventoryCharacters()
+			if len(characters) <= screen.activeLine || screen.activeLine < 0 {
+				return false
+			}
+			screen.activeCharacter = characters[screen.activeLine]
+			screen.scrStatus = RENAME_CHAR_ENT_NEWNAME
+			screen.inputText = ""
+			screen.FreshRender()
 		case SEL_DEFAULT_WEAPON:
 			items := screen.user.InventorySwords()
 			if len(items) <= screen.activeLine || screen.activeLine < 0 {
