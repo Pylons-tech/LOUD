@@ -177,7 +177,7 @@ func (screen *GameScreen) TxResultSituationDesc() string {
 		case RSLT_HEALTH_RESTORE_CHAR:
 			desc = loud.Localize("You have successfully restored character's health!")
 		case RSLT_RENAME_CHAR:
-			desc = loud.Localize("You have successfully updated character's name!")
+			desc = loud.Sprintf("You have successfully updated character's name to %s!", screen.inputText)
 		case RSLT_SEL_DEF_WEAPON:
 			desc = loud.Localize("You have successfully set default weapon!")
 		case RSLT_BUYITM:
