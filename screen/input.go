@@ -18,14 +18,18 @@ func (screen *GameScreen) HandleInputKey(input termbox.Event) {
 	}
 	Key := strings.ToUpper(string(input.Ch))
 	log.Println("Handling Key \"", Key, "\"", input.Ch)
-	if screen.HandleFirstClassInputKeys(input) {
-		return
-	}
-	if screen.HandleSecondClassInputKeys(input) {
-		return
-	}
-	if screen.HandleThirdClassInputKeys(input) {
-		return
+	if screen.InputActive() {
+		screen.HandleTypingModeInputKeys(input)
+	} else {
+		if screen.HandleFirstClassInputKeys(input) {
+			return
+		}
+		if screen.HandleSecondClassInputKeys(input) {
+			return
+		}
+		if screen.HandleThirdClassInputKeys(input) {
+			return
+		}
 	}
 
 	screen.Render()
@@ -292,281 +296,142 @@ func (screen *GameScreen) HandleSecondClassInputKeys(input termbox.Event) bool {
 func (screen *GameScreen) HandleThirdClassInputKeys(input termbox.Event) bool {
 	// implement thid class commands, eg. commands which are not processed by first, second classes
 	Key := strings.ToUpper(string(input.Ch))
-	if screen.InputActive() {
-		switch input.Key {
-		case termbox.KeyBackspace2,
-			termbox.KeyBackspace:
+	switch input.Key {
+	case termbox.KeyArrowLeft:
+	case termbox.KeyArrowRight:
+	case termbox.KeyArrowUp:
+		if screen.activeLine > 0 {
+			screen.activeLine -= 1
+		}
+		return true
+	case termbox.KeyArrowDown:
+		screen.activeLine += 1
+		return true
+	}
+	if input.Key == termbox.KeyEnter {
+		return screen.HandleThirdClassKeyEnterEvent()
+	}
 
-			log.Println("Pressed Backspace")
-			lastIdx := len(screen.inputText) - 1
-			if lastIdx < 0 {
-				lastIdx = 0
-			}
-			screen.SetInputTextAndRender(screen.inputText[:lastIdx])
-			return true
-		case termbox.KeyEnter:
+	if input.Key == termbox.KeyBackspace2 || input.Key == termbox.KeyBackspace {
+		screen.MoveToPrevStep()
+	}
+
+	switch Key {
+	case "R": // CREATE ORDER
+		if screen.user.GetLocation() == loud.MARKET {
 			switch screen.scrStatus {
-			case RENAME_CHAR_ENT_NEWNAME:
-				screen.RunCharacterRename(screen.inputText)
-			case CR8_BUY_LOUD_TRDREQ_ENT_LUDVAL:
-				screen.scrStatus = CR8_BUY_LOUD_TRDREQ_ENT_PYLVAL
-				screen.refreshed = false
-				screen.loudEnterValue = screen.inputText
-				screen.inputText = ""
-			case CR8_BUY_LOUD_TRDREQ_ENT_PYLVAL:
-				screen.scrStatus = W8_BUY_LOUD_TRDREQ_CREATION
-				screen.refreshed = false
-				screen.pylonEnterValue = screen.inputText
-				screen.SetInputTextAndRender("")
-				txhash, err := loud.CreateBuyLoudTrdReq(screen.user, screen.loudEnterValue, screen.pylonEnterValue)
-				log.Println("ended sending request for creating buy loud request")
-				if err != nil {
-					screen.txFailReason = err.Error()
-					screen.SetScreenStatusAndRefresh(RSLT_BUY_LOUD_TRDREQ_CREATION)
-				} else {
-					time.AfterFunc(2*time.Second, func() {
-						screen.txResult, screen.txFailReason = loud.ProcessTxResult(screen.user, txhash)
-						screen.SetScreenStatusAndRefresh(RSLT_BUY_LOUD_TRDREQ_CREATION)
-					})
-				}
-			case CR8_SELL_LOUD_TRDREQ_ENT_LUDVAL:
-				screen.scrStatus = CR8_SELL_LOUD_TRDREQ_ENT_PYLVAL
-				screen.refreshed = false
-				screen.loudEnterValue = screen.inputText
-				screen.inputText = ""
-			case CR8_SELL_LOUD_TRDREQ_ENT_PYLVAL:
-				screen.scrStatus = W8_SELL_LOUD_TRDREQ_CREATION
-				screen.refreshed = false
-				screen.pylonEnterValue = screen.inputText
-				screen.SetInputTextAndRender("")
-				txhash, err := loud.CreateSellLoudTrdReq(screen.user, screen.loudEnterValue, screen.pylonEnterValue)
-
-				log.Println("ended sending request for creating buy loud request")
-				if err != nil {
-					screen.txFailReason = err.Error()
-					screen.SetScreenStatusAndRefresh(RSLT_SELL_LOUD_TRDREQ_CREATION)
-				} else {
-					time.AfterFunc(2*time.Second, func() {
-						screen.txResult, screen.txFailReason = loud.ProcessTxResult(screen.user, txhash)
-						screen.SetScreenStatusAndRefresh(RSLT_SELL_LOUD_TRDREQ_CREATION)
-					})
-				}
-			case CR8_SELLITM_TRDREQ_ENT_PYLVAL:
-				screen.scrStatus = W8_SELLITM_TRDREQ_CREATION
-				screen.refreshed = false
-				screen.pylonEnterValue = screen.inputText
-				screen.SetInputTextAndRender("")
-				txhash, err := loud.CreateSellItemTrdReq(screen.user, screen.activeItem, screen.pylonEnterValue)
-				log.Println("ended sending request for creating sword -> pylon request")
-				if err != nil {
-					screen.txFailReason = err.Error()
-					screen.SetScreenStatusAndRefresh(RSLT_SELLITM_TRDREQ_CREATION)
-				} else {
-					time.AfterFunc(2*time.Second, func() {
-						screen.txResult, screen.txFailReason = loud.ProcessTxResult(screen.user, txhash)
-						screen.SetScreenStatusAndRefresh(RSLT_SELLITM_TRDREQ_CREATION)
-					})
-				}
-			case CR8_BUYITM_TRDREQ_ENT_PYLVAL:
-				screen.scrStatus = W8_BUYITM_TRDREQ_CREATION
-				screen.refreshed = false
-				screen.pylonEnterValue = screen.inputText
-				screen.SetInputTextAndRender("")
-				txhash, err := loud.CreateBuyItemTrdReq(screen.user, screen.activeItSpec, screen.pylonEnterValue)
-				log.Println("ended sending request for creating sword -> pylon request")
-				if err != nil {
-					screen.txFailReason = err.Error()
-					screen.SetScreenStatusAndRefresh(RSLT_BUYITM_TRDREQ_CREATION)
-				} else {
-					time.AfterFunc(2*time.Second, func() {
-						screen.txResult, screen.txFailReason = loud.ProcessTxResult(screen.user, txhash)
-						screen.SetScreenStatusAndRefresh(RSLT_BUYITM_TRDREQ_CREATION)
-					})
-				}
-
-			case CR8_SELLCHR_TRDREQ_ENT_PYLVAL:
-				screen.scrStatus = W8_SELLCHR_TRDREQ_CREATION
-				screen.refreshed = false
-				screen.pylonEnterValue = screen.inputText
-				screen.SetInputTextAndRender("")
-				txhash, err := loud.CreateSellCharacterTrdReq(screen.user, screen.activeCharacter, screen.pylonEnterValue)
-				log.Println("ended sending request for creating character -> pylon request")
-				if err != nil {
-					screen.txFailReason = err.Error()
-					screen.SetScreenStatusAndRefresh(RSLT_SELLCHR_TRDREQ_CREATION)
-				} else {
-					time.AfterFunc(2*time.Second, func() {
-						screen.txResult, screen.txFailReason = loud.ProcessTxResult(screen.user, txhash)
-						screen.SetScreenStatusAndRefresh(RSLT_SELLCHR_TRDREQ_CREATION)
-					})
-				}
-			case CR8_BUYCHR_TRDREQ_ENT_PYLVAL:
-				screen.scrStatus = W8_BUYCHR_TRDREQ_CREATION
-				screen.refreshed = false
-				screen.pylonEnterValue = screen.inputText
-				screen.SetInputTextAndRender("")
-				txhash, err := loud.CreateBuyCharacterTrdReq(screen.user, screen.activeChSpec, screen.pylonEnterValue)
-				log.Println("ended sending request for creating character -> pylon request")
-				if err != nil {
-					screen.txFailReason = err.Error()
-					screen.SetScreenStatusAndRefresh(RSLT_BUYCHR_TRDREQ_CREATION)
-				} else {
-					time.AfterFunc(2*time.Second, func() {
-						screen.txResult, screen.txFailReason = loud.ProcessTxResult(screen.user, txhash)
-						screen.SetScreenStatusAndRefresh(RSLT_BUYCHR_TRDREQ_CREATION)
-					})
-				}
-			default:
+			case SHW_LOUD_BUY_TRDREQS:
+				screen.scrStatus = CR8_BUY_LOUD_TRDREQ_ENT_LUDVAL
+			case SHW_LOUD_SELL_TRDREQS:
+				screen.scrStatus = CR8_SELL_LOUD_TRDREQ_ENT_LUDVAL
+			case SHW_SELLITM_TRDREQS:
+				screen.scrStatus = CR8_SELLITM_TRDREQ_SEL_ITEM
+			case SHW_BUYITM_TRDREQS:
+				screen.scrStatus = CR8_BUYITM_TRDREQ_SEL_ITEM
+			case SHW_SELLCHR_TRDREQS:
+				screen.scrStatus = CR8_SELLCHR_TRDREQ_SEL_CHR
+			case SHW_BUYCHR_TRDREQS:
+				screen.scrStatus = CR8_BUYCHR_TRDREQ_SEL_CHR
+			}
+			screen.refreshed = false
+		}
+	case "O": // GO ON
+		screen.MoveToNextStep()
+		return true
+	case "0", "1", "2", "3", "4", "5", "6", "7", "8", "9": // Numbers
+		screen.refreshed = false
+		switch screen.scrStatus {
+		case SEL_DEFAULT_CHAR:
+			screen.activeLine = loud.GetIndexFromString(Key)
+			characters := screen.user.InventoryCharacters()
+			if len(characters) <= screen.activeLine || screen.activeLine < 0 {
 				return false
 			}
-			return true
-		default:
-			if screen.scrStatus == RENAME_CHAR_ENT_NEWNAME {
-				screen.SetInputTextAndRender(screen.inputText + Key)
-			} else if _, err := strconv.Atoi(Key); err == nil {
-				// If user entered number, just use it
-				screen.SetInputTextAndRender(screen.inputText + Key)
+			screen.RunActiveCharacterSelect()
+		case SEL_HEALTH_RESTORE_CHAR:
+			screen.activeLine = loud.GetIndexFromString(Key)
+			characters := screen.user.InventoryCharacters()
+			if len(characters) <= screen.activeLine || screen.activeLine < 0 {
+				return false
 			}
-			return false
-		}
-	} else {
-		switch input.Key {
-		case termbox.KeyArrowLeft:
-		case termbox.KeyArrowRight:
-		case termbox.KeyArrowUp:
-			if screen.activeLine > 0 {
-				screen.activeLine -= 1
+			screen.activeCharacter = characters[screen.activeLine]
+			screen.RunCharacterHealthRestore()
+		case SEL_RENAME_CHAR:
+			screen.activeLine = loud.GetIndexFromString(Key)
+			characters := screen.user.InventoryCharacters()
+			if len(characters) <= screen.activeLine || screen.activeLine < 0 {
+				return false
 			}
-			return true
-		case termbox.KeyArrowDown:
-			screen.activeLine += 1
-			return true
-		}
-		if input.Key == termbox.KeyEnter {
-			return screen.HandleThirdClassKeyEnterEventForNoInputMode()
-		}
+			screen.activeCharacter = characters[screen.activeLine]
+			screen.scrStatus = RENAME_CHAR_ENT_NEWNAME
+			screen.inputText = ""
+			screen.FreshRender()
+		case SEL_DEFAULT_WEAPON:
+			screen.activeLine = loud.GetIndexFromString(Key)
+			items := screen.user.InventorySwords()
+			if len(items) <= screen.activeLine || screen.activeLine < 0 {
+				return false
+			}
+			screen.RunActiveWeaponSelect()
+		case SEL_BUYITM:
+			screen.activeItem = loud.GetToBuyItemFromKey(Key)
+			if len(screen.activeItem.Name) == 0 {
+				return false
+			}
+			screen.RunActiveItemBuy()
+		case SEL_BUYCHR:
+			screen.activeCharacter = loud.GetToBuyCharacterFromKey(Key)
+			if len(screen.activeCharacter.Name) == 0 {
+				return false
+			}
+			screen.RunActiveCharacterBuy()
+		case SEL_HUNT_ITEM:
+			screen.activeItem = loud.GetWeaponItemFromKey(screen.user, Key)
+			screen.RunActiveItemHunt()
+		case SEL_FIGHT_GIANT_ITEM:
+			screen.activeItem = loud.GetIronSwordItemFromKey(screen.user, Key)
+			if len(screen.activeItem.Name) == 0 {
+				return false
+			}
+			screen.RunActiveItemFightGiant()
+		case SEL_FIGHT_TROLL_ITEM:
+			screen.activeItem = loud.GetSwordItemFromKey(screen.user, Key)
+			if len(screen.activeItem.Name) == 0 {
+				return false
+			}
+			screen.RunActiveItemFightTroll()
+		case SEL_FIGHT_WOLF_ITEM:
+			screen.activeItem = loud.GetSwordItemFromKey(screen.user, Key)
+			if len(screen.activeItem.Name) == 0 {
+				return false
+			}
+			screen.RunActiveItemFightWolf()
+		case SEL_FIGHT_GOBLIN_ITEM:
+			screen.activeItem = loud.GetSwordItemFromKey(screen.user, Key)
+			if len(screen.activeItem.Name) == 0 {
+				return false
+			}
+			screen.RunActiveItemFightGoblin()
+		case SEL_SELLITM:
+			screen.activeItem = loud.GetToSellItemFromKey(screen.user, Key)
+			if len(screen.activeItem.Name) == 0 {
+				return false
+			}
+			screen.RunActiveItemSell()
 
-		if input.Key == termbox.KeyBackspace2 || input.Key == termbox.KeyBackspace {
-			screen.MoveToPrevStep()
-		}
-
-		switch Key {
-		case "R": // CREATE ORDER
-			if screen.user.GetLocation() == loud.MARKET {
-				switch screen.scrStatus {
-				case SHW_LOUD_BUY_TRDREQS:
-					screen.scrStatus = CR8_BUY_LOUD_TRDREQ_ENT_LUDVAL
-				case SHW_LOUD_SELL_TRDREQS:
-					screen.scrStatus = CR8_SELL_LOUD_TRDREQ_ENT_LUDVAL
-				case SHW_SELLITM_TRDREQS:
-					screen.scrStatus = CR8_SELLITM_TRDREQ_SEL_ITEM
-				case SHW_BUYITM_TRDREQS:
-					screen.scrStatus = CR8_BUYITM_TRDREQ_SEL_ITEM
-				case SHW_SELLCHR_TRDREQS:
-					screen.scrStatus = CR8_SELLCHR_TRDREQ_SEL_CHR
-				case SHW_BUYCHR_TRDREQS:
-					screen.scrStatus = CR8_BUYCHR_TRDREQ_SEL_CHR
-				}
-				screen.refreshed = false
+		case SEL_UPGITM:
+			screen.activeItem = loud.GetToUpgradeItemFromKey(screen.user, Key)
+			if len(screen.activeItem.Name) == 0 {
+				return false
 			}
-		case "O": // GO ON
-			screen.MoveToNextStep()
-			return true
-		case "0", "1", "2", "3", "4", "5", "6", "7", "8", "9": // Numbers
-			screen.refreshed = false
-			switch screen.scrStatus {
-			case SEL_DEFAULT_CHAR:
-				screen.activeLine = loud.GetIndexFromString(Key)
-				characters := screen.user.InventoryCharacters()
-				if len(characters) <= screen.activeLine || screen.activeLine < 0 {
-					return false
-				}
-				screen.RunActiveCharacterSelect()
-			case SEL_HEALTH_RESTORE_CHAR:
-				screen.activeLine = loud.GetIndexFromString(Key)
-				characters := screen.user.InventoryCharacters()
-				if len(characters) <= screen.activeLine || screen.activeLine < 0 {
-					return false
-				}
-				screen.activeCharacter = characters[screen.activeLine]
-				screen.RunCharacterHealthRestore()
-			case SEL_RENAME_CHAR:
-				screen.activeLine = loud.GetIndexFromString(Key)
-				characters := screen.user.InventoryCharacters()
-				if len(characters) <= screen.activeLine || screen.activeLine < 0 {
-					return false
-				}
-				screen.activeCharacter = characters[screen.activeLine]
-				screen.scrStatus = RENAME_CHAR_ENT_NEWNAME
-				screen.inputText = ""
-				screen.FreshRender()
-			case SEL_DEFAULT_WEAPON:
-				screen.activeLine = loud.GetIndexFromString(Key)
-				items := screen.user.InventorySwords()
-				if len(items) <= screen.activeLine || screen.activeLine < 0 {
-					return false
-				}
-				screen.RunActiveWeaponSelect()
-			case SEL_BUYITM:
-				screen.activeItem = loud.GetToBuyItemFromKey(Key)
-				if len(screen.activeItem.Name) == 0 {
-					return false
-				}
-				screen.RunActiveItemBuy()
-			case SEL_BUYCHR:
-				screen.activeCharacter = loud.GetToBuyCharacterFromKey(Key)
-				if len(screen.activeCharacter.Name) == 0 {
-					return false
-				}
-				screen.RunActiveCharacterBuy()
-			case SEL_HUNT_ITEM:
-				screen.activeItem = loud.GetWeaponItemFromKey(screen.user, Key)
-				screen.RunActiveItemHunt()
-			case SEL_FIGHT_GIANT_ITEM:
-				screen.activeItem = loud.GetIronSwordItemFromKey(screen.user, Key)
-				if len(screen.activeItem.Name) == 0 {
-					return false
-				}
-				screen.RunActiveItemFightGiant()
-			case SEL_FIGHT_TROLL_ITEM:
-				screen.activeItem = loud.GetSwordItemFromKey(screen.user, Key)
-				if len(screen.activeItem.Name) == 0 {
-					return false
-				}
-				screen.RunActiveItemFightTroll()
-			case SEL_FIGHT_WOLF_ITEM:
-				screen.activeItem = loud.GetSwordItemFromKey(screen.user, Key)
-				if len(screen.activeItem.Name) == 0 {
-					return false
-				}
-				screen.RunActiveItemFightWolf()
-			case SEL_FIGHT_GOBLIN_ITEM:
-				screen.activeItem = loud.GetSwordItemFromKey(screen.user, Key)
-				if len(screen.activeItem.Name) == 0 {
-					return false
-				}
-				screen.RunActiveItemFightGoblin()
-			case SEL_SELLITM:
-				screen.activeItem = loud.GetToSellItemFromKey(screen.user, Key)
-				if len(screen.activeItem.Name) == 0 {
-					return false
-				}
-				screen.RunActiveItemSell()
-
-			case SEL_UPGITM:
-				screen.activeItem = loud.GetToUpgradeItemFromKey(screen.user, Key)
-				if len(screen.activeItem.Name) == 0 {
-					return false
-				}
-				screen.RunActiveItemUpgrade()
-			}
-			return true
+			screen.RunActiveItemUpgrade()
 		}
+		return true
 	}
 	return false
 }
 
-func (screen *GameScreen) HandleThirdClassKeyEnterEventForNoInputMode() bool {
+func (screen *GameScreen) HandleThirdClassKeyEnterEvent() bool {
 	switch screen.user.GetLocation() {
 	case loud.HOME, loud.MARKET, loud.SHOP, loud.FOREST:
 		switch screen.scrStatus {
@@ -720,4 +585,144 @@ func (screen *GameScreen) HandleThirdClassKeyEnterEventForNoInputMode() bool {
 		return false
 	}
 	return true
+}
+
+func (screen *GameScreen) HandleTypingModeInputKeys(input termbox.Event) bool {
+	switch input.Key {
+	case termbox.KeyBackspace2,
+		termbox.KeyBackspace:
+
+		log.Println("Pressed Backspace")
+		lastIdx := len(screen.inputText) - 1
+		if lastIdx < 0 {
+			lastIdx = 0
+		}
+		screen.SetInputTextAndRender(screen.inputText[:lastIdx])
+		return true
+	case termbox.KeyEnter:
+		switch screen.scrStatus {
+		case RENAME_CHAR_ENT_NEWNAME:
+			screen.RunCharacterRename(screen.inputText)
+		case CR8_BUY_LOUD_TRDREQ_ENT_LUDVAL:
+			screen.scrStatus = CR8_BUY_LOUD_TRDREQ_ENT_PYLVAL
+			screen.refreshed = false
+			screen.loudEnterValue = screen.inputText
+			screen.inputText = ""
+		case CR8_BUY_LOUD_TRDREQ_ENT_PYLVAL:
+			screen.scrStatus = W8_BUY_LOUD_TRDREQ_CREATION
+			screen.refreshed = false
+			screen.pylonEnterValue = screen.inputText
+			screen.SetInputTextAndRender("")
+			txhash, err := loud.CreateBuyLoudTrdReq(screen.user, screen.loudEnterValue, screen.pylonEnterValue)
+			log.Println("ended sending request for creating buy loud request")
+			if err != nil {
+				screen.txFailReason = err.Error()
+				screen.SetScreenStatusAndRefresh(RSLT_BUY_LOUD_TRDREQ_CREATION)
+			} else {
+				time.AfterFunc(2*time.Second, func() {
+					screen.txResult, screen.txFailReason = loud.ProcessTxResult(screen.user, txhash)
+					screen.SetScreenStatusAndRefresh(RSLT_BUY_LOUD_TRDREQ_CREATION)
+				})
+			}
+		case CR8_SELL_LOUD_TRDREQ_ENT_LUDVAL:
+			screen.scrStatus = CR8_SELL_LOUD_TRDREQ_ENT_PYLVAL
+			screen.refreshed = false
+			screen.loudEnterValue = screen.inputText
+			screen.inputText = ""
+		case CR8_SELL_LOUD_TRDREQ_ENT_PYLVAL:
+			screen.scrStatus = W8_SELL_LOUD_TRDREQ_CREATION
+			screen.refreshed = false
+			screen.pylonEnterValue = screen.inputText
+			screen.SetInputTextAndRender("")
+			txhash, err := loud.CreateSellLoudTrdReq(screen.user, screen.loudEnterValue, screen.pylonEnterValue)
+
+			log.Println("ended sending request for creating buy loud request")
+			if err != nil {
+				screen.txFailReason = err.Error()
+				screen.SetScreenStatusAndRefresh(RSLT_SELL_LOUD_TRDREQ_CREATION)
+			} else {
+				time.AfterFunc(2*time.Second, func() {
+					screen.txResult, screen.txFailReason = loud.ProcessTxResult(screen.user, txhash)
+					screen.SetScreenStatusAndRefresh(RSLT_SELL_LOUD_TRDREQ_CREATION)
+				})
+			}
+		case CR8_SELLITM_TRDREQ_ENT_PYLVAL:
+			screen.scrStatus = W8_SELLITM_TRDREQ_CREATION
+			screen.refreshed = false
+			screen.pylonEnterValue = screen.inputText
+			screen.SetInputTextAndRender("")
+			txhash, err := loud.CreateSellItemTrdReq(screen.user, screen.activeItem, screen.pylonEnterValue)
+			log.Println("ended sending request for creating sword -> pylon request")
+			if err != nil {
+				screen.txFailReason = err.Error()
+				screen.SetScreenStatusAndRefresh(RSLT_SELLITM_TRDREQ_CREATION)
+			} else {
+				time.AfterFunc(2*time.Second, func() {
+					screen.txResult, screen.txFailReason = loud.ProcessTxResult(screen.user, txhash)
+					screen.SetScreenStatusAndRefresh(RSLT_SELLITM_TRDREQ_CREATION)
+				})
+			}
+		case CR8_BUYITM_TRDREQ_ENT_PYLVAL:
+			screen.scrStatus = W8_BUYITM_TRDREQ_CREATION
+			screen.refreshed = false
+			screen.pylonEnterValue = screen.inputText
+			screen.SetInputTextAndRender("")
+			txhash, err := loud.CreateBuyItemTrdReq(screen.user, screen.activeItSpec, screen.pylonEnterValue)
+			log.Println("ended sending request for creating sword -> pylon request")
+			if err != nil {
+				screen.txFailReason = err.Error()
+				screen.SetScreenStatusAndRefresh(RSLT_BUYITM_TRDREQ_CREATION)
+			} else {
+				time.AfterFunc(2*time.Second, func() {
+					screen.txResult, screen.txFailReason = loud.ProcessTxResult(screen.user, txhash)
+					screen.SetScreenStatusAndRefresh(RSLT_BUYITM_TRDREQ_CREATION)
+				})
+			}
+
+		case CR8_SELLCHR_TRDREQ_ENT_PYLVAL:
+			screen.scrStatus = W8_SELLCHR_TRDREQ_CREATION
+			screen.refreshed = false
+			screen.pylonEnterValue = screen.inputText
+			screen.SetInputTextAndRender("")
+			txhash, err := loud.CreateSellCharacterTrdReq(screen.user, screen.activeCharacter, screen.pylonEnterValue)
+			log.Println("ended sending request for creating character -> pylon request")
+			if err != nil {
+				screen.txFailReason = err.Error()
+				screen.SetScreenStatusAndRefresh(RSLT_SELLCHR_TRDREQ_CREATION)
+			} else {
+				time.AfterFunc(2*time.Second, func() {
+					screen.txResult, screen.txFailReason = loud.ProcessTxResult(screen.user, txhash)
+					screen.SetScreenStatusAndRefresh(RSLT_SELLCHR_TRDREQ_CREATION)
+				})
+			}
+		case CR8_BUYCHR_TRDREQ_ENT_PYLVAL:
+			screen.scrStatus = W8_BUYCHR_TRDREQ_CREATION
+			screen.refreshed = false
+			screen.pylonEnterValue = screen.inputText
+			screen.SetInputTextAndRender("")
+			txhash, err := loud.CreateBuyCharacterTrdReq(screen.user, screen.activeChSpec, screen.pylonEnterValue)
+			log.Println("ended sending request for creating character -> pylon request")
+			if err != nil {
+				screen.txFailReason = err.Error()
+				screen.SetScreenStatusAndRefresh(RSLT_BUYCHR_TRDREQ_CREATION)
+			} else {
+				time.AfterFunc(2*time.Second, func() {
+					screen.txResult, screen.txFailReason = loud.ProcessTxResult(screen.user, txhash)
+					screen.SetScreenStatusAndRefresh(RSLT_BUYCHR_TRDREQ_CREATION)
+				})
+			}
+		default:
+			return false
+		}
+		return true
+	default:
+		Key := strings.ToUpper(string(input.Ch))
+		if screen.scrStatus == RENAME_CHAR_ENT_NEWNAME {
+			screen.SetInputTextAndRender(screen.inputText + Key)
+		} else if _, err := strconv.Atoi(Key); err == nil {
+			// If user entered number, just use it
+			screen.SetInputTextAndRender(screen.inputText + Key)
+		}
+		return false
+	}
 }

@@ -348,7 +348,7 @@ func (screen *GameScreen) TxWaitSituationDesc() string {
 	W8_TO_END := "\n" + loud.Localize("Please wait for a moment to finish the process")
 	switch screen.scrStatus {
 	case W8_RENAME_CHAR:
-		desc = loud.Localize("You are now waiting to rename character")
+		desc = loud.Sprintf("You are now waiting to rename character from %s to %s.", screen.activeCharacter.Name, screen.inputText)
 	case W8_BUY_LOUD_TRDREQ_CREATION:
 		desc = loud.Localize("You are now waiting for loud buy request creation")
 		desc += screen.buyLoudDesc(screen.loudEnterValue, screen.pylonEnterValue)

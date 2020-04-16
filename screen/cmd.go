@@ -147,10 +147,11 @@ func (screen *GameScreen) renderUserCommands() {
 	}
 
 	infoLines = append(infoLines, "\n")
+	refreshCmdTxt := loud.Localize("Re)fresh Status")
 	if screen.syncingData {
-		infoLines = append(infoLines, screen.blueBoldFont()(loud.Localize("Re)fresh Status")))
+		infoLines = append(infoLines, screen.blueBoldFont()(refreshCmdTxt))
 	} else {
-		infoLines = append(infoLines, loud.Localize("Re)fresh Status"))
+		infoLines = append(infoLines, refreshCmdTxt)
 	}
 
 	// box start point (x, y)
