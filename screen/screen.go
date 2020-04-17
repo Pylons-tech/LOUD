@@ -139,6 +139,11 @@ func (screen *GameScreen) SetInputTextAndRender(text string) {
 	screen.Render()
 }
 
+func (screen *GameScreen) SetInputTextAndFreshRender(text string) {
+	screen.refreshed = false
+	screen.SetInputTextAndRender(text)
+}
+
 func (screen *GameScreen) pylonIcon() string {
 	return screen.drawProgressMeter(1, 1, 117, bgcolor, 1)
 }
@@ -547,7 +552,7 @@ func (screen *GameScreen) SetScreenSize(Width, Height int) {
 		Width:  Width,
 		Height: Height,
 	}
-	screen.refreshed = false
+	screen.FreshRender()
 }
 
 func (screen *GameScreen) colorFunc(color string) func(string) string {

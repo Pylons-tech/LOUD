@@ -49,7 +49,7 @@ func (screen *GameScreen) HandleInputKeyLocationSwitch(input termbox.Event) bool
 
 	if newStus, ok := tarLctMap[Key]; ok {
 		screen.user.SetLocation(newStus)
-		screen.refreshed = false
+		screen.FreshRender()
 		return true
 	} else {
 		return false
@@ -67,7 +67,7 @@ func (screen *GameScreen) HandleInputKeyHomeEntryPoint(input termbox.Event) bool
 
 	if newStus, ok := tarStusMap[Key]; ok {
 		screen.scrStatus = newStus
-		screen.refreshed = false
+		screen.FreshRender()
 		return true
 	} else {
 		return false
@@ -87,7 +87,7 @@ func (screen *GameScreen) HandleInputKeyMarketEntryPoint(input termbox.Event) bo
 
 	if newStus, ok := tarStusMap[Key]; ok {
 		screen.scrStatus = newStus
-		screen.refreshed = false
+		screen.FreshRender()
 		return true
 	} else {
 		return false
@@ -104,7 +104,7 @@ func (screen *GameScreen) HandleInputKeySettingsEntryPoint(input termbox.Event) 
 
 	if newLang, ok := tarLangMap[Key]; ok {
 		loud.GameLanguage = newLang
-		screen.refreshed = false
+		screen.FreshRender()
 		return true
 	} else {
 		return false
@@ -124,7 +124,7 @@ func (screen *GameScreen) HandleInputKeyForestEntryPoint(input termbox.Event) bo
 
 	if newStus, ok := tarStusMap[Key]; ok {
 		screen.scrStatus = newStus
-		screen.refreshed = false
+		screen.FreshRender()
 		return true
 	} else {
 		return false
@@ -143,7 +143,7 @@ func (screen *GameScreen) HandleInputKeyShopEntryPoint(input termbox.Event) bool
 
 	if newStus, ok := tarStusMap[Key]; ok {
 		screen.scrStatus = newStus
-		screen.refreshed = false
+		screen.FreshRender()
 		return true
 	} else {
 		return false
@@ -189,7 +189,7 @@ func (screen *GameScreen) MoveToNextStep() {
 		screen.scrStatus = SHW_LOCATION
 	}
 	screen.txFailReason = ""
-	screen.refreshed = false
+	screen.FreshRender()
 }
 
 func (screen *GameScreen) MoveToPrevStep() {
@@ -212,7 +212,7 @@ func (screen *GameScreen) MoveToPrevStep() {
 	} else {
 		screen.scrStatus = SHW_LOCATION
 	}
-	screen.refreshed = false
+	screen.FreshRender()
 }
 
 func (screen *GameScreen) HandleFirstClassInputKeys(input termbox.Event) bool {
@@ -333,13 +333,13 @@ func (screen *GameScreen) HandleThirdClassInputKeys(input termbox.Event) bool {
 			case SHW_BUYCHR_TRDREQS:
 				screen.scrStatus = CR8_BUYCHR_TRDREQ_SEL_CHR
 			}
-			screen.refreshed = false
+			screen.FreshRender()
+			return true
 		}
 	case "O": // GO ON
 		screen.MoveToNextStep()
 		return true
 	case "0", "1", "2", "3", "4", "5", "6", "7", "8", "9": // Numbers
-		screen.refreshed = false
 		switch screen.scrStatus {
 		case SEL_DEFAULT_CHAR:
 			screen.activeLine = loud.GetIndexFromString(Key)
@@ -426,6 +426,7 @@ func (screen *GameScreen) HandleThirdClassInputKeys(input termbox.Event) bool {
 			}
 			screen.RunActiveItemUpgrade()
 		}
+		screen.FreshRender()
 		return true
 	}
 	return false
@@ -455,7 +456,7 @@ func (screen *GameScreen) HandleThirdClassKeyEnterEvent() bool {
 			screen.activeItem = userItems[screen.activeLine]
 			screen.scrStatus = CR8_SELLITM_TRDREQ_ENT_PYLVAL
 			screen.inputText = ""
-			screen.refreshed = false
+			screen.FreshRender()
 		case CR8_BUYITM_TRDREQ_SEL_ITEM:
 			if len(loud.WorldItemSpecs) <= screen.activeLine || screen.activeLine < 0 {
 				return false
@@ -463,7 +464,7 @@ func (screen *GameScreen) HandleThirdClassKeyEnterEvent() bool {
 			screen.activeItSpec = loud.WorldItemSpecs[screen.activeLine]
 			screen.scrStatus = CR8_BUYITM_TRDREQ_ENT_PYLVAL
 			screen.inputText = ""
-			screen.refreshed = false
+			screen.FreshRender()
 		case CR8_SELLCHR_TRDREQ_SEL_CHR:
 			userCharacters := screen.user.InventoryCharacters()
 			if len(userCharacters) <= screen.activeLine || screen.activeLine < 0 {
@@ -472,7 +473,7 @@ func (screen *GameScreen) HandleThirdClassKeyEnterEvent() bool {
 			screen.activeCharacter = userCharacters[screen.activeLine]
 			screen.scrStatus = CR8_SELLCHR_TRDREQ_ENT_PYLVAL
 			screen.inputText = ""
-			screen.refreshed = false
+			screen.FreshRender()
 		case CR8_BUYCHR_TRDREQ_SEL_CHR:
 			if len(loud.WorldCharacterSpecs) <= screen.activeLine || screen.activeLine < 0 {
 				return false
@@ -480,7 +481,7 @@ func (screen *GameScreen) HandleThirdClassKeyEnterEvent() bool {
 			screen.activeChSpec = loud.WorldCharacterSpecs[screen.activeLine]
 			screen.scrStatus = CR8_BUYCHR_TRDREQ_ENT_PYLVAL
 			screen.inputText = ""
-			screen.refreshed = false
+			screen.FreshRender()
 		case SEL_DEFAULT_CHAR:
 			characters := screen.user.InventoryCharacters()
 			if len(characters) <= screen.activeLine || screen.activeLine < 0 {
@@ -605,14 +606,13 @@ func (screen *GameScreen) HandleTypingModeInputKeys(input termbox.Event) bool {
 			screen.RunCharacterRename(screen.inputText)
 		case CR8_BUY_LOUD_TRDREQ_ENT_LUDVAL:
 			screen.scrStatus = CR8_BUY_LOUD_TRDREQ_ENT_PYLVAL
-			screen.refreshed = false
 			screen.loudEnterValue = screen.inputText
 			screen.inputText = ""
+			screen.FreshRender()
 		case CR8_BUY_LOUD_TRDREQ_ENT_PYLVAL:
 			screen.scrStatus = W8_BUY_LOUD_TRDREQ_CREATION
-			screen.refreshed = false
 			screen.pylonEnterValue = screen.inputText
-			screen.SetInputTextAndRender("")
+			screen.SetInputTextAndFreshRender("")
 			txhash, err := loud.CreateBuyLoudTrdReq(screen.user, screen.loudEnterValue, screen.pylonEnterValue)
 			log.Println("ended sending request for creating buy loud request")
 			if err != nil {
@@ -626,12 +626,12 @@ func (screen *GameScreen) HandleTypingModeInputKeys(input termbox.Event) bool {
 			}
 		case CR8_SELL_LOUD_TRDREQ_ENT_LUDVAL:
 			screen.scrStatus = CR8_SELL_LOUD_TRDREQ_ENT_PYLVAL
-			screen.refreshed = false
+			screen.FreshRender()
 			screen.loudEnterValue = screen.inputText
 			screen.inputText = ""
 		case CR8_SELL_LOUD_TRDREQ_ENT_PYLVAL:
 			screen.scrStatus = W8_SELL_LOUD_TRDREQ_CREATION
-			screen.refreshed = false
+			screen.FreshRender()
 			screen.pylonEnterValue = screen.inputText
 			screen.SetInputTextAndRender("")
 			txhash, err := loud.CreateSellLoudTrdReq(screen.user, screen.loudEnterValue, screen.pylonEnterValue)
@@ -648,9 +648,8 @@ func (screen *GameScreen) HandleTypingModeInputKeys(input termbox.Event) bool {
 			}
 		case CR8_SELLITM_TRDREQ_ENT_PYLVAL:
 			screen.scrStatus = W8_SELLITM_TRDREQ_CREATION
-			screen.refreshed = false
 			screen.pylonEnterValue = screen.inputText
-			screen.SetInputTextAndRender("")
+			screen.SetInputTextAndFreshRender("")
 			txhash, err := loud.CreateSellItemTrdReq(screen.user, screen.activeItem, screen.pylonEnterValue)
 			log.Println("ended sending request for creating sword -> pylon request")
 			if err != nil {
@@ -664,9 +663,8 @@ func (screen *GameScreen) HandleTypingModeInputKeys(input termbox.Event) bool {
 			}
 		case CR8_BUYITM_TRDREQ_ENT_PYLVAL:
 			screen.scrStatus = W8_BUYITM_TRDREQ_CREATION
-			screen.refreshed = false
 			screen.pylonEnterValue = screen.inputText
-			screen.SetInputTextAndRender("")
+			screen.SetInputTextAndFreshRender("")
 			txhash, err := loud.CreateBuyItemTrdReq(screen.user, screen.activeItSpec, screen.pylonEnterValue)
 			log.Println("ended sending request for creating sword -> pylon request")
 			if err != nil {
@@ -681,9 +679,8 @@ func (screen *GameScreen) HandleTypingModeInputKeys(input termbox.Event) bool {
 
 		case CR8_SELLCHR_TRDREQ_ENT_PYLVAL:
 			screen.scrStatus = W8_SELLCHR_TRDREQ_CREATION
-			screen.refreshed = false
 			screen.pylonEnterValue = screen.inputText
-			screen.SetInputTextAndRender("")
+			screen.SetInputTextAndFreshRender("")
 			txhash, err := loud.CreateSellCharacterTrdReq(screen.user, screen.activeCharacter, screen.pylonEnterValue)
 			log.Println("ended sending request for creating character -> pylon request")
 			if err != nil {
@@ -697,9 +694,8 @@ func (screen *GameScreen) HandleTypingModeInputKeys(input termbox.Event) bool {
 			}
 		case CR8_BUYCHR_TRDREQ_ENT_PYLVAL:
 			screen.scrStatus = W8_BUYCHR_TRDREQ_CREATION
-			screen.refreshed = false
 			screen.pylonEnterValue = screen.inputText
-			screen.SetInputTextAndRender("")
+			screen.SetInputTextAndFreshRender("")
 			txhash, err := loud.CreateBuyCharacterTrdReq(screen.user, screen.activeChSpec, screen.pylonEnterValue)
 			log.Println("ended sending request for creating character -> pylon request")
 			if err != nil {
