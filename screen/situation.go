@@ -418,25 +418,26 @@ func (screen *GameScreen) TxWaitSituationDesc() string {
 		desc += screen.buyItemDesc(request.TItem, fmt.Sprintf("%d", request.Price))
 	case W8_FULFILL_SELLCHR_TRDREQ:
 		request := screen.activeItemTrdReq.(loud.CharacterSellTrdReq)
-		desc = loud.Localize("you are now buying character ") + fmt.Sprintf(" at %d.\n", request.Price)
+		desc = loud.Sprintf("you are now buying character at %d.", request.Price)
 		desc += screen.buyCharacterDesc(request.TCharacter, fmt.Sprintf("%d", request.Price))
 	case W8_FULFILL_BUYITM_TRDREQ:
 		request := screen.activeItemTrdReq.(loud.ItemBuyTrdReq)
-		desc = loud.Localize("you are now selling item ") + fmt.Sprintf(" at %d.\n", request.Price)
+		desc = loud.Sprintf("you are now selling item at %d.", request.Price)
 		desc += screen.sellItemSpecDesc(request.TItem, fmt.Sprintf("%d", request.Price))
 	case W8_FULFILL_BUYCHR_TRDREQ:
 		request := screen.activeItemTrdReq.(loud.CharacterBuyTrdReq)
-		desc = loud.Localize("you are now selling character ") + fmt.Sprintf(" at %d.\n", request.Price)
+		desc = loud.Sprintf("you are now selling character at %d.", request.Price)
 		desc += screen.sellCharacterSpecDesc(request.TCharacter, fmt.Sprintf("%d", request.Price))
 	case W8_FULFILL_BUY_LOUD_TRDREQ:
 		request := screen.activeTrdReq
-		desc = loud.Localize("you are now selling loud for pylon") + fmt.Sprintf(" at %.4f.\n", request.Price)
+		desc = loud.Sprintf("you are now selling loud for pylon at %.4f.", request.Price)
 		desc += screen.sellLoudDesc(request.Amount, request.Total)
 	case W8_FULFILL_SELL_LOUD_TRDREQ:
 		request := screen.activeTrdReq
-		desc = loud.Localize("you are now buying loud from pylon") + fmt.Sprintf(" at %.4f.\n", request.Price)
+		desc = loud.Sprintf("you are now buying loud from pylon at %.4f.", request.Price)
 		desc += screen.buyLoudDesc(request.Amount, request.Total)
 	}
+	desc += "\n"
 	onColor := screen.colorFunc(fmt.Sprintf("%v+B:%v", 117, bgcolor))
-	return onColor(desc)
+	return desc + onColor("......")
 }

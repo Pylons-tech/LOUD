@@ -88,6 +88,19 @@ func SetupScreenAndEvents(world data.World, logFile *os.File) {
 
 	screenInstance.Render()
 
+	go func() {
+		for {
+			select {
+			case <-regRefreshTick:
+				screenInstance.FakeSync()
+			case <-terminalCloseSignal:
+				screenInstance.Reset()
+				os.Exit(0)
+			case <-tick:
+				screenInstance.Render()
+			}
+		}
+	}()
 eventloop:
 	for {
 		switch ev := termbox.PollEvent(); ev.Type {
@@ -107,16 +120,6 @@ eventloop:
 			screenInstance.SetScreenSize(ev.Width, ev.Height)
 		case termbox.EventError:
 			panic(ev.Err)
-		}
-		select {
-		case <-regRefreshTick:
-			screenInstance.FakeSync()
-		case <-terminalCloseSignal:
-			screenInstance.Reset()
-			break eventloop
-		case <-tick:
-			screenInstance.Render()
-			continue
 		}
 	}
 }
