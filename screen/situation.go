@@ -437,5 +437,6 @@ func (screen *GameScreen) TxWaitSituationDesc() string {
 		desc = loud.Localize("you are now buying loud from pylon") + fmt.Sprintf(" at %.4f.\n", request.Price)
 		desc += screen.buyLoudDesc(request.Amount, request.Total)
 	}
-	return desc
+	onColor := screen.colorFunc(fmt.Sprintf("%v+B:%v", 117, bgcolor))
+	return onColor(desc)
 }
