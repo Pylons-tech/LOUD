@@ -6,7 +6,6 @@ import (
 	"log"
 	"math"
 	"os"
-	"strconv"
 	"strings"
 	"time"
 	"unicode/utf8"
@@ -30,12 +29,13 @@ const bgcolor = 232
 // Screen represents a UI screen.
 type Screen interface {
 	SaveGame()
-	UpdateBlockHeight(int64)
+	UpdateFakeBlockHeight(int64)
 	SetScreenSize(int, int)
 	HandleInputKey(termbox.Event)
 	GetScreenStatus() ScreenStatus
 	SetScreenStatus(ScreenStatus)
 	GetTxFailReason() string
+	FakeSync()
 	Resync()
 	Render()
 	Reset()
@@ -57,6 +57,7 @@ type GameScreen struct {
 	inputText        string
 	syncingData      bool
 	blockHeight      int64
+	fakeBlockHeight  int64
 	txFailReason     string
 	txResult         []byte
 	refreshed        bool
@@ -99,6 +100,11 @@ func (screen *GameScreen) Resync() {
 	}()
 }
 
+func (screen *GameScreen) FakeSync() {
+	screen.UpdateFakeBlockHeight(screen.fakeBlockHeight + 1)
+	screen.FreshRender()
+}
+
 func (screen *GameScreen) GetTxFailReason() string {
 	return screen.txFailReason
 }
@@ -119,13 +125,13 @@ func (screen *GameScreen) SaveGame() {
 	screen.user.Save()
 }
 
-func (screen *GameScreen) UpdateBlockHeight(blockHeight int64) {
-	screen.blockHeight = blockHeight
+func (screen *GameScreen) UpdateFakeBlockHeight(h int64) {
+	screen.fakeBlockHeight = h
 	screen.FreshRender()
 }
 
-func (screen *GameScreen) BlockSince(baseBlockHeight int64) uint64 {
-	return uint64(screen.blockHeight - baseBlockHeight)
+func (screen *GameScreen) BlockSince(h int64) uint64 {
+	return uint64(screen.fakeBlockHeight - h)
 }
 
 func (screen *GameScreen) SetInputTextAndRender(text string) {
@@ -602,8 +608,10 @@ func (screen *GameScreen) renderCharacterSheet() {
 	var HP uint64 = 0
 	var MaxHP uint64 = 0
 
+	// update blockHeight from newly synced data
 	if lbh := screen.user.GetLatestBlockHeight(); lbh > screen.blockHeight {
 		screen.blockHeight = lbh
+		screen.fakeBlockHeight = lbh
 	}
 
 	characters := screen.user.InventoryCharacters()
@@ -668,11 +676,11 @@ func (screen *GameScreen) renderCharacterSheet() {
 	}
 
 	nodeLines := []string{
-		centerText(loud.Localize("pylons network status")+" [Copy to Clipboard(L)]", " ", width),
+		centerText(loud.Sprintf("pylons network status [Copy to Clipboard(L)]"), " ", width),
 		centerText(screen.user.GetLastTransaction(), " ", width),
 	}
 
-	blockHeightText := centerText(loud.Localize("block height")+": "+strconv.FormatInt(screen.blockHeight, 10), " ", width)
+	blockHeightText := centerText(loud.Sprintf("block height: %d(%d)", screen.blockHeight, screen.fakeBlockHeight), " ", width)
 	if screen.syncingData {
 		nodeLines = append(nodeLines, screen.blueBoldFont()(blockHeightText))
 	} else {

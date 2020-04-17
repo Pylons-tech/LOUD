@@ -42,7 +42,7 @@ func SetupScreenAndEvents(world data.World, logFile *os.File) {
 	log.Println("setting up screen and events")
 
 	tick := time.Tick(300 * time.Millisecond)
-	regRefreshTick := time.Tick(10 * time.Second)
+	regRefreshTick := time.Tick(5 * time.Second)
 
 	if data.AutomateInput {
 		screenInstance.SetScreenStatus(screen.RSLT_SWITCH_USER)
@@ -110,7 +110,7 @@ eventloop:
 		}
 		select {
 		case <-regRefreshTick:
-			screenInstance.Resync()
+			screenInstance.FakeSync()
 		case <-terminalCloseSignal:
 			screenInstance.Reset()
 			break eventloop
