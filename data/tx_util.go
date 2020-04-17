@@ -292,12 +292,12 @@ func InitPylonAccount(username string) string {
 			os.MkdirAll(pylonsDir, os.ModePerm)
 			keyFile := filepath.Join(pylonsDir, username+".json")
 			addResult, err = ioutil.ReadFile(keyFile)
-			if err != nil {
+			if err != nil && AutomateInput {
 				log.Fatal("Couldn't get private key from ", username, ".json")
 			}
 			addedKeyResInterface := make(map[string]string)
 			err = json.Unmarshal(addResult, &addedKeyResInterface)
-			if err != nil {
+			if err != nil && AutomateInput {
 				log.Fatal("Couldn't parse file for", username, ".json", err.Error())
 			}
 			privKey = addedKeyResInterface["privkey"]
