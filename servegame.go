@@ -28,8 +28,7 @@ func SetupScreenAndEvents(world data.World, logFile *os.File) {
 	username := ""
 	log.Println("args SetupScreenAndEvents", args)
 	if len(args) < 2 {
-		log.Println("you didn't configure username when running, using default username \"eugen\"")
-		username = "eugen"
+		log.Fatal("you didn't configure username when running!")
 	} else {
 		username = args[1]
 	}
