@@ -22,7 +22,7 @@ Key action descriptions
 'H': go to home
 'F': go to forest
 'S': go to shop
-'M': go to market
+'M': go to pylons central
 'T': go to settings
 'D': go to develop
 ```

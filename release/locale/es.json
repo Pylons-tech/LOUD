@@ -8,7 +8,7 @@
   "buy character failed reason": {
     "one": "Razón de compra fallida"
   },
-  "hunt failed reason": {
+  "hunt rabbits failed reason": {
     "one": "Razón fallida de caza"
   },
   "sell failed reason": {
@@ -41,7 +41,7 @@
   "shop": {
     "one": "1) Comprar Artículos\n2) Vender Artículos\n3) Mejorar Artículos\n4) Comprar personajes\n"
   },
-  "market": {
+  "pylons central": {
     "one": "1) Sell Loud from orderbook / Create an order to buy Loud\n2) Buy Loud from orderbook / Create an order to Sell Loud\n3) Sell sword from orderbook / Create an order to buy sword\n4) Buy sword from orderbook / Create an order to sell sword\n5) Sell character from orderbook / Create an order to buy character\n6) Buy character from orderbook / Create an order to sell character\n"
   },
   "settings": {
@@ -59,8 +59,8 @@
   "go to shop": {
     "one": "Tienda(S)"
   },
-  "go to market": {
-    "one": "M)ercado"
+  "go to pylons central": {
+    "one": "Pylons C)entral"
   },
   "go to settings": {
     "one": "Ajust)es"
@@ -88,13 +88,22 @@
   "home desc": {
     "one": "Estás en inicio.\nSi quieres cazar, dirígete al bosque.\nY si quieres comprar/vender algo, dirígete a la tienda."
   },
+  "home desc without pylon": {
+    "one": "You don't have pylon within account.\nTo buy characters, you need to purchase pylons or sell existing characters/items on market to get pylons."
+  },
+  "home desc without character": {
+    "one": "You don't have any character yet.\nYou can buy one from market or at the shop"
+  },
+  "home desc with low HP": {
+    "one": "Your character's health is very low.\nYou can restore health by spending loud or just doing rest for few mins."
+  },
   "forest desc": {
     "one": "Estás en el bosque.\nPuedes cazar aquí o regresar a inicio."
   },
   "shop desc": {
     "one": "Estás en una tienda.\nSi quieres, puedes comprar o vender artículos aquí."
   },
-  "market desc": {
+  "pylons central desc": {
     "one": "Ahora estás en un mercado.\nPuedes comerciar aquí por monedas y artículos."
   },
   "settings desc": {
@@ -112,7 +121,7 @@
   "select sell item desc": {
     "one": "Vas a vender un artículo.\nPor favor selecciona un artículo a vender."
   },
-  "select hunt item desc": {
+  "select hunt rabbits item desc": {
     "one": "Te estás preparando para cazar.\nPor favor selecciona un artículo a llevar."
   },
   "select fight goblin item desc": {
@@ -142,10 +151,10 @@
   "You are now buying %s at the shop": {
     "one": "Ahora estás comprando \"%s\" en la tienda"
   },
-  "You are now hunting with %s": {
+  "You are now hunting rabbits with %s": {
     "one": "Estás cazando con \"%s\"."
   },
-  "You are now hunting without weapon": {
+  "You are now hunting rabbits without weapon": {
     "one": "Estás cazando sin arma."
   },
   "You are now fighting with giant with %s": {

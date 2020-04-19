@@ -41,7 +41,7 @@
   "shop": {
     "one": "1) Comprar Artículos\n2) Vender Artículos\n3) Mejorar Artículos\n4) Comprar personajes\n"
   },
-  "market": {
+  "pylons central": {
     "one": "1) Sell Loud from orderbook / Create an order to buy Loud\n2) Buy Loud from orderbook / Create an order to Sell Loud\n3) Sell sword from orderbook / Create an order to buy sword\n4) Buy sword from orderbook / Create an order to sell sword\n5) Sell character from orderbook / Create an order to buy character\n6) Buy character from orderbook / Create an order to sell character\n"
   },
   "settings": {
@@ -59,8 +59,8 @@
   "go to shop": {
     "one": "Tienda(S)"
   },
-  "go to market": {
-    "one": "M)ercado"
+  "go to pylons central": {
+    "one": "Pylons C)entral"
   },
   "go to settings": {
     "one": "Ajust)es"
@@ -103,7 +103,7 @@
   "shop desc": {
     "one": "Estás en una tienda.\nSi quieres, puedes comprar o vender artículos aquí."
   },
-  "market desc": {
+  "pylons central desc": {
     "one": "Ahora estás en un mercado.\nPuedes comerciar aquí por monedas y artículos."
   },
   "settings desc": {

@@ -71,7 +71,7 @@ const (
 	W8_SWITCH_USER       = "W8_SWITCH_USER"
 	RSLT_SWITCH_USER     = "RSLT_SWITCH_USER"
 
-	// in market
+	// in pylons central
 	SHW_LOUD_BUY_TRDREQS           = "SHW_LOUD_BUY_TRDREQS"           // navigation using arrow and list should be sorted by price
 	CR8_BUY_LOUD_TRDREQ_ENT_LUDVAL = "CR8_BUY_LOUD_TRDREQ_ENT_LUDVAL" // enter value after switching enter mode
 	CR8_BUY_LOUD_TRDREQ_ENT_PYLVAL = "CR8_BUY_LOUD_TRDREQ_ENT_PYLVAL"

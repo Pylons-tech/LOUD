@@ -44,7 +44,7 @@ func (screen *GameScreen) HandleInputKeyLocationSwitch(input termbox.Event) bool
 		"S": loud.SHOP,
 		"H": loud.HOME,
 		"T": loud.SETTINGS,
-		"M": loud.MARKET,
+		"C": loud.PYLCNTRL,
 		"D": loud.DEVELOP,
 	}
 
@@ -78,7 +78,7 @@ func (screen *GameScreen) HandleInputKeyHomeEntryPoint(input termbox.Event) bool
 		return false
 	}
 }
-func (screen *GameScreen) HandleInputKeyMarketEntryPoint(input termbox.Event) bool {
+func (screen *GameScreen) HandleInputKeyPylonsCentralEntryPoint(input termbox.Event) bool {
 	Key := string(input.Ch)
 
 	tarStusMap := map[string]ScreenStatus{
@@ -278,10 +278,10 @@ func (screen *GameScreen) HandleSecondClassInputKeys(input termbox.Event) bool {
 		case SHW_LOCATION:
 			return screen.HandleInputKeyHomeEntryPoint(input)
 		}
-	} else if screen.user.GetLocation() == loud.MARKET {
+	} else if screen.user.GetLocation() == loud.PYLCNTRL {
 		switch screen.scrStatus {
 		case SHW_LOCATION:
-			return screen.HandleInputKeyMarketEntryPoint(input)
+			return screen.HandleInputKeyPylonsCentralEntryPoint(input)
 		}
 	} else if screen.user.GetLocation() == loud.SETTINGS {
 		switch screen.scrStatus {
@@ -327,7 +327,7 @@ func (screen *GameScreen) HandleThirdClassInputKeys(input termbox.Event) bool {
 
 	switch Key {
 	case "R": // CREATE ORDER
-		if screen.user.GetLocation() == loud.MARKET {
+		if screen.user.GetLocation() == loud.PYLCNTRL {
 			switch screen.scrStatus {
 			case SHW_LOUD_BUY_TRDREQS:
 				screen.scrStatus = CR8_BUY_LOUD_TRDREQ_ENT_LUDVAL
@@ -443,7 +443,7 @@ func (screen *GameScreen) HandleThirdClassInputKeys(input termbox.Event) bool {
 
 func (screen *GameScreen) HandleThirdClassKeyEnterEvent() bool {
 	switch screen.user.GetLocation() {
-	case loud.HOME, loud.MARKET, loud.SHOP, loud.FOREST:
+	case loud.HOME, loud.PYLCNTRL, loud.SHOP, loud.FOREST:
 		switch screen.scrStatus {
 		case SHW_LOUD_BUY_TRDREQS:
 			screen.RunSelectedLoudBuyTrdReq()

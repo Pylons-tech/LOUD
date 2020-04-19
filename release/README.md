@@ -39,4 +39,4 @@ Health restore status is updated every 10s.
 So if you want to increase health, you can just wait for few mins to restore health.
 Or you can spend pylon to instantly restore health at Home(H) by pressing 3) Restore health.
 
-If you want to trade with items and coins, you can just create an order under Market(M) or just fulfill the order.
+If you want to trade with items and coins, you can just create an order or just fulfill the order under Pylons Central(M).

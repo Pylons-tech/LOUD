@@ -21,7 +21,7 @@ func (screen *GameScreen) renderUserSituation() {
 			loud.HOME:     loud.Localize("home desc"),
 			loud.FOREST:   loud.Localize("forest desc"),
 			loud.SHOP:     loud.Localize("shop desc"),
-			loud.MARKET:   loud.Localize("market desc"),
+			loud.PYLCNTRL: loud.Localize("pylons central desc"),
 			loud.SETTINGS: loud.Localize("settings desc"),
 			loud.DEVELOP:  loud.Localize("develop desc"),
 		}

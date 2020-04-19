@@ -30,13 +30,13 @@ func (screen *GameScreen) renderUserCommands() {
 			loud.HOME:     "home",
 			loud.FOREST:   "forest",
 			loud.SHOP:     "shop",
-			loud.MARKET:   "market",
+			loud.PYLCNTRL: "pylons central",
 			loud.SETTINGS: "settings",
 			loud.DEVELOP:  "develop",
 		}
 		cmdString := loud.Localize(cmdMap[screen.user.GetLocation()])
 		infoLines = strings.Split(cmdString, "\n")
-		for _, loc := range []loud.UserLocation{loud.HOME, loud.FOREST, loud.SHOP, loud.MARKET, loud.SETTINGS, loud.DEVELOP} {
+		for _, loc := range []loud.UserLocation{loud.HOME, loud.FOREST, loud.SHOP, loud.PYLCNTRL, loud.SETTINGS, loud.DEVELOP} {
 			if loc != screen.user.GetLocation() {
 				infoLines = append(infoLines, loud.Localize("go to "+cmdMap[loc]))
 			}

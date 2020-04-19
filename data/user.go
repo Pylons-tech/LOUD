@@ -6,7 +6,7 @@ const (
 	HOME UserLocation = iota
 	FOREST
 	SHOP
-	MARKET
+	PYLCNTRL
 	SETTINGS
 	DEVELOP
 )
