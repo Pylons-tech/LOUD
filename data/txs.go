@@ -73,20 +73,20 @@ func RestoreHealth(user User, char Character) (string, error) {
 	return ExecuteRecipe(user, rcpName, itemIDs)
 }
 
-func Hunt(user User, item Item) (string, error) {
+func HuntRabbits(user User, item Item) (string, error) {
 
 	defaultCharacter := user.GetDefaultCharacter()
 	defaultCharacterID := ""
 	if defaultCharacter != nil {
 		defaultCharacterID = defaultCharacter.ID
 	} else {
-		return "", errors.New("character is required to hunt!")
+		return "", errors.New("character is required to hunt rabbits!")
 	}
-	rcpName := "LOUD's hunt without sword recipe"
+	rcpName := "LOUD's hunt rabbits without sword recipe"
 	itemIDs := []string{defaultCharacterID}
 
 	if item.IsSword() {
-		rcpName = "LOUD's hunt with a sword recipe"
+		rcpName = "LOUD's hunt rabbits with a sword recipe"
 		itemIDs = []string{defaultCharacterID, item.ID}
 	}
 

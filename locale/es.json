@@ -8,7 +8,7 @@
   "buy character failed reason": {
     "one": "Razón de compra fallida"
   },
-  "hunt failed reason": {
+  "hunt rabbits failed reason": {
     "one": "Razón fallida de caza"
   },
   "sell failed reason": {
@@ -115,7 +115,7 @@
   "select sell item desc": {
     "one": "Vas a vender un artículo.\nPor favor selecciona un artículo a vender."
   },
-  "select hunt item desc": {
+  "select hunt rabbits item desc": {
     "one": "Te estás preparando para cazar.\nPor favor selecciona un artículo a llevar."
   },
   "select fight goblin item desc": {
@@ -145,10 +145,10 @@
   "You are now buying %s at the shop": {
     "one": "Ahora estás comprando \"%s\" en la tienda"
   },
-  "You are now hunting with %s": {
+  "You are now hunting rabbits with %s": {
     "one": "Estás cazando con \"%s\"."
   },
-  "You are now hunting without weapon": {
+  "You are now hunting rabbits without weapon": {
     "one": "Estás cazando sin arma."
   },
   "You are now fighting with giant with %s": {
@@ -196,8 +196,8 @@
   "Please use it for hunting": {
     "one": "Por favor usar para cazar."
   },
-  "You did hunt animals and earned %d. Detailed result: %+v": {
-    "one": "You did hunt animals and earned %d. Detailed result: %+v"
+  "You did hunt rabbits and earned %d. Detailed result: %+v": {
+    "one": "You did hunt rabbits and earned %d. Detailed result: %+v"
   },
   "You did fight with goblin and earned %d. Detailed result: %+v": {
     "one": "You did fight with goblin and earned %d. Detailed result: %+v"

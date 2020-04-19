@@ -31,8 +31,8 @@ import (
 var RcpIDs map[string]string = map[string]string{
 	"LOUD's get initial coin recipe":                "LOUD-get-initial-coin-recipe-v0.0.1-1579652622",
 	"LOUD's Get Character recipe":                   "LOUD-get-character-recipe-v0.0.0-1583801800",
-	"LOUD's hunt without sword recipe":              "LOUD-hunt-with-no-weapon-recipe-v0.0.0-1579053457",
-	"LOUD's hunt with a sword recipe":               "LOUD-hunt-with-a-sword-recipe-v0.0.0-1583631194",
+	"LOUD's hunt rabbits without sword recipe":      "LOUD-hunt-rabbits-with-no-weapon-recipe-v0.0.0-1579053457",
+	"LOUD's hunt rabbits with a sword recipe":       "LOUD-hunt-rabbits-with-a-sword-recipe-v0.0.0-1583631194",
 	"LOUD's sword sell recipe":                      "LOUD-sell-a-sword-recipe-v0.0.0-1583631194",
 	"LOUD's Copper sword lv1 to lv2 upgrade recipe": "LOUD-upgrade-copper-sword-lv1-to-lv2-recipe-v0.0.0-1579053457",
 	"LOUD's Wooden sword lv1 to lv2 upgrade recipe": "LOUD-upgrade-wooden-sword-lv1-to-lv2-recipe-v0.0.0-1579053457",

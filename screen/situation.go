@@ -90,8 +90,8 @@ func (screen *GameScreen) renderUserSituation() {
 		infoLines = screen.renderITTable("select buy character desc", "Character", loud.ShopCharacters)
 	case SEL_SELLITM:
 		infoLines = screen.renderITTable("select sell item desc", "Item", screen.user.InventorySellableItems())
-	case SEL_HUNT_ITEM:
-		infoLines = screen.renderITTable("select hunt item desc", "Item", screen.user.InventorySwords())
+	case SEL_HUNT_RABBITS_ITEM:
+		infoLines = screen.renderITTable("select hunt rabbits item desc", "Item", screen.user.InventorySwords())
 	case SEL_FIGHT_GOBLIN_ITEM:
 		infoLines = screen.renderITTable("select fight goblin item desc", "Item", screen.user.InventorySwords())
 	case SEL_FIGHT_WOLF_ITEM:
@@ -143,7 +143,7 @@ func (screen *GameScreen) TxResultSituationDesc() string {
 		RSLT_SEL_DEF_WEAPON:            "selecting default weapon",
 		RSLT_BUYITM:                    "buy item",
 		RSLT_BUYCHR:                    "buy character",
-		RSLT_HUNT:                      "hunt",
+		RSLT_HUNT_RABBITS:              "hunt rabbits",
 		RSLT_GET_INITIAL_COIN:          "get initial coin",
 		RSLT_GET_PYLONS:                "get pylon",
 		RSLT_SWITCH_USER:               "switch user",
@@ -188,7 +188,7 @@ func (screen *GameScreen) TxResultSituationDesc() string {
 			desc = loud.Sprintf("You have bought %s from the shop", formatCharacter(screen.activeCharacter))
 			desc += "\n"
 			desc += loud.Localize("Please use it for hunting")
-		case RSLT_HUNT:
+		case RSLT_HUNT_RABBITS:
 			respOutput := []handlers.ExecuteRecipeSerialize{}
 			earnedAmount := int64(0)
 			json.Unmarshal(screen.txResult, &respOutput)
@@ -196,7 +196,7 @@ func (screen *GameScreen) TxResultSituationDesc() string {
 				earnedAmount = respOutput[0].Amount
 			}
 			resultTexts := []string{"gold", "character", "weapon"}
-			desc = loud.Sprintf("You did hunt animals and earned %d. Detailed result: %+v", earnedAmount, resultTexts[:len(respOutput)])
+			desc = loud.Sprintf("You did hunt rabbits and earned %d. Detailed result: %+v", earnedAmount, resultTexts[:len(respOutput)])
 			switch len(respOutput) {
 			case 0:
 				desc += "\nYour character is dead during hunt accidently"
@@ -361,11 +361,11 @@ func (screen *GameScreen) TxWaitSituationDesc() string {
 	case W8_BUYCHR:
 		desc = loud.Sprintf("You are now buying %s at the shop", formatCharacter(screen.activeCharacter))
 		desc += W8_TO_END
-	case W8_HUNT:
+	case W8_HUNT_RABBITS:
 		if len(screen.activeItem.Name) > 0 {
-			desc = loud.Sprintf("You are now hunting with %s", formatItem(screen.activeItem))
+			desc = loud.Sprintf("You are now hunting rabbits with %s", formatItem(screen.activeItem))
 		} else {
-			desc = loud.Localize("You are now hunting without weapon")
+			desc = loud.Sprintf("You are now hunting rabbits without weapon")
 		}
 		desc += W8_TO_END
 	case W8_FIGHT_GIANT:

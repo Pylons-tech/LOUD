@@ -112,7 +112,7 @@ func (screen *GameScreen) renderUserCommands() {
 			infoLines = append(infoLines, fmt.Sprintf("%d) %s  ", idx+1, formatItem(item))+screen.loudIcon()+fmt.Sprintf(" %s", item.GetSellPriceRange()))
 		}
 		infoLines = appendSelectCancelCmds(infoLines)
-	case SEL_HUNT_ITEM:
+	case SEL_HUNT_RABBITS_ITEM:
 		infoLines = append(infoLines, loud.Localize("No item"))
 		infoLines = append(infoLines, loud.Localize("Get I)nitial Coin"))
 		for idx, item := range screen.user.InventorySwords() {

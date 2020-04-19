@@ -196,8 +196,8 @@
   "Please use it for hunting": {
     "one": "Please use it for hunting."
   },
-  "You did hunt animals and earned %d. Detailed result: %+v": {
-    "one": "You did hunt animals and earned %d. Detailed result: %+v"
+  "You did hunt rabbits and earned %d. Detailed result: %+v": {
+    "one": "You did hunt rabbits and earned %d. Detailed result: %+v"
   },
   "You did fight with goblin and earned %d. Detailed result: %+v": {
     "one": "You did fight with goblin and earned %d. Detailed result: %+v"

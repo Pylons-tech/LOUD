@@ -238,13 +238,13 @@
         }
     },
     {
-        "ID": "CREATE_HUNT_WITH_A_SWORD_RECIPE",
+        "ID": "CREATE_HUNT_RABBITS_WITH_A_SWORD_RECIPE",
         "runAfter": {
             "precondition": ["CREATE_LOUD_COOKBOOK"],
             "blockWait": 0
         },
         "action": "create_recipe",
-        "paramsRef": "./recipes/hunt_with_a_sword.json",
+        "paramsRef": "./recipes/hunt_rabbits_with_a_sword.json",
         "output": {
             "txResult": {
                 "status": "Success"
@@ -252,19 +252,19 @@
             "property": [
                 {
                     "owner": "eugen",
-                    "recipes": ["LOUD's hunt with a sword recipe"]
+                    "recipes": ["LOUD's hunt rabbits with a sword recipe"]
                 }
             ]
         }
     },
     {
-        "ID": "CREATE_HUNT_WITH_NO_WEAPON_RECIPE",
+        "ID": "CREATE_HUNT_RABBITS_WITH_NO_WEAPON_RECIPE",
         "runAfter": {
             "precondition": ["CREATE_LOUD_COOKBOOK"],
             "blockWait": 0
         },
         "action": "create_recipe",
-        "paramsRef": "./recipes/hunt_with_no_weapon.json",
+        "paramsRef": "./recipes/hunt_rabbits_with_no_weapon.json",
         "output": {
             "txResult": {
                 "status": "Success"
@@ -272,7 +272,7 @@
             "property": [
                 {
                     "owner": "eugen",
-                    "recipes": ["LOUD's hunt without sword recipe"]
+                    "recipes": ["LOUD's hunt rabbits without sword recipe"]
                 }
             ]
         }

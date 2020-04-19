@@ -754,9 +754,9 @@ func (screen *GameScreen) RunActiveItemUpgrade() {
 	})
 }
 
-func (screen *GameScreen) RunActiveItemHunt() {
-	screen.RunTxProcess(W8_HUNT, RSLT_HUNT, func() (string, error) {
-		return loud.Hunt(screen.user, screen.activeItem)
+func (screen *GameScreen) RunActiveItemHuntRabbits() {
+	screen.RunTxProcess(W8_HUNT_RABBITS, RSLT_HUNT_RABBITS, func() (string, error) {
+		return loud.HuntRabbits(screen.user, screen.activeItem)
 	})
 }
 

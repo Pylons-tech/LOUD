@@ -8,8 +8,8 @@
   "buy character failed reason": {
     "one": "Buy Character Failure Reason"
   },
-  "hunt failed reason": {
-    "one": "Hunt Failure Reason"
+  "hunt rabbits failed reason": {
+    "one": "Hunt Rabbits Failure Reason"
   },
   "sell failed reason": {
     "one": "Sell Failure Reason"
@@ -115,8 +115,8 @@
   "select sell item desc": {
     "one": "You are gonna sell an item.\nPlease select an item to sell."
   },
-  "select hunt item desc": {
-    "one": "You are preparing for hunt.\nPlease select an item to carry."
+  "select hunt rabbits item desc": {
+    "one": "You are preparing to hunt rabbits.\nPlease select an item to carry."
   },
   "select fight goblin item desc": {
     "one": "You are preparing for fighting goblin.\nPlease select an item to carry."
@@ -145,10 +145,10 @@
   "You are now buying %s at the shop": {
     "one": "You are now buying \"%s\" at the shop"
   },
-  "You are now hunting with %s": {
-    "one": "You are now hunting with \"%s\"."
+  "You are now hunting rabbits with %s": {
+    "one": "You are now hunting rabbits with \"%s\"."
   },
-  "You are now hunting without weapon": {
+  "You are now hunting rabbits without weapon": {
     "one": "You are now hunting rabbits."
   },
   "You are now fighting with giant with %s": {
@@ -196,8 +196,8 @@
   "Please use it for hunting": {
     "one": "Please use it for hunting."
   },
-  "You did hunt animals and earned %d. Detailed result: %+v": {
-    "one": "You did hunt animals and earned %d. Detailed result: %+v"
+  "You did hunt rabbits and earned %d. Detailed result: %+v": {
+    "one": "You did hunt rabbits and earned %d. Detailed result: %+v"
   },
   "You did fight with goblin and earned %d. Detailed result: %+v": {
     "one": "You did fight with goblin and earned %d. Detailed result: %+v"
