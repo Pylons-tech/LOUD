@@ -52,8 +52,8 @@ func GetExtraPylons(user User) (string, error) {
 	return SendTxMsg(user, extraPylonsMsg)
 }
 
-func GetInitialCoin(user User) (string, error) {
-	rcpName := "LOUD's get initial coin recipe"
+func BuyGoldWithPylons(user User) (string, error) {
+	rcpName := "LOUD's buy gold with pylons recipe"
 	itemIDs := []string{}
 
 	return ExecuteRecipe(user, rcpName, itemIDs)

@@ -29,7 +29,7 @@ import (
 )
 
 var RcpIDs map[string]string = map[string]string{
-	"LOUD's get initial coin recipe":                "LOUD-get-initial-coin-recipe-v0.0.1-1579652622",
+	"LOUD's buy gold with pylons recipe":            "LOUD-buy-gold-from-pylons-recipe-v0.0.1-1579652622",
 	"LOUD's Get Character recipe":                   "LOUD-get-character-recipe-v0.0.0-1583801800",
 	"LOUD's hunt rabbits without sword recipe":      "LOUD-hunt-rabbits-with-no-weapon-recipe-v0.0.0-1579053457",
 	"LOUD's hunt rabbits with a sword recipe":       "LOUD-hunt-rabbits-with-a-sword-recipe-v0.0.0-1583631194",

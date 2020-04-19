@@ -98,13 +98,13 @@
         }
     },
     {
-        "ID": "CREATE_GET_INITIAL_COIN_RECIPE",
+        "ID": "CREATE_BUY_GOLD_WITH_PYLONS_RECIPE",
         "runAfter": {
             "precondition": ["CREATE_LOUD_COOKBOOK"],
             "blockWait": 0
         },
         "action": "create_recipe",
-        "paramsRef": "./recipes/get_initial_coin.json",
+        "paramsRef": "./recipes/buy_gold_with_pylons.json",
         "output": {
             "txResult": {
                 "status": "Success"
@@ -112,7 +112,7 @@
             "property": [
                 {
                     "owner": "eugen",
-                    "recipes": ["LOUD's get initial coin recipe"]
+                    "recipes": ["LOUD's buy gold with pylons recipe"]
                 }
             ]
         }

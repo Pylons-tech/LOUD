@@ -159,7 +159,7 @@ func (screen *GameScreen) TxResultSituationDesc() string {
 		RSLT_BUYITM:                    "buy item",
 		RSLT_BUYCHR:                    "buy character",
 		RSLT_HUNT_RABBITS:              "hunt rabbits",
-		RSLT_GET_INITIAL_COIN:          "get initial coin",
+		RSLT_BUY_GOLD_WITH_PYLONS:      "buy gold with pylons",
 		RSLT_GET_PYLONS:                "get pylon",
 		RSLT_SWITCH_USER:               "switch user",
 		RSLT_CREATE_COOKBOOK:           "create cookbook",
@@ -286,14 +286,14 @@ func (screen *GameScreen) TxResultSituationDesc() string {
 			case 2:
 				desc += "\nYou have lost your weapon accidently"
 			}
-		case RSLT_GET_INITIAL_COIN:
+		case RSLT_BUY_GOLD_WITH_PYLONS:
 			respOutput := []handlers.ExecuteRecipeSerialize{}
 			json.Unmarshal(screen.txResult, &respOutput)
 			earnedAmount := int64(0)
 			if len(respOutput) > 0 {
 				earnedAmount = respOutput[0].Amount
 			}
-			desc = loud.Sprintf("Got initial gold from pylons. Amount is %d.", earnedAmount)
+			desc = loud.Sprintf("Bought gold with pylons. Amount is %d.", earnedAmount)
 		case RSLT_DEV_GET_TEST_ITEMS:
 			respOutput := []handlers.ExecuteRecipeSerialize{}
 			json.Unmarshal(screen.txResult, &respOutput)
@@ -391,8 +391,8 @@ func (screen *GameScreen) TxWaitSituationDesc() string {
 		desc = loud.Sprintf("You are now fighting with troll with %s", formatItem(screen.activeItem))
 	case W8_FIGHT_WOLF:
 		desc = loud.Sprintf("You are now fighting with wolf with %s", formatItem(screen.activeItem))
-	case W8_GET_INITIAL_COIN:
-		desc = loud.Localize("Getting initial gold from pylon")
+	case W8_BUY_GOLD_WITH_PYLONS:
+		desc = loud.Localize("Buying gold with pylon")
 		desc += W8_TO_END
 	case W8_DEV_GET_TEST_ITEMS:
 		desc = loud.Localize("Getting dev test items from pylon")

@@ -115,7 +115,6 @@ func (screen *GameScreen) renderUserCommands() {
 		infoLines = appendSelectGoBackCmds(infoLines)
 	case SEL_HUNT_RABBITS_ITEM:
 		infoLines = append(infoLines, loud.Localize("No item"))
-		infoLines = append(infoLines, loud.Localize("Get I)nitial Coin"))
 		for idx, item := range screen.user.InventorySwords() {
 			infoLines = append(infoLines, fmt.Sprintf("%d) %s", idx+1, formatItem(item)))
 		}

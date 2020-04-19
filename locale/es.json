@@ -39,16 +39,16 @@
     "one": "1) Cazar\n2) Goblin\n3) Wolf\n4) Troll\n5) Giant\n"
   },
   "shop": {
-    "one": "1) Comprar Artículos\n2) Vender Artículos\n3) Mejorar Artículos\n4) Comprar personajes\n"
+    "one": "1) Comprar Artículos\n2) Vender Artículos\n3) Mejorar Artículos\n"
   },
   "pylons central": {
-    "one": "1) Sell Loud from orderbook / Create an order to buy Loud\n2) Buy Loud from orderbook / Create an order to Sell Loud\n3) Sell sword from orderbook / Create an order to buy sword\n4) Buy sword from orderbook / Create an order to sell sword\n5) Sell character from orderbook / Create an order to buy character\n6) Buy character from orderbook / Create an order to sell character\n"
+    "one": "Buy gold with pylons(I)\n1) Buy Characters\n2) Sell Loud from orderbook / Create an order to buy Loud\n3) Buy Loud from orderbook / Create an order to Sell Loud\n4) Sell sword from orderbook / Create an order to buy sword\n5) Buy sword from orderbook / Create an order to sell sword\n6) Sell character from orderbook / Create an order to buy character\n7) Buy character from orderbook / Create an order to sell character\n"
   },
   "settings": {
     "one": "Idioma:\n1) English\n2) Español\n"
   },
   "develop": {
-    "one": "Create cookbook(j)\nSwitch user(z)\nGet initial py)lons\nGet I)nitial Loud Coin\nDevMode Test Items(b)\n"
+    "one": "Create cookbook(j)\nSwitch user(z)\nGet initial py)lons\nDevMode Test Items(b)\n"
   },
   "go to home": {
     "one": "Inicio(H)"
@@ -78,9 +78,6 @@
   },
   "No item": {
     "one": "No Artículo (0)"
-  },
-  "Get I)nitial Coin": {
-    "one": "Obtener la moneda I)nicial"
   },
   "Go) on": {
     "one": "Seguir(O)"
@@ -217,8 +214,8 @@
   "You did fight with giant and earned %d. Detailed result: %+v": {
     "one": "You did fight with giant and earned %d. Detailed result: %+v"
   },
-  "Got initial gold from pylons. Amount is %d.": {
-    "one": "Got initial gold from pylons. Amount is %d."
+  "Bought gold with pylons. Amount is %d.": {
+    "one": "Bought gold with pylons. Amount is %d."
   },
   "You sold %s for gold.": {
     "one": "You sold \"%s\" for %d gold."

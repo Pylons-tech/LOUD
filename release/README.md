@@ -15,8 +15,10 @@
 To test things easily
 
 - Go to Develop (D)
-- Get initial Loud coin (I)
 - Get goblin's ear, troll's toes, wolf's tail (B)
+
+- Go to Pylons Central(C)
+- Buy gold with pylons (I)
 
 - Go to Shop by pressing (S)
 - Go to Buy Items(1)
