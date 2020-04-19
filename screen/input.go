@@ -83,17 +83,24 @@ func (screen *GameScreen) HandleInputKeyPylonsCentralEntryPoint(input termbox.Ev
 
 	tarStusMap := map[string]ScreenStatus{
 		"1": SEL_BUYCHR,
-		"2": SHW_LOUD_BUY_TRDREQS,
-		"3": SHW_LOUD_SELL_TRDREQS,
-		"4": SHW_BUYITM_TRDREQS,
-		"5": SHW_SELLITM_TRDREQS,
-		"6": SHW_BUYCHR_TRDREQS,
-		"7": SHW_SELLCHR_TRDREQS,
+		"2": W8_BUY_GOLD_WITH_PYLONS,
+		"3": SHW_LOUD_BUY_TRDREQS,
+		"4": SHW_LOUD_SELL_TRDREQS,
+		"5": SHW_BUYITM_TRDREQS,
+		"6": SHW_SELLITM_TRDREQS,
+		"7": SHW_BUYCHR_TRDREQS,
+		"8": SHW_SELLCHR_TRDREQS,
 	}
 
 	if newStus, ok := tarStusMap[Key]; ok {
-		screen.scrStatus = newStus
-		screen.FreshRender()
+		if newStus == W8_BUY_GOLD_WITH_PYLONS {
+			screen.RunTxProcess(W8_BUY_GOLD_WITH_PYLONS, RSLT_BUY_GOLD_WITH_PYLONS, func() (string, error) {
+				return loud.BuyGoldWithPylons(screen.user)
+			})
+		} else {
+			screen.scrStatus = newStus
+			screen.FreshRender()
+		}
 		return true
 	} else {
 		return false
@@ -250,10 +257,6 @@ func (screen *GameScreen) HandleFirstClassInputKeys(input termbox.Event) bool {
 	case "Y": // get initial pylons
 		screen.RunTxProcess(W8_GET_PYLONS, RSLT_GET_PYLONS, func() (string, error) {
 			return loud.GetExtraPylons(screen.user)
-		})
-	case "I":
-		screen.RunTxProcess(W8_BUY_GOLD_WITH_PYLONS, RSLT_BUY_GOLD_WITH_PYLONS, func() (string, error) {
-			return loud.BuyGoldWithPylons(screen.user)
 		})
 	case "B": // DEV ITEMS GET (troll toes, goblin ear, wolf tail)
 		screen.RunTxProcess(W8_DEV_GET_TEST_ITEMS, RSLT_DEV_GET_TEST_ITEMS, func() (string, error) {

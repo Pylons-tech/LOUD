@@ -42,7 +42,7 @@
     "one": "1) Comprar Artículos\n2) Vender Artículos\n3) Mejorar Artículos\n"
   },
   "pylons central": {
-    "one": "Buy gold with pylons(I)\n1) Buy Characters\n2) Sell Loud from orderbook / Create an order to buy Loud\n3) Buy Loud from orderbook / Create an order to Sell Loud\n4) Sell sword from orderbook / Create an order to buy sword\n5) Buy sword from orderbook / Create an order to sell sword\n6) Sell character from orderbook / Create an order to buy character\n7) Buy character from orderbook / Create an order to sell character\n"
+    "one": "1) Buy Characters\n2) Buy gold with pylons\n3) Sell Loud from orderbook / Create an order to buy Loud\n4) Buy Loud from orderbook / Create an order to Sell Loud\n5) Sell sword from orderbook / Create an order to buy sword\n6) Buy sword from orderbook / Create an order to sell sword\n7) Sell character from orderbook / Create an order to buy character\n8) Buy character from orderbook / Create an order to sell character\n"
   },
   "settings": {
     "one": "Idioma:\n1) English\n2) Español\n"
