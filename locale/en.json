@@ -1,6 +1,6 @@
 {
-  "block height": {
-    "one": "Block Height"
+  "block height: %d(%d)": {
+    "one": "Block Height: %d(%d)"
   },
   "buy item failed reason": {
     "one": "Buy Item Failure Reason"

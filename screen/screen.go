@@ -647,7 +647,6 @@ func (screen *GameScreen) renderCharacterSheet() {
 	infoLines := []string{
 		centerText(fmt.Sprintf("%v", screen.user.GetUserName()), " ", width),
 		centerText(warning, "─", width),
-		screen.pylonIcon() + fmtFunc(truncateRight(fmt.Sprintf(" %s: %v", "Pylon", screen.user.GetPylonAmount()), width-1)),
 		screen.loudIcon() + fmtFunc(truncateRight(fmt.Sprintf(" %s: %v", loud.Localize("gold"), screen.user.GetGold()), width-1)),
 		screen.drawProgressMeter(HP, MaxHP, 196, bgcolor, 10) + fmtFunc(truncateRight(fmt.Sprintf(" HP: %v/%v", HP, MaxHP), width-10)),
 		// screen.drawProgressMeter(HP, MaxHP, 225, bgcolor, 10) + fmtFunc(truncateRight(fmt.Sprintf(" XP: %v/%v", HP, 10), width-10)),
@@ -674,7 +673,7 @@ func (screen *GameScreen) renderCharacterSheet() {
 		}
 		infoLines = append(infoLines, characterInfo)
 	}
-	infoLines = append(infoLines, centerText(" ❦ ", "─", width))
+	infoLines = append(infoLines, centerText(" pylons network status ", "─", width))
 
 	for index, line := range infoLines {
 		io.WriteString(os.Stdout, fmt.Sprintf("%s%s", cursor.MoveTo(2+index, x), fmtFunc(line)))
@@ -684,11 +683,14 @@ func (screen *GameScreen) renderCharacterSheet() {
 	}
 
 	nodeLines := []string{
-		centerText(loud.Sprintf("pylons network status [Copy to Clipboard(L)]"), " ", width),
-		centerText(screen.user.GetLastTransaction(), " ", width),
+		screen.pylonIcon() + fmtFunc(truncateRight(fmt.Sprintf(" %s: %v", "Pylon", screen.user.GetPylonAmount()), width-1)),
 	}
 
-	blockHeightText := centerText(loud.Sprintf("block height: %d(%d)", screen.blockHeight, screen.fakeBlockHeight), " ", width)
+	if len(screen.user.GetLastTransaction()) > 0 {
+		nodeLines = append(nodeLines, loud.Sprintf("Last Tx: %s 📋(L)", truncateRight(screen.user.GetLastTransaction(), 32)))
+	}
+
+	blockHeightText := loud.Sprintf("block height: %d(%d)", screen.blockHeight, screen.fakeBlockHeight)
 	if screen.syncingData {
 		nodeLines = append(nodeLines, screen.blueBoldFont()(blockHeightText))
 	} else {
