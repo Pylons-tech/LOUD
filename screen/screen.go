@@ -624,12 +624,11 @@ func (screen *GameScreen) renderCharacterSheet() {
 	}
 
 	characters := screen.user.InventoryCharacters()
-	dfc := screen.user.GetDefaultCharacterIndex()
-	if dfc >= 0 && dfc < len(characters) {
-		DFC := characters[dfc]
-		HP = uint64(DFC.HP)
-		MaxHP = uint64(DFC.MaxHP)
-		HP = min(HP+screen.BlockSince(DFC.LastUpdate), MaxHP)
+	dfc := screen.user.GetDefaultCharacter()
+	if dfc != nil {
+		HP = uint64(dfc.HP)
+		MaxHP = uint64(dfc.MaxHP)
+		HP = min(HP+screen.BlockSince(dfc.LastUpdate), MaxHP)
 	}
 	bgcolor := uint64(bgcolor)
 	warning := ""

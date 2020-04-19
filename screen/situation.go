@@ -26,6 +26,21 @@ func (screen *GameScreen) renderUserSituation() {
 			loud.DEVELOP:  loud.Localize("develop desc"),
 		}
 		desc = locationDescMap[screen.user.GetLocation()]
+		if screen.user.GetLocation() == loud.HOME {
+			dfc := screen.user.GetDefaultCharacter()
+			if dfc == nil {
+				desc = loud.Localize("home desc without character")
+			} else if screen.user.GetPylonAmount() == 0 {
+				desc = loud.Localize("home desc without pylon")
+			} else {
+				HP := uint64(dfc.HP)
+				MaxHP := uint64(dfc.MaxHP)
+				HP = min(HP+screen.BlockSince(dfc.LastUpdate), MaxHP)
+				if float32(HP) < float32(MaxHP)*.25 {
+					desc = loud.Localize("home desc with low HP")
+				}
+			}
+		}
 	case SHW_LOUD_BUY_TRDREQS:
 		infoLines = screen.renderTRTable(loud.BuyTrdReqs)
 	case SHW_LOUD_SELL_TRDREQS:

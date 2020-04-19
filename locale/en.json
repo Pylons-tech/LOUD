@@ -88,6 +88,15 @@
   "home desc": {
     "one": "You are now at home.\nIf you like to hunt something go to forest.\nAnd if you like to buy/sell something go to shop."
   },
+  "home desc without pylon": {
+    "one": "You don't have pylon within account.\nTo buy characters, you need to purchase pylons or sell existing characters/items on market to get pylons."
+  },
+  "home desc without character": {
+    "one": "You don't have any character yet.\nYou can buy one from market or at the shop"
+  },
+  "home desc with low HP": {
+    "one": "Your character's health is very low.\nYou can restore health by spending loud or just doing rest for few mins."
+  },
   "forest desc": {
     "one": "You are now at forest.\nYou can hunt here or go back to home."
   },
