@@ -212,11 +212,18 @@ func (screen *GameScreen) MoveToPrevStep() {
 		CR8_BUYCHR_TRDREQ_SEL_CHR:       SHW_BUYCHR_TRDREQS,
 		CR8_BUYCHR_TRDREQ_ENT_PYLVAL:    CR8_BUYCHR_TRDREQ_SEL_CHR,
 	}
+
+	nxtStatus := SHW_LOCATION
 	if nextStatus, ok := prevMapper[screen.scrStatus]; ok {
-		screen.scrStatus = nextStatus
-	} else {
-		screen.scrStatus = SHW_LOCATION
+		nxtStatus = nextStatus
 	}
+
+	// move to home if it's somewhere else's 1st step
+	if nxtStatus == SHW_LOCATION && screen.scrStatus == SHW_LOCATION {
+		screen.user.SetLocation(loud.HOME)
+	}
+
+	screen.scrStatus = nxtStatus
 	screen.FreshRender()
 }
 
@@ -257,9 +264,6 @@ func (screen *GameScreen) HandleFirstClassInputKeys(input termbox.Event) bool {
 		clipboard.WriteAll(screen.user.GetLastTransaction())
 	case "E": // REFRESH
 		screen.Resync()
-		return true
-	case "C": // CANCEL, GO BACK
-		screen.MoveToPrevStep()
 		return true
 	default:
 		return false

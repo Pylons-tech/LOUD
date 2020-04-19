@@ -5,7 +5,7 @@ import "strings"
 type ScreenStatus string
 
 const (
-	SHW_LOCATION = "SHW_LOCATION"
+	SHW_LOCATION ScreenStatus = "SHW_LOCATION"
 	// at home
 	SEL_DEFAULT_CHAR  = "SEL_DEFAULT_CHAR"
 	RSLT_SEL_DEF_CHAR = "RSLT_SEL_DEF_CHAR"
