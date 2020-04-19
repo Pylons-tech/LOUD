@@ -3,28 +3,28 @@
     "one": "Block Height"
   },
   "buy item failed reason": {
-    "one": "Buy Item Failed Reason"
+    "one": "Buy Item Failure Reason"
   },
   "buy character failed reason": {
-    "one": "Buy Character Failed Reason"
+    "one": "Buy Character Failure Reason"
   },
   "hunt failed reason": {
-    "one": "Hunt Failed Reason"
+    "one": "Hunt Failure Reason"
   },
   "sell failed reason": {
-    "one": "Sell Failed Reason"
+    "one": "Sell Failure Reason"
   },
   "upgrade failed reason": {
-    "one": "Upgrade Failed Reason"
+    "one": "Upgrade Failure Reason"
   },
   "Recipe Name does not exist!": {
     "one": "Recipe Name does not exist!"
   },
   "You are trying to buy item which is not in shop": {
-    "one": "You are trying to buy item which is not in shop"
+    "one": "You are trying to buy an item which is not in the shop"
   },
   "You are trying to buy character which is not in shop": {
-    "one": "You are trying to buy character which is not in shop"
+    "one": "You are trying to buy a character which is not in the shop"
   },
   "You don't have enough gold to buy this item": {
     "one": "You don't have enough gold to buy this item"
@@ -33,10 +33,10 @@
     "one": "You don't have enough gold to upgrade this item"
   },
   "home": {
-    "one": "1) Select default character\n2) Select default weapon\n3) Restore character health\n"
+    "one": "1) Select active character\n2) Select active weapon\n3) Restore character health\n"
   },
   "forest": {
-    "one": "1) Hunt\n2) Goblin\n3) Wolf\n4) Troll\n5) Giant\n"
+    "one": "1) Rabbit\n2) Goblin\n3) Wolf\n4) Troll\n5) Giant\n"
   },
   "shop": {
     "one": "1) Buy Items\n2) Sell Items\n3) Upgrade Items\n4) Buy Characters\n"
@@ -149,7 +149,7 @@
     "one": "You are now hunting with \"%s\"."
   },
   "You are now hunting without weapon": {
-    "one": "You are now hunting without weapon."
+    "one": "You are now hunting rabbits."
   },
   "You are now fighting with giant with %s": {
     "one": "You are now fighting with giant with \"%s\"\n"
