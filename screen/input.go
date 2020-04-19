@@ -13,6 +13,7 @@ import (
 )
 
 func (screen *GameScreen) HandleInputKey(input termbox.Event) {
+	screen.actionText = ""
 	if screen.IsWaitScreen() {
 		return
 	}
@@ -48,12 +49,16 @@ func (screen *GameScreen) HandleInputKeyLocationSwitch(input termbox.Event) bool
 	}
 
 	if newStus, ok := tarLctMap[Key]; ok {
-		screen.user.SetLocation(newStus)
-		screen.FreshRender()
-		return true
-	} else {
-		return false
+		if newStus == loud.FOREST && screen.user.GetDefaultCharacter() == nil {
+			screen.actionText = "You can't go to forest without character"
+			screen.FreshRender()
+		} else {
+			screen.user.SetLocation(newStus)
+			screen.FreshRender()
+			return true
+		}
 	}
+	return false
 }
 func (screen *GameScreen) HandleInputKeyHomeEntryPoint(input termbox.Event) bool {
 	Key := string(input.Ch)

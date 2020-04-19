@@ -54,6 +54,7 @@ type GameScreen struct {
 	activeItemTrdReq interface{}
 	pylonEnterValue  string
 	loudEnterValue   string
+	actionText       string
 	inputText        string
 	syncingData      bool
 	blockHeight      int64
@@ -603,8 +604,11 @@ func (screen *GameScreen) renderInputValue() {
 	}
 
 	fixedChat := truncateLeft(screen.inputText, int(inputWidth))
-
 	inputText := fmt.Sprintf("%s%s%s", move, chat, chatFunc(fmt.Sprintf(fmtString, fixedChat)))
+
+	if !screen.InputActive() {
+		inputText = fmt.Sprintf("%s%s", move, chatFunc(screen.actionText))
+	}
 
 	io.WriteString(os.Stdout, inputText)
 }
