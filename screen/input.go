@@ -346,6 +346,7 @@ func (screen *GameScreen) HandleThirdClassInputKeys(input termbox.Event) bool {
 			case SHW_BUYCHR_TRDREQS:
 				screen.scrStatus = CR8_BUYCHR_TRDREQ_SEL_CHR
 			}
+			screen.inputText = ""
 			screen.FreshRender()
 			return true
 		}

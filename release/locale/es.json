@@ -1,6 +1,6 @@
 {
-  "block height": {
-    "one": "Altura del bloque"
+  "block height: %d(%d)": {
+    "one": "Altura del bloque: %d(%d)"
   },
   "buy item failed reason": {
     "one": "Razón de compra fallida"
@@ -39,16 +39,16 @@
     "one": "1) Cazar\n2) Goblin\n3) Wolf\n4) Troll\n5) Giant\n"
   },
   "shop": {
-    "one": "1) Comprar Artículos\n2) Vender Artículos\n3) Mejorar Artículos\n4) Comprar personajes\n"
+    "one": "1) Comprar Artículos\n2) Vender Artículos\n3) Mejorar Artículos\n"
   },
   "pylons central": {
-    "one": "1) Sell Loud from orderbook / Create an order to buy Loud\n2) Buy Loud from orderbook / Create an order to Sell Loud\n3) Sell sword from orderbook / Create an order to buy sword\n4) Buy sword from orderbook / Create an order to sell sword\n5) Sell character from orderbook / Create an order to buy character\n6) Buy character from orderbook / Create an order to sell character\n"
+    "one": "1) Buy Characters\n2) Buy gold with pylons\n3) Sell Loud from orderbook / Create an order to buy Loud\n4) Buy Loud from orderbook / Create an order to Sell Loud\n5) Sell sword from orderbook / Create an order to buy sword\n6) Buy sword from orderbook / Create an order to sell sword\n7) Sell character from orderbook / Create an order to buy character\n8) Buy character from orderbook / Create an order to sell character\n"
   },
   "settings": {
     "one": "Idioma:\n1) English\n2) Español\n"
   },
   "develop": {
-    "one": "Create cookbook(j)\nSwitch user(z)\nGet initial py)lons\nGet I)nitial Loud Coin\nDevMode Test Items(b)\n"
+    "one": "Create cookbook(j)\nSwitch user(z)\nGet initial py)lons\nDevMode Test Items(b)\n"
   },
   "go to home": {
     "one": "Inicio(H)"
@@ -214,8 +214,8 @@
   "You did fight with giant and earned %d. Detailed result: %+v": {
     "one": "You did fight with giant and earned %d. Detailed result: %+v"
   },
-  "Got initial gold from pylons. Amount is %d.": {
-    "one": "Got initial gold from pylons. Amount is %d."
+  "Bought gold with pylons. Amount is %d.": {
+    "one": "Bought gold with pylons. Amount is %d."
   },
   "You sold %s for gold.": {
     "one": "You sold \"%s\" for %d gold."

@@ -18,14 +18,19 @@ To test things easily
 - Get goblin's ear, troll's toes, wolf's tail (B)
 
 - Go to Pylons Central(C)
-- Buy gold with pylons (I)
+- Go to buy character (1)
+- Buy Tiger character using (1)
+- Go back to Pylons Central Entry point by pressing Backspace
+- Buy gold with pylons (2)
 
 - Go to Shop by pressing (S)
 - Go to Buy Items(1)
 - Buy all the swords by pressing (1-5)
-- Go back to Shop Entry point by pressing(C)
-- Go to Buy character(4)
-- Buy Tiger character(1)
+
+- Go to Home (H)
+- Go to room for updating character's name (4)
+- Select character to rename (arrow keys | number)
+- Enter new name and press Enter key
 
 To sell item (wooden sword and copper sword) and upgrade item (wooden sword and copper sword) can be tested under shop.
 
