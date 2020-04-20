@@ -7,6 +7,7 @@ import (
 	"strconv"
 	"time"
 
+	pylonSDK "github.com/Pylons-tech/pylons/cmd/test"
 	"github.com/Pylons-tech/pylons/x/pylons/msgs"
 	"github.com/Pylons-tech/pylons/x/pylons/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -52,8 +53,8 @@ func GetExtraPylons(user User) (string, error) {
 	return SendTxMsg(user, extraPylonsMsg)
 }
 
-func GetInitialCoin(user User) (string, error) {
-	rcpName := "LOUD's get initial coin recipe"
+func BuyGoldWithPylons(user User) (string, error) {
+	rcpName := "LOUD's buy gold with pylons recipe"
 	itemIDs := []string{}
 
 	return ExecuteRecipe(user, rcpName, itemIDs)
@@ -73,20 +74,20 @@ func RestoreHealth(user User, char Character) (string, error) {
 	return ExecuteRecipe(user, rcpName, itemIDs)
 }
 
-func Hunt(user User, item Item) (string, error) {
+func HuntRabbits(user User, item Item) (string, error) {
 
 	defaultCharacter := user.GetDefaultCharacter()
 	defaultCharacterID := ""
 	if defaultCharacter != nil {
 		defaultCharacterID = defaultCharacter.ID
 	} else {
-		return "", errors.New("character is required to hunt!")
+		return "", errors.New("character is required to hunt rabbits!")
 	}
-	rcpName := "LOUD's hunt without sword recipe"
+	rcpName := "LOUD's hunt rabbits without sword recipe"
 	itemIDs := []string{defaultCharacterID}
 
 	if item.IsSword() {
-		rcpName = "LOUD's hunt with a sword recipe"
+		rcpName = "LOUD's hunt rabbits with a sword recipe"
 		itemIDs = []string{defaultCharacterID, item.ID}
 	}
 
@@ -149,18 +150,30 @@ func FightGiant(user User, item Item) (string, error) {
 	return ExecuteRecipe(user, rcpName, itemIDs)
 }
 
-func BuyCharacter(user User, item Character) (string, error) {
+func BuyCharacter(user User, ch Character) (string, error) {
 	rcpName := ""
-	switch item.Name {
+	switch ch.Name {
 	case TIGER_CHR:
 		rcpName = "LOUD's Get Character recipe"
 	default:
 		return "", errors.New("You are trying to buy character which is not in shop")
 	}
-	if item.Price > user.GetPylonAmount() {
+	if ch.Price > user.GetPylonAmount() {
 		return "", errors.New("You don't have enough pylon to buy this character")
 	}
 	return ExecuteRecipe(user, rcpName, []string{})
+}
+
+func RenameCharacter(user User, ch Character, newName string) (string, error) {
+	t := GetTestingT()
+	addr := pylonSDK.GetAccountAddr(user.GetUserName(), nil)
+	sdkAddr, _ := sdk.AccAddressFromBech32(addr)
+	renameMsg := msgs.NewMsgUpdateItemString(ch.ID, "Name", newName, sdkAddr)
+	log.Println("started sending transaction", user.GetUserName(), renameMsg)
+	txhash := pylonSDK.TestTxWithMsgWithNonce(t, renameMsg, user.GetUserName(), false)
+	user.SetLastTransaction(txhash)
+	log.Println("ended sending transaction")
+	return txhash, nil
 }
 
 func Buy(user User, item Item) (string, error) {

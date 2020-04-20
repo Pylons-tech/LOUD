@@ -102,14 +102,14 @@ Output: `attack * (randi(2)+20)` loudcoin
 Input: Any item which has `attack` and `level` attributes
 ```
 
-### Hunt recipe without sword
+### Hunt rabbits recipe without sword
 ```
 Reward: 1 or 2
 Character die percent: 10%
 When character die, no gold is returned.
 ```
 
-### Hunt recipe with a sword
+### Hunt rabbits recipe with a sword
 
 ```
 Reward: 1 + `attack / 2`
@@ -206,5 +206,5 @@ Price: 10 loudcoin
 
 If HP is bigger than MaxHP, it is set to MaxHP automatically.
 
-Warn: When a character fight or hunt, automatic health increaser just work to restore the health gained during relax.
+Warn: When a character fight or hunt rabbits, automatic health increaser just work to restore the health gained during relax.
 For every block, the HP is increased by +1.

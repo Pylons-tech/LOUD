@@ -1,5 +1,5 @@
 {
-    "ID": "LOUD-get-initial-coin-recipe-v0.0.1-1579652622",
+    "ID": "LOUD-buy-gold-from-pylons-recipe-v0.0.1-1579652622",
     "CoinInputs":[{
         "Coin": "pylon",
         "Count": "100"
@@ -20,7 +20,7 @@
     ],
     "ExtraInfo":"",
     "Sender":"eugen",
-    "Name": "LOUD's get initial coin recipe",
+    "Name": "LOUD's buy gold with pylons recipe",
     "CookbookName": "Legend of Undead Dragon",
     "Description": "this recipe is used to get enough coins to test game.",
     "BlockInterval":"0"

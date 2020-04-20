@@ -6,13 +6,14 @@ const (
 	HOME UserLocation = iota
 	FOREST
 	SHOP
-	MARKET
+	PYLCNTRL
 	SETTINGS
 	DEVELOP
 )
 
 // User represents an active user in the system.
 type User interface {
+	SetAddress(string)
 	SetGold(int)
 	SetPylonAmount(int)
 	SetItems([]Item)
@@ -22,8 +23,8 @@ type User interface {
 	SetLocation(UserLocation)
 	SetLastTransaction(string)
 	SetLatestBlockHeight(int64)
-	GetLatestBlockHeight() int64
 	InventoryItems() []Item
+	HasPreItemForAnItem(Item) bool
 	InventoryItemIDByName(string) string
 	InventoryIronSwords() []Item
 	InventorySwords() []Item
@@ -35,10 +36,12 @@ type User interface {
 	GetDefaultItemIndex() int
 	GetDefaultCharacterIndex() int
 	GetDefaultCharacter() *Character
+	GetAddress() string
 	GetGold() int
 	GetPylonAmount() int
 	GetUserName() string
 	GetLastTransaction() string
+	GetLatestBlockHeight() int64
 	Reload()
 	Save()
 }

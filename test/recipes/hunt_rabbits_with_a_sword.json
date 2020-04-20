@@ -1,5 +1,5 @@
 {
-    "ID": "LOUD-hunt-with-a-sword-recipe-v0.0.0-1583631194",
+    "ID": "LOUD-hunt-rabbits-with-a-sword-recipe-v0.0.0-1583631194",
     "CoinInputs":[],
     "ItemInputRefs":[
         "./recipes/item_input/character.json",
@@ -14,7 +14,7 @@
             {
                 "ModifyItem": {
                     "ItemInputRef": 0,
-                    "ModifyParamsRef": "./recipes/upgrader/character_after_hunt.json"
+                    "ModifyParamsRef": "./recipes/upgrader/character_after_hunting_rabbits.json"
                 }
             },
             {
@@ -40,8 +40,8 @@
     ],
     "ExtraInfo":"",
     "Sender":"eugen",
-    "Name": "LOUD's hunt with a sword recipe",
+    "Name": "LOUD's hunt rabbits with a sword recipe",
     "CookbookName": "Legend of Undead Dragon",
-    "Description": "this recipe is used to hunt with a sword.",
+    "Description": "this recipe is used to hunt rabbits with a sword.",
     "BlockInterval":"0"
 }

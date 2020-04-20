@@ -21,11 +21,26 @@ func (screen *GameScreen) renderUserSituation() {
 			loud.HOME:     loud.Localize("home desc"),
 			loud.FOREST:   loud.Localize("forest desc"),
 			loud.SHOP:     loud.Localize("shop desc"),
-			loud.MARKET:   loud.Localize("market desc"),
+			loud.PYLCNTRL: loud.Localize("pylons central desc"),
 			loud.SETTINGS: loud.Localize("settings desc"),
 			loud.DEVELOP:  loud.Localize("develop desc"),
 		}
 		desc = locationDescMap[screen.user.GetLocation()]
+		if screen.user.GetLocation() == loud.HOME {
+			dfc := screen.user.GetDefaultCharacter()
+			if dfc == nil {
+				desc = loud.Localize("home desc without character")
+			} else if screen.user.GetPylonAmount() == 0 {
+				desc = loud.Localize("home desc without pylon")
+			} else {
+				HP := uint64(dfc.HP)
+				MaxHP := uint64(dfc.MaxHP)
+				HP = min(HP+screen.BlockSince(dfc.LastUpdate), MaxHP)
+				if float32(HP) < float32(MaxHP)*.25 {
+					desc = loud.Localize("home desc with low HP")
+				}
+			}
+		}
 	case SHW_LOUD_BUY_TRDREQS:
 		infoLines = screen.renderTRTable(loud.BuyTrdReqs)
 	case SHW_LOUD_SELL_TRDREQS:
@@ -56,6 +71,8 @@ func (screen *GameScreen) renderUserSituation() {
 		desc = "Please enter pylon amount to get (should be integer value)" // TODO should add Localize
 	case CR8_BUY_LOUD_TRDREQ_ENT_LUDVAL:
 		desc = "Please enter loud amount to buy (should be integer value)" // TODO should add Localize
+	case RENAME_CHAR_ENT_NEWNAME:
+		desc = "Please enter new character's name - it's costing pylons per letter."
 	case CR8_SELL_LOUD_TRDREQ_ENT_LUDVAL:
 		desc = "Please enter loud amount to sell (should be integer value)" // TODO should add Localize
 	case CR8_SELLITM_TRDREQ_SEL_ITEM:
@@ -78,6 +95,8 @@ func (screen *GameScreen) renderUserSituation() {
 		infoLines = screen.renderITTable("Please select default character", "Character", screen.user.InventoryCharacters())
 	case SEL_HEALTH_RESTORE_CHAR:
 		infoLines = screen.renderITTable("Please select character to restore health", "Character", screen.user.InventoryCharacters())
+	case SEL_RENAME_CHAR:
+		infoLines = screen.renderITTable("Please select character to rename", "Character", screen.user.InventoryCharacters())
 	case SEL_DEFAULT_WEAPON:
 		infoLines = screen.renderITTable("Please select default weapon", "Item", screen.user.InventorySwords())
 	case SEL_BUYITM:
@@ -86,8 +105,8 @@ func (screen *GameScreen) renderUserSituation() {
 		infoLines = screen.renderITTable("select buy character desc", "Character", loud.ShopCharacters)
 	case SEL_SELLITM:
 		infoLines = screen.renderITTable("select sell item desc", "Item", screen.user.InventorySellableItems())
-	case SEL_HUNT_ITEM:
-		infoLines = screen.renderITTable("select hunt item desc", "Item", screen.user.InventorySwords())
+	case SEL_HUNT_RABBITS_ITEM:
+		infoLines = screen.renderITTable("select hunt rabbits item desc", "Item", screen.user.InventorySwords())
 	case SEL_FIGHT_GOBLIN_ITEM:
 		infoLines = screen.renderITTable("select fight goblin item desc", "Item", screen.user.InventorySwords())
 	case SEL_FIGHT_WOLF_ITEM:
@@ -135,11 +154,12 @@ func (screen *GameScreen) TxResultSituationDesc() string {
 		RSLT_SELL_LOUD_TRDREQ_CREATION: "loud sell request creation",
 		RSLT_SEL_DEF_CHAR:              "selecting default character",
 		RSLT_HEALTH_RESTORE_CHAR:       "selecting character to restore health",
+		RSLT_RENAME_CHAR:               "renaming character",
 		RSLT_SEL_DEF_WEAPON:            "selecting default weapon",
 		RSLT_BUYITM:                    "buy item",
 		RSLT_BUYCHR:                    "buy character",
-		RSLT_HUNT:                      "hunt",
-		RSLT_GET_INITIAL_COIN:          "get initial coin",
+		RSLT_HUNT_RABBITS:              "hunt rabbits",
+		RSLT_BUY_GOLD_WITH_PYLONS:      "buy gold with pylons",
 		RSLT_GET_PYLONS:                "get pylon",
 		RSLT_SWITCH_USER:               "switch user",
 		RSLT_CREATE_COOKBOOK:           "create cookbook",
@@ -171,6 +191,8 @@ func (screen *GameScreen) TxResultSituationDesc() string {
 			desc = loud.Localize("You have successfully set default character!")
 		case RSLT_HEALTH_RESTORE_CHAR:
 			desc = loud.Localize("You have successfully restored character's health!")
+		case RSLT_RENAME_CHAR:
+			desc = loud.Sprintf("You have successfully updated character's name to %s!", screen.inputText)
 		case RSLT_SEL_DEF_WEAPON:
 			desc = loud.Localize("You have successfully set default weapon!")
 		case RSLT_BUYITM:
@@ -181,7 +203,7 @@ func (screen *GameScreen) TxResultSituationDesc() string {
 			desc = loud.Sprintf("You have bought %s from the shop", formatCharacter(screen.activeCharacter))
 			desc += "\n"
 			desc += loud.Localize("Please use it for hunting")
-		case RSLT_HUNT:
+		case RSLT_HUNT_RABBITS:
 			respOutput := []handlers.ExecuteRecipeSerialize{}
 			earnedAmount := int64(0)
 			json.Unmarshal(screen.txResult, &respOutput)
@@ -189,7 +211,7 @@ func (screen *GameScreen) TxResultSituationDesc() string {
 				earnedAmount = respOutput[0].Amount
 			}
 			resultTexts := []string{"gold", "character", "weapon"}
-			desc = loud.Sprintf("You did hunt animals and earned %d. Detailed result: %+v", earnedAmount, resultTexts[:len(respOutput)])
+			desc = loud.Sprintf("You did hunt rabbits and earned %d. Detailed result: %+v", earnedAmount, resultTexts[:len(respOutput)])
 			switch len(respOutput) {
 			case 0:
 				desc += "\nYour character is dead during hunt accidently"
@@ -264,14 +286,14 @@ func (screen *GameScreen) TxResultSituationDesc() string {
 			case 2:
 				desc += "\nYou have lost your weapon accidently"
 			}
-		case RSLT_GET_INITIAL_COIN:
+		case RSLT_BUY_GOLD_WITH_PYLONS:
 			respOutput := []handlers.ExecuteRecipeSerialize{}
 			json.Unmarshal(screen.txResult, &respOutput)
 			earnedAmount := int64(0)
 			if len(respOutput) > 0 {
 				earnedAmount = respOutput[0].Amount
 			}
-			desc = loud.Sprintf("Got initial gold from pylons. Amount is %d.", earnedAmount)
+			desc = loud.Sprintf("Bought gold with pylons. Amount is %d.", earnedAmount)
 		case RSLT_DEV_GET_TEST_ITEMS:
 			respOutput := []handlers.ExecuteRecipeSerialize{}
 			json.Unmarshal(screen.txResult, &respOutput)
@@ -340,6 +362,8 @@ func (screen *GameScreen) TxWaitSituationDesc() string {
 	desc := ""
 	W8_TO_END := "\n" + loud.Localize("Please wait for a moment to finish the process")
 	switch screen.scrStatus {
+	case W8_RENAME_CHAR:
+		desc = loud.Sprintf("You are now waiting to rename character from %s to %s.", screen.activeCharacter.Name, screen.inputText)
 	case W8_BUY_LOUD_TRDREQ_CREATION:
 		desc = loud.Localize("You are now waiting for loud buy request creation")
 		desc += screen.buyLoudDesc(screen.loudEnterValue, screen.pylonEnterValue)
@@ -352,11 +376,11 @@ func (screen *GameScreen) TxWaitSituationDesc() string {
 	case W8_BUYCHR:
 		desc = loud.Sprintf("You are now buying %s at the shop", formatCharacter(screen.activeCharacter))
 		desc += W8_TO_END
-	case W8_HUNT:
+	case W8_HUNT_RABBITS:
 		if len(screen.activeItem.Name) > 0 {
-			desc = loud.Sprintf("You are now hunting with %s", formatItem(screen.activeItem))
+			desc = loud.Sprintf("You are now hunting rabbits with %s", formatItem(screen.activeItem))
 		} else {
-			desc = loud.Localize("You are now hunting without weapon")
+			desc = loud.Sprintf("You are now hunting rabbits without weapon")
 		}
 		desc += W8_TO_END
 	case W8_FIGHT_GIANT:
@@ -367,8 +391,8 @@ func (screen *GameScreen) TxWaitSituationDesc() string {
 		desc = loud.Sprintf("You are now fighting with troll with %s", formatItem(screen.activeItem))
 	case W8_FIGHT_WOLF:
 		desc = loud.Sprintf("You are now fighting with wolf with %s", formatItem(screen.activeItem))
-	case W8_GET_INITIAL_COIN:
-		desc = loud.Localize("Getting initial gold from pylon")
+	case W8_BUY_GOLD_WITH_PYLONS:
+		desc = loud.Localize("Buying gold with pylon")
 		desc += W8_TO_END
 	case W8_DEV_GET_TEST_ITEMS:
 		desc = loud.Localize("Getting dev test items from pylon")
@@ -409,24 +433,26 @@ func (screen *GameScreen) TxWaitSituationDesc() string {
 		desc += screen.buyItemDesc(request.TItem, fmt.Sprintf("%d", request.Price))
 	case W8_FULFILL_SELLCHR_TRDREQ:
 		request := screen.activeItemTrdReq.(loud.CharacterSellTrdReq)
-		desc = loud.Localize("you are now buying character ") + fmt.Sprintf(" at %d.\n", request.Price)
+		desc = loud.Sprintf("you are now buying character at %d.", request.Price)
 		desc += screen.buyCharacterDesc(request.TCharacter, fmt.Sprintf("%d", request.Price))
 	case W8_FULFILL_BUYITM_TRDREQ:
 		request := screen.activeItemTrdReq.(loud.ItemBuyTrdReq)
-		desc = loud.Localize("you are now selling item ") + fmt.Sprintf(" at %d.\n", request.Price)
+		desc = loud.Sprintf("you are now selling item at %d.", request.Price)
 		desc += screen.sellItemSpecDesc(request.TItem, fmt.Sprintf("%d", request.Price))
 	case W8_FULFILL_BUYCHR_TRDREQ:
 		request := screen.activeItemTrdReq.(loud.CharacterBuyTrdReq)
-		desc = loud.Localize("you are now selling character ") + fmt.Sprintf(" at %d.\n", request.Price)
+		desc = loud.Sprintf("you are now selling character at %d.", request.Price)
 		desc += screen.sellCharacterSpecDesc(request.TCharacter, fmt.Sprintf("%d", request.Price))
 	case W8_FULFILL_BUY_LOUD_TRDREQ:
 		request := screen.activeTrdReq
-		desc = loud.Localize("you are now selling loud for pylon") + fmt.Sprintf(" at %.4f.\n", request.Price)
+		desc = loud.Sprintf("you are now selling loud for pylon at %.4f.", request.Price)
 		desc += screen.sellLoudDesc(request.Amount, request.Total)
 	case W8_FULFILL_SELL_LOUD_TRDREQ:
 		request := screen.activeTrdReq
-		desc = loud.Localize("you are now buying loud from pylon") + fmt.Sprintf(" at %.4f.\n", request.Price)
+		desc = loud.Sprintf("you are now buying loud from pylon at %.4f.", request.Price)
 		desc += screen.buyLoudDesc(request.Amount, request.Total)
 	}
-	return desc
+	desc += "\n"
+	onColor := screen.colorFunc(fmt.Sprintf("%v+B:%v", 117, bgcolor))
+	return desc + onColor("......")
 }

@@ -15,20 +15,27 @@
 To test things easily
 
 - Go to Develop (D)
-- Get initial Loud coin (I)
 - Get goblin's ear, troll's toes, wolf's tail (B)
+
+- Go to Pylons Central(C)
+- Go to buy character (1)
+- Buy Tiger character using (1)
+- Go back to Pylons Central Entry point by pressing Backspace
+- Buy gold with pylons (2)
 
 - Go to Shop by pressing (S)
 - Go to Buy Items(1)
 - Buy all the swords by pressing (1-5)
-- Go back to Shop Entry point by pressing(C)
-- Go to Buy character(4)
-- Buy Tiger character(1)
+
+- Go to Home (H)
+- Go to room for updating character's name (4)
+- Select character to rename (arrow keys | number)
+- Enter new name and press Enter key
 
 To sell item (wooden sword and copper sword) and upgrade item (wooden sword and copper sword) can be tested under shop.
 
 After that can go to Forest (F)
-In forest, you can try to hunt(1), Fight Goblin, Wolf, Troll or Giant(2-5)
+In forest, you can try to Hunt Rabbits(1), Fight Goblin, Wolf, Troll or Giant(2-5)
 To fight Giant, you need to carry iron sword.
 To fight other monsters, need to carry at least 1 sword.
 
@@ -39,4 +46,4 @@ Health restore status is updated every 10s.
 So if you want to increase health, you can just wait for few mins to restore health.
 Or you can spend pylon to instantly restore health at Home(H) by pressing 3) Restore health.
 
-If you want to trade with items and coins, you can just create an order under Market(M) or just fulfill the order.
+If you want to trade with items and coins, you can just create an order or just fulfill the order under Pylons Central(M).

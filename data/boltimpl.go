@@ -71,6 +71,7 @@ type UserData struct {
 	Gold                  int
 	PylonAmount           int
 	Username              string `json:""`
+	Address               string
 	Location              UserLocation
 	Items                 []Item
 	DefaultItemIndex      int
@@ -140,6 +141,14 @@ func (user *dbUser) Save() {
 	})
 }
 
+func (user *dbUser) GetAddress() string {
+	return user.UserData.Address
+}
+
+func (user *dbUser) SetAddress(addr string) {
+	user.UserData.Address = addr
+}
+
 func (user *dbUser) GetUserName() string {
 	return user.UserData.Username
 }
@@ -193,6 +202,16 @@ func (user *dbUser) GetDefaultCharacter() *Character {
 
 func (user *dbUser) InventoryItems() []Item {
 	return user.UserData.Items
+}
+
+func (user *dbUser) HasPreItemForAnItem(item Item) bool {
+	if len(item.PreItem) == 0 {
+		return true
+	}
+	if len(user.InventoryItemIDByName(item.PreItem)) != 0 {
+		return true
+	}
+	return false
 }
 
 func (user *dbUser) InventoryItemIDByName(name string) string {

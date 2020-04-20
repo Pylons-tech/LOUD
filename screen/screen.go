@@ -6,7 +6,6 @@ import (
 	"log"
 	"math"
 	"os"
-	"strconv"
 	"strings"
 	"time"
 	"unicode/utf8"
@@ -30,12 +29,13 @@ const bgcolor = 232
 // Screen represents a UI screen.
 type Screen interface {
 	SaveGame()
-	UpdateBlockHeight(int64)
+	UpdateFakeBlockHeight(int64)
 	SetScreenSize(int, int)
 	HandleInputKey(termbox.Event)
 	GetScreenStatus() ScreenStatus
 	SetScreenStatus(ScreenStatus)
 	GetTxFailReason() string
+	FakeSync()
 	Resync()
 	Render()
 	Reset()
@@ -54,9 +54,11 @@ type GameScreen struct {
 	activeItemTrdReq interface{}
 	pylonEnterValue  string
 	loudEnterValue   string
+	actionText       string
 	inputText        string
 	syncingData      bool
 	blockHeight      int64
+	fakeBlockHeight  int64
 	txFailReason     string
 	txResult         []byte
 	refreshed        bool
@@ -99,6 +101,11 @@ func (screen *GameScreen) Resync() {
 	}()
 }
 
+func (screen *GameScreen) FakeSync() {
+	screen.UpdateFakeBlockHeight(screen.fakeBlockHeight + 1)
+	screen.FreshRender()
+}
+
 func (screen *GameScreen) GetTxFailReason() string {
 	return screen.txFailReason
 }
@@ -119,18 +126,23 @@ func (screen *GameScreen) SaveGame() {
 	screen.user.Save()
 }
 
-func (screen *GameScreen) UpdateBlockHeight(blockHeight int64) {
-	screen.blockHeight = blockHeight
+func (screen *GameScreen) UpdateFakeBlockHeight(h int64) {
+	screen.fakeBlockHeight = h
 	screen.FreshRender()
 }
 
-func (screen *GameScreen) BlockSince(baseBlockHeight int64) uint64 {
-	return uint64(screen.blockHeight - baseBlockHeight)
+func (screen *GameScreen) BlockSince(h int64) uint64 {
+	return uint64(screen.fakeBlockHeight - h)
 }
 
 func (screen *GameScreen) SetInputTextAndRender(text string) {
 	screen.inputText = text
 	screen.Render()
+}
+
+func (screen *GameScreen) SetInputTextAndFreshRender(text string) {
+	screen.refreshed = false
+	screen.SetInputTextAndRender(text)
 }
 
 func (screen *GameScreen) pylonIcon() string {
@@ -541,7 +553,7 @@ func (screen *GameScreen) SetScreenSize(Width, Height int) {
 		Width:  Width,
 		Height: Height,
 	}
-	screen.refreshed = false
+	screen.FreshRender()
 }
 
 func (screen *GameScreen) colorFunc(color string) func(string) string {
@@ -564,21 +576,15 @@ func (screen *GameScreen) IsWaitScreen() bool {
 
 func (screen *GameScreen) InputActive() bool {
 	switch screen.scrStatus {
-	case CR8_BUY_LOUD_TRDREQ_ENT_LUDVAL:
-		return true
-	case CR8_BUY_LOUD_TRDREQ_ENT_PYLVAL:
-		return true
-	case CR8_SELL_LOUD_TRDREQ_ENT_LUDVAL:
-		return true
-	case CR8_SELL_LOUD_TRDREQ_ENT_PYLVAL:
-		return true
-	case CR8_SELLITM_TRDREQ_ENT_PYLVAL:
-		return true
-	case CR8_BUYITM_TRDREQ_ENT_PYLVAL:
-		return true
-	case CR8_SELLCHR_TRDREQ_ENT_PYLVAL:
-		return true
-	case CR8_BUYCHR_TRDREQ_ENT_PYLVAL:
+	case CR8_BUY_LOUD_TRDREQ_ENT_LUDVAL,
+		CR8_BUY_LOUD_TRDREQ_ENT_PYLVAL,
+		CR8_SELL_LOUD_TRDREQ_ENT_LUDVAL,
+		CR8_SELL_LOUD_TRDREQ_ENT_PYLVAL,
+		CR8_SELLITM_TRDREQ_ENT_PYLVAL,
+		CR8_BUYITM_TRDREQ_ENT_PYLVAL,
+		CR8_SELLCHR_TRDREQ_ENT_PYLVAL,
+		CR8_BUYCHR_TRDREQ_ENT_PYLVAL,
+		RENAME_CHAR_ENT_NEWNAME:
 		return true
 	}
 	return false
@@ -598,8 +604,11 @@ func (screen *GameScreen) renderInputValue() {
 	}
 
 	fixedChat := truncateLeft(screen.inputText, int(inputWidth))
-
 	inputText := fmt.Sprintf("%s%s%s", move, chat, chatFunc(fmt.Sprintf(fmtString, fixedChat)))
+
+	if !screen.InputActive() {
+		inputText = fmt.Sprintf("%s%s", move, chatFunc(screen.actionText))
+	}
 
 	io.WriteString(os.Stdout, inputText)
 }
@@ -608,45 +617,32 @@ func (screen *GameScreen) renderCharacterSheet() {
 	var HP uint64 = 0
 	var MaxHP uint64 = 0
 
+	// update blockHeight from newly synced data
 	if lbh := screen.user.GetLatestBlockHeight(); lbh > screen.blockHeight {
 		screen.blockHeight = lbh
+		screen.fakeBlockHeight = lbh
 	}
 
 	characters := screen.user.InventoryCharacters()
-	dfc := screen.user.GetDefaultCharacterIndex()
-	if dfc >= 0 && dfc < len(characters) {
-		DFC := characters[dfc]
-		HP = uint64(DFC.HP)
-		MaxHP = uint64(DFC.MaxHP)
-		HP = min(HP+screen.BlockSince(DFC.LastUpdate), MaxHP)
-	}
-	bgcolor := uint64(bgcolor)
-	warning := ""
-	if float32(HP) < float32(MaxHP)*.25 {
-		bgcolor = 124
-		warning = loud.Localize("health low warning")
-	} else if float32(HP) < float32(MaxHP)*.1 {
-		bgcolor = 160
-		warning = loud.Localize("health critical warning")
+	dfc := screen.user.GetDefaultCharacter()
+	dfcRestBlocks := uint64(0)
+	if dfc != nil {
+		HP = uint64(dfc.HP)
+		MaxHP = uint64(dfc.MaxHP)
+		dfcRestBlocks = screen.BlockSince(dfc.LastUpdate)
+		HP = min(HP+dfcRestBlocks, MaxHP)
 	}
 
 	x := screen.screenSize.Width/2 - 1
 	width := (screen.screenSize.Width - x)
-	fmtFunc := screen.colorFunc(fmt.Sprintf("255:%v", bgcolor))
 
 	infoLines := []string{
 		centerText(fmt.Sprintf("%v", screen.user.GetUserName()), " ", width),
-		centerText(warning, "─", width),
-		screen.pylonIcon() + fmtFunc(truncateRight(fmt.Sprintf(" %s: %v", "Pylon", screen.user.GetPylonAmount()), width-1)),
-		screen.loudIcon() + fmtFunc(truncateRight(fmt.Sprintf(" %s: %v", loud.Localize("gold"), screen.user.GetGold()), width-1)),
-		screen.drawProgressMeter(HP, MaxHP, 196, bgcolor, 10) + fmtFunc(truncateRight(fmt.Sprintf(" HP: %v/%v", HP, MaxHP), width-10)),
-		// screen.drawProgressMeter(HP, MaxHP, 225, bgcolor, 10) + fmtFunc(truncateRight(fmt.Sprintf(" XP: %v/%v", HP, 10), width-10)),
-		// screen.drawProgressMeter(HP, MaxHP, 208, bgcolor, 10) + fmtFunc(truncateRight(fmt.Sprintf(" AP: %v/%v", HP, MaxHP), width-10)),
-		// screen.drawProgressMeter(HP, MaxHP, 117, bgcolor, 10) + fmtFunc(truncateRight(fmt.Sprintf(" RP: %v/%v", HP, MaxHP), width-10)),
-		// screen.drawProgressMeter(HP, MaxHP, 76, bgcolor, 10) + fmtFunc(truncateRight(fmt.Sprintf(" MP: %v/%v", HP, MaxHP), width-10)),
+		centerText(loud.Localize("inventory"), "─", width),
+		screen.loudIcon() + truncateRight(fmt.Sprintf(" %s: %v", loud.Localize("gold"), screen.user.GetGold()), width-1),
+		"",
 	}
 
-	infoLines = append(infoLines, centerText(loud.Localize("inventory items"), "─", width))
 	items := screen.user.InventoryItems()
 	for idx, item := range items {
 		itemInfo := truncateRight(formatItem(item), width)
@@ -656,7 +652,6 @@ func (screen *GameScreen) renderCharacterSheet() {
 		infoLines = append(infoLines, itemInfo)
 	}
 
-	infoLines = append(infoLines, centerText(loud.Localize("inventory chracters"), "─", width))
 	for idx, character := range characters {
 		characterInfo := truncateRight(formatCharacter(character), width)
 		if idx == screen.user.GetDefaultCharacterIndex() {
@@ -664,21 +659,51 @@ func (screen *GameScreen) renderCharacterSheet() {
 		}
 		infoLines = append(infoLines, characterInfo)
 	}
-	infoLines = append(infoLines, centerText(" ❦ ", "─", width))
+
+	bgcolor := uint64(bgcolor)
+	warning := ""
+	if float32(HP) < float32(MaxHP)*.25 {
+		bgcolor = 124
+		warning = loud.Localize("health low warning")
+	} else if float32(HP) < float32(MaxHP)*.1 {
+		bgcolor = 160
+		warning = loud.Localize("health critical warning")
+	}
+	fmtFunc := screen.colorFunc(fmt.Sprintf("255:%v", bgcolor))
+
+	infoLines = append(infoLines,
+		fmtFunc(centerText(loud.Sprintf(" Active Character%s", warning), "─", width)),
+		screen.drawProgressMeter(HP, MaxHP, 196, bgcolor, 10)+fmtFunc(truncateRight(fmt.Sprintf(" HP: %v/%v", HP, MaxHP), width-10)),
+		// screen.drawProgressMeter(HP, MaxHP, 225, bgcolor, 10) + fmtFunc(truncateRight(fmt.Sprintf(" XP: %v/%v", HP, 10), width-10)),
+		// screen.drawProgressMeter(HP, MaxHP, 208, bgcolor, 10) + fmtFunc(truncateRight(fmt.Sprintf(" AP: %v/%v", HP, MaxHP), width-10)),
+		// screen.drawProgressMeter(HP, MaxHP, 117, bgcolor, 10) + fmtFunc(truncateRight(fmt.Sprintf(" RP: %v/%v", HP, MaxHP), width-10)),
+		// screen.drawProgressMeter(HP, MaxHP, 76, bgcolor, 10) + fmtFunc(truncateRight(fmt.Sprintf(" MP: %v/%v", HP, MaxHP), width-10)),
+	)
+	if dfc != nil {
+		infoLines = append(infoLines,
+			fmtFunc(truncateRight(formatCharacter(*dfc), width)),
+			fmtFunc(truncateRight(loud.Sprintf("rest blocks: %d", dfcRestBlocks), width)),
+		)
+	}
 
 	for index, line := range infoLines {
-		io.WriteString(os.Stdout, fmt.Sprintf("%s%s", cursor.MoveTo(2+index, x), fmtFunc(line)))
+		io.WriteString(os.Stdout, fmt.Sprintf("%s%s", cursor.MoveTo(2+index, x), line))
 		if index+2 > int(screen.screenSize.Height) {
 			break
 		}
 	}
 
 	nodeLines := []string{
-		centerText(loud.Localize("pylons network status")+" [Copy to Clipboard(L)]", " ", width),
-		centerText(screen.user.GetLastTransaction(), " ", width),
+		centerText(" pylons network status ", "─", width),
+		fmt.Sprintf("Address: %s 📋(M)", truncateRight(screen.user.GetAddress(), 32)),
+		screen.pylonIcon() + truncateRight(fmt.Sprintf(" %s: %v", "Pylon", screen.user.GetPylonAmount()), width-1),
 	}
 
-	blockHeightText := centerText(loud.Localize("block height")+": "+strconv.FormatInt(screen.blockHeight, 10), " ", width)
+	if len(screen.user.GetLastTransaction()) > 0 {
+		nodeLines = append(nodeLines, loud.Sprintf("Last Tx: %s 📋(L)", truncateRight(screen.user.GetLastTransaction(), 32)))
+	}
+
+	blockHeightText := truncateRight(loud.Sprintf("block height: %d(%d)", screen.blockHeight, screen.fakeBlockHeight), width-1)
 	if screen.syncingData {
 		nodeLines = append(nodeLines, screen.blueBoldFont()(blockHeightText))
 	} else {
@@ -687,7 +712,7 @@ func (screen *GameScreen) renderCharacterSheet() {
 	nodeLines = append(nodeLines, centerText(" ❦ ", "─", width))
 
 	for index, line := range nodeLines {
-		io.WriteString(os.Stdout, fmt.Sprintf("%s%s", cursor.MoveTo(2+len(infoLines)+index, x), fmtFunc(line)))
+		io.WriteString(os.Stdout, fmt.Sprintf("%s%s", cursor.MoveTo(2+len(infoLines)+index, x), line))
 		if index+2 > int(screen.screenSize.Height) {
 			break
 		}
@@ -713,7 +738,18 @@ func (screen *GameScreen) RunCharacterHealthRestore() {
 	})
 }
 
+func (screen *GameScreen) RunCharacterRename(newName string) {
+	screen.RunTxProcess(W8_RENAME_CHAR, RSLT_RENAME_CHAR, func() (string, error) {
+		return loud.RenameCharacter(screen.user, screen.activeCharacter, newName)
+	})
+}
+
 func (screen *GameScreen) RunActiveItemBuy() {
+	if !screen.user.HasPreItemForAnItem(screen.activeItem) {
+		screen.txFailReason = loud.Sprintf("You don't have required item to make %s", screen.activeItem.Name)
+		screen.SetScreenStatusAndRefresh(RSLT_BUYITM)
+		return
+	}
 	screen.RunTxProcess(W8_BUYITM, RSLT_BUYITM, func() (string, error) {
 		return loud.Buy(screen.user, screen.activeItem)
 	})
@@ -737,9 +773,9 @@ func (screen *GameScreen) RunActiveItemUpgrade() {
 	})
 }
 
-func (screen *GameScreen) RunActiveItemHunt() {
-	screen.RunTxProcess(W8_HUNT, RSLT_HUNT, func() (string, error) {
-		return loud.Hunt(screen.user, screen.activeItem)
+func (screen *GameScreen) RunActiveItemHuntRabbits() {
+	screen.RunTxProcess(W8_HUNT_RABBITS, RSLT_HUNT_RABBITS, func() (string, error) {
+		return loud.HuntRabbits(screen.user, screen.activeItem)
 	})
 }
 

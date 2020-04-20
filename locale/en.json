@@ -1,6 +1,6 @@
 {
-  "block height": {
-    "one": "Block Height"
+  "block height: %d(%d)": {
+    "one": "Block Height: %d(%d)"
   },
   "buy item failed reason": {
     "one": "Buy Item Failure Reason"
@@ -8,8 +8,8 @@
   "buy character failed reason": {
     "one": "Buy Character Failure Reason"
   },
-  "hunt failed reason": {
-    "one": "Hunt Failure Reason"
+  "hunt rabbits failed reason": {
+    "one": "Hunt Rabbits Failure Reason"
   },
   "sell failed reason": {
     "one": "Sell Failure Reason"
@@ -33,22 +33,22 @@
     "one": "You don't have enough gold to upgrade this item"
   },
   "home": {
-    "one": "1) Select active character\n2) Select active weapon\n3) Restore character health\n"
+    "one": "1) Select active character\n2) Select active weapon\n3) Restore character health\n4) Update character name\n"
   },
   "forest": {
     "one": "1) Rabbit\n2) Goblin\n3) Wolf\n4) Troll\n5) Giant\n"
   },
   "shop": {
-    "one": "1) Buy Items\n2) Sell Items\n3) Upgrade Items\n4) Buy Characters\n"
+    "one": "1) Buy Items\n2) Sell Items\n3) Upgrade Items\n"
   },
-  "market": {
-    "one": "1) Sell Loud from orderbook / Create an order to buy Loud\n2) Buy Loud from orderbook / Create an order to Sell Loud\n3) Sell sword from orderbook / Create an order to buy sword\n4) Buy sword from orderbook / Create an order to sell sword\n5) Sell character from orderbook / Create an order to buy character\n6) Buy character from orderbook / Create an order to sell character\n"
+  "pylons central": {
+    "one": "1) Buy Characters\n2) Buy gold with pylons\n3) Sell Loud from orderbook / Create an order to buy Loud\n4) Buy Loud from orderbook / Create an order to Sell Loud\n5) Sell sword from orderbook / Create an order to buy sword\n6) Buy sword from orderbook / Create an order to sell sword\n7) Sell character from orderbook / Create an order to buy character\n8) Buy character from orderbook / Create an order to sell character\n"
   },
   "settings": {
     "one": "Language:\n1) English\n2) Español\n"
   },
   "develop": {
-    "one": "Create cookbook(j)\nSwitch user(z)\nGet initial py)lons\nGet I)nitial Loud Coin\nDevMode Test Items(b)\n"
+    "one": "Create cookbook(j)\nSwitch user(z)\nGet initial py)lons\nDevMode Test Items(b)\n"
   },
   "go to home": {
     "one": "H)ome"
@@ -59,8 +59,8 @@
   "go to shop": {
     "one": "S)hop"
   },
-  "go to market": {
-    "one": "M)arket"
+  "go to pylons central": {
+    "one": "Pylons C)entral"
   },
   "go to settings": {
     "one": "Set)tings"
@@ -76,14 +76,8 @@
     "one": "Copper sword",
     "other": "Copper swords"
   },
-  "C)ancel": {
-    "one": "C)ancel"
-  },
   "No item": {
     "one": "No Item(0)"
-  },
-  "Get I)nitial Coin": {
-    "one": "Get I)nitial Coin"
   },
   "Go) on": {
     "one": "Go) on"
@@ -91,13 +85,22 @@
   "home desc": {
     "one": "You are now at home.\nIf you like to hunt something go to forest.\nAnd if you like to buy/sell something go to shop."
   },
+  "home desc without pylon": {
+    "one": "You don't have pylon within account.\nTo buy characters, you need to purchase pylons or sell existing characters/items on market to get pylons."
+  },
+  "home desc without character": {
+    "one": "You don't have any character yet.\nYou can buy one from market or at the shop"
+  },
+  "home desc with low HP": {
+    "one": "Your character's health is very low.\nYou can restore health by spending loud or just doing rest for few mins."
+  },
   "forest desc": {
     "one": "You are now at forest.\nYou can hunt here or go back to home."
   },
   "shop desc": {
     "one": "You are now at a shop.\nIf you want you can buy or sell items here."
   },
-  "market desc": {
+  "pylons central desc": {
     "one": "You are now at a marketplace.\nYou can do trading here for coin and items."
   }, 
   "settings desc": {
@@ -115,8 +118,8 @@
   "select sell item desc": {
     "one": "You are gonna sell an item.\nPlease select an item to sell."
   },
-  "select hunt item desc": {
-    "one": "You are preparing for hunt.\nPlease select an item to carry."
+  "select hunt rabbits item desc": {
+    "one": "You are preparing to hunt rabbits.\nPlease select an item to carry."
   },
   "select fight goblin item desc": {
     "one": "You are preparing for fighting goblin.\nPlease select an item to carry."
@@ -145,10 +148,10 @@
   "You are now buying %s at the shop": {
     "one": "You are now buying \"%s\" at the shop"
   },
-  "You are now hunting with %s": {
-    "one": "You are now hunting with \"%s\"."
+  "You are now hunting rabbits with %s": {
+    "one": "You are now hunting rabbits with \"%s\"."
   },
-  "You are now hunting without weapon": {
+  "You are now hunting rabbits without weapon": {
     "one": "You are now hunting rabbits."
   },
   "You are now fighting with giant with %s": {
@@ -196,8 +199,8 @@
   "Please use it for hunting": {
     "one": "Please use it for hunting."
   },
-  "You did hunt animals and earned %d. Detailed result: %+v": {
-    "one": "You did hunt animals and earned %d. Detailed result: %+v"
+  "You did hunt rabbits and earned %d. Detailed result: %+v": {
+    "one": "You did hunt rabbits and earned %d. Detailed result: %+v"
   },
   "You did fight with goblin and earned %d. Detailed result: %+v": {
     "one": "You did fight with goblin and earned %d. Detailed result: %+v"
@@ -211,8 +214,8 @@
   "You did fight with giant and earned %d. Detailed result: %+v": {
     "one": "You did fight with giant and earned %d. Detailed result: %+v"
   },
-  "Got initial gold from pylons. Amount is %d.": {
-    "one": "Got initial gold from pylons. Amount is %d."
+  "Bought gold with pylons. Amount is %d.": {
+    "one": "Bought gold with pylons. Amount is %d."
   },
   "result fight wolf finish desc": {
     "one": "You did fight with wolf"
@@ -235,8 +238,8 @@
   "gold": {
     "one": "Gold"
   },
-  "inventory items": {
-    "one": " Inventory Items "
+  "inventory": {
+    "one": " Inventory "
   },
   "inventory chracters": {
     "one": " Inventory Characters "

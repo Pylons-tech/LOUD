@@ -28,8 +28,7 @@ func SetupScreenAndEvents(world data.World, logFile *os.File) {
 	username := ""
 	log.Println("args SetupScreenAndEvents", args)
 	if len(args) < 2 {
-		log.Println("you didn't configure username when running, using default username \"eugen\"")
-		username = "eugen"
+		log.Fatal("you didn't configure username when running!")
 	} else {
 		username = args[1]
 	}
@@ -42,7 +41,7 @@ func SetupScreenAndEvents(world data.World, logFile *os.File) {
 	log.Println("setting up screen and events")
 
 	tick := time.Tick(300 * time.Millisecond)
-	regRefreshTick := time.Tick(10 * time.Second)
+	regRefreshTick := time.Tick(5 * time.Second)
 
 	if data.AutomateInput {
 		screenInstance.SetScreenStatus(screen.RSLT_SWITCH_USER)
@@ -88,6 +87,19 @@ func SetupScreenAndEvents(world data.World, logFile *os.File) {
 
 	screenInstance.Render()
 
+	go func() {
+		for {
+			select {
+			case <-regRefreshTick:
+				screenInstance.FakeSync()
+			case <-terminalCloseSignal:
+				screenInstance.Reset()
+				os.Exit(0)
+			case <-tick:
+				screenInstance.Render()
+			}
+		}
+	}()
 eventloop:
 	for {
 		switch ev := termbox.PollEvent(); ev.Type {
@@ -107,16 +119,6 @@ eventloop:
 			screenInstance.SetScreenSize(ev.Width, ev.Height)
 		case termbox.EventError:
 			panic(ev.Err)
-		}
-		select {
-		case <-regRefreshTick:
-			screenInstance.Resync()
-		case <-terminalCloseSignal:
-			screenInstance.Reset()
-			break eventloop
-		case <-tick:
-			screenInstance.Render()
-			continue
 		}
 	}
 }
