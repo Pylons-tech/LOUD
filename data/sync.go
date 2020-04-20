@@ -26,8 +26,9 @@ func SyncFromNode(user User) {
 	log.Println("accountInfo=", accInfo)
 
 	user.SetGold(int(accInfo.Coins.AmountOf("loudcoin").Int64()))
-	user.SetPylonAmount(int(accInfo.Coins.AmountOf("pylon").Int64()))
 	log.Println("gold=", accInfo.Coins.AmountOf("loudcoin").Int64())
+	user.SetPylonAmount(int(accInfo.Coins.AmountOf("pylon").Int64()))
+	user.SetAddress(accAddr)
 
 	rawItems, _ := pylonSDK.ListItemsViaCLI(accInfo.Address.String())
 	myItems := []Item{}

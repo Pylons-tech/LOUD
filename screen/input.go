@@ -262,8 +262,10 @@ func (screen *GameScreen) HandleFirstClassInputKeys(input termbox.Event) bool {
 		screen.RunTxProcess(W8_DEV_GET_TEST_ITEMS, RSLT_DEV_GET_TEST_ITEMS, func() (string, error) {
 			return loud.DevGetTestItems(screen.user)
 		})
-	case "L": // CLIPBOARD
+	case "L": // copy last transaction to CLIPBOARD
 		clipboard.WriteAll(screen.user.GetLastTransaction())
+	case "M": // copy last transaction to CLIPBOARD
+		clipboard.WriteAll(screen.user.GetAddress())
 	case "E": // REFRESH
 		screen.Resync()
 		return true

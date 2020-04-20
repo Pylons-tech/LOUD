@@ -683,6 +683,7 @@ func (screen *GameScreen) renderCharacterSheet() {
 	}
 
 	nodeLines := []string{
+		fmt.Sprintf("Address: %s 📋(M)", truncateRight(screen.user.GetAddress(), 32)),
 		screen.pylonIcon() + fmtFunc(truncateRight(fmt.Sprintf(" %s: %v", "Pylon", screen.user.GetPylonAmount()), width-1)),
 	}
 

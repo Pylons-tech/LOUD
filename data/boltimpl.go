@@ -71,6 +71,7 @@ type UserData struct {
 	Gold                  int
 	PylonAmount           int
 	Username              string `json:""`
+	Address               string
 	Location              UserLocation
 	Items                 []Item
 	DefaultItemIndex      int
@@ -138,6 +139,14 @@ func (user *dbUser) Save() {
 
 		return err
 	})
+}
+
+func (user *dbUser) GetAddress() string {
+	return user.UserData.Address
+}
+
+func (user *dbUser) SetAddress(addr string) {
+	user.UserData.Address = addr
 }
 
 func (user *dbUser) GetUserName() string {
