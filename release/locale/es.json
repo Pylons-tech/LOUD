@@ -232,8 +232,8 @@
   "gold": {
     "one": "Oro"
   },
-  "inventory items": {
-    "one": " Inventario de Artículos "
+  "inventory": {
+    "one": " Inventario "
   },
   "inventory chracters": {
     "one": " Inventory Characters "

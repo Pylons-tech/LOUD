@@ -630,32 +630,17 @@ func (screen *GameScreen) renderCharacterSheet() {
 		MaxHP = uint64(dfc.MaxHP)
 		HP = min(HP+screen.BlockSince(dfc.LastUpdate), MaxHP)
 	}
-	bgcolor := uint64(bgcolor)
-	warning := ""
-	if float32(HP) < float32(MaxHP)*.25 {
-		bgcolor = 124
-		warning = loud.Localize("health low warning")
-	} else if float32(HP) < float32(MaxHP)*.1 {
-		bgcolor = 160
-		warning = loud.Localize("health critical warning")
-	}
 
 	x := screen.screenSize.Width/2 - 1
 	width := (screen.screenSize.Width - x)
-	fmtFunc := screen.colorFunc(fmt.Sprintf("255:%v", bgcolor))
 
 	infoLines := []string{
 		centerText(fmt.Sprintf("%v", screen.user.GetUserName()), " ", width),
-		centerText(warning, "─", width),
-		screen.loudIcon() + fmtFunc(truncateRight(fmt.Sprintf(" %s: %v", loud.Localize("gold"), screen.user.GetGold()), width-1)),
-		screen.drawProgressMeter(HP, MaxHP, 196, bgcolor, 10) + fmtFunc(truncateRight(fmt.Sprintf(" HP: %v/%v", HP, MaxHP), width-10)),
-		// screen.drawProgressMeter(HP, MaxHP, 225, bgcolor, 10) + fmtFunc(truncateRight(fmt.Sprintf(" XP: %v/%v", HP, 10), width-10)),
-		// screen.drawProgressMeter(HP, MaxHP, 208, bgcolor, 10) + fmtFunc(truncateRight(fmt.Sprintf(" AP: %v/%v", HP, MaxHP), width-10)),
-		// screen.drawProgressMeter(HP, MaxHP, 117, bgcolor, 10) + fmtFunc(truncateRight(fmt.Sprintf(" RP: %v/%v", HP, MaxHP), width-10)),
-		// screen.drawProgressMeter(HP, MaxHP, 76, bgcolor, 10) + fmtFunc(truncateRight(fmt.Sprintf(" MP: %v/%v", HP, MaxHP), width-10)),
+		centerText(loud.Localize("inventory"), "─", width),
+		screen.loudIcon() + truncateRight(fmt.Sprintf(" %s: %v", loud.Localize("gold"), screen.user.GetGold()), width-1),
+		"",
 	}
 
-	infoLines = append(infoLines, centerText(loud.Localize("inventory items"), "─", width))
 	items := screen.user.InventoryItems()
 	for idx, item := range items {
 		itemInfo := truncateRight(formatItem(item), width)
@@ -665,7 +650,6 @@ func (screen *GameScreen) renderCharacterSheet() {
 		infoLines = append(infoLines, itemInfo)
 	}
 
-	infoLines = append(infoLines, centerText(loud.Localize("inventory chracters"), "─", width))
 	for idx, character := range characters {
 		characterInfo := truncateRight(formatCharacter(character), width)
 		if idx == screen.user.GetDefaultCharacterIndex() {
@@ -673,25 +657,48 @@ func (screen *GameScreen) renderCharacterSheet() {
 		}
 		infoLines = append(infoLines, characterInfo)
 	}
-	infoLines = append(infoLines, centerText(" pylons network status ", "─", width))
+
+	bgcolor := uint64(bgcolor)
+	warning := ""
+	if float32(HP) < float32(MaxHP)*.25 {
+		bgcolor = 124
+		warning = loud.Localize("health low warning")
+	} else if float32(HP) < float32(MaxHP)*.1 {
+		bgcolor = 160
+		warning = loud.Localize("health critical warning")
+	}
+	fmtFunc := screen.colorFunc(fmt.Sprintf("255:%v", bgcolor))
+
+	infoLines = append(infoLines,
+		fmtFunc(centerText(loud.Sprintf(" Active Character%s", warning), "─", width)),
+		screen.drawProgressMeter(HP, MaxHP, 196, bgcolor, 10)+fmtFunc(truncateRight(fmt.Sprintf(" HP: %v/%v", HP, MaxHP), width-10)),
+		// screen.drawProgressMeter(HP, MaxHP, 225, bgcolor, 10) + fmtFunc(truncateRight(fmt.Sprintf(" XP: %v/%v", HP, 10), width-10)),
+		// screen.drawProgressMeter(HP, MaxHP, 208, bgcolor, 10) + fmtFunc(truncateRight(fmt.Sprintf(" AP: %v/%v", HP, MaxHP), width-10)),
+		// screen.drawProgressMeter(HP, MaxHP, 117, bgcolor, 10) + fmtFunc(truncateRight(fmt.Sprintf(" RP: %v/%v", HP, MaxHP), width-10)),
+		// screen.drawProgressMeter(HP, MaxHP, 76, bgcolor, 10) + fmtFunc(truncateRight(fmt.Sprintf(" MP: %v/%v", HP, MaxHP), width-10)),
+	)
+	if dfc != nil {
+		infoLines = append(infoLines, fmtFunc(truncateRight(formatCharacter(*dfc), width)))
+	}
 
 	for index, line := range infoLines {
-		io.WriteString(os.Stdout, fmt.Sprintf("%s%s", cursor.MoveTo(2+index, x), fmtFunc(line)))
+		io.WriteString(os.Stdout, fmt.Sprintf("%s%s", cursor.MoveTo(2+index, x), line))
 		if index+2 > int(screen.screenSize.Height) {
 			break
 		}
 	}
 
 	nodeLines := []string{
+		centerText(" pylons network status ", "─", width),
 		fmt.Sprintf("Address: %s 📋(M)", truncateRight(screen.user.GetAddress(), 32)),
-		screen.pylonIcon() + fmtFunc(truncateRight(fmt.Sprintf(" %s: %v", "Pylon", screen.user.GetPylonAmount()), width-1)),
+		screen.pylonIcon() + truncateRight(fmt.Sprintf(" %s: %v", "Pylon", screen.user.GetPylonAmount()), width-1),
 	}
 
 	if len(screen.user.GetLastTransaction()) > 0 {
 		nodeLines = append(nodeLines, loud.Sprintf("Last Tx: %s 📋(L)", truncateRight(screen.user.GetLastTransaction(), 32)))
 	}
 
-	blockHeightText := loud.Sprintf("block height: %d(%d)", screen.blockHeight, screen.fakeBlockHeight)
+	blockHeightText := truncateRight(loud.Sprintf("block height: %d(%d)", screen.blockHeight, screen.fakeBlockHeight), width-1)
 	if screen.syncingData {
 		nodeLines = append(nodeLines, screen.blueBoldFont()(blockHeightText))
 	} else {
@@ -700,7 +707,7 @@ func (screen *GameScreen) renderCharacterSheet() {
 	nodeLines = append(nodeLines, centerText(" ❦ ", "─", width))
 
 	for index, line := range nodeLines {
-		io.WriteString(os.Stdout, fmt.Sprintf("%s%s", cursor.MoveTo(2+len(infoLines)+index, x), fmtFunc(line)))
+		io.WriteString(os.Stdout, fmt.Sprintf("%s%s", cursor.MoveTo(2+len(infoLines)+index, x), line))
 		if index+2 > int(screen.screenSize.Height) {
 			break
 		}
