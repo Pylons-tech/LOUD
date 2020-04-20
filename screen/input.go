@@ -725,9 +725,10 @@ func (screen *GameScreen) HandleTypingModeInputKeys(input termbox.Event) bool {
 		}
 		return true
 	default:
-		Key := strings.ToUpper(string(input.Ch))
+		iChar := string(input.Ch)
+		Key := strings.ToUpper(iChar)
 		if screen.scrStatus == RENAME_CHAR_ENT_NEWNAME {
-			screen.SetInputTextAndRender(screen.inputText + Key)
+			screen.SetInputTextAndRender(screen.inputText + iChar)
 		} else if _, err := strconv.Atoi(Key); err == nil {
 			// If user entered number, just use it
 			screen.SetInputTextAndRender(screen.inputText + Key)
