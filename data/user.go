@@ -24,6 +24,7 @@ type User interface {
 	SetLastTransaction(string)
 	SetLatestBlockHeight(int64)
 	InventoryItems() []Item
+	HasPreItemForAnItem(Item) bool
 	InventoryItemIDByName(string) string
 	InventoryIronSwords() []Item
 	InventorySwords() []Item

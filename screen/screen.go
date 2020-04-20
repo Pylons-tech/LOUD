@@ -745,6 +745,11 @@ func (screen *GameScreen) RunCharacterRename(newName string) {
 }
 
 func (screen *GameScreen) RunActiveItemBuy() {
+	if !screen.user.HasPreItemForAnItem(screen.activeItem) {
+		screen.txFailReason = loud.Sprintf("You don't have required item to make %s", screen.activeItem.Name)
+		screen.SetScreenStatusAndRefresh(RSLT_BUYITM)
+		return
+	}
 	screen.RunTxProcess(W8_BUYITM, RSLT_BUYITM, func() (string, error) {
 		return loud.Buy(screen.user, screen.activeItem)
 	})
