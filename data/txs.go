@@ -7,6 +7,7 @@ import (
 	"strconv"
 	"time"
 
+	pylonSDK "github.com/Pylons-tech/pylons/cmd/test"
 	"github.com/Pylons-tech/pylons/x/pylons/msgs"
 	"github.com/Pylons-tech/pylons/x/pylons/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -164,16 +165,15 @@ func BuyCharacter(user User, ch Character) (string, error) {
 }
 
 func RenameCharacter(user User, ch Character, newName string) (string, error) {
-	// t := GetTestingT()
-	// addr := pylonSDK.GetAccountAddr(user.GetUserName(), nil)
-	// sdkAddr, _ := sdk.AccAddressFromBech32(addr)
-	// renameMsg := msgs.NewMsgUpdateItemString(ch.ID, "Name", newName, sdkAddr)
-	// log.Println("started sending transaction", user.GetUserName(), renameMsg)
-	// txhash := pylonSDK.TestTxWithMsgWithNonce(t, renameMsg, user.GetUserName(), false)
-	// user.SetLastTransaction(txhash)
-	// log.Println("ended sending transaction")
-	// return txhash, nil
-	return "", nil
+	t := GetTestingT()
+	addr := pylonSDK.GetAccountAddr(user.GetUserName(), nil)
+	sdkAddr, _ := sdk.AccAddressFromBech32(addr)
+	renameMsg := msgs.NewMsgUpdateItemString(ch.ID, "Name", newName, sdkAddr)
+	log.Println("started sending transaction", user.GetUserName(), renameMsg)
+	txhash := pylonSDK.TestTxWithMsgWithNonce(t, renameMsg, user.GetUserName(), false)
+	user.SetLastTransaction(txhash)
+	log.Println("ended sending transaction")
+	return txhash, nil
 }
 
 func Buy(user User, item Item) (string, error) {
