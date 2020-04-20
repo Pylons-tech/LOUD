@@ -625,10 +625,12 @@ func (screen *GameScreen) renderCharacterSheet() {
 
 	characters := screen.user.InventoryCharacters()
 	dfc := screen.user.GetDefaultCharacter()
+	dfcRestBlocks := uint64(0)
 	if dfc != nil {
 		HP = uint64(dfc.HP)
 		MaxHP = uint64(dfc.MaxHP)
-		HP = min(HP+screen.BlockSince(dfc.LastUpdate), MaxHP)
+		dfcRestBlocks = screen.BlockSince(dfc.LastUpdate)
+		HP = min(HP+dfcRestBlocks, MaxHP)
 	}
 
 	x := screen.screenSize.Width/2 - 1
@@ -678,7 +680,10 @@ func (screen *GameScreen) renderCharacterSheet() {
 		// screen.drawProgressMeter(HP, MaxHP, 76, bgcolor, 10) + fmtFunc(truncateRight(fmt.Sprintf(" MP: %v/%v", HP, MaxHP), width-10)),
 	)
 	if dfc != nil {
-		infoLines = append(infoLines, fmtFunc(truncateRight(formatCharacter(*dfc), width)))
+		infoLines = append(infoLines,
+			fmtFunc(truncateRight(formatCharacter(*dfc), width)),
+			fmtFunc(truncateRight(loud.Sprintf("rest blocks: %d", dfcRestBlocks), width)),
+		)
 	}
 
 	for index, line := range infoLines {
