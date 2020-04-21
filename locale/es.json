@@ -76,11 +76,8 @@
     "one": "Espada de Cobre",
     "other": "Espadas de Cobre"
   },
-  "No item": {
-    "one": "No Artículo (0)"
-  },
   "Go) on": {
-    "one": "Seguir(O)"
+    "one": "Seguir(O) ( ↵ )"
   },
   "home desc": {
     "one": "Estás en inicio.\nSi quieres cazar, dirígete al bosque.\nY si quieres comprar/vender algo, dirígete a la tienda."
@@ -117,21 +114,6 @@
   },
   "select sell item desc": {
     "one": "Vas a vender un artículo.\nPor favor selecciona un artículo a vender."
-  },
-  "select hunt rabbits item desc": {
-    "one": "Te estás preparando para cazar.\nPor favor selecciona un artículo a llevar."
-  },
-  "select fight goblin item desc": {
-    "one": "You are preparing for fighting goblin.\nPlease select an item to carry."
-  },
-  "select fight troll item desc": {
-    "one": "You are preparing for fighting troll.\nPlease select an item to carry."
-  },
-  "select fight wolf item desc": {
-    "one": "You are preparing for fighting wolf.\nPlease select an item to carry."
-  },
-  "select fight giant item desc": {
-    "one": "You are preparing for fighting giant.\nPlease select an item to carry."
   },
   "rabbits without sword outcome": {
     "one": "Reward: 1 or 2\nCharacter dying percent: 10%\n"

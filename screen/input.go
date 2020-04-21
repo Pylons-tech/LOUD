@@ -142,6 +142,23 @@ func (screen *GameScreen) HandleInputKeyForestEntryPoint(input termbox.Event) bo
 	}
 
 	if newStus, ok := tarStusMap[Key]; ok {
+		activeWeapon := screen.user.GetActiveWeapon()
+		switch newStus {
+		case CONFIRM_FIGHT_GOBLIN,
+			CONFIRM_FIGHT_WOLF,
+			CONFIRM_FIGHT_TROLL:
+			if activeWeapon == nil {
+				screen.actionText = "You need a sword for this action!"
+				screen.FreshRender()
+				return true
+			}
+		case CONFIRM_FIGHT_GIANT:
+			if activeWeapon == nil || activeWeapon.Name != loud.IRON_SWORD {
+				screen.actionText = "You need an iron sword for this action!"
+				screen.FreshRender()
+				return true
+			}
+		}
 		screen.scrStatus = newStus
 		screen.FreshRender()
 		return true
@@ -169,6 +186,23 @@ func (screen *GameScreen) HandleInputKeyShopEntryPoint(input termbox.Event) bool
 }
 
 func (screen *GameScreen) MoveToNextStep() {
+	switch screen.scrStatus {
+	case CONFIRM_HUNT_RABBITS:
+		screen.RunHuntRabbits()
+		return
+	case CONFIRM_FIGHT_GIANT:
+		screen.RunFightGiant()
+		return
+	case CONFIRM_FIGHT_TROLL:
+		screen.RunFightTroll()
+		return
+	case CONFIRM_FIGHT_WOLF:
+		screen.RunFightWolf()
+		return
+	case CONFIRM_FIGHT_GOBLIN:
+		screen.RunFightGoblin()
+		return
+	}
 	nextMapper := map[ScreenStatus]ScreenStatus{
 		RSLT_HUNT_RABBITS:              CONFIRM_HUNT_RABBITS,
 		RSLT_FIGHT_GOBLIN:              CONFIRM_FIGHT_GOBLIN,
@@ -405,33 +439,6 @@ func (screen *GameScreen) HandleThirdClassInputKeys(input termbox.Event) bool {
 				return false
 			}
 			screen.RunActiveCharacterBuy()
-		case CONFIRM_HUNT_RABBITS:
-			screen.activeItem = loud.GetWeaponItemFromKey(screen.user, Key)
-			screen.RunActiveItemHuntRabbits()
-		case CONFIRM_FIGHT_GIANT:
-			screen.activeItem = loud.GetIronSwordItemFromKey(screen.user, Key)
-			if len(screen.activeItem.Name) == 0 {
-				return false
-			}
-			screen.RunActiveItemFightGiant()
-		case CONFIRM_FIGHT_TROLL:
-			screen.activeItem = loud.GetSwordItemFromKey(screen.user, Key)
-			if len(screen.activeItem.Name) == 0 {
-				return false
-			}
-			screen.RunActiveItemFightTroll()
-		case CONFIRM_FIGHT_WOLF:
-			screen.activeItem = loud.GetSwordItemFromKey(screen.user, Key)
-			if len(screen.activeItem.Name) == 0 {
-				return false
-			}
-			screen.RunActiveItemFightWolf()
-		case CONFIRM_FIGHT_GOBLIN:
-			screen.activeItem = loud.GetSwordItemFromKey(screen.user, Key)
-			if len(screen.activeItem.Name) == 0 {
-				return false
-			}
-			screen.RunActiveItemFightGoblin()
 		case SEL_SELLITM:
 			screen.activeItem = loud.GetToSellItemFromKey(screen.user, Key)
 			if len(screen.activeItem.Name) == 0 {
@@ -548,41 +555,6 @@ func (screen *GameScreen) HandleThirdClassKeyEnterEvent() bool {
 			screen.activeCharacter = characters[screen.activeLine]
 			screen.RunActiveCharacterBuy()
 			log.Println("SEL_BUYCHR", screen.activeCharacter)
-		case CONFIRM_HUNT_RABBITS:
-			items := screen.user.InventorySwords()
-			if len(items) <= screen.activeLine || screen.activeLine < 0 {
-				return false
-			}
-			screen.activeItem = items[screen.activeLine]
-			screen.RunActiveItemHuntRabbits()
-		case CONFIRM_FIGHT_GOBLIN:
-			items := screen.user.InventorySwords()
-			if len(items) <= screen.activeLine || screen.activeLine < 0 {
-				return false
-			}
-			screen.activeItem = items[screen.activeLine]
-			screen.RunActiveItemFightGoblin()
-		case CONFIRM_FIGHT_WOLF:
-			items := screen.user.InventorySwords()
-			if len(items) <= screen.activeLine || screen.activeLine < 0 {
-				return false
-			}
-			screen.activeItem = items[screen.activeLine]
-			screen.RunActiveItemFightWolf()
-		case CONFIRM_FIGHT_TROLL:
-			items := screen.user.InventorySwords()
-			if len(items) <= screen.activeLine || screen.activeLine < 0 {
-				return false
-			}
-			screen.activeItem = items[screen.activeLine]
-			screen.RunActiveItemFightTroll()
-		case CONFIRM_FIGHT_GIANT:
-			items := screen.user.InventoryIronSwords()
-			if len(items) <= screen.activeLine || screen.activeLine < 0 {
-				return false
-			}
-			screen.activeItem = items[screen.activeLine]
-			screen.RunActiveItemFightGiant()
 		case SEL_SELLITM:
 			items := screen.user.InventoryItems()
 			if len(items) <= screen.activeLine || screen.activeLine < 0 {

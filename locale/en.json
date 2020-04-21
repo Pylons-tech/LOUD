@@ -76,11 +76,8 @@
     "one": "Copper sword",
     "other": "Copper swords"
   },
-  "No item": {
-    "one": "No Item(0)"
-  },
   "Go) on": {
-    "one": "Go) on"
+    "one": "Go) on ( ↵ )"
   },
   "home desc": {
     "one": "You are now at home.\nIf you like to hunt something go to forest.\nAnd if you like to buy/sell something go to shop."
@@ -118,38 +115,23 @@
   "select sell item desc": {
     "one": "You are gonna sell an item.\nPlease select an item to sell."
   },
-  "select hunt rabbits item desc": {
-    "one": "You are preparing to hunt rabbits.\nPlease select an item to carry."
-  },
-  "select fight goblin item desc": {
-    "one": "You are preparing for fighting goblin.\nPlease select an item to carry."
-  },
-  "select fight troll item desc": {
-    "one": "You are preparing for fighting troll.\nPlease select an item to carry."
-  },
-  "select fight wolf item desc": {
-    "one": "You are preparing for fighting wolf.\nPlease select an item to carry."
-  },
-  "select fight giant item desc": {
-    "one": "You are preparing for fighting giant.\nPlease select an item to carry."
-  },
   "rabbits without sword outcome": {
-    "one": "Reward: 1 or 2\nCharacter dying percent: 10%\n"
+    "one": "Hunt Rabbits\n\nReward: 1 or 2\nCharacter dying percent: 10%\n"
   },
   "rabbits with a sword outcome": {
-    "one": "Reward: sword.attack/2 + 1\n5% chance of character lose\n5% chance of sword lose\n"
+    "one": "Hunt Rabbits\n\nReward: sword.attack/2 + 1\n5% chance of character lose\n5% chance of sword lose\n"
   },
   "goblin outcome": {
-    "one": "Reward: 50\nEnemy info (HP: 10, Attack: 1)\n10% chance of sword lose\n10% chance of getting \"Goblin ear\"\n"
+    "one": "Fight Goblin\n\nReward: 50\nEnemy info (HP: 10, Attack: 1)\n10% chance of sword lose\n10% chance of getting \"Goblin ear\"\n"
   },
   "wolf outcome": {
-    "one": "Reward: 150\nEnemy info (HP: 15, Attack: 3)\n10% chance of sword lose\n10% chance of getting \"Wolf tail\"\n"
+    "one": "Fight Wolf\n\nReward: 150\nEnemy info (HP: 15, Attack: 3)\n10% chance of sword lose\n10% chance of getting \"Wolf tail\"\n"
   },
   "troll outcome": {
-    "one": "Reward: 300\nEnemy info (HP: 20, Attack: 5)\n10% chance of sword lose\n10% chance of getting \"Troll toes\"\n"
+    "one": "Fight Troll\n\nReward: 300\nEnemy info (HP: 20, Attack: 5)\n10% chance of sword lose\n10% chance of getting \"Troll toes\"\n"
   },
   "giant outcome": {
-    "one": "Reward: 3000\nEnemy info (HP: 100, Attack: 10)\n10% chance of sword lose\nGiantKiller badget on character\n"
+    "one": "Fight Giant\n\nReward: 3000\nEnemy info (HP: 100, Attack: 10)\n10% chance of sword lose\nGiantKiller badget on character\n"
   },
   "select upgrade item desc": {
     "one": "You are gonna upgrade an item.\nPlease select an item to upgrade."

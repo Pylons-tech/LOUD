@@ -12,12 +12,19 @@ import (
 
 const (
 	SEL_CMD     = "Select ( ↵ )"
+	GO_ON_CMD   = "Go) on ( ↵ )"
 	GO_BACK_CMD = "Go back( ⌫ ) - Backspace Key"
 )
 
 func appendSelectGoBackCmds(infoLines []string) []string {
 	return append(infoLines,
 		SEL_CMD,
+		loud.Localize(GO_BACK_CMD))
+}
+
+func appendGoOnBackCmds(infoLines []string) []string {
+	return append(infoLines,
+		GO_ON_CMD,
 		loud.Localize(GO_BACK_CMD))
 }
 
@@ -113,24 +120,12 @@ func (screen *GameScreen) renderUserCommands() {
 			infoLines = append(infoLines, fmt.Sprintf("%d) %s  ", idx+1, formatItem(item))+screen.loudIcon()+fmt.Sprintf(" %s", item.GetSellPriceRange()))
 		}
 		infoLines = appendSelectGoBackCmds(infoLines)
-	case CONFIRM_HUNT_RABBITS:
-		infoLines = append(infoLines, loud.Localize("No item"))
-		for idx, item := range screen.user.InventorySwords() {
-			infoLines = append(infoLines, fmt.Sprintf("%d) %s", idx+1, formatItem(item)))
-		}
-		infoLines = appendSelectGoBackCmds(infoLines)
-	case CONFIRM_FIGHT_GOBLIN,
+	case CONFIRM_HUNT_RABBITS,
+		CONFIRM_FIGHT_GOBLIN,
 		CONFIRM_FIGHT_TROLL,
-		CONFIRM_FIGHT_WOLF:
-		for idx, item := range screen.user.InventorySwords() {
-			infoLines = append(infoLines, fmt.Sprintf("%d) %s", idx+1, formatItem(item)))
-		}
-		infoLines = appendSelectGoBackCmds(infoLines)
-	case CONFIRM_FIGHT_GIANT:
-		for idx, item := range screen.user.InventoryIronSwords() {
-			infoLines = append(infoLines, fmt.Sprintf("%d) %s", idx+1, formatItem(item)))
-		}
-		infoLines = appendSelectGoBackCmds(infoLines)
+		CONFIRM_FIGHT_WOLF,
+		CONFIRM_FIGHT_GIANT:
+		infoLines = appendGoOnBackCmds(infoLines)
 	case SEL_UPGITM:
 		for idx, item := range screen.user.InventoryUpgradableItems() {
 			infoLines = append(infoLines, fmt.Sprintf("%d) %s ", idx+1, formatItem(item))+screen.loudIcon()+fmt.Sprintf(" %d", item.GetUpgradePrice()))
@@ -138,7 +133,7 @@ func (screen *GameScreen) renderUserCommands() {
 		infoLines = appendSelectGoBackCmds(infoLines)
 	default:
 		if screen.IsResultScreen() { // eg. RSLT_BUY_LOUD_TRDREQ_CREATION
-			infoLines = append(infoLines, loud.Localize("Go) on( ↵ )"))
+			infoLines = append(infoLines, GO_ON_CMD)
 		} else if screen.InputActive() { // eg. CR8_BUYITM_TRDREQ_ENT_PYLVAL
 			infoLines = append(infoLines,
 				loud.Localize("Finish Enter ( ↵ )"),

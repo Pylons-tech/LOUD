@@ -76,11 +76,8 @@
     "one": "Copper sword",
     "other": "Copper swords"
   },
-  "No item": {
-    "one": "No Item(0)"
-  },
   "Go) on": {
-    "one": "Go) on"
+    "one": "Go) on ( ↵ )"
   },
   "home desc": {
     "one": "You are now at home.\nIf you like to hunt something go to forest.\nAnd if you like to buy/sell something go to shop."
@@ -117,21 +114,6 @@
   },
   "select sell item desc": {
     "one": "You are gonna sell an item.\nPlease select an item to sell."
-  },
-  "select hunt rabbits item desc": {
-    "one": "You are preparing to hunt rabbits.\nPlease select an item to carry."
-  },
-  "select fight goblin item desc": {
-    "one": "You are preparing for fighting goblin.\nPlease select an item to carry."
-  },
-  "select fight troll item desc": {
-    "one": "You are preparing for fighting troll.\nPlease select an item to carry."
-  },
-  "select fight wolf item desc": {
-    "one": "You are preparing for fighting wolf.\nPlease select an item to carry."
-  },
-  "select fight giant item desc": {
-    "one": "You are preparing for fighting giant.\nPlease select an item to carry."
   },
   "select upgrade item desc": {
     "one": "You are gonna upgrade an item.\nPlease select an item to upgrade."

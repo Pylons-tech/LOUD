@@ -71,6 +71,14 @@ func formatItem(item loud.Item) string {
 	return itemStr
 }
 
+func carryItemDesc(item *loud.Item) string {
+	if item == nil {
+		return ""
+	} else {
+		return "Carry: " + formatItem(*item)
+	}
+}
+
 func formatIntRange(r [2]int) string {
 	if r[0] == r[1] {
 		if r[0] == 0 {

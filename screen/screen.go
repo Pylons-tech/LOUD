@@ -780,33 +780,39 @@ func (screen *GameScreen) RunActiveItemUpgrade() {
 	})
 }
 
-func (screen *GameScreen) RunActiveItemHuntRabbits() {
+func (screen *GameScreen) RunHuntRabbits() {
 	screen.RunTxProcess(W8_HUNT_RABBITS, RSLT_HUNT_RABBITS, func() (string, error) {
-		return loud.HuntRabbits(screen.user, screen.activeItem)
+		return loud.HuntRabbits(screen.user)
 	})
 }
 
-func (screen *GameScreen) RunActiveItemFightGiant() {
+func (screen *GameScreen) RunFightGiant() {
+	activeWeapon := screen.user.GetActiveWeapon()
+	if activeWeapon == nil || activeWeapon.Name != loud.IRON_SWORD {
+		screen.actionText = "You can't fight giant without iron sword."
+		screen.FreshRender()
+		return
+	}
 	screen.RunTxProcess(W8_FIGHT_GIANT, RSLT_FIGHT_GIANT, func() (string, error) {
-		return loud.FightGiant(screen.user, screen.activeItem)
+		return loud.FightGiant(screen.user)
 	})
 }
 
-func (screen *GameScreen) RunActiveItemFightTroll() {
+func (screen *GameScreen) RunFightTroll() {
 	screen.RunTxProcess(W8_FIGHT_TROLL, RSLT_FIGHT_TROLL, func() (string, error) {
-		return loud.FightTroll(screen.user, screen.activeItem)
+		return loud.FightTroll(screen.user)
 	})
 }
 
-func (screen *GameScreen) RunActiveItemFightWolf() {
+func (screen *GameScreen) RunFightWolf() {
 	screen.RunTxProcess(W8_FIGHT_WOLF, RSLT_FIGHT_WOLF, func() (string, error) {
-		return loud.FightWolf(screen.user, screen.activeItem)
+		return loud.FightWolf(screen.user)
 	})
 }
 
-func (screen *GameScreen) RunActiveItemFightGoblin() {
+func (screen *GameScreen) RunFightGoblin() {
 	screen.RunTxProcess(W8_FIGHT_GOBLIN, RSLT_FIGHT_GOBLIN, func() (string, error) {
-		return loud.FightGoblin(screen.user, screen.activeItem)
+		return loud.FightGoblin(screen.user)
 	})
 }
 

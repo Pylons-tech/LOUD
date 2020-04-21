@@ -74,8 +74,7 @@ func RestoreHealth(user User, char Character) (string, error) {
 	return ExecuteRecipe(user, rcpName, itemIDs)
 }
 
-func HuntRabbits(user User, item Item) (string, error) {
-
+func RunHuntRecipe(rcpName string, user User) (string, error) {
 	activeCharacter := user.GetActiveCharacter()
 	activeCharacterID := ""
 	if activeCharacter != nil {
@@ -83,71 +82,39 @@ func HuntRabbits(user User, item Item) (string, error) {
 	} else {
 		return "", errors.New("character is required to hunt rabbits!")
 	}
-	rcpName := "LOUD's hunt rabbits without sword recipe"
+
+	activeWeapon := user.GetActiveWeapon()
 	itemIDs := []string{activeCharacterID}
-
-	if item.IsSword() {
-		rcpName = "LOUD's hunt rabbits with a sword recipe"
-		itemIDs = []string{activeCharacterID, item.ID}
+	if activeWeapon != nil {
+		itemIDs = []string{activeCharacterID, activeWeapon.ID}
 	}
 
 	return ExecuteRecipe(user, rcpName, itemIDs)
 }
 
-func FightTroll(user User, item Item) (string, error) {
-	activeCharacter := user.GetActiveCharacter()
-	activeCharacterID := ""
-	if activeCharacter != nil {
-		activeCharacterID = activeCharacter.ID
+func HuntRabbits(user User) (string, error) {
+	activeWeapon := user.GetActiveWeapon()
+	if activeWeapon == nil {
+		return RunHuntRecipe("LOUD's hunt rabbits without sword recipe", user)
 	} else {
-		return "", errors.New("character is required to fight!")
+		return RunHuntRecipe("LOUD's hunt rabbits with a sword recipe", user)
 	}
-	rcpName := "LOUD's fight with troll with a sword recipe"
-	itemIDs := []string{activeCharacterID, item.ID}
-
-	return ExecuteRecipe(user, rcpName, itemIDs)
 }
 
-func FightWolf(user User, item Item) (string, error) {
-	activeCharacter := user.GetActiveCharacter()
-	activeCharacterID := ""
-	if activeCharacter != nil {
-		activeCharacterID = activeCharacter.ID
-	} else {
-		return "", errors.New("character is required to fight!")
-	}
-	rcpName := "LOUD's fight with wolf with a sword recipe"
-	itemIDs := []string{activeCharacterID, item.ID}
-
-	return ExecuteRecipe(user, rcpName, itemIDs)
+func FightTroll(user User) (string, error) {
+	return RunHuntRecipe("LOUD's fight with troll with a sword recipe", user)
 }
 
-func FightGoblin(user User, item Item) (string, error) {
-	activeCharacter := user.GetActiveCharacter()
-	activeCharacterID := ""
-	if activeCharacter != nil {
-		activeCharacterID = activeCharacter.ID
-	} else {
-		return "", errors.New("character is required to fight!")
-	}
-	rcpName := "LOUD's fight with goblin with a sword recipe"
-	itemIDs := []string{activeCharacterID, item.ID}
-
-	return ExecuteRecipe(user, rcpName, itemIDs)
+func FightWolf(user User) (string, error) {
+	return RunHuntRecipe("LOUD's fight with wolf with a sword recipe", user)
 }
 
-func FightGiant(user User, item Item) (string, error) {
-	activeCharacter := user.GetActiveCharacter()
-	activeCharacterID := ""
-	if activeCharacter != nil {
-		activeCharacterID = activeCharacter.ID
-	} else {
-		return "", errors.New("character is required to fight!")
-	}
-	rcpName := "LOUD's fight with giant with a sword recipe"
-	itemIDs := []string{activeCharacterID, item.ID}
+func FightGoblin(user User) (string, error) {
+	return RunHuntRecipe("LOUD's fight with goblin with a sword recipe", user)
+}
 
-	return ExecuteRecipe(user, rcpName, itemIDs)
+func FightGiant(user User) (string, error) {
+	return RunHuntRecipe("LOUD's fight with giant with a sword recipe", user)
 }
 
 func BuyCharacter(user User, ch Character) (string, error) {

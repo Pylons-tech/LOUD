@@ -15,6 +15,7 @@ import (
 func (screen *GameScreen) renderUserSituation() {
 	infoLines := []string{}
 	desc := ""
+	activeWeapon := screen.user.GetActiveWeapon()
 	switch screen.scrStatus {
 	case SHW_LOCATION:
 		locationDescMap := map[loud.UserLocation]string{
@@ -108,15 +109,24 @@ func (screen *GameScreen) renderUserSituation() {
 	case SEL_BUYCHR:
 		infoLines = screen.renderITTable("select buy character desc", "Character", loud.ShopCharacters)
 	case CONFIRM_HUNT_RABBITS:
-		infoLines = screen.renderITTable("select hunt rabbits item desc", "Item", screen.user.InventorySwords())
+		if activeWeapon != nil {
+			desc = loud.Localize("rabbits with a sword outcome")
+			desc += carryItemDesc(activeWeapon)
+		} else {
+			desc = loud.Localize("rabbits without sword outcome")
+		}
 	case CONFIRM_FIGHT_GOBLIN:
-		infoLines = screen.renderITTable("select fight goblin item desc", "Item", screen.user.InventorySwords())
+		desc = loud.Localize("goblin outcome")
+		desc += carryItemDesc(activeWeapon)
 	case CONFIRM_FIGHT_WOLF:
-		infoLines = screen.renderITTable("select fight wolf item desc", "Item", screen.user.InventorySwords())
+		desc = loud.Localize("wolf outcome")
+		desc += carryItemDesc(activeWeapon)
 	case CONFIRM_FIGHT_TROLL:
-		infoLines = screen.renderITTable("select fight troll item desc", "Item", screen.user.InventorySwords())
+		desc = loud.Localize("troll outcome")
+		desc += carryItemDesc(activeWeapon)
 	case CONFIRM_FIGHT_GIANT:
-		infoLines = screen.renderITTable("select fight giant item desc", "Item", screen.user.InventoryIronSwords())
+		desc = loud.Localize("giant outcome")
+		desc += carryItemDesc(activeWeapon)
 	}
 
 	if screen.IsResultScreen() {
@@ -360,6 +370,7 @@ func (screen *GameScreen) TxResultSituationDesc() string {
 
 func (screen *GameScreen) TxWaitSituationDesc() string {
 	desc := ""
+	activeWeapon := screen.user.GetActiveWeapon()
 	W8_TO_END := "\n" + loud.Localize("Please wait for a moment to finish the process")
 	switch screen.scrStatus {
 	case W8_RENAME_CHAR:
@@ -377,20 +388,20 @@ func (screen *GameScreen) TxWaitSituationDesc() string {
 		desc = loud.Sprintf("You are now buying %s at the shop", formatCharacter(screen.activeCharacter))
 		desc += W8_TO_END
 	case W8_HUNT_RABBITS:
-		if len(screen.activeItem.Name) > 0 {
-			desc = loud.Sprintf("You are now hunting rabbits with %s", formatItem(screen.activeItem))
+		if activeWeapon != nil {
+			desc = loud.Sprintf("You are now hunting rabbits with %s", formatItem(*activeWeapon))
 		} else {
 			desc = loud.Sprintf("You are now hunting rabbits without weapon")
 		}
 		desc += W8_TO_END
 	case W8_FIGHT_GIANT:
-		desc = loud.Sprintf("You are now fighting with giant with %s", formatItem(screen.activeItem))
+		desc = loud.Sprintf("You are now fighting with giant with %s", formatItem(*activeWeapon))
 	case W8_FIGHT_GOBLIN:
-		desc = loud.Sprintf("You are now fighting with goblin with %s", formatItem(screen.activeItem))
+		desc = loud.Sprintf("You are now fighting with goblin with %s", formatItem(*activeWeapon))
 	case W8_FIGHT_TROLL:
-		desc = loud.Sprintf("You are now fighting with troll with %s", formatItem(screen.activeItem))
+		desc = loud.Sprintf("You are now fighting with troll with %s", formatItem(*activeWeapon))
 	case W8_FIGHT_WOLF:
-		desc = loud.Sprintf("You are now fighting with wolf with %s", formatItem(screen.activeItem))
+		desc = loud.Sprintf("You are now fighting with wolf with %s", formatItem(*activeWeapon))
 	case W8_BUY_GOLD_WITH_PYLONS:
 		desc = loud.Localize("Buying gold with pylon")
 		desc += W8_TO_END
