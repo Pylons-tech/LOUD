@@ -27,15 +27,15 @@ func (screen *GameScreen) renderUserSituation() {
 		}
 		desc = locationDescMap[screen.user.GetLocation()]
 		if screen.user.GetLocation() == loud.HOME {
-			dfc := screen.user.GetDefaultCharacter()
-			if dfc == nil {
+			activeCharacter := screen.user.GetActiveCharacter()
+			if activeCharacter == nil {
 				desc = loud.Localize("home desc without character")
 			} else if screen.user.GetPylonAmount() == 0 {
 				desc = loud.Localize("home desc without pylon")
 			} else {
-				HP := uint64(dfc.HP)
-				MaxHP := uint64(dfc.MaxHP)
-				HP = min(HP+screen.BlockSince(dfc.LastUpdate), MaxHP)
+				HP := uint64(activeCharacter.HP)
+				MaxHP := uint64(activeCharacter.MaxHP)
+				HP = min(HP+screen.BlockSince(activeCharacter.LastUpdate), MaxHP)
 				if float32(HP) < float32(MaxHP)*.25 {
 					desc = loud.Localize("home desc with low HP")
 				}
@@ -91,14 +91,14 @@ func (screen *GameScreen) renderUserSituation() {
 		desc = "Please enter pylon amount to use (should be integer value)" // TODO should add Localize
 	case CR8_BUYCHR_TRDREQ_ENT_PYLVAL:
 		desc = "Please enter pylon amount to use (should be integer value)" // TODO should add Localize
-	case SEL_DEFAULT_CHAR:
-		infoLines = screen.renderITTable("Please select default character", "Character", screen.user.InventoryCharacters())
+	case SEL_ACTIVE_CHAR:
+		infoLines = screen.renderITTable("Please select active character", "Character", screen.user.InventoryCharacters())
 	case SEL_HEALTH_RESTORE_CHAR:
 		infoLines = screen.renderITTable("Please select character to restore health", "Character", screen.user.InventoryCharacters())
 	case SEL_RENAME_CHAR:
 		infoLines = screen.renderITTable("Please select character to rename", "Character", screen.user.InventoryCharacters())
-	case SEL_DEFAULT_WEAPON:
-		infoLines = screen.renderITTable("Please select default weapon", "Item", screen.user.InventorySwords())
+	case SEL_ACTIVE_WEAPON:
+		infoLines = screen.renderITTable("Please select active weapon", "Item", screen.user.InventorySwords())
 	case SEL_BUYITM:
 		infoLines = screen.renderITTable("select buy item desc", "Item", loud.ShopItems)
 	case SEL_BUYCHR:
@@ -152,10 +152,10 @@ func (screen *GameScreen) TxResultSituationDesc() string {
 	resDescMap := map[ScreenStatus]string{
 		RSLT_BUY_LOUD_TRDREQ_CREATION:  "loud buy request creation",
 		RSLT_SELL_LOUD_TRDREQ_CREATION: "loud sell request creation",
-		RSLT_SEL_DEF_CHAR:              "selecting default character",
+		RSLT_SEL_ACT_CHAR:              "selecting active character",
 		RSLT_HEALTH_RESTORE_CHAR:       "selecting character to restore health",
 		RSLT_RENAME_CHAR:               "renaming character",
-		RSLT_SEL_DEF_WEAPON:            "selecting default weapon",
+		RSLT_SEL_ACT_WEAPON:            "selecting active weapon",
 		RSLT_BUYITM:                    "buy item",
 		RSLT_BUYCHR:                    "buy character",
 		RSLT_HUNT_RABBITS:              "hunt rabbits",
@@ -187,14 +187,14 @@ func (screen *GameScreen) TxResultSituationDesc() string {
 		case RSLT_SELL_LOUD_TRDREQ_CREATION:
 			desc = loud.Localize("loud sell request was successfully created")
 			desc += screen.sellLoudDesc(screen.loudEnterValue, screen.pylonEnterValue)
-		case RSLT_SEL_DEF_CHAR:
-			desc = loud.Localize("You have successfully set default character!")
+		case RSLT_SEL_ACT_CHAR:
+			desc = loud.Localize("You have successfully set the active character!")
 		case RSLT_HEALTH_RESTORE_CHAR:
 			desc = loud.Localize("You have successfully restored character's health!")
 		case RSLT_RENAME_CHAR:
 			desc = loud.Sprintf("You have successfully updated character's name to %s!", screen.inputText)
-		case RSLT_SEL_DEF_WEAPON:
-			desc = loud.Localize("You have successfully set default weapon!")
+		case RSLT_SEL_ACT_WEAPON:
+			desc = loud.Localize("You have successfully set the active weapon!")
 		case RSLT_BUYITM:
 			desc = loud.Sprintf("You have bought %s from the shop", formatItem(screen.activeItem))
 			desc += "\n"

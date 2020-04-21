@@ -76,76 +76,76 @@ func RestoreHealth(user User, char Character) (string, error) {
 
 func HuntRabbits(user User, item Item) (string, error) {
 
-	defaultCharacter := user.GetDefaultCharacter()
-	defaultCharacterID := ""
-	if defaultCharacter != nil {
-		defaultCharacterID = defaultCharacter.ID
+	activeCharacter := user.GetActiveCharacter()
+	activeCharacterID := ""
+	if activeCharacter != nil {
+		activeCharacterID = activeCharacter.ID
 	} else {
 		return "", errors.New("character is required to hunt rabbits!")
 	}
 	rcpName := "LOUD's hunt rabbits without sword recipe"
-	itemIDs := []string{defaultCharacterID}
+	itemIDs := []string{activeCharacterID}
 
 	if item.IsSword() {
 		rcpName = "LOUD's hunt rabbits with a sword recipe"
-		itemIDs = []string{defaultCharacterID, item.ID}
+		itemIDs = []string{activeCharacterID, item.ID}
 	}
 
 	return ExecuteRecipe(user, rcpName, itemIDs)
 }
 
 func FightTroll(user User, item Item) (string, error) {
-	defaultCharacter := user.GetDefaultCharacter()
-	defaultCharacterID := ""
-	if defaultCharacter != nil {
-		defaultCharacterID = defaultCharacter.ID
+	activeCharacter := user.GetActiveCharacter()
+	activeCharacterID := ""
+	if activeCharacter != nil {
+		activeCharacterID = activeCharacter.ID
 	} else {
 		return "", errors.New("character is required to fight!")
 	}
 	rcpName := "LOUD's fight with troll with a sword recipe"
-	itemIDs := []string{defaultCharacterID, item.ID}
+	itemIDs := []string{activeCharacterID, item.ID}
 
 	return ExecuteRecipe(user, rcpName, itemIDs)
 }
 
 func FightWolf(user User, item Item) (string, error) {
-	defaultCharacter := user.GetDefaultCharacter()
-	defaultCharacterID := ""
-	if defaultCharacter != nil {
-		defaultCharacterID = defaultCharacter.ID
+	activeCharacter := user.GetActiveCharacter()
+	activeCharacterID := ""
+	if activeCharacter != nil {
+		activeCharacterID = activeCharacter.ID
 	} else {
 		return "", errors.New("character is required to fight!")
 	}
 	rcpName := "LOUD's fight with wolf with a sword recipe"
-	itemIDs := []string{defaultCharacterID, item.ID}
+	itemIDs := []string{activeCharacterID, item.ID}
 
 	return ExecuteRecipe(user, rcpName, itemIDs)
 }
 
 func FightGoblin(user User, item Item) (string, error) {
-	defaultCharacter := user.GetDefaultCharacter()
-	defaultCharacterID := ""
-	if defaultCharacter != nil {
-		defaultCharacterID = defaultCharacter.ID
+	activeCharacter := user.GetActiveCharacter()
+	activeCharacterID := ""
+	if activeCharacter != nil {
+		activeCharacterID = activeCharacter.ID
 	} else {
 		return "", errors.New("character is required to fight!")
 	}
 	rcpName := "LOUD's fight with goblin with a sword recipe"
-	itemIDs := []string{defaultCharacterID, item.ID}
+	itemIDs := []string{activeCharacterID, item.ID}
 
 	return ExecuteRecipe(user, rcpName, itemIDs)
 }
 
 func FightGiant(user User, item Item) (string, error) {
-	defaultCharacter := user.GetDefaultCharacter()
-	defaultCharacterID := ""
-	if defaultCharacter != nil {
-		defaultCharacterID = defaultCharacter.ID
+	activeCharacter := user.GetActiveCharacter()
+	activeCharacterID := ""
+	if activeCharacter != nil {
+		activeCharacterID = activeCharacter.ID
 	} else {
 		return "", errors.New("character is required to fight!")
 	}
 	rcpName := "LOUD's fight with giant with a sword recipe"
-	itemIDs := []string{defaultCharacterID, item.ID}
+	itemIDs := []string{activeCharacterID, item.ID}
 
 	return ExecuteRecipe(user, rcpName, itemIDs)
 }

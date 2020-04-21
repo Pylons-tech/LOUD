@@ -624,14 +624,15 @@ func (screen *GameScreen) renderCharacterSheet() {
 	}
 
 	characters := screen.user.InventoryCharacters()
-	dfc := screen.user.GetDefaultCharacter()
-	dfcRestBlocks := uint64(0)
-	if dfc != nil {
-		HP = uint64(dfc.HP)
-		MaxHP = uint64(dfc.MaxHP)
-		dfcRestBlocks = screen.BlockSince(dfc.LastUpdate)
-		HP = min(HP+dfcRestBlocks, MaxHP)
+	activeCharacter := screen.user.GetActiveCharacter()
+	activeCharacterRestBlocks := uint64(0)
+	if activeCharacter != nil {
+		HP = uint64(activeCharacter.HP)
+		MaxHP = uint64(activeCharacter.MaxHP)
+		activeCharacterRestBlocks = screen.BlockSince(activeCharacter.LastUpdate)
+		HP = min(HP+activeCharacterRestBlocks, MaxHP)
 	}
+	activeWeapon := screen.user.GetActiveWeapon()
 
 	x := screen.screenSize.Width/2 - 1
 	width := (screen.screenSize.Width - x)
@@ -644,9 +645,9 @@ func (screen *GameScreen) renderCharacterSheet() {
 	}
 
 	items := screen.user.InventoryItems()
-	for idx, item := range items {
+	for _, item := range items {
 		itemInfo := truncateRight(formatItem(item), width)
-		if idx == screen.user.GetDefaultItemIndex() {
+		if activeWeapon != nil && item.ID == activeWeapon.ID {
 			itemInfo = screen.blueBoldFont()(itemInfo)
 		}
 		infoLines = append(infoLines, itemInfo)
@@ -654,7 +655,7 @@ func (screen *GameScreen) renderCharacterSheet() {
 
 	for idx, character := range characters {
 		characterInfo := truncateRight(formatCharacter(character), width)
-		if idx == screen.user.GetDefaultCharacterIndex() {
+		if idx == screen.user.GetActiveCharacterIndex() {
 			characterInfo = screen.blueBoldFont()(characterInfo)
 		}
 		infoLines = append(infoLines, characterInfo)
@@ -679,10 +680,16 @@ func (screen *GameScreen) renderCharacterSheet() {
 		// screen.drawProgressMeter(HP, MaxHP, 117, bgcolor, 10) + fmtFunc(truncateRight(fmt.Sprintf(" RP: %v/%v", HP, MaxHP), width-10)),
 		// screen.drawProgressMeter(HP, MaxHP, 76, bgcolor, 10) + fmtFunc(truncateRight(fmt.Sprintf(" MP: %v/%v", HP, MaxHP), width-10)),
 	)
-	if dfc != nil {
+	if activeCharacter != nil {
 		infoLines = append(infoLines,
-			fmtFunc(truncateRight(formatCharacter(*dfc), width)),
-			fmtFunc(truncateRight(loud.Sprintf("rest blocks: %d", dfcRestBlocks), width)),
+			fmtFunc(truncateRight(formatCharacter(*activeCharacter), width)),
+			fmtFunc(truncateRight(loud.Sprintf("rest blocks: %d", activeCharacterRestBlocks), width)),
+		)
+	}
+	if activeWeapon != nil {
+		infoLines = append(infoLines,
+			centerText(loud.Sprintf(" Active Weapon "), "─", width),
+			fmtFunc(truncateRight(formatItem(*activeWeapon), width)),
 		)
 	}
 
@@ -723,13 +730,13 @@ func (screen *GameScreen) renderCharacterSheet() {
 }
 
 func (screen *GameScreen) RunActiveCharacterSelect() {
-	screen.user.SetDefaultCharacterIndex(screen.activeLine)
-	screen.SetScreenStatusAndRefresh(RSLT_SEL_DEF_CHAR)
+	screen.user.SetActiveCharacterIndex(screen.activeLine)
+	screen.SetScreenStatusAndRefresh(RSLT_SEL_ACT_CHAR)
 }
 
 func (screen *GameScreen) RunActiveWeaponSelect() {
-	screen.user.SetDefaultItemIndex(screen.activeLine)
-	screen.SetScreenStatusAndRefresh(RSLT_SEL_DEF_WEAPON)
+	screen.user.SetActiveWeaponIndex(screen.activeLine)
+	screen.SetScreenStatusAndRefresh(RSLT_SEL_ACT_WEAPON)
 }
 
 func (screen *GameScreen) RunCharacterHealthRestore() {
