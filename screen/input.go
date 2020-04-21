@@ -72,6 +72,12 @@ func (screen *GameScreen) HandleInputKeyHomeEntryPoint(input termbox.Event) bool
 
 	if newStus, ok := tarStusMap[Key]; ok {
 		screen.scrStatus = newStus
+		switch newStus {
+		case SEL_ACTIVE_CHAR:
+			screen.activeLine = screen.user.GetActiveCharacterIndex()
+		case SEL_ACTIVE_WEAPON:
+			screen.activeLine = screen.user.GetActiveWeaponIndex()
+		}
 		screen.FreshRender()
 		return true
 	} else {
