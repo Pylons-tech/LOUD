@@ -113,20 +113,20 @@ func (screen *GameScreen) renderUserCommands() {
 			infoLines = append(infoLines, fmt.Sprintf("%d) %s  ", idx+1, formatItem(item))+screen.loudIcon()+fmt.Sprintf(" %s", item.GetSellPriceRange()))
 		}
 		infoLines = appendSelectGoBackCmds(infoLines)
-	case SEL_HUNT_RABBITS_ITEM:
+	case CONFIRM_HUNT_RABBITS:
 		infoLines = append(infoLines, loud.Localize("No item"))
 		for idx, item := range screen.user.InventorySwords() {
 			infoLines = append(infoLines, fmt.Sprintf("%d) %s", idx+1, formatItem(item)))
 		}
 		infoLines = appendSelectGoBackCmds(infoLines)
-	case SEL_FIGHT_GOBLIN_ITEM,
-		SEL_FIGHT_TROLL_ITEM,
-		SEL_FIGHT_WOLF_ITEM:
+	case CONFIRM_FIGHT_GOBLIN,
+		CONFIRM_FIGHT_TROLL,
+		CONFIRM_FIGHT_WOLF:
 		for idx, item := range screen.user.InventorySwords() {
 			infoLines = append(infoLines, fmt.Sprintf("%d) %s", idx+1, formatItem(item)))
 		}
 		infoLines = appendSelectGoBackCmds(infoLines)
-	case SEL_FIGHT_GIANT_ITEM:
+	case CONFIRM_FIGHT_GIANT:
 		for idx, item := range screen.user.InventoryIronSwords() {
 			infoLines = append(infoLines, fmt.Sprintf("%d) %s", idx+1, formatItem(item)))
 		}

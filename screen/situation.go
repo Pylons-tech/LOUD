@@ -101,22 +101,22 @@ func (screen *GameScreen) renderUserSituation() {
 		infoLines = screen.renderITTable("Please select active weapon", "Item", screen.user.InventorySwords())
 	case SEL_BUYITM:
 		infoLines = screen.renderITTable("select buy item desc", "Item", loud.ShopItems)
-	case SEL_BUYCHR:
-		infoLines = screen.renderITTable("select buy character desc", "Character", loud.ShopCharacters)
 	case SEL_SELLITM:
 		infoLines = screen.renderITTable("select sell item desc", "Item", screen.user.InventorySellableItems())
-	case SEL_HUNT_RABBITS_ITEM:
-		infoLines = screen.renderITTable("select hunt rabbits item desc", "Item", screen.user.InventorySwords())
-	case SEL_FIGHT_GOBLIN_ITEM:
-		infoLines = screen.renderITTable("select fight goblin item desc", "Item", screen.user.InventorySwords())
-	case SEL_FIGHT_WOLF_ITEM:
-		infoLines = screen.renderITTable("select fight wolf item desc", "Item", screen.user.InventorySwords())
-	case SEL_FIGHT_TROLL_ITEM:
-		infoLines = screen.renderITTable("select fight troll item desc", "Item", screen.user.InventorySwords())
-	case SEL_FIGHT_GIANT_ITEM:
-		infoLines = screen.renderITTable("select fight giant item desc", "Item", screen.user.InventoryIronSwords())
 	case SEL_UPGITM:
 		infoLines = screen.renderITTable("select upgrade item desc", "Item", screen.user.InventoryUpgradableItems())
+	case SEL_BUYCHR:
+		infoLines = screen.renderITTable("select buy character desc", "Character", loud.ShopCharacters)
+	case CONFIRM_HUNT_RABBITS:
+		infoLines = screen.renderITTable("select hunt rabbits item desc", "Item", screen.user.InventorySwords())
+	case CONFIRM_FIGHT_GOBLIN:
+		infoLines = screen.renderITTable("select fight goblin item desc", "Item", screen.user.InventorySwords())
+	case CONFIRM_FIGHT_WOLF:
+		infoLines = screen.renderITTable("select fight wolf item desc", "Item", screen.user.InventorySwords())
+	case CONFIRM_FIGHT_TROLL:
+		infoLines = screen.renderITTable("select fight troll item desc", "Item", screen.user.InventorySwords())
+	case CONFIRM_FIGHT_GIANT:
+		infoLines = screen.renderITTable("select fight giant item desc", "Item", screen.user.InventoryIronSwords())
 	}
 
 	if screen.IsResultScreen() {
