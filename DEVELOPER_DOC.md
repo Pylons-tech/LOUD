@@ -153,7 +153,7 @@ character should carry sword to fight wolf.
 Total received damage you get from Wolf is calculated by using `EnemyHP * EnemyAttack / SwordAttack`, and dying percentage is related to Total received damage you get from Wolf.
 
 ```
-Character Dying percent: `(Total received damage - HP) / Total received damage`
+Character Dying percent: `1 - HP / Total received damage`
 Character Alive percent: `HP / Total received damage`
 Sword lose percent: `HP / Total received damage * 0.1`
 Wolf tail bonus item percent: `HP / Total received damage * 0.1`
@@ -175,7 +175,7 @@ character should carry sword to fight troll.
 Total received damage you get from Troll is calculated by using `EnemyHP * EnemyAttack / SwordAttack`, and dying percentage is related to Total received damage you get from Troll.
 
 ```
-Character Dying percent: `(Total received damage - HP) / Total received damage`
+Character Dying percent: `1 - HP / Total received damage`
 Character Alive percent: `HP / Total received damage`
 Sword lose percent: `HP / Total received damage * 0.1`
 Troll toes bonus item percent: `HP / Total received damage * 0.1`
@@ -197,7 +197,7 @@ character should carry iron sword to fight giant.
 Total received damage you get from Giant is calculated by using `EnemyHP * EnemyAttack / SwordAttack`, and dying percentage is related to Total received damage you get from Giant.
 
 ```
-Character Dying percent: `(Total received damage - HP) / Total received damage`
+Character Dying percent: `1 - HP / Total received damage`
 Character Alive percent: `HP / Total received damage`
 Sword lose percent: `HP / Total received damage * 0.1`
 ```
