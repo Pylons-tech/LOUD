@@ -38,6 +38,7 @@ func SyncFromNode(user User) {
 		HP, _ := rawItem.FindLong("HP")
 		MaxHP, _ := rawItem.FindLong("MaxHP")
 		Level, _ := rawItem.FindLong("level")
+		GiantKill, _ := rawItem.FindLong("GiantKill")
 		Name, _ := rawItem.FindString("Name")
 		itemType, _ := rawItem.FindString("Type")
 		Attack, _ := rawItem.FindDouble("attack")
@@ -51,6 +52,7 @@ func SyncFromNode(user User) {
 				XP:         XP,
 				HP:         HP,
 				MaxHP:      MaxHP,
+				GiantKill:  GiantKill,
 				LastUpdate: LastUpdate,
 			})
 		} else {

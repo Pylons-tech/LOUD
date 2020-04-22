@@ -120,6 +120,9 @@ func formatItemSpec(itemSpec loud.ItemSpec) string {
 
 func formatCharacter(ch loud.Character) string {
 	chStr := loud.Localize(ch.Name)
+	if ch.GiantKill > 0 {
+		chStr = fmt.Sprintf("🥇x%d %s", ch.GiantKill, chStr)
+	}
 	if ch.Level > 0 {
 		chStr += fmt.Sprintf(" Lv%d", ch.Level)
 	}
