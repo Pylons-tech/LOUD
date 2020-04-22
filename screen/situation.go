@@ -17,7 +17,7 @@ func basicHuntResultDesc(format string, earnedAmount int64, res []string) string
 }
 
 func devDetailedResultDesc(res []string) string {
-	return loud.Sprintf(" Detailed result: %+v\n", res)
+	return loud.Sprintf("\nDetailed result:\n  %s\n", strings.Join(res, "\n  "))
 }
 
 func (screen *GameScreen) GetTxResponseOutput() (int64, []handlers.ExecuteRecipeSerialize) {
