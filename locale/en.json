@@ -199,20 +199,20 @@
   "Please use it for hunting": {
     "one": "Please use it for hunting."
   },
-  "You did hunt rabbits and earned %d. Detailed result: %+v": {
-    "one": "You did hunt rabbits and earned %d. Detailed result: %+v"
+  "You did hunt rabbits and earned %d.": {
+    "one": "You did hunt rabbits and earned %d."
   },
-  "You did fight with goblin and earned %d. Detailed result: %+v": {
-    "one": "You did fight with goblin and earned %d. Detailed result: %+v"
+  "You did fight with goblin and earned %d.": {
+    "one": "You did fight with goblin and earned %d."
   },
-  "You did fight with troll and earned %d. Detailed result: %+v": {
-    "one": "You did fight with troll and earned %d. Detailed result: %+v"
+  "You did fight with troll and earned %d.": {
+    "one": "You did fight with troll and earned %d."
   },
-  "You did fight with wolf and earned %d. Detailed result: %+v": {
-    "one": "You did fight with wolf and earned %d. Detailed result: %+v"
+  "You did fight with wolf and earned %d.": {
+    "one": "You did fight with wolf and earned %d."
   },
-  "You did fight with giant and earned %d. Detailed result: %+v": {
-    "one": "You did fight with giant and earned %d. Detailed result: %+v"
+  "You did fight with giant and earned %d.": {
+    "one": "You did fight with giant and earned %d."
   },
   "Bought gold with pylons. Amount is %d.": {
     "one": "Bought gold with pylons. Amount is %d."

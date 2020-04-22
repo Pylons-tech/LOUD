@@ -12,6 +12,24 @@ import (
 	"github.com/ahmetb/go-cursor"
 )
 
+func basicHuntResultDesc(format string, earnedAmount int64, res []string) string {
+	return loud.Sprintf(format, earnedAmount) + devDetailedResultDesc(res)
+}
+
+func devDetailedResultDesc(res []string) string {
+	return loud.Sprintf(" Detailed result: %+v\n", res)
+}
+
+func (screen *GameScreen) GetTxResponseOutput() (int64, []handlers.ExecuteRecipeSerialize) {
+	respOutput := []handlers.ExecuteRecipeSerialize{}
+	earnedAmount := int64(0)
+	json.Unmarshal(screen.txResult, &respOutput)
+	if len(respOutput) > 0 {
+		earnedAmount = respOutput[0].Amount
+	}
+	return earnedAmount, respOutput
+}
+
 func (screen *GameScreen) renderUserSituation() {
 	infoLines := []string{}
 	desc := ""
@@ -214,109 +232,78 @@ func (screen *GameScreen) TxResultSituationDesc() string {
 		case RSLT_RENAME_CHAR:
 			desc = loud.Sprintf("You have successfully updated character's name to %s!", screen.inputText)
 		case RSLT_BUYITM:
-			desc = loud.Sprintf("You have bought %s from the shop", formatItem(screen.activeItem))
-			desc += "\n"
+			desc = loud.Sprintf("You have bought %s from the shop\n", formatItem(screen.activeItem))
 			desc += loud.Localize("Please use it for hunting")
 		case RSLT_BUYCHR:
-			desc = loud.Sprintf("You have bought %s from the shop", formatCharacter(screen.activeCharacter))
-			desc += "\n"
+			desc = loud.Sprintf("You have bought %s from the shop\n", formatCharacter(screen.activeCharacter))
 			desc += loud.Localize("Please use it for hunting")
 		case RSLT_HUNT_RABBITS:
-			respOutput := []handlers.ExecuteRecipeSerialize{}
-			earnedAmount := int64(0)
-			json.Unmarshal(screen.txResult, &respOutput)
-			if len(respOutput) > 0 {
-				earnedAmount = respOutput[0].Amount
-			}
+			earnedAmount, respOutput := screen.GetTxResponseOutput()
 			resultTexts := []string{"gold", "character", "weapon"}
-			desc = loud.Sprintf("You did hunt rabbits and earned %d. Detailed result: %+v", earnedAmount, resultTexts[:len(respOutput)])
+			desc = basicHuntResultDesc("You did hunt rabbits and earned %d.", earnedAmount, resultTexts[:len(respOutput)])
 			switch len(respOutput) {
 			case 0:
-				desc += "\nYour character is dead during hunt accidently"
+				desc += "Your character is dead during hunt accidently"
 			case 2:
 				if len(screen.activeItem.Name) > 0 {
-					desc += "\nYou have lost your weapon accidently"
+					desc += "You have lost your weapon accidently"
 				}
 			}
 		case RSLT_FIGHT_GOBLIN:
-			respOutput := []handlers.ExecuteRecipeSerialize{}
-			earnedAmount := int64(0)
-			json.Unmarshal(screen.txResult, &respOutput)
-			if len(respOutput) > 0 {
-				earnedAmount = respOutput[0].Amount
-			}
+			earnedAmount, respOutput := screen.GetTxResponseOutput()
 			resultTexts := []string{"gold", "character", "weapon", loud.GOBLIN_EAR}
-			desc = loud.Sprintf("You did fight with goblin and earned %d. Detailed result: %+v", earnedAmount, resultTexts[:len(respOutput)])
+			desc = basicHuntResultDesc("You did fight with goblin and earned %d.", earnedAmount, resultTexts[:len(respOutput)])
 			switch len(respOutput) {
 			case 0:
-				desc += "\nYour character is dead during fighting goblin accidently"
+				desc += "Your character is dead during fighting goblin accidently"
 			case 2:
-				desc += "\nYou have lost your weapon accidently"
+				desc += "You have lost your weapon accidently"
 			case 4:
-				desc += fmt.Sprintf("\nYou got bonus item called %s", loud.GOBLIN_EAR)
+				desc += fmt.Sprintf("You got bonus item called %s", loud.GOBLIN_EAR)
 			}
 		case RSLT_FIGHT_TROLL:
-			respOutput := []handlers.ExecuteRecipeSerialize{}
-			earnedAmount := int64(0)
-			json.Unmarshal(screen.txResult, &respOutput)
-			if len(respOutput) > 0 {
-				earnedAmount = respOutput[0].Amount
-			}
+			earnedAmount, respOutput := screen.GetTxResponseOutput()
 			resultTexts := []string{"gold", "character", "weapon", loud.TROLL_TOES}
-			desc = loud.Sprintf("You did fight with troll and earned %d. Detailed result: %+v", earnedAmount, resultTexts[:len(respOutput)])
+			desc = basicHuntResultDesc("You did fight with troll and earned %d.", earnedAmount, resultTexts[:len(respOutput)])
+
 			switch len(respOutput) {
 			case 0:
-				desc += "\nYour character is dead during fighting troll accidently"
+				desc += "Your character is dead during fighting troll accidently"
 			case 2:
-				desc += "\nYou have lost your weapon accidently"
+				desc += "You have lost your weapon accidently"
 			case 4:
-				desc += fmt.Sprintf("\nYou got bonus item called %s", loud.TROLL_TOES)
+				desc += fmt.Sprintf("You got bonus item called %s", loud.TROLL_TOES)
 			}
 		case RSLT_FIGHT_WOLF:
-			respOutput := []handlers.ExecuteRecipeSerialize{}
-			earnedAmount := int64(0)
-			json.Unmarshal(screen.txResult, &respOutput)
-			if len(respOutput) > 0 {
-				earnedAmount = respOutput[0].Amount
-			}
+			earnedAmount, respOutput := screen.GetTxResponseOutput()
 			resultTexts := []string{"gold", "character", "weapon", loud.WOLF_TAIL}
-			desc = loud.Sprintf("You did fight with wolf and earned %d. Detailed result: %+v", earnedAmount, resultTexts[:len(respOutput)])
+			desc = basicHuntResultDesc("You did fight with wolf and earned %d.", earnedAmount, resultTexts[:len(respOutput)])
 			switch len(respOutput) {
 			case 0:
-				desc += "\nYour character is dead during fighting wolf accidently"
+				desc += "Your character is dead during fighting wolf accidently"
 			case 2:
-				desc += "\nYou have lost your weapon accidently"
+				desc += "You have lost your weapon accidently"
 			case 4:
-				desc += fmt.Sprintf("\nYou got bonus item called %s", loud.WOLF_TAIL)
+				desc += fmt.Sprintf("You got bonus item called %s", loud.WOLF_TAIL)
 			}
 		case RSLT_FIGHT_GIANT:
-			respOutput := []handlers.ExecuteRecipeSerialize{}
-			earnedAmount := int64(0)
-			json.Unmarshal(screen.txResult, &respOutput)
-			if len(respOutput) > 0 {
-				earnedAmount = respOutput[0].Amount
-			}
+			earnedAmount, respOutput := screen.GetTxResponseOutput()
 			resultTexts := []string{"gold", "character", "weapon"}
-			desc = loud.Sprintf("You did fight with giant and earned %d. Detailed result: %+v", earnedAmount, resultTexts[:len(respOutput)])
+			desc = basicHuntResultDesc("You did fight with giant and earned %d.", earnedAmount, resultTexts[:len(respOutput)])
 			switch len(respOutput) {
 			case 0:
-				desc += "\nYour character is dead during fighting wolf accidently"
+				desc += "Your character is dead during fighting wolf accidently"
 			case 2:
-				desc += "\nYou have lost your weapon accidently"
+				desc += "You have lost your weapon accidently"
 			}
 		case RSLT_BUY_GOLD_WITH_PYLONS:
-			respOutput := []handlers.ExecuteRecipeSerialize{}
-			json.Unmarshal(screen.txResult, &respOutput)
-			earnedAmount := int64(0)
-			if len(respOutput) > 0 {
-				earnedAmount = respOutput[0].Amount
-			}
+			earnedAmount, _ := screen.GetTxResponseOutput()
 			desc = loud.Sprintf("Bought gold with pylons. Amount is %d.", earnedAmount)
 		case RSLT_DEV_GET_TEST_ITEMS:
-			respOutput := []handlers.ExecuteRecipeSerialize{}
-			json.Unmarshal(screen.txResult, &respOutput)
+			_, respOutput := screen.GetTxResponseOutput()
 			resultTexts := []string{loud.WOLF_TAIL, loud.TROLL_TOES, loud.GOBLIN_EAR}
-			desc = loud.Sprintf("Finished getting developer test items. Detailed result %+v", resultTexts[:len(respOutput)])
+			desc = loud.Sprintf("Finished getting developer test items.")
+			desc += devDetailedResultDesc(resultTexts[:len(respOutput)])
 		case RSLT_GET_PYLONS:
 			desc = loud.Localize("You got extra pylons for loud game")
 		case RSLT_SWITCH_USER:
@@ -324,12 +311,7 @@ func (screen *GameScreen) TxResultSituationDesc() string {
 		case RSLT_CREATE_COOKBOOK:
 			desc = loud.Localize("You created a new cookbook for a new game build")
 		case RSLT_SELLITM:
-			respOutput := []handlers.ExecuteRecipeSerialize{}
-			earnedAmount := int64(0)
-			json.Unmarshal(screen.txResult, &respOutput)
-			if len(respOutput) > 0 {
-				earnedAmount = respOutput[0].Amount
-			}
+			earnedAmount, _ := screen.GetTxResponseOutput()
 			desc = loud.Sprintf("You sold %s for %d gold.", formatItem(screen.activeItem), earnedAmount)
 		case RSLT_UPGITM:
 			desc = loud.Sprintf("You have upgraded %s to get better hunt result", screen.activeItem.Name)
