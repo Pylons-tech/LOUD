@@ -35,6 +35,8 @@ func (screen *GameScreen) renderUserSituation() {
 	desc := ""
 	activeWeapon := screen.user.GetActiveWeapon()
 	switch screen.scrStatus {
+	case CONFIRM_ENDGAME:
+		desc = "Are you really gonna end game? 🥺"
 	case SHW_LOCATION:
 		locationDescMap := map[loud.UserLocation]string{
 			loud.HOME:     loud.Localize("home desc"),

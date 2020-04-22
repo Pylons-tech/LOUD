@@ -11,9 +11,11 @@ import (
 )
 
 const (
-	SEL_CMD     = "Select ( ↵ )"
-	GO_ON_CMD   = "Go) on ( ↵ )"
-	GO_BACK_CMD = "Go back( ⌫ ) - Backspace Key"
+	SEL_CMD         = "Select ( ↵ )"
+	GO_ON_CMD       = "Go) on ( ↵ )"
+	GO_ON_ENTER_CMD = "Go on ( ↵ )"
+	GO_BACK_CMD     = "Go back ( ⌫ ) - Backspace Key"
+	GO_BACK_ESC_CMD = "Go back ( Esc )"
 )
 
 func (tl TextLines) appendDeselectCmd() TextLines {
@@ -44,6 +46,11 @@ func (screen *GameScreen) renderUserCommands() {
 
 	infoLines := TextLines{}
 	switch screen.scrStatus {
+	case CONFIRM_ENDGAME:
+		infoLines = infoLines.
+			append(
+				GO_BACK_ESC_CMD,
+				GO_ON_ENTER_CMD)
 	case SHW_LOCATION:
 		cmdMap := map[loud.UserLocation]string{
 			loud.HOME:     "home",
@@ -197,7 +204,7 @@ func (screen *GameScreen) renderUserCommands() {
 			infoLines = infoLines.
 				append(
 					loud.Localize("Finish Enter ( ↵ )"),
-					loud.Localize(GO_BACK_CMD))
+					loud.Localize(GO_BACK_ESC_CMD))
 		}
 	}
 

@@ -258,6 +258,7 @@ func (screen *GameScreen) MoveToPrevStep() {
 		CR8_SELLCHR_TRDREQ_ENT_PYLVAL:   CR8_SELLCHR_TRDREQ_SEL_CHR,
 		CR8_BUYCHR_TRDREQ_SEL_CHR:       SHW_BUYCHR_TRDREQS,
 		CR8_BUYCHR_TRDREQ_ENT_PYLVAL:    CR8_BUYCHR_TRDREQ_SEL_CHR,
+		RENAME_CHAR_ENT_NEWNAME:         SEL_RENAME_CHAR,
 	}
 
 	nxtStatus := SHW_LOCATION
@@ -265,9 +266,19 @@ func (screen *GameScreen) MoveToPrevStep() {
 		nxtStatus = nextStatus
 	}
 
-	// move to home if it's somewhere else's 1st step
+	switch nxtStatus {
+	case CR8_BUY_LOUD_TRDREQ_ENT_LUDVAL,
+		CR8_SELL_LOUD_TRDREQ_ENT_LUDVAL:
+		// set loud value previously entered
+		screen.inputText = screen.loudEnterValue
+	case SHW_LOCATION:
+		// move to home if it's somewhere else's 1st step
+		if screen.scrStatus == SHW_LOCATION {
+			screen.user.SetLocation(loud.HOME)
+		}
+	}
+
 	if nxtStatus == SHW_LOCATION && screen.scrStatus == SHW_LOCATION {
-		screen.user.SetLocation(loud.HOME)
 	}
 
 	screen.scrStatus = nxtStatus
@@ -275,6 +286,16 @@ func (screen *GameScreen) MoveToPrevStep() {
 }
 
 func (screen *GameScreen) HandleFirstClassInputKeys(input termbox.Event) bool {
+	if input.Key == termbox.KeyEsc {
+		switch screen.scrStatus {
+		case CONFIRM_ENDGAME:
+			screen.scrStatus = SHW_LOCATION
+		default:
+			screen.scrStatus = CONFIRM_ENDGAME
+		}
+		screen.FreshRender()
+		return true
+	}
 	// implement first class commands, eg. development input keys
 	if screen.HandleInputKeyLocationSwitch(input) {
 		return true
@@ -574,6 +595,9 @@ func (screen *GameScreen) HandleThirdClassKeyEnterEvent() bool {
 
 func (screen *GameScreen) HandleTypingModeInputKeys(input termbox.Event) bool {
 	switch input.Key {
+	case termbox.KeyEsc:
+		screen.MoveToPrevStep()
+		return true
 	case termbox.KeyBackspace2,
 		termbox.KeyBackspace:
 

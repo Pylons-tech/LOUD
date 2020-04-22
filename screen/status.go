@@ -6,6 +6,8 @@ type ScreenStatus string
 
 const (
 	SHW_LOCATION ScreenStatus = "SHW_LOCATION"
+
+	CONFIRM_ENDGAME = "CONFIRM_ENDGAME"
 	// at home
 	SEL_ACTIVE_CHAR   = "SEL_ACTIVE_CHAR"
 	RSLT_SEL_ACT_CHAR = "RSLT_SEL_ACT_CHAR"

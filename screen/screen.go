@@ -29,6 +29,7 @@ const bgcolor = 232
 // Screen represents a UI screen.
 type Screen interface {
 	SaveGame()
+	IsEndGameConfirmScreen() bool
 	UpdateFakeBlockHeight(int64)
 	SetScreenSize(int, int)
 	HandleInputKey(termbox.Event)
@@ -572,6 +573,10 @@ func (screen *GameScreen) IsResultScreen() bool {
 
 func (screen *GameScreen) IsWaitScreen() bool {
 	return screen.scrStatus.IsWaitScreen()
+}
+
+func (screen *GameScreen) IsEndGameConfirmScreen() bool {
+	return screen.scrStatus == CONFIRM_ENDGAME
 }
 
 func (screen *GameScreen) InputActive() bool {
