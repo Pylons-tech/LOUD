@@ -8,6 +8,12 @@ import (
 	loud "github.com/Pylons-tech/LOUD/data"
 )
 
+type TextLines []string
+
+func (tl TextLines) append(elems ...string) TextLines {
+	return append(tl, elems...)
+}
+
 func truncateRight(message string, width int) string {
 	if utf8.RuneCountInString(message) < width {
 		fmtString := fmt.Sprintf("%%-%vs", width)
