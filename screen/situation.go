@@ -331,11 +331,11 @@ func (screen *GameScreen) TxResultSituationDesc() string {
 			desc = loud.Localize("successfully cancelled trade request")
 		case RSLT_FULFILL_BUY_LOUD_TRDREQ:
 			request := screen.activeTrdReq
-			desc = loud.Localize("you have sold loud coin successfully from loud/pylon market") + fmt.Sprintf(" at %.4f.\n", request.Price)
+			desc = loud.Localize("you have sold loud coin successfully from coin market") + fmt.Sprintf(" at %.4f.\n", request.Price)
 			desc += screen.sellLoudDesc(request.Amount, request.Total)
 		case RSLT_FULFILL_SELL_LOUD_TRDREQ:
 			request := screen.activeTrdReq
-			desc = loud.Localize("you have bought loud coin successfully from loud/pylon market") + fmt.Sprintf(" at %.4f.\n", request.Price)
+			desc = loud.Localize("you have bought loud coin successfully from coin market") + fmt.Sprintf(" at %.4f.\n", request.Price)
 			desc += screen.buyLoudDesc(request.Amount, request.Total)
 		case RSLT_FULFILL_SELLITM_TRDREQ:
 			request := screen.activeItemTrdReq.(loud.ItemSellTrdReq)

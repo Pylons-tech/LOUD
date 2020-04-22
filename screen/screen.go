@@ -149,8 +149,8 @@ func (screen *GameScreen) pylonIcon() string {
 	return screen.drawProgressMeter(1, 1, 117, bgcolor, 1)
 }
 
-func (screen *GameScreen) loudIcon() string {
-	return screen.drawProgressMeter(1, 1, 208, bgcolor, 1)
+func (screen *GameScreen) goldIcon() string {
+	return "💰"
 }
 
 func (screen *GameScreen) buyLoudDesc(loudValue interface{}, pylonValue interface{}) string {
@@ -159,7 +159,7 @@ func (screen *GameScreen) buyLoudDesc(loudValue interface{}, pylonValue interfac
 		screen.pylonIcon(),
 		fmt.Sprintf("%v", pylonValue),
 		"\n  ↓\n",
-		screen.loudIcon(),
+		screen.goldIcon(),
 		fmt.Sprintf("%v", loudValue),
 	}, "")
 	return desc
@@ -168,7 +168,7 @@ func (screen *GameScreen) buyLoudDesc(loudValue interface{}, pylonValue interfac
 func (screen *GameScreen) sellLoudDesc(loudValue interface{}, pylonValue interface{}) string {
 	var desc = strings.Join([]string{
 		"\n",
-		screen.loudIcon(),
+		screen.goldIcon(),
 		fmt.Sprintf("%v", loudValue),
 		"\n  ↓\n",
 		screen.pylonIcon(),
@@ -640,7 +640,7 @@ func (screen *GameScreen) renderCharacterSheet() {
 	infoLines := []string{
 		centerText(fmt.Sprintf("%v", screen.user.GetUserName()), " ", width),
 		centerText(loud.Localize("inventory"), "─", width),
-		screen.loudIcon() + truncateRight(fmt.Sprintf(" %s: %v", loud.Localize("gold"), screen.user.GetGold()), width-1),
+		screen.goldIcon() + truncateRight(fmt.Sprintf(" %v", screen.user.GetGold()), width-1),
 		"",
 	}
 

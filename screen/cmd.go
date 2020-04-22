@@ -73,42 +73,42 @@ func (screen *GameScreen) renderUserCommands() {
 			append(screen.tradeTableColorDesc()...).
 			append(
 				"Sell loud to fulfill selected request( ↵ )",
-				"Create an order to buy loud(R)",
+				"place order to buy loud(R)",
 				GO_BACK_CMD)
 	case SHW_LOUD_SELL_TRDREQS:
 		infoLines = infoLines.
 			append(screen.tradeTableColorDesc()...).
 			append(
 				"Buy loud to fulfill selected request( ↵ )",
-				"Create an order to sell loud(R)",
+				"place order to sell loud(R)",
 				GO_BACK_CMD)
 	case SHW_BUYITM_TRDREQS:
 		infoLines = infoLines.
 			append(screen.tradeTableColorDesc()...).
 			append(
 				"Sell item to fulfill selected request( ↵ )",
-				"Create an order to buy item(R)",
+				"place order to buy item(R)",
 				GO_BACK_CMD)
 	case SHW_SELLITM_TRDREQS:
 		infoLines = infoLines.
 			append(screen.tradeTableColorDesc()...).
 			append(
 				"Buy item to fulfill selected request( ↵ )",
-				"Create an order to sell item(R)",
+				"place order to sell item(R)",
 				GO_BACK_CMD)
 	case SHW_BUYCHR_TRDREQS:
 		infoLines = infoLines.
 			append(screen.tradeTableColorDesc()...).
 			append(
 				"Sell character to fulfill selected request( ↵ )",
-				"Create an order to buy character(R)",
+				"place order to buy character(R)",
 				GO_BACK_CMD)
 	case SHW_SELLCHR_TRDREQS:
 		infoLines = infoLines.
 			append(screen.tradeTableColorDesc()...).
 			append(
 				"Buy character to fulfill selected request( ↵ )",
-				"Create an order to sell character(R)",
+				"place order to sell character(R)",
 				GO_BACK_CMD)
 
 	case CR8_BUYCHR_TRDREQ_SEL_CHR,
@@ -152,7 +152,7 @@ func (screen *GameScreen) renderUserCommands() {
 				loud.ShopItems,
 				func(it interface{}) string {
 					item := it.(loud.Item)
-					return formatItem(item) + screen.loudIcon() + fmt.Sprintf(" %d", item.Price)
+					return formatItem(item) + screen.goldIcon() + fmt.Sprintf(" %d", item.Price)
 				}).
 			appendSelectGoBackCmds()
 	case SEL_BUYCHR:
@@ -170,7 +170,7 @@ func (screen *GameScreen) renderUserCommands() {
 				screen.user.InventorySellableItems(),
 				func(it interface{}) string {
 					item := it.(loud.Item)
-					return formatItem(item) + screen.loudIcon() + fmt.Sprintf(" %s", item.GetSellPriceRange())
+					return formatItem(item) + screen.goldIcon() + fmt.Sprintf(" %s", item.GetSellPriceRange())
 				}).
 			appendSelectGoBackCmds()
 	case SEL_UPGITM:
@@ -179,7 +179,7 @@ func (screen *GameScreen) renderUserCommands() {
 				screen.user.InventoryUpgradableItems(),
 				func(it interface{}) string {
 					item := it.(loud.Item)
-					return formatItem(item) + screen.loudIcon() + fmt.Sprintf(" %d", item.GetUpgradePrice())
+					return formatItem(item) + screen.goldIcon() + fmt.Sprintf(" %d", item.GetUpgradePrice())
 				}).
 			appendSelectGoBackCmds()
 	case CONFIRM_HUNT_RABBITS,

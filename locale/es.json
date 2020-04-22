@@ -36,13 +36,13 @@
     "one": "1) Select active character\n2) Select active weapon\n3) Restore character health\n4) Update character name\n"
   },
   "forest": {
-    "one": "1) Cazar\n2) Goblin\n3) Wolf\n4) Troll\n5) Giant\n"
+    "one": "1) Rabbit(💰1+)\n2) Goblin(💰50)\n3) Wolf(💰150)\n4) Troll(💰300)\n5) Giant(💰3000)\n"
   },
   "shop": {
     "one": "1) Comprar Artículos\n2) Vender Artículos\n3) Mejorar Artículos\n"
   },
   "pylons central": {
-    "one": "1) Buy Characters\n2) Buy gold with pylons\n3) Sell Loud from orderbook / Create an order to buy Loud\n4) Buy Loud from orderbook / Create an order to Sell Loud\n5) Sell sword from orderbook / Create an order to buy sword\n6) Buy sword from orderbook / Create an order to sell sword\n7) Sell character from orderbook / Create an order to buy character\n8) Buy character from orderbook / Create an order to sell character\n"
+    "one": "1) Buy characters(🦘)\n2) Buy 💰5000 with 100 pylons\n3) Sell 💰 from orderbook / place order to buy 💰\n4) Buy 💰 from orderbook / place order to sell 💰\n5) Sell 🗡️  from orderbook / place order to buy 🗡️\n6) Buy 🗡️  from orderbook / place order to sell 🗡️\n7) Sell 🦘 from orderbook / place order to buy 🦘\n8) Buy 🦘 from orderbook / place order to sell 🦘\n"
   },
   "settings": {
     "one": "Idioma:\n1) English\n2) Español\n"
@@ -178,11 +178,11 @@
   "You are now buying sword at %d": {
     "one": "You are now buying sword at %d.\n"
   },
-  "you have bought loud coin successfully from loud/pylon market": {
-    "one": "Has comprado una moneda fuerte con éxito en loud/pylon market"
+  "you have bought loud coin successfully from coin market": {
+    "one": "Has comprado una moneda fuerte con éxito en coin market"
   },
-  "you have sold loud coin successfully from loud/pylon market": {
-    "one": "Has vendido monedas fuertes con éxito en el mercado loud/pylon"
+  "you have sold loud coin successfully from coin market": {
+    "one": "Has vendido monedas fuertes con éxito en el mercado coin"
   },
   "You are now waiting for loud buy request creation": {
     "one": "Ahora está esperando la creación de la orden de compra loud"
@@ -200,22 +200,22 @@
     "one": "Por favor usar para cazar."
   },
   "You did hunt rabbits and earned %d.": {
-    "one": "You did hunt rabbits and earned %d."
+    "one": "You did hunt rabbits and earned 💰%d."
   },
   "You did fight with goblin and earned %d.": {
-    "one": "You did fight with goblin and earned %d."
+    "one": "You did fight with goblin and earned 💰%d."
   },
   "You did fight with troll and earned %d.": {
-    "one": "You did fight with troll and earned %d."
+    "one": "You did fight with troll and earned 💰%d."
   },
   "You did fight with wolf and earned %d.": {
-    "one": "You did fight with wolf and earned %d."
+    "one": "You did fight with wolf and earned 💰%d."
   },
   "You did fight with giant and earned %d.": {
-    "one": "You did fight with giant and earned %d."
+    "one": "You did fight with giant and earned 💰%d."
   },
   "Bought gold with pylons. Amount is %d.": {
-    "one": "Bought gold with pylons. Amount is %d."
+    "one": "Bought gold with pylons. Amount is 💰%d."
   },
   "You sold %s for gold.": {
     "one": "You sold \"%s\" for %d gold."
@@ -228,9 +228,6 @@
   },
   "health critical warning": {
     "one": " (Salud CRITICA) "
-  },
-  "gold": {
-    "one": "Oro"
   },
   "inventory": {
     "one": " Inventario "
