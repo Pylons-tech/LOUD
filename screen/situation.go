@@ -198,13 +198,21 @@ func (screen *GameScreen) TxResultSituationDesc() string {
 			desc = loud.Localize("loud sell request was successfully created")
 			desc += screen.sellLoudDesc(screen.loudEnterValue, screen.pylonEnterValue)
 		case RSLT_SEL_ACT_CHAR:
-			desc = loud.Localize("You have successfully set the active character!")
+			if screen.user.GetActiveCharacter() == nil {
+				desc = loud.Localize("You have successfully unset the active character!")
+			} else {
+				desc = loud.Localize("You have successfully set the active character!")
+			}
+		case RSLT_SEL_ACT_WEAPON:
+			if screen.user.GetActiveWeapon() == nil {
+				desc = loud.Localize("You have successfully unset the active weapon!")
+			} else {
+				desc = loud.Localize("You have successfully set the active weapon!")
+			}
 		case RSLT_HEALTH_RESTORE_CHAR:
 			desc = loud.Localize("You have successfully restored character's health!")
 		case RSLT_RENAME_CHAR:
 			desc = loud.Sprintf("You have successfully updated character's name to %s!", screen.inputText)
-		case RSLT_SEL_ACT_WEAPON:
-			desc = loud.Localize("You have successfully set the active weapon!")
 		case RSLT_BUYITM:
 			desc = loud.Sprintf("You have bought %s from the shop", formatItem(screen.activeItem))
 			desc += "\n"

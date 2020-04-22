@@ -92,14 +92,20 @@ func (screen *GameScreen) renderUserCommands() {
 		infoLines = append(infoLines,
 			SEL_CMD,
 			GO_BACK_CMD)
-	case SEL_ACTIVE_CHAR,
-		SEL_HEALTH_RESTORE_CHAR,
+	case SEL_HEALTH_RESTORE_CHAR,
 		SEL_RENAME_CHAR:
 		for idx, char := range screen.user.InventoryCharacters() {
 			infoLines = append(infoLines, fmt.Sprintf("%d) %s  ", idx+1, formatCharacter(char)))
 		}
 		infoLines = appendSelectGoBackCmds(infoLines)
+	case SEL_ACTIVE_CHAR:
+		infoLines = append(infoLines, loud.Sprintf("0) %s", "Deselect"))
+		for idx, char := range screen.user.InventoryCharacters() {
+			infoLines = append(infoLines, fmt.Sprintf("%d) %s  ", idx+1, formatCharacter(char)))
+		}
+		infoLines = appendSelectGoBackCmds(infoLines)
 	case SEL_ACTIVE_WEAPON:
+		infoLines = append(infoLines, loud.Sprintf("0) %s", "Deselect"))
 		for idx, item := range screen.user.InventorySwords() {
 			infoLines = append(infoLines, fmt.Sprintf("%d) %s  ", idx+1, formatItem(item)))
 		}

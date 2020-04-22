@@ -729,13 +729,13 @@ func (screen *GameScreen) renderCharacterSheet() {
 	screen.drawFill(x, lastLine+1, width, screen.screenSize.Height-(lastLine+2))
 }
 
-func (screen *GameScreen) RunActiveCharacterSelect() {
-	screen.user.SetActiveCharacterIndex(screen.activeLine)
+func (screen *GameScreen) RunActiveCharacterSelect(index int) {
+	screen.user.SetActiveCharacterIndex(index)
 	screen.SetScreenStatusAndRefresh(RSLT_SEL_ACT_CHAR)
 }
 
-func (screen *GameScreen) RunActiveWeaponSelect() {
-	screen.user.SetActiveWeaponIndex(screen.activeLine)
+func (screen *GameScreen) RunActiveWeaponSelect(index int) {
+	screen.user.SetActiveWeaponIndex(index)
 	screen.SetScreenStatusAndRefresh(RSLT_SEL_ACT_WEAPON)
 }
 

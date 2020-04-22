@@ -397,11 +397,10 @@ func (screen *GameScreen) HandleThirdClassInputKeys(input termbox.Event) bool {
 		switch screen.scrStatus {
 		case SEL_ACTIVE_CHAR:
 			screen.activeLine = loud.GetIndexFromString(Key)
-			characters := screen.user.InventoryCharacters()
-			if len(characters) <= screen.activeLine || screen.activeLine < 0 {
-				return false
-			}
-			screen.RunActiveCharacterSelect()
+			screen.RunActiveCharacterSelect(screen.activeLine)
+		case SEL_ACTIVE_WEAPON:
+			screen.activeLine = loud.GetIndexFromString(Key)
+			screen.RunActiveWeaponSelect(screen.activeLine)
 		case SEL_HEALTH_RESTORE_CHAR:
 			screen.activeLine = loud.GetIndexFromString(Key)
 			characters := screen.user.InventoryCharacters()
@@ -420,13 +419,6 @@ func (screen *GameScreen) HandleThirdClassInputKeys(input termbox.Event) bool {
 			screen.scrStatus = RENAME_CHAR_ENT_NEWNAME
 			screen.inputText = ""
 			screen.FreshRender()
-		case SEL_ACTIVE_WEAPON:
-			screen.activeLine = loud.GetIndexFromString(Key)
-			items := screen.user.InventorySwords()
-			if len(items) <= screen.activeLine || screen.activeLine < 0 {
-				return false
-			}
-			screen.RunActiveWeaponSelect()
 		case SEL_BUYITM:
 			screen.activeItem = loud.GetToBuyItemFromKey(Key)
 			if len(screen.activeItem.Name) == 0 {
@@ -515,7 +507,14 @@ func (screen *GameScreen) HandleThirdClassKeyEnterEvent() bool {
 				return false
 			}
 			screen.activeCharacter = characters[screen.activeLine]
-			screen.RunActiveCharacterSelect()
+			screen.RunActiveCharacterSelect(screen.activeLine)
+		case SEL_ACTIVE_WEAPON:
+			items := screen.user.InventorySwords()
+			if len(items) <= screen.activeLine || screen.activeLine < 0 {
+				return false
+			}
+			screen.activeItem = items[screen.activeLine]
+			screen.RunActiveWeaponSelect(screen.activeLine)
 		case SEL_HEALTH_RESTORE_CHAR:
 			characters := screen.user.InventoryCharacters()
 			if len(characters) <= screen.activeLine || screen.activeLine < 0 {
@@ -532,13 +531,6 @@ func (screen *GameScreen) HandleThirdClassKeyEnterEvent() bool {
 			screen.scrStatus = RENAME_CHAR_ENT_NEWNAME
 			screen.inputText = ""
 			screen.FreshRender()
-		case SEL_ACTIVE_WEAPON:
-			items := screen.user.InventorySwords()
-			if len(items) <= screen.activeLine || screen.activeLine < 0 {
-				return false
-			}
-			screen.activeItem = items[screen.activeLine]
-			screen.RunActiveWeaponSelect()
 		case SEL_BUYITM:
 			items := loud.ShopItems
 			if len(items) <= screen.activeLine || screen.activeLine < 0 {
