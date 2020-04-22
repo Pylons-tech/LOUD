@@ -303,6 +303,9 @@ func (screen *GameScreen) HandleFirstClassInputKeys(input termbox.Event) bool {
 	Key := strings.ToUpper(string(input.Ch))
 	switch Key {
 	case "J": // Create cookbook
+		if !loud.AutomateInput {
+			return false
+		}
 		screen.RunTxProcess(W8_CREATE_COOKBOOK, RSLT_CREATE_COOKBOOK, func() (string, error) {
 			return loud.CreateCookbook(screen.user)
 		})
