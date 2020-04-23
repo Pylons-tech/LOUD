@@ -149,7 +149,7 @@ func (screen *GameScreen) renderUserCommands() {
 		infoLines = infoLines.
 			appendDeselectCmd().
 			appendSelectCmds(
-				screen.user.InventoryCharacters(),
+				screen.user.InventorySwords(),
 				func(it interface{}) string {
 					return formatItem(it.(loud.Item))
 				}).
