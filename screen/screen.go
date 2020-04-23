@@ -269,10 +269,10 @@ func (screen *GameScreen) sellCharacterSpecDesc(activeCharacter loud.CharacterSp
 func (screen *GameScreen) tradeTableColorDesc() []string {
 	var infoLines = []string{}
 
-	infoLines = append(infoLines, "white trade line desc")
-	infoLines = append(infoLines, screen.blueBoldFont()("bluebold trade line desc"))
-	infoLines = append(infoLines, screen.brownBoldFont()("brownbold trade line desc"))
-	infoLines = append(infoLines, screen.brownFont()("brown trade line desc"))
+	infoLines = append(infoLines, loud.Localize("white trade line desc"))
+	infoLines = append(infoLines, screen.blueBoldFont()(loud.Localize("bluebold trade line desc")))
+	infoLines = append(infoLines, screen.brownBoldFont()(loud.Localize("brownbold trade line desc")))
+	infoLines = append(infoLines, screen.brownFont()(loud.Localize("brown trade line desc")))
 	infoLines = append(infoLines, "\n")
 	return infoLines
 }
