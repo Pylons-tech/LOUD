@@ -2,19 +2,19 @@
   "block height: %d(%d)": {
     "one": "Block Height: %d(%d)"
   },
-  "buy item failed reason": {
+  "buy item failure reason": {
     "one": "Buy Item Failure Reason"
   },
-  "buy character failed reason": {
+  "buy character failure reason": {
     "one": "Buy Character Failure Reason"
   },
-  "hunt rabbits failed reason": {
+  "hunt rabbits failure reason": {
     "one": "Hunt Rabbits Failure Reason"
   },
-  "sell failed reason": {
+  "sell item failure reason": {
     "one": "Sell Failure Reason"
   },
-  "upgrade failed reason": {
+  "upgrade item failure reason": {
     "one": "Upgrade Failure Reason"
   },
   "Recipe Name does not exist!": {
@@ -67,17 +67,6 @@
   },
   "go to develop": {
     "one": "D)evelop"
-  },
-  "Wooden sword": {
-    "one": "Wooden sword",
-    "other": "Wooden swords"
-  },
-  "Copper sword": {
-    "one": "Copper sword",
-    "other": "Copper swords"
-  },
-  "Go) on": {
-    "one": "Go) on ( ↵ )"
   },
   "home desc": {
     "one": "You are now at home.\nIf you like to hunt something go to forest.\nAnd if you like to buy/sell something go to shop."
@@ -175,26 +164,23 @@
   "You have bought %s from the shop": {
     "one": "You have bought \"%s\" from the shop"
   },
-  "You are now buying sword at %d": {
-    "one": "You are now buying sword at %d.\n"
+  "you have bought gold successfully from coin market": {
+    "one": "you have bought gold successfully from coin market"
   },
-  "you have bought loud coin successfully from coin market": {
-    "one": "You have bought loud coin successfully from coin market"
+  "you have sold gold successfully from coin market": {
+    "one": "you have sold gold successfully from coin market"
   },
-  "you have sold loud coin successfully from coin market": {
-    "one": "You have sold loud coin successfully from coin market"
+  "You are now waiting for gold buy request creation": {
+    "one": "You are now waiting for gold buy request creation"
   },
-  "You are now waiting for loud buy request creation": {
-    "one": "You are now waiting for loud buy request creation"
+  "You are now waiting for gold sell request creation": {
+    "one": "You are now waiting for gold sell request creation"
   },
-  "You are now waiting for loud sell request creation": {
-    "one": "You are now waiting for loud sell request creation"
-  },
-  "loud buy request was successfully created": {
+  "gold buy request was successfully created": {
     "one": "Loud buy request was successfully created."
   },
-  "loud sell request was successfully created": {
-    "one": "Loud sell request was successfully created."
+  "gold sell request was successfully created": {
+    "one": "Gold sell request was successfully created."
   },
   "Please use it for hunting": {
     "one": "Please use it for hunting."
@@ -237,9 +223,6 @@
   },
   "inventory": {
     "one": " Inventory "
-  },
-  "inventory chracters": {
-    "one": " Inventory Characters "
   },
   "screen size warning": {
     "one": "Screen is too small. Make your terminal larger. (120x38 minimum)"

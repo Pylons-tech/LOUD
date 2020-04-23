@@ -2,19 +2,19 @@
   "block height: %d(%d)": {
     "one": "Altura del bloque: %d(%d)"
   },
-  "buy item failed reason": {
+  "buy item failure reason": {
     "one": "Razón de compra fallida"
   },
-  "buy character failed reason": {
+  "buy character failure reason": {
     "one": "Razón de compra fallida"
   },
-  "hunt rabbits failed reason": {
+  "hunt rabbits failure reason": {
     "one": "Razón fallida de caza"
   },
-  "sell failed reason": {
+  "sell item failure reason": {
     "one": "Razón de venta fallida"
   },
-  "upgrade failed reason": {
+  "upgrade item failure reason": {
     "one": "Motivo fallido de actualización"
   },
   "Recipe Name does not exist!": {
@@ -67,17 +67,6 @@
   },
   "go to develop": {
     "one": "D)evelop"
-  },
-  "Wooden sword": {
-    "one": "Espada de Madera",
-    "other": "Espadas de Madera"
-  },
-  "Copper sword": {
-    "one": "Espada de Cobre",
-    "other": "Espadas de Cobre"
-  },
-  "Go) on": {
-    "one": "Seguir(O) ( ↵ )"
   },
   "home desc": {
     "one": "Estás en inicio.\nSi quieres cazar, dirígete al bosque.\nY si quieres comprar/vender algo, dirígete a la tienda."
@@ -175,25 +164,22 @@
   "You have bought %s from the shop": {
     "one": "Has comprado %s de la tienda"
   },
-  "You are now buying sword at %d": {
-    "one": "You are now buying sword at %d.\n"
-  },
-  "you have bought loud coin successfully from coin market": {
+  "you have bought gold successfully from coin market": {
     "one": "Has comprado una moneda fuerte con éxito en coin market"
   },
-  "you have sold loud coin successfully from coin market": {
+  "you have sold gold successfully from coin market": {
     "one": "Has vendido monedas fuertes con éxito en el mercado coin"
   },
-  "You are now waiting for loud buy request creation": {
+  "You are now waiting for gold buy request creation": {
     "one": "Ahora está esperando la creación de la orden de compra loud"
   },
-  "You are now waiting for loud sell request creation": {
+  "You are now waiting for gold sell request creation": {
     "one": "Ahora está esperando la creación de órdenes de venta loud"
   },
-  "loud buy request was successfully created": {
+  "gold buy request was successfully created": {
     "one": "La orden de compra Loud se creó con éxito."
   },
-  "loud sell request was successfully created": {
+  "gold sell request was successfully created": {
     "one": "La orden de venta Loud se creó correctamente."
   },
   "Please use it for hunting": {
@@ -231,9 +217,6 @@
   },
   "inventory": {
     "one": " Inventario "
-  },
-  "inventory chracters": {
-    "one": " Inventory Characters "
   },
   "screen size warning": {
     "one": "La pantalla es muy pequena. Haga su terminal mas larga. (120x38 minimo)"

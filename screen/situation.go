@@ -208,14 +208,14 @@ func (screen *GameScreen) TxResultSituationDesc() string {
 		RSLT_FULFILL_BUYCHR_TRDREQ:     "sell character",
 	}
 	if screen.txFailReason != "" {
-		desc = resDescMap[screen.scrStatus] + ": " + loud.Localize(screen.txFailReason)
+		desc = loud.Localize(resDescMap[screen.scrStatus]+" failure reason") + ": " + loud.Localize(screen.txFailReason)
 	} else {
 		switch screen.scrStatus {
 		case RSLT_BUY_LOUD_TRDREQ_CREATION:
-			desc = loud.Localize("loud buy request was successfully created")
+			desc = loud.Localize("gold buy request was successfully created")
 			desc += screen.buyLoudDesc(screen.loudEnterValue, screen.pylonEnterValue)
 		case RSLT_SELL_LOUD_TRDREQ_CREATION:
-			desc = loud.Localize("loud sell request was successfully created")
+			desc = loud.Localize("gold sell request was successfully created")
 			desc += screen.sellLoudDesc(screen.loudEnterValue, screen.pylonEnterValue)
 		case RSLT_SEL_ACT_CHAR:
 			if screen.user.GetActiveCharacter() == nil {
@@ -234,10 +234,12 @@ func (screen *GameScreen) TxResultSituationDesc() string {
 		case RSLT_RENAME_CHAR:
 			desc = loud.Sprintf("You have successfully updated character's name to %s!", screen.inputText)
 		case RSLT_BUYITM:
-			desc = loud.Sprintf("You have bought %s from the shop\n", formatItem(screen.activeItem))
+			desc = loud.Sprintf("You have bought %s from the shop", formatItem(screen.activeItem))
+			desc += "\n"
 			desc += loud.Localize("Please use it for hunting")
 		case RSLT_BUYCHR:
-			desc = loud.Sprintf("You have bought %s from the shop\n", formatCharacter(screen.activeCharacter))
+			desc = loud.Sprintf("You have bought %s from the shop", formatCharacter(screen.activeCharacter))
+			desc += "\n"
 			desc += loud.Localize("Please use it for hunting")
 		case RSLT_HUNT_RABBITS:
 			earnedAmount, respOutput := screen.GetTxResponseOutput()
@@ -344,11 +346,11 @@ func (screen *GameScreen) TxResultSituationDesc() string {
 			desc = loud.Localize("successfully cancelled trade request")
 		case RSLT_FULFILL_BUY_LOUD_TRDREQ:
 			request := screen.activeTrdReq
-			desc = loud.Localize("you have sold loud coin successfully from coin market") + fmt.Sprintf(" at %.4f.\n", request.Price)
+			desc = loud.Localize("you have sold gold successfully from coin market") + fmt.Sprintf(" at %.4f.\n", request.Price)
 			desc += screen.sellLoudDesc(request.Amount, request.Total)
 		case RSLT_FULFILL_SELL_LOUD_TRDREQ:
 			request := screen.activeTrdReq
-			desc = loud.Localize("you have bought loud coin successfully from coin market") + fmt.Sprintf(" at %.4f.\n", request.Price)
+			desc = loud.Localize("you have bought gold successfully from coin market") + fmt.Sprintf(" at %.4f.\n", request.Price)
 			desc += screen.buyLoudDesc(request.Amount, request.Total)
 		case RSLT_FULFILL_SELLITM_TRDREQ:
 			request := screen.activeItemTrdReq.(loud.ItemSellTrdReq)
@@ -379,10 +381,10 @@ func (screen *GameScreen) TxWaitSituationDesc() string {
 	case W8_RENAME_CHAR:
 		desc = loud.Sprintf("You are now waiting to rename character from %s to %s.", screen.activeCharacter.Name, screen.inputText)
 	case W8_BUY_LOUD_TRDREQ_CREATION:
-		desc = loud.Localize("You are now waiting for loud buy request creation")
+		desc = loud.Localize("You are now waiting for gold buy request creation")
 		desc += screen.buyLoudDesc(screen.loudEnterValue, screen.pylonEnterValue)
 	case W8_SELL_LOUD_TRDREQ_CREATION:
-		desc = loud.Localize("You are now waiting for loud sell request creation")
+		desc = loud.Localize("You are now waiting for gold sell request creation")
 		desc += screen.sellLoudDesc(screen.loudEnterValue, screen.pylonEnterValue)
 	case W8_BUYITM:
 		desc = loud.Sprintf("You are now buying %s at the shop", formatItem(screen.activeItem))

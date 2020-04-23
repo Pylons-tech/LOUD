@@ -706,7 +706,7 @@ func (screen *GameScreen) renderCharacterSheet() {
 	}
 
 	nodeLines := []string{
-		centerText(" pylons network status ", "─", width),
+		centerText(" "+loud.Sprintf("pylons network status")+" ", "─", width),
 		fmt.Sprintf("Address: %s 📋(M)", truncateRight(screen.user.GetAddress(), 32)),
 		screen.pylonIcon() + truncateRight(fmt.Sprintf(" %s: %v", "Pylon", screen.user.GetPylonAmount()), width-1),
 	}
