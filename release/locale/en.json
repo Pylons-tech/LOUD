@@ -136,10 +136,10 @@
   "select upgrade item desc": {
     "one": "You are gonna upgrade an item.\nPlease select an item to upgrade."
   },
-  "you are now buying loud from pylon": {
+  "Making gold from pylons": {
     "one": "You are now buying loud coin from pylon"
   },
-  "you are now selling loud for pylon": {
+  "Making pylons from gold": {
     "one": "You are now selling loud coin for pylon"
   },
   "Please wait for a moment to finish the process": {

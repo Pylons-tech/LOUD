@@ -241,62 +241,73 @@ func (screen *GameScreen) TxResultSituationDesc() string {
 			desc += loud.Localize("Please use it for hunting")
 		case RSLT_HUNT_RABBITS:
 			earnedAmount, respOutput := screen.GetTxResponseOutput()
+			resLen := len(respOutput)
 			resultTexts := []string{"gold", "character", "weapon"}
-			desc = basicHuntResultDesc("You did hunt rabbits and earned %d.", earnedAmount, resultTexts[:len(respOutput)])
-			switch len(respOutput) {
-			case 0:
-				desc += "Your character is dead during hunt accidently"
-			case 2:
-				if len(screen.activeItem.Name) > 0 {
-					desc += "You have lost your weapon accidently"
+			if resLen == 0 {
+				desc = loud.Sprintf("Your character is dead while following rabbits accidently")
+			} else {
+				desc = basicHuntResultDesc("You did hunt rabbits and earned %d.", earnedAmount, resultTexts[:resLen])
+				if resLen == 2 && screen.user.GetLastTxMetaData() == loud.RCP_HUNT_RABBITS_YESWORD {
+					desc += loud.Sprintf("You have lost your weapon accidently")
 				}
 			}
 		case RSLT_FIGHT_GOBLIN:
 			earnedAmount, respOutput := screen.GetTxResponseOutput()
+			resLen := len(respOutput)
 			resultTexts := []string{"gold", "character", "weapon", loud.GOBLIN_EAR}
-			desc = basicHuntResultDesc("You did fight with goblin and earned %d.", earnedAmount, resultTexts[:len(respOutput)])
-			switch len(respOutput) {
-			case 0:
-				desc += "Your character is dead during fighting goblin accidently"
-			case 2:
-				desc += "You have lost your weapon accidently"
-			case 4:
-				desc += fmt.Sprintf("You got bonus item called %s", loud.GOBLIN_EAR)
+			if resLen == 0 {
+				desc = loud.Sprintf("You were killed by goblin accidently")
+			} else {
+				desc = basicHuntResultDesc("You did fight with goblin and earned %d.", earnedAmount, resultTexts[:resLen])
+				switch resLen {
+				case 2:
+					desc += loud.Sprintf("You have lost your weapon accidently")
+				case 4:
+					desc += loud.Sprintf("You got bonus item called %s", loud.GOBLIN_EAR)
+				}
 			}
 		case RSLT_FIGHT_TROLL:
 			earnedAmount, respOutput := screen.GetTxResponseOutput()
+			resLen := len(respOutput)
 			resultTexts := []string{"gold", "character", "weapon", loud.TROLL_TOES}
-			desc = basicHuntResultDesc("You did fight with troll and earned %d.", earnedAmount, resultTexts[:len(respOutput)])
-
-			switch len(respOutput) {
-			case 0:
-				desc += "Your character is dead during fighting troll accidently"
-			case 2:
-				desc += "You have lost your weapon accidently"
-			case 4:
-				desc += fmt.Sprintf("You got bonus item called %s", loud.TROLL_TOES)
+			if resLen == 0 {
+				desc = loud.Sprintf("You were killed by troll accidently")
+			} else {
+				desc = basicHuntResultDesc("You did fight with troll and earned %d.", earnedAmount, resultTexts[:resLen])
+				switch resLen {
+				case 2:
+					desc += loud.Sprintf("You have lost your weapon accidently")
+				case 4:
+					desc += loud.Sprintf("You got bonus item called %s", loud.TROLL_TOES)
+				}
 			}
 		case RSLT_FIGHT_WOLF:
 			earnedAmount, respOutput := screen.GetTxResponseOutput()
+			resLen := len(respOutput)
 			resultTexts := []string{"gold", "character", "weapon", loud.WOLF_TAIL}
-			desc = basicHuntResultDesc("You did fight with wolf and earned %d.", earnedAmount, resultTexts[:len(respOutput)])
-			switch len(respOutput) {
-			case 0:
-				desc += "Your character is dead during fighting wolf accidently"
-			case 2:
-				desc += "You have lost your weapon accidently"
-			case 4:
-				desc += fmt.Sprintf("You got bonus item called %s", loud.WOLF_TAIL)
+			if resLen == 0 {
+				desc = loud.Sprintf("You were killed by wolf accidently")
+			} else {
+				desc = basicHuntResultDesc("You did fight with wolf and earned %d.", earnedAmount, resultTexts[:resLen])
+				switch resLen {
+				case 2:
+					desc += loud.Sprintf("You have lost your weapon accidently")
+				case 4:
+					desc += loud.Sprintf("You got bonus item called %s", loud.WOLF_TAIL)
+				}
 			}
 		case RSLT_FIGHT_GIANT:
 			earnedAmount, respOutput := screen.GetTxResponseOutput()
+			resLen := len(respOutput)
 			resultTexts := []string{"gold", "character", "weapon"}
-			desc = basicHuntResultDesc("You did fight with giant and earned %d.", earnedAmount, resultTexts[:len(respOutput)])
-			switch len(respOutput) {
-			case 0:
-				desc += "Your character is dead during fighting wolf accidently"
-			case 2:
-				desc += "You have lost your weapon accidently"
+			if resLen == 0 {
+				desc = loud.Sprintf("You were killed by giant accidently")
+			} else {
+				desc = basicHuntResultDesc("You did fight with giant and earned %d.", earnedAmount, resultTexts[:resLen])
+				switch resLen {
+				case 2:
+					desc += loud.Sprintf("You have lost your weapon accidently")
+				}
 			}
 		case RSLT_BUY_GOLD_WITH_PYLONS:
 			earnedAmount, _ := screen.GetTxResponseOutput()
@@ -448,11 +459,11 @@ func (screen *GameScreen) TxWaitSituationDesc() string {
 		desc += screen.sellCharacterSpecDesc(request.TCharacter, fmt.Sprintf("%d", request.Price))
 	case W8_FULFILL_BUY_LOUD_TRDREQ:
 		request := screen.activeTrdReq
-		desc = loud.Sprintf("you are now selling loud for pylon at %.4f.", request.Price)
+		desc = loud.Sprintf("Making pylons from gold")
 		desc += screen.sellLoudDesc(request.Amount, request.Total)
 	case W8_FULFILL_SELL_LOUD_TRDREQ:
 		request := screen.activeTrdReq
-		desc = loud.Sprintf("you are now buying loud from pylon at %.4f.", request.Price)
+		desc = loud.Sprintf("Making gold from pylons")
 		desc += screen.buyLoudDesc(request.Amount, request.Total)
 	}
 	desc += "\n"

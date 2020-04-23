@@ -21,7 +21,7 @@ type User interface {
 	SetActiveWeaponIndex(idx int)
 	SetActiveCharacterIndex(idx int)
 	SetLocation(UserLocation)
-	SetLastTransaction(string)
+	SetLastTransaction(string, string)
 	SetLatestBlockHeight(int64)
 	InventoryItems() []Item
 	HasPreItemForAnItem(Item) bool
@@ -41,7 +41,8 @@ type User interface {
 	GetGold() int
 	GetPylonAmount() int
 	GetUserName() string
-	GetLastTransaction() string
+	GetLastTxHash() string
+	GetLastTxMetaData() string
 	GetLatestBlockHeight() int64
 	Reload()
 	Save()

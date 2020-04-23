@@ -711,8 +711,8 @@ func (screen *GameScreen) renderCharacterSheet() {
 		screen.pylonIcon() + truncateRight(fmt.Sprintf(" %s: %v", "Pylon", screen.user.GetPylonAmount()), width-1),
 	}
 
-	if len(screen.user.GetLastTransaction()) > 0 {
-		nodeLines = append(nodeLines, loud.Sprintf("Last Tx: %s 📋(L)", truncateRight(screen.user.GetLastTransaction(), 32)))
+	if len(screen.user.GetLastTxHash()) > 0 {
+		nodeLines = append(nodeLines, loud.Sprintf("Last TxHash: %s 📋(L)", truncateRight(screen.user.GetLastTxHash(), 32)))
 	}
 
 	blockHeightText := truncateRight(loud.Sprintf("block height: %d(%d)", screen.blockHeight, screen.fakeBlockHeight), width-1)

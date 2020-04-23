@@ -79,6 +79,7 @@ type UserData struct {
 	ActiveCharacterIndex int
 	PrivKey              string
 	lastTransaction      string
+	lastTxMetaData       string
 	lastUpdate           int64
 }
 
@@ -282,12 +283,17 @@ func (user *dbUser) InventorySellableItems() []Item {
 	return uis
 }
 
-func (user *dbUser) GetLastTransaction() string {
+func (user *dbUser) GetLastTxHash() string {
 	return user.UserData.lastTransaction
 }
 
-func (user *dbUser) SetLastTransaction(tx string) {
+func (user *dbUser) GetLastTxMetaData() string {
+	return user.UserData.lastTxMetaData
+}
+
+func (user *dbUser) SetLastTransaction(tx, metadata string) {
 	user.UserData.lastTransaction = tx
+	user.UserData.lastTxMetaData = metadata
 }
 
 func (user *dbUser) SetLatestBlockHeight(h int64) {

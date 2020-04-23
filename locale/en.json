@@ -136,8 +136,11 @@
   "select upgrade item desc": {
     "one": "Upgrading. Upgrading sounds good."
   },
-  "you are now buying loud from pylon": {
+  "Making gold from pylons": {
     "one": "Making gold from pylons..."
+  },
+  "Making pylons from gold": {
+    "one": "Making pylons from gold..."
   },
   "Please wait for a moment to finish the process": {
     "one": "Please wait for a moment to finish the process."
@@ -213,12 +216,6 @@
   },
   "Bought gold with pylons. Amount is %d.": {
     "one": "Bought gold with pylons. Hell yeah 💰%d."
-  },
-  "result fight wolf finish desc": {
-    "one": "You fought with a wolf"
-  },
-  "result fight giant finish desc": {
-    "one": "You battled a giant"
   },
   "You sold %s for %d gold.": {
     "one": "You sold \"%s\" for %d gold."

@@ -136,10 +136,10 @@
   "select upgrade item desc": {
     "one": "Vas a mejorar un artículo.\nPor favor selecciona un artículo para mejorar."
   },
-  "you are now buying loud from pylon": {
+  "Making gold from pylons": {
     "one": "Ahora estás comprando monedas fuertes de pylon"
   },
-  "you are now selling loud for pylon": {
+  "Making pylons from gold": {
     "one": "Ahora está vendiendo monedas ruidosas por pylon"
   },
   "Please wait for a moment to finish the process": {

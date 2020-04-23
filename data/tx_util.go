@@ -28,27 +28,50 @@ import (
 	"github.com/tyler-smith/go-bip39"
 )
 
+const (
+	RCP_BUY_GOLD_WITH_PYLON = "LOUD's buy gold with pylons recipe"
+	RCP_BUY_CHARACTER       = "LOUD's Get Character recipe"
+	RCP_SELL_SWORD          = "LOUD's sword sell recipe"
+	RCP_COPPER_SWORD_UPG    = "LOUD's Copper sword lv1 to lv2 upgrade recipe"
+	RCP_WOODEN_SWORD_UPG    = "LOUD's Wooden sword lv1 to lv2 upgrade recipe"
+	RCP_BUY_WOODEN_SWORD    = "LOUD's Wooden sword lv1 buy recipe"
+	RCP_BUY_COPPER_SWORD    = "LOUD's Copper sword lv1 buy recipe"
+	RCP_BUY_BRONZE_SWORD    = "LOUD's Bronze sword lv1 make recipe"
+	RCP_BUY_IRON_SWORD      = "LOUD's Iron sword lv1 make recipe"
+	RCP_BUY_SILVER_SWORD    = "LOUD's Silver sword lv1 make recipe"
+
+	RCP_HUNT_RABBITS_NOSWORD = "LOUD's hunt rabbits without sword recipe"
+	RCP_HUNT_RABBITS_YESWORD = "LOUD's hunt rabbits with a sword recipe"
+	RCP_FIGHT_GIANT          = "LOUD's fight with giant with a sword recipe"
+	RCP_FIGHT_GOBLIN         = "LOUD's fight with goblin with a sword recipe"
+	RCP_FIGHT_TROLL          = "LOUD's fight with troll with a sword recipe"
+	RCP_FIGHT_WOLF           = "LOUD's fight with wolf with a sword recipe"
+
+	RCP_GET_TEST_ITEMS = "LOUD's Dev Get Test Items recipe"
+	RCP_RESTORE_HEALTH = "LOUD's health restore recipe"
+)
+
 var RcpIDs map[string]string = map[string]string{
-	"LOUD's buy gold with pylons recipe":            "LOUD-buy-gold-from-pylons-recipe-v0.0.1-1579652622",
-	"LOUD's Get Character recipe":                   "LOUD-get-character-recipe-v0.0.0-1583801800",
-	"LOUD's hunt rabbits without sword recipe":      "LOUD-hunt-rabbits-with-no-weapon-recipe-v0.0.0-1579053457",
-	"LOUD's hunt rabbits with a sword recipe":       "LOUD-hunt-rabbits-with-a-sword-recipe-v0.0.0-1583631194",
-	"LOUD's sword sell recipe":                      "LOUD-sell-a-sword-recipe-v0.0.0-1583631194",
-	"LOUD's Copper sword lv1 to lv2 upgrade recipe": "LOUD-upgrade-copper-sword-lv1-to-lv2-recipe-v0.0.0-1579053457",
-	"LOUD's Wooden sword lv1 to lv2 upgrade recipe": "LOUD-upgrade-wooden-sword-lv1-to-lv2-recipe-v0.0.0-1579053457",
-	"LOUD's Wooden sword lv1 buy recipe":            "LOUD-wooden-sword-lv1-buy-recipe-v0.0.0-1579053457",
-	"LOUD's Copper sword lv1 buy recipe":            "LOUD-copper-sword-lv1-buy-recipe-v0.0.0-1579053457",
+	RCP_BUY_GOLD_WITH_PYLON: "LOUD-buy-gold-from-pylons-recipe-v0.0.1-1579652622",
+	RCP_BUY_CHARACTER:       "LOUD-get-character-recipe-v0.0.0-1583801800",
+	RCP_SELL_SWORD:          "LOUD-sell-a-sword-recipe-v0.0.0-1583631194",
+	RCP_COPPER_SWORD_UPG:    "LOUD-upgrade-copper-sword-lv1-to-lv2-recipe-v0.0.0-1579053457",
+	RCP_WOODEN_SWORD_UPG:    "LOUD-upgrade-wooden-sword-lv1-to-lv2-recipe-v0.0.0-1579053457",
+	RCP_BUY_WOODEN_SWORD:    "LOUD-wooden-sword-lv1-buy-recipe-v0.0.0-1579053457",
+	RCP_BUY_COPPER_SWORD:    "LOUD-copper-sword-lv1-buy-recipe-v0.0.0-1579053457",
+	RCP_BUY_BRONZE_SWORD:    "LOUD-bronze-sword-lv1-make-recipe-v0.0.0-1579053457",
+	RCP_BUY_IRON_SWORD:      "LOUD-iron-sword-lv1-make-recipe-v0.0.0-1579053457",
+	RCP_BUY_SILVER_SWORD:    "LOUD-silver-sword-lv1-make-recipe-v0.0.0-1579053457",
 
-	"LOUD's fight with giant with a sword recipe":  "LOUD-fight-giant-with-iron-sword-recipe-v0.0.0-1583631194",
-	"LOUD's fight with goblin with a sword recipe": "LOUD-fight-goblin-with-a-sword-recipe-v0.0.0-1583631194",
-	"LOUD's fight with troll with a sword recipe":  "LOUD-fight-troll-with-a-sword-recipe-v0.0.0-1583631194",
-	"LOUD's fight with wolf with a sword recipe":   "LOUD-fight-wolf-with-a-sword-recipe-v0.0.0-1583631194",
-	"LOUD's Bronze sword lv1 make recipe":          "LOUD-bronze-sword-lv1-make-recipe-v0.0.0-1579053457",
-	"LOUD's Iron sword lv1 make recipe":            "LOUD-iron-sword-lv1-make-recipe-v0.0.0-1579053457",
-	"LOUD's Silver sword lv1 make recipe":          "LOUD-silver-sword-lv1-make-recipe-v0.0.0-1579053457",
+	RCP_HUNT_RABBITS_NOSWORD: "LOUD-hunt-rabbits-with-no-weapon-recipe-v0.0.0-1579053457",
+	RCP_HUNT_RABBITS_YESWORD: "LOUD-hunt-rabbits-with-a-sword-recipe-v0.0.0-1583631194",
+	RCP_FIGHT_GIANT:          "LOUD-fight-giant-with-iron-sword-recipe-v0.0.0-1583631194",
+	RCP_FIGHT_GOBLIN:         "LOUD-fight-goblin-with-a-sword-recipe-v0.0.0-1583631194",
+	RCP_FIGHT_TROLL:          "LOUD-fight-troll-with-a-sword-recipe-v0.0.0-1583631194",
+	RCP_FIGHT_WOLF:           "LOUD-fight-wolf-with-a-sword-recipe-v0.0.0-1583631194",
 
-	"LOUD's Dev Get Test Items recipe": "LOUD-dev-get-test-items-recipe-v0.0.0-1583801800",
-	"LOUD's health restore recipe":     "LOUD-health-restore-recipe-v0.0.1-1579652622",
+	RCP_GET_TEST_ITEMS: "LOUD-dev-get-test-items-recipe-v0.0.0-1583801800",
+	RCP_RESTORE_HEALTH: "LOUD-health-restore-recipe-v0.0.1-1579652622",
 }
 
 // Remote mode
@@ -410,7 +433,7 @@ func ExecuteRecipe(user User, rcpName string, itemIDs []string) (string, error) 
 	execMsg := msgs.NewMsgExecuteRecipe(rcpID, sdkAddr, itemIDs)
 	log.Println("started sending transaction", user.GetUserName(), execMsg)
 	txhash := pylonSDK.TestTxWithMsgWithNonce(t, execMsg, user.GetUserName(), false)
-	user.SetLastTransaction(txhash)
+	user.SetLastTransaction(txhash, rcpName)
 	log.Println("ended sending transaction")
 	return txhash, nil
 }
@@ -568,7 +591,7 @@ func SendTxMsg(user User, txMsg sdk.Msg) (string, error) {
 	t := GetTestingT()
 	log.Println("started sending transaction", user.GetUserName(), txMsg)
 	txhash := pylonSDK.TestTxWithMsgWithNonce(t, txMsg, user.GetUserName(), false)
-	user.SetLastTransaction(txhash)
+	user.SetLastTransaction(txhash, txMsg.Type())
 	log.Println("ended sending transaction")
 	return txhash, nil
 }
