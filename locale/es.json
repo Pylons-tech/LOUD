@@ -161,11 +161,11 @@
   "You have bought %s from the shop": {
     "one": "Has comprado %s de la tienda"
   },
-  "you have bought gold successfully from coin market": {
-    "one": "Has comprado una moneda fuerte con éxito en coin market"
+  "you have bought gold successfully from coin market at %.4f": {
+    "one": "you have bought gold successfully from coin market at %.4f.\n"
   },
-  "you have sold gold successfully from coin market": {
-    "one": "Has vendido monedas fuertes con éxito en el mercado coin"
+  "you have sold gold successfully from coin market at %.4f": {
+    "one": "you have sold gold successfully from coin market at %.4f.\n"
   },
   "You are now waiting for gold buy request creation": {
     "one": "Ahora está esperando la creación de la orden de compra loud"

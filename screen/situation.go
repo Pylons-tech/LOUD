@@ -351,27 +351,27 @@ func (screen *GameScreen) TxResultSituationDesc() string {
 			desc = loud.Localize("successfully cancelled trade request")
 		case RSLT_FULFILL_BUY_LOUD_TRDREQ:
 			request := screen.activeTrdReq
-			desc = loud.Localize("you have sold gold successfully from coin market") + fmt.Sprintf(" at %.4f.\n", request.Price)
+			desc = loud.Sprintf("you have sold gold successfully from coin market at %.4f", request.Price)
 			desc += screen.sellLoudDesc(request.Amount, request.Total)
 		case RSLT_FULFILL_SELL_LOUD_TRDREQ:
 			request := screen.activeTrdReq
-			desc = loud.Localize("you have bought gold successfully from coin market") + fmt.Sprintf(" at %.4f.\n", request.Price)
+			desc = loud.Sprintf("you have bought gold successfully from coin market at %.4f", request.Price)
 			desc += screen.buyLoudDesc(request.Amount, request.Total)
 		case RSLT_FULFILL_SELLITM_TRDREQ:
 			request := screen.activeItemTrdReq.(loud.ItemSellTrdReq)
-			desc = loud.Localize("you have bought item successfully from item/pylon market") + fmt.Sprintf(" at %d.\n", request.Price)
+			desc = loud.Localize("you have bought item successfully from item/pylon market")
 			desc += screen.buyItemDesc(request.TItem, fmt.Sprintf("%d", request.Price))
 		case RSLT_FULFILL_SELLCHR_TRDREQ:
 			request := screen.activeItemTrdReq.(loud.CharacterSellTrdReq)
-			desc = loud.Localize("you have bought character successfully from character/pylon market") + fmt.Sprintf(" at %d.\n", request.Price)
+			desc = loud.Localize("you have bought character successfully from character/pylon market")
 			desc += screen.buyCharacterDesc(request.TCharacter, fmt.Sprintf("%d", request.Price))
 		case RSLT_FULFILL_BUYITM_TRDREQ:
 			request := screen.activeItemTrdReq.(loud.ItemBuyTrdReq)
-			desc = loud.Localize("you have sold item successfully from item/pylon market") + fmt.Sprintf(" at %d.\n", request.Price)
+			desc = loud.Localize("you have sold item successfully from item/pylon market")
 			desc += screen.sellItemSpecDesc(request.TItem, fmt.Sprintf("%d", request.Price))
 		case RSLT_FULFILL_BUYCHR_TRDREQ:
 			request := screen.activeItemTrdReq.(loud.CharacterBuyTrdReq)
-			desc = loud.Localize("you have sold character successfully from character/pylon market") + fmt.Sprintf(" at %d.\n", request.Price)
+			desc = loud.Localize("you have sold character successfully from character/pylon market")
 			desc += screen.sellCharacterSpecDesc(request.TCharacter, fmt.Sprintf("%d", request.Price))
 		}
 	}

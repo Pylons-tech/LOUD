@@ -161,11 +161,11 @@
   "You have bought %s from the shop": {
     "one": "You have bought \"%s\" from the shop"
   },
-  "you have bought gold successfully from coin market": {
-    "one": "you have bought gold successfully from coin market"
+  "you have bought gold successfully from coin market at %.4f": {
+    "one": "you have bought gold successfully from coin market at %.4f.\n"
   },
-  "you have sold gold successfully from coin market": {
-    "one": "you have sold gold successfully from coin market"
+  "you have sold gold successfully from coin market at %.4f": {
+    "one": "you have sold gold successfully from coin market at %.4f.\n"
   },
   "You are now waiting for gold buy request creation": {
     "one": "You are now waiting for gold buy request creation"
