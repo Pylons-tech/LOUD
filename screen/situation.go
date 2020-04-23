@@ -17,7 +17,11 @@ func basicHuntResultDesc(format string, earnedAmount int64, res []string) string
 }
 
 func devDetailedResultDesc(res []string) string {
-	return loud.Sprintf("\nDetailed result:\n  %s\n", strings.Join(res, "\n  "))
+	resT := []string{}
+	for _, it := range res {
+		resT = append(resT, loud.Localize(it))
+	}
+	return fmt.Sprintf("\n%s:\n  %s\n", loud.Localize("Detailed result"), strings.Join(resT, "\n  "))
 }
 
 func (screen *GameScreen) GetTxResponseOutput() (int64, []handlers.ExecuteRecipeSerialize) {
@@ -36,7 +40,7 @@ func (screen *GameScreen) renderUserSituation() {
 	activeWeapon := screen.user.GetActiveWeapon()
 	switch screen.scrStatus {
 	case CONFIRM_ENDGAME:
-		desc = "Are you really gonna end game? 🥺"
+		desc = loud.Localize("Are you really gonna end game?")
 	case SHW_LOCATION:
 		locationDescMap := map[loud.UserLocation]string{
 			loud.HOME:     loud.Localize("home desc"),
@@ -87,31 +91,32 @@ func (screen *GameScreen) renderUserSituation() {
 			[2]string{"Character", "Price (pylon)"},
 			loud.CharacterBuyTrdReqs)
 	case CR8_BUY_LOUD_TRDREQ_ENT_PYLVAL:
-		desc = "Please enter pylon amount to use (should be integer value)" // TODO should add Localize
+		desc = loud.Localize("Please enter pylon amount to use (should be integer value)")
 	case CR8_SELL_LOUD_TRDREQ_ENT_PYLVAL:
-		desc = "Please enter pylon amount to get (should be integer value)" // TODO should add Localize
+		desc = loud.Localize("Please enter pylon amount to get (should be integer value)")
 	case CR8_BUY_LOUD_TRDREQ_ENT_LUDVAL:
-		desc = "Please enter loud amount to buy (should be integer value)" // TODO should add Localize
+		desc = loud.Localize("Please enter loud amount to buy (should be integer value)")
 	case RENAME_CHAR_ENT_NEWNAME:
-		desc = "Please enter new character's name - it's costing pylons per letter."
+		desc = loud.Localize("Please enter new character's name - it's costing pylons per letter.")
 	case CR8_SELL_LOUD_TRDREQ_ENT_LUDVAL:
-		desc = "Please enter loud amount to sell (should be integer value)" // TODO should add Localize
+		desc = loud.Localize("Please enter loud amount to sell (should be integer value)")
+
 	case CR8_SELLITM_TRDREQ_SEL_ITEM:
 		infoLines = screen.renderITTable("Select item to sell", "Item", screen.user.InventoryItems())
 	case CR8_SELLCHR_TRDREQ_SEL_CHR:
 		infoLines = screen.renderITTable("Select character to sell", "Character", screen.user.InventoryCharacters())
 	case CR8_SELLITM_TRDREQ_ENT_PYLVAL:
-		desc = "Please enter pylon amount to use (should be integer value)" // TODO should add Localize
+		desc = loud.Localize("Please enter pylon amount to use (should be integer value)")
 	case CR8_SELLCHR_TRDREQ_ENT_PYLVAL:
-		desc = "Please enter pylon amount to use (should be integer value)" // TODO should add Localize
+		desc = loud.Localize("Please enter pylon amount to use (should be integer value)")
 	case CR8_BUYITM_TRDREQ_SEL_ITEM:
 		infoLines = screen.renderITTable("Select item to buy", "Item", loud.WorldItemSpecs)
 	case CR8_BUYCHR_TRDREQ_SEL_CHR:
 		infoLines = screen.renderITTable("Select character specs to get", "Character", loud.WorldCharacterSpecs)
 	case CR8_BUYITM_TRDREQ_ENT_PYLVAL:
-		desc = "Please enter pylon amount to use (should be integer value)" // TODO should add Localize
+		desc = loud.Localize("Please enter pylon amount to use (should be integer value)")
 	case CR8_BUYCHR_TRDREQ_ENT_PYLVAL:
-		desc = "Please enter pylon amount to use (should be integer value)" // TODO should add Localize
+		desc = loud.Localize("Please enter pylon amount to use (should be integer value)")
 	case SEL_ACTIVE_CHAR:
 		infoLines = screen.renderITTable("Please select active character", "Character", screen.user.InventoryCharacters())
 	case SEL_HEALTH_RESTORE_CHAR:

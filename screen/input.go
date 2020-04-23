@@ -50,7 +50,7 @@ func (screen *GameScreen) HandleInputKeyLocationSwitch(input termbox.Event) bool
 
 	if newStus, ok := tarLctMap[Key]; ok {
 		if newStus == loud.FOREST && screen.user.GetActiveCharacter() == nil {
-			screen.actionText = "You can't go to forest without character"
+			screen.actionText = loud.Sprintf("You can't go to forest without character")
 			screen.FreshRender()
 		} else {
 			screen.user.SetLocation(newStus)
@@ -148,13 +148,13 @@ func (screen *GameScreen) HandleInputKeyForestEntryPoint(input termbox.Event) bo
 			CONFIRM_FIGHT_WOLF,
 			CONFIRM_FIGHT_TROLL:
 			if activeWeapon == nil {
-				screen.actionText = "You need a sword for this action!"
+				screen.actionText = loud.Sprintf("You need a sword for this action!")
 				screen.FreshRender()
 				return true
 			}
 		case CONFIRM_FIGHT_GIANT:
 			if activeWeapon == nil || activeWeapon.Name != loud.IRON_SWORD {
-				screen.actionText = "You need an iron sword for this action!"
+				screen.actionText = loud.Sprintf("You need an iron sword for this action!")
 				screen.FreshRender()
 				return true
 			}
@@ -562,7 +562,6 @@ func (screen *GameScreen) HandleThirdClassKeyEnterEvent() bool {
 			}
 			screen.activeItem = items[screen.activeLine]
 			screen.RunActiveItemBuy()
-			log.Println("SEL_BUYITM", screen.activeItem)
 		case SEL_BUYCHR:
 			characters := loud.ShopCharacters
 			if len(characters) <= screen.activeLine || screen.activeLine < 0 {
@@ -570,7 +569,6 @@ func (screen *GameScreen) HandleThirdClassKeyEnterEvent() bool {
 			}
 			screen.activeCharacter = characters[screen.activeLine]
 			screen.RunActiveCharacterBuy()
-			log.Println("SEL_BUYCHR", screen.activeCharacter)
 		case SEL_SELLITM:
 			items := screen.user.InventoryItems()
 			if len(items) <= screen.activeLine || screen.activeLine < 0 {

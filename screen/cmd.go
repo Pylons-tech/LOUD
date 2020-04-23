@@ -11,27 +11,28 @@ import (
 )
 
 const (
-	SEL_CMD         = "Select ( ↵ )"
-	GO_ON_CMD       = "Go) on ( ↵ )"
-	GO_ON_ENTER_CMD = "Go on ( ↵ )"
-	GO_BACK_CMD     = "Go back ( ⌫ ) - Backspace Key"
-	GO_BACK_ESC_CMD = "Go back ( Esc )"
+	SEL_CMD          = "Select ( ↵ )"
+	GO_ON_ENTER_CMD  = "Go on ( ↵ )"
+	FINISH_ENTER_CMD = "Finish Enter ( ↵ )"
+	GO_BACK_CMD      = "Go back ( ⌫ ) - Backspace Key"
+	GO_BACK_ESC_CMD  = "Go back ( Esc )"
+	REFRESH_CMD      = "Re)fresh Status"
 )
 
 func (tl TextLines) appendDeselectCmd() TextLines {
-	return append(tl, loud.Sprintf("0) %s", "Deselect"))
+	return append(tl, fmt.Sprintf("0) %s", loud.Localize("Deselect")))
 }
 
 func (tl TextLines) appendSelectGoBackCmds() TextLines {
-	return append(tl,
+	return tl.appendT(
 		SEL_CMD,
-		loud.Localize(GO_BACK_CMD))
+		GO_BACK_CMD)
 }
 
 func (tl TextLines) appendGoOnBackCmds() TextLines {
-	return append(tl,
-		GO_ON_CMD,
-		loud.Localize(GO_BACK_CMD))
+	return tl.appendT(
+		GO_ON_ENTER_CMD,
+		GO_BACK_CMD)
 }
 
 func (tl TextLines) appendSelectCmds(itemsSlice interface{}, fn func(interface{}) string) TextLines {
@@ -48,7 +49,7 @@ func (screen *GameScreen) renderUserCommands() {
 	switch screen.scrStatus {
 	case CONFIRM_ENDGAME:
 		infoLines = infoLines.
-			append(
+			appendT(
 				GO_BACK_ESC_CMD,
 				GO_ON_ENTER_CMD)
 	case SHW_LOCATION:
@@ -78,42 +79,42 @@ func (screen *GameScreen) renderUserCommands() {
 	case SHW_LOUD_BUY_TRDREQS:
 		infoLines = infoLines.
 			append(screen.tradeTableColorDesc()...).
-			append(
+			appendT(
 				"Sell loud to fulfill selected request( ↵ )",
 				"place order to buy loud(R)",
 				GO_BACK_CMD)
 	case SHW_LOUD_SELL_TRDREQS:
 		infoLines = infoLines.
 			append(screen.tradeTableColorDesc()...).
-			append(
+			appendT(
 				"Buy loud to fulfill selected request( ↵ )",
 				"place order to sell loud(R)",
 				GO_BACK_CMD)
 	case SHW_BUYITM_TRDREQS:
 		infoLines = infoLines.
 			append(screen.tradeTableColorDesc()...).
-			append(
+			appendT(
 				"Sell item to fulfill selected request( ↵ )",
 				"place order to buy item(R)",
 				GO_BACK_CMD)
 	case SHW_SELLITM_TRDREQS:
 		infoLines = infoLines.
 			append(screen.tradeTableColorDesc()...).
-			append(
+			appendT(
 				"Buy item to fulfill selected request( ↵ )",
 				"place order to sell item(R)",
 				GO_BACK_CMD)
 	case SHW_BUYCHR_TRDREQS:
 		infoLines = infoLines.
 			append(screen.tradeTableColorDesc()...).
-			append(
+			appendT(
 				"Sell character to fulfill selected request( ↵ )",
 				"place order to buy character(R)",
 				GO_BACK_CMD)
 	case SHW_SELLCHR_TRDREQS:
 		infoLines = infoLines.
 			append(screen.tradeTableColorDesc()...).
-			append(
+			appendT(
 				"Buy character to fulfill selected request( ↵ )",
 				"place order to sell character(R)",
 				GO_BACK_CMD)
@@ -123,7 +124,7 @@ func (screen *GameScreen) renderUserCommands() {
 		CR8_SELLITM_TRDREQ_SEL_ITEM,
 		CR8_BUYITM_TRDREQ_SEL_ITEM:
 		infoLines = infoLines.
-			append(
+			appendT(
 				SEL_CMD,
 				GO_BACK_CMD)
 	case SEL_HEALTH_RESTORE_CHAR,
@@ -199,17 +200,17 @@ func (screen *GameScreen) renderUserCommands() {
 	default:
 		if screen.IsResultScreen() { // eg. RSLT_BUY_LOUD_TRDREQ_CREATION
 			infoLines = infoLines.
-				append(GO_ON_CMD)
+				appendT(GO_ON_ENTER_CMD)
 		} else if screen.InputActive() { // eg. CR8_BUYITM_TRDREQ_ENT_PYLVAL
 			infoLines = infoLines.
-				append(
-					loud.Localize("Finish Enter ( ↵ )"),
-					loud.Localize(GO_BACK_ESC_CMD))
+				appendT(
+					FINISH_ENTER_CMD,
+					GO_BACK_ESC_CMD)
 		}
 	}
 
 	infoLines = append(infoLines, "\n")
-	refreshCmdTxt := loud.Localize("Re)fresh Status")
+	refreshCmdTxt := loud.Localize(REFRESH_CMD)
 	if screen.syncingData {
 		infoLines = append(infoLines, screen.blueBoldFont()(refreshCmdTxt))
 	} else {
