@@ -54,107 +54,65 @@ func GetExtraPylons(user User) (string, error) {
 }
 
 func BuyGoldWithPylons(user User) (string, error) {
-	rcpName := "LOUD's buy gold with pylons recipe"
-	itemIDs := []string{}
-
-	return ExecuteRecipe(user, rcpName, itemIDs)
+	return ExecuteRecipe(user, RCP_BUY_GOLD_WITH_PYLON, []string{})
 }
 
 func DevGetTestItems(user User) (string, error) {
-	rcpName := "LOUD's Dev Get Test Items recipe"
-	itemIDs := []string{}
-
-	return ExecuteRecipe(user, rcpName, itemIDs)
+	return ExecuteRecipe(user, RCP_GET_TEST_ITEMS, []string{})
 }
 
 func RestoreHealth(user User, char Character) (string, error) {
-	rcpName := "LOUD's health restore recipe"
-	itemIDs := []string{char.ID}
-
-	return ExecuteRecipe(user, rcpName, itemIDs)
+	return ExecuteRecipe(user, RCP_RESTORE_HEALTH, []string{char.ID})
 }
 
-func HuntRabbits(user User, item Item) (string, error) {
-
-	defaultCharacter := user.GetDefaultCharacter()
-	defaultCharacterID := ""
-	if defaultCharacter != nil {
-		defaultCharacterID = defaultCharacter.ID
+func RunHuntRecipe(rcpName string, user User) (string, error) {
+	activeCharacter := user.GetActiveCharacter()
+	activeCharacterID := ""
+	if activeCharacter != nil {
+		activeCharacterID = activeCharacter.ID
 	} else {
 		return "", errors.New("character is required to hunt rabbits!")
 	}
-	rcpName := "LOUD's hunt rabbits without sword recipe"
-	itemIDs := []string{defaultCharacterID}
 
-	if item.IsSword() {
-		rcpName = "LOUD's hunt rabbits with a sword recipe"
-		itemIDs = []string{defaultCharacterID, item.ID}
+	activeWeapon := user.GetActiveWeapon()
+	itemIDs := []string{activeCharacterID}
+	if activeWeapon != nil {
+		itemIDs = []string{activeCharacterID, activeWeapon.ID}
 	}
 
 	return ExecuteRecipe(user, rcpName, itemIDs)
 }
 
-func FightTroll(user User, item Item) (string, error) {
-	defaultCharacter := user.GetDefaultCharacter()
-	defaultCharacterID := ""
-	if defaultCharacter != nil {
-		defaultCharacterID = defaultCharacter.ID
+func HuntRabbits(user User) (string, error) {
+	activeWeapon := user.GetActiveWeapon()
+	if activeWeapon == nil {
+		return RunHuntRecipe(RCP_HUNT_RABBITS_NOSWORD, user)
 	} else {
-		return "", errors.New("character is required to fight!")
+		return RunHuntRecipe(RCP_HUNT_RABBITS_YESWORD, user)
 	}
-	rcpName := "LOUD's fight with troll with a sword recipe"
-	itemIDs := []string{defaultCharacterID, item.ID}
-
-	return ExecuteRecipe(user, rcpName, itemIDs)
 }
 
-func FightWolf(user User, item Item) (string, error) {
-	defaultCharacter := user.GetDefaultCharacter()
-	defaultCharacterID := ""
-	if defaultCharacter != nil {
-		defaultCharacterID = defaultCharacter.ID
-	} else {
-		return "", errors.New("character is required to fight!")
-	}
-	rcpName := "LOUD's fight with wolf with a sword recipe"
-	itemIDs := []string{defaultCharacterID, item.ID}
-
-	return ExecuteRecipe(user, rcpName, itemIDs)
+func FightTroll(user User) (string, error) {
+	return RunHuntRecipe(RCP_FIGHT_TROLL, user)
 }
 
-func FightGoblin(user User, item Item) (string, error) {
-	defaultCharacter := user.GetDefaultCharacter()
-	defaultCharacterID := ""
-	if defaultCharacter != nil {
-		defaultCharacterID = defaultCharacter.ID
-	} else {
-		return "", errors.New("character is required to fight!")
-	}
-	rcpName := "LOUD's fight with goblin with a sword recipe"
-	itemIDs := []string{defaultCharacterID, item.ID}
-
-	return ExecuteRecipe(user, rcpName, itemIDs)
+func FightWolf(user User) (string, error) {
+	return RunHuntRecipe(RCP_FIGHT_WOLF, user)
 }
 
-func FightGiant(user User, item Item) (string, error) {
-	defaultCharacter := user.GetDefaultCharacter()
-	defaultCharacterID := ""
-	if defaultCharacter != nil {
-		defaultCharacterID = defaultCharacter.ID
-	} else {
-		return "", errors.New("character is required to fight!")
-	}
-	rcpName := "LOUD's fight with giant with a sword recipe"
-	itemIDs := []string{defaultCharacterID, item.ID}
+func FightGoblin(user User) (string, error) {
+	return RunHuntRecipe(RCP_FIGHT_GOBLIN, user)
+}
 
-	return ExecuteRecipe(user, rcpName, itemIDs)
+func FightGiant(user User) (string, error) {
+	return RunHuntRecipe(RCP_FIGHT_GIANT, user)
 }
 
 func BuyCharacter(user User, ch Character) (string, error) {
 	rcpName := ""
 	switch ch.Name {
 	case TIGER_CHR:
-		rcpName = "LOUD's Get Character recipe"
+		rcpName = RCP_BUY_CHARACTER
 	default:
 		return "", errors.New("You are trying to buy character which is not in shop")
 	}
@@ -171,7 +129,7 @@ func RenameCharacter(user User, ch Character, newName string) (string, error) {
 	renameMsg := msgs.NewMsgUpdateItemString(ch.ID, "Name", newName, sdkAddr)
 	log.Println("started sending transaction", user.GetUserName(), renameMsg)
 	txhash := pylonSDK.TestTxWithMsgWithNonce(t, renameMsg, user.GetUserName(), false)
-	user.SetLastTransaction(txhash)
+	user.SetLastTransaction(txhash, Sprintf("rename character from %s to %s", ch.Name, newName))
 	log.Println("ended sending transaction")
 	return txhash, nil
 }
@@ -182,25 +140,25 @@ func Buy(user User, item Item) (string, error) {
 	switch item.Name {
 	case WOODEN_SWORD:
 		if item.Level == 1 {
-			rcpName = "LOUD's Wooden sword lv1 buy recipe"
+			rcpName = RCP_BUY_WOODEN_SWORD
 		}
 	case COPPER_SWORD:
 		if item.Level == 1 {
-			rcpName = "LOUD's Copper sword lv1 buy recipe"
+			rcpName = RCP_BUY_COPPER_SWORD
 		}
 	case SILVER_SWORD:
 		if item.Level == 1 {
-			rcpName = "LOUD's Silver sword lv1 make recipe"
+			rcpName = RCP_BUY_SILVER_SWORD
 			itemIDs = []string{user.InventoryItemIDByName(GOBLIN_EAR)}
 		}
 	case BRONZE_SWORD:
 		if item.Level == 1 {
-			rcpName = "LOUD's Bronze sword lv1 make recipe"
+			rcpName = RCP_BUY_BRONZE_SWORD
 			itemIDs = []string{user.InventoryItemIDByName(WOLF_TAIL)}
 		}
 	case IRON_SWORD:
 		if item.Level == 1 {
-			rcpName = "LOUD's Iron sword lv1 make recipe"
+			rcpName = RCP_BUY_IRON_SWORD
 			itemIDs = []string{user.InventoryItemIDByName(TROLL_TOES)}
 		}
 	default:
@@ -218,7 +176,7 @@ func Sell(user User, item Item) (string, error) {
 	rcpName := ""
 	switch item.Name {
 	case WOODEN_SWORD, COPPER_SWORD:
-		rcpName = "LOUD's sword sell recipe"
+		rcpName = RCP_SELL_SWORD
 	}
 	return ExecuteRecipe(user, rcpName, itemIDs)
 }
@@ -229,11 +187,11 @@ func Upgrade(user User, item Item) (string, error) {
 	switch item.Name {
 	case WOODEN_SWORD:
 		if item.Level == 1 {
-			rcpName = "LOUD's Wooden sword lv1 to lv2 upgrade recipe"
+			rcpName = RCP_WOODEN_SWORD_UPG
 		}
 	case COPPER_SWORD:
 		if item.Level == 1 {
-			rcpName = "LOUD's Copper sword lv1 to lv2 upgrade recipe"
+			rcpName = RCP_COPPER_SWORD_UPG
 		}
 	}
 	if item.GetUpgradePrice() > user.GetGold() {

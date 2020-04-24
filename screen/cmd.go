@@ -11,20 +11,65 @@ import (
 )
 
 const (
-	SEL_CMD     = "Select ( ↵ )"
-	GO_BACK_CMD = "Go back( ⌫ ) - Backspace Key"
+	SEL_CMD          = "Select ( ↵ )"
+	GO_ON_ENTER_CMD  = "Go on ( ↵ )"
+	FINISH_ENTER_CMD = "Finish Enter ( ↵ )"
+	GO_BACK_CMD      = "Go back ( ⌫ ) - Backspace Key"
+	GO_BACK_ESC_CMD  = "Go back ( Esc )"
+	END_GAME_ESC_CMD = "End Game ( Esc )"
+	REFRESH_CMD      = "Re)fresh Status"
 )
 
-func appendSelectGoBackCmds(infoLines []string) []string {
-	return append(infoLines,
+func (tl TextLines) appendDeselectCmd() TextLines {
+	return append(tl, fmt.Sprintf("0) %s", loud.Localize("Deselect")))
+}
+
+func (tl TextLines) appendSelectGoBackCmds() TextLines {
+	return tl.appendT(
 		SEL_CMD,
-		loud.Localize(GO_BACK_CMD))
+		GO_BACK_CMD)
+}
+
+func (tl TextLines) appendGoOnBackCmds() TextLines {
+	return tl.appendT(
+		GO_ON_ENTER_CMD,
+		GO_BACK_CMD)
+}
+
+func (tl TextLines) appendSelectCmds(itemsSlice interface{}, fn func(interface{}) string) TextLines {
+	items := InterfaceSlice(itemsSlice)
+	for idx, item := range items {
+		tl = append(tl, fmt.Sprintf("%d) %s  ", idx+1, fn(item)))
+	}
+	return tl
+}
+
+func (tl TextLines) appendRefreshCmd(screen *GameScreen) TextLines {
+	refreshCmdTxt := loud.Localize(REFRESH_CMD)
+	if screen.syncingData {
+		tl = append(tl, screen.blueBoldFont()(refreshCmdTxt))
+	} else {
+		tl = append(tl, refreshCmdTxt)
+	}
+	return tl
+}
+
+func (tl TextLines) appendEndGameCmd(screen *GameScreen) TextLines {
+	if screen.scrStatus != CONFIRM_ENDGAME && !screen.InputActive() {
+		tl = tl.appendT(END_GAME_ESC_CMD)
+	}
+	return tl
 }
 
 func (screen *GameScreen) renderUserCommands() {
 
-	infoLines := []string{}
+	infoLines := TextLines{}
 	switch screen.scrStatus {
+	case CONFIRM_ENDGAME:
+		infoLines = infoLines.
+			appendT(
+				GO_BACK_ESC_CMD,
+				GO_ON_ENTER_CMD)
 	case SHW_LOCATION:
 		cmdMap := map[loud.UserLocation]string{
 			loud.HOME:     "home",
@@ -36,123 +81,154 @@ func (screen *GameScreen) renderUserCommands() {
 		}
 		cmdString := loud.Localize(cmdMap[screen.user.GetLocation()])
 		infoLines = strings.Split(cmdString, "\n")
-		for _, loc := range []loud.UserLocation{loud.HOME, loud.FOREST, loud.SHOP, loud.PYLCNTRL, loud.SETTINGS, loud.DEVELOP} {
+		for _, loc := range []loud.UserLocation{
+			loud.HOME,
+			loud.FOREST,
+			loud.SHOP,
+			loud.PYLCNTRL,
+			loud.SETTINGS,
+			loud.DEVELOP,
+		} {
 			if loc != screen.user.GetLocation() {
-				infoLines = append(infoLines, loud.Localize("go to "+cmdMap[loc]))
+				infoLines = infoLines.
+					append(loud.Localize("go to " + cmdMap[loc]))
 			}
 		}
 	case SHW_LOUD_BUY_TRDREQS:
-		infoLines = append(infoLines, screen.tradeTableColorDesc()...)
-		infoLines = append(infoLines,
-			"Sell loud to fulfill selected request( ↵ )",
-			"Create an order to buy loud(R)",
-			GO_BACK_CMD)
+		infoLines = infoLines.
+			append(screen.tradeTableColorDesc()...).
+			appendT(
+				"Sell loud to fulfill selected request( ↵ )",
+				"place order to buy loud(R)",
+				GO_BACK_CMD)
 	case SHW_LOUD_SELL_TRDREQS:
-		infoLines = append(infoLines, screen.tradeTableColorDesc()...)
-		infoLines = append(infoLines,
-			"Buy loud to fulfill selected request( ↵ )",
-			"Create an order to sell loud(R)",
-			GO_BACK_CMD)
+		infoLines = infoLines.
+			append(screen.tradeTableColorDesc()...).
+			appendT(
+				"Buy loud to fulfill selected request( ↵ )",
+				"place order to sell loud(R)",
+				GO_BACK_CMD)
 	case SHW_BUYITM_TRDREQS:
-		infoLines = append(infoLines, screen.tradeTableColorDesc()...)
-		infoLines = append(infoLines,
-			"Sell item to fulfill selected request( ↵ )",
-			"Create an order to buy item(R)",
-			GO_BACK_CMD)
+		infoLines = infoLines.
+			append(screen.tradeTableColorDesc()...).
+			appendT(
+				"Sell item to fulfill selected request( ↵ )",
+				"place order to buy item(R)",
+				GO_BACK_CMD)
 	case SHW_SELLITM_TRDREQS:
-		infoLines = append(infoLines, screen.tradeTableColorDesc()...)
-		infoLines = append(infoLines,
-			"Buy item to fulfill selected request( ↵ )",
-			"Create an order to sell item(R)",
-			GO_BACK_CMD)
+		infoLines = infoLines.
+			append(screen.tradeTableColorDesc()...).
+			appendT(
+				"Buy item to fulfill selected request( ↵ )",
+				"place order to sell item(R)",
+				GO_BACK_CMD)
 	case SHW_BUYCHR_TRDREQS:
-		infoLines = append(infoLines, screen.tradeTableColorDesc()...)
-		infoLines = append(infoLines,
-			"Sell character to fulfill selected request( ↵ )",
-			"Create an order to buy character(R)",
-			GO_BACK_CMD)
+		infoLines = infoLines.
+			append(screen.tradeTableColorDesc()...).
+			appendT(
+				"Sell character to fulfill selected request( ↵ )",
+				"place order to buy character(R)",
+				GO_BACK_CMD)
 	case SHW_SELLCHR_TRDREQS:
-		infoLines = append(infoLines, screen.tradeTableColorDesc()...)
-		infoLines = append(infoLines,
-			"Buy character to fulfill selected request( ↵ )",
-			"Create an order to sell character(R)",
-			GO_BACK_CMD)
+		infoLines = infoLines.
+			append(screen.tradeTableColorDesc()...).
+			appendT(
+				"Buy character to fulfill selected request( ↵ )",
+				"place order to sell character(R)",
+				GO_BACK_CMD)
 
 	case CR8_BUYCHR_TRDREQ_SEL_CHR,
 		CR8_SELLCHR_TRDREQ_SEL_CHR,
 		CR8_SELLITM_TRDREQ_SEL_ITEM,
 		CR8_BUYITM_TRDREQ_SEL_ITEM:
-		infoLines = append(infoLines,
-			SEL_CMD,
-			GO_BACK_CMD)
-	case SEL_DEFAULT_CHAR,
-		SEL_HEALTH_RESTORE_CHAR,
+		infoLines = infoLines.
+			appendT(
+				SEL_CMD,
+				GO_BACK_CMD)
+	case SEL_HEALTH_RESTORE_CHAR,
 		SEL_RENAME_CHAR:
-		for idx, char := range screen.user.InventoryCharacters() {
-			infoLines = append(infoLines, fmt.Sprintf("%d) %s  ", idx+1, formatCharacter(char)))
-		}
-		infoLines = appendSelectGoBackCmds(infoLines)
-	case SEL_DEFAULT_WEAPON:
-		for idx, item := range screen.user.InventorySwords() {
-			infoLines = append(infoLines, fmt.Sprintf("%d) %s  ", idx+1, formatItem(item)))
-		}
-		infoLines = appendSelectGoBackCmds(infoLines)
+		infoLines = infoLines.
+			appendSelectCmds(
+				screen.user.InventoryCharacters(),
+				func(it interface{}) string {
+					return formatCharacter(it.(loud.Character))
+				}).
+			appendSelectGoBackCmds()
+	case SEL_ACTIVE_CHAR:
+		infoLines = infoLines.
+			appendDeselectCmd().
+			appendSelectCmds(
+				screen.user.InventoryCharacters(),
+				func(it interface{}) string {
+					return formatCharacter(it.(loud.Character))
+				}).
+			appendSelectGoBackCmds()
+	case SEL_ACTIVE_WEAPON:
+		infoLines = infoLines.
+			appendDeselectCmd().
+			appendSelectCmds(
+				screen.user.InventorySwords(),
+				func(it interface{}) string {
+					return formatItem(it.(loud.Item))
+				}).
+			appendSelectGoBackCmds()
 	case SEL_BUYITM:
-		for idx, item := range loud.ShopItems {
-			infoLines = append(infoLines, fmt.Sprintf("%d) %s  ", idx+1, formatItem(item))+screen.loudIcon()+fmt.Sprintf(" %d", item.Price))
-		}
-		infoLines = appendSelectGoBackCmds(infoLines)
+		infoLines = infoLines.
+			appendSelectCmds(
+				loud.ShopItems,
+				func(it interface{}) string {
+					item := it.(loud.Item)
+					return formatItem(item) + screen.goldIcon() + fmt.Sprintf(" %d", item.Price)
+				}).
+			appendSelectGoBackCmds()
 	case SEL_BUYCHR:
-		for idx, item := range loud.ShopCharacters {
-			infoLines = append(infoLines, fmt.Sprintf("%d) %s  ", idx+1, formatCharacter(item))+screen.pylonIcon()+fmt.Sprintf(" %d", item.Price))
-		}
-		infoLines = appendSelectGoBackCmds(infoLines)
+		infoLines = infoLines.
+			appendSelectCmds(
+				loud.ShopCharacters,
+				func(it interface{}) string {
+					char := it.(loud.Character)
+					return formatCharacter(char) + screen.pylonIcon() + fmt.Sprintf(" %d", char.Price)
+				}).
+			appendSelectGoBackCmds()
 	case SEL_SELLITM:
-		userItems := screen.user.InventorySellableItems()
-		for idx, item := range userItems {
-			infoLines = append(infoLines, fmt.Sprintf("%d) %s  ", idx+1, formatItem(item))+screen.loudIcon()+fmt.Sprintf(" %s", item.GetSellPriceRange()))
-		}
-		infoLines = appendSelectGoBackCmds(infoLines)
-	case SEL_HUNT_RABBITS_ITEM:
-		infoLines = append(infoLines, loud.Localize("No item"))
-		for idx, item := range screen.user.InventorySwords() {
-			infoLines = append(infoLines, fmt.Sprintf("%d) %s", idx+1, formatItem(item)))
-		}
-		infoLines = appendSelectGoBackCmds(infoLines)
-	case SEL_FIGHT_GOBLIN_ITEM,
-		SEL_FIGHT_TROLL_ITEM,
-		SEL_FIGHT_WOLF_ITEM:
-		for idx, item := range screen.user.InventorySwords() {
-			infoLines = append(infoLines, fmt.Sprintf("%d) %s", idx+1, formatItem(item)))
-		}
-		infoLines = appendSelectGoBackCmds(infoLines)
-	case SEL_FIGHT_GIANT_ITEM:
-		for idx, item := range screen.user.InventoryIronSwords() {
-			infoLines = append(infoLines, fmt.Sprintf("%d) %s", idx+1, formatItem(item)))
-		}
-		infoLines = appendSelectGoBackCmds(infoLines)
+		infoLines = infoLines.
+			appendSelectCmds(
+				screen.user.InventorySellableItems(),
+				func(it interface{}) string {
+					item := it.(loud.Item)
+					return formatItem(item) + screen.goldIcon() + fmt.Sprintf(" %s", item.GetSellPriceRange())
+				}).
+			appendSelectGoBackCmds()
 	case SEL_UPGITM:
-		for idx, item := range screen.user.InventoryUpgradableItems() {
-			infoLines = append(infoLines, fmt.Sprintf("%d) %s ", idx+1, formatItem(item))+screen.loudIcon()+fmt.Sprintf(" %d", item.GetUpgradePrice()))
-		}
-		infoLines = appendSelectGoBackCmds(infoLines)
+		infoLines = infoLines.
+			appendSelectCmds(
+				screen.user.InventoryUpgradableItems(),
+				func(it interface{}) string {
+					item := it.(loud.Item)
+					return formatItem(item) + screen.goldIcon() + fmt.Sprintf(" %d", item.GetUpgradePrice())
+				}).
+			appendSelectGoBackCmds()
+	case CONFIRM_HUNT_RABBITS,
+		CONFIRM_FIGHT_GOBLIN,
+		CONFIRM_FIGHT_TROLL,
+		CONFIRM_FIGHT_WOLF,
+		CONFIRM_FIGHT_GIANT:
+		infoLines = infoLines.
+			appendGoOnBackCmds()
 	default:
 		if screen.IsResultScreen() { // eg. RSLT_BUY_LOUD_TRDREQ_CREATION
-			infoLines = append(infoLines, loud.Localize("Go) on( ↵ )"))
+			infoLines = infoLines.appendT(GO_ON_ENTER_CMD)
 		} else if screen.InputActive() { // eg. CR8_BUYITM_TRDREQ_ENT_PYLVAL
-			infoLines = append(infoLines,
-				loud.Localize("Finish Enter ( ↵ )"),
-				loud.Localize(GO_BACK_CMD))
+			infoLines = infoLines.
+				appendT(
+					FINISH_ENTER_CMD,
+					GO_BACK_ESC_CMD)
 		}
 	}
 
-	infoLines = append(infoLines, "\n")
-	refreshCmdTxt := loud.Localize("Re)fresh Status")
-	if screen.syncingData {
-		infoLines = append(infoLines, screen.blueBoldFont()(refreshCmdTxt))
-	} else {
-		infoLines = append(infoLines, refreshCmdTxt)
-	}
+	infoLines = infoLines.append("\n")
+	infoLines = infoLines.appendRefreshCmd(screen)
+	infoLines = infoLines.appendEndGameCmd(screen)
 
 	// box start point (x, y)
 	x := 2

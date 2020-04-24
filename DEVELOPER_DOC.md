@@ -105,7 +105,7 @@ Input: Any item which has `attack` and `level` attributes
 ### Hunt rabbits recipe without sword
 ```
 Reward: 1 or 2
-Character die percent: 10%
+10% chance of character lose
 When character die, no gold is returned.
 ```
 
@@ -113,9 +113,9 @@ When character die, no gold is returned.
 
 ```
 Reward: 1 + `attack / 2`
-Character dying percent: 5%
-Sword lose percent: 5%
-When character die, no gold is returned.
+5% chance of character lose
+5% chance of sword lose
+When character die, no gold or sword is returned.
 ```
 
 ### Fight Goblin
@@ -124,13 +124,15 @@ When character die, no gold is returned.
 Goblin HP: 10
 Goblin attack: 1
 Reward: 50 loudcoin
+10% chance of sword lose
+10% chance of "Goblin ear"
 ```
 
 character should carry sword to fight goblin.
 Total received damage you get from Goblin is calculated by using `EnemyHP * EnemyAttack / SwordAttack`, and dying percentage is related to Total received damage you get from Goblin.
 
 ```
-Character Dying percent: `(Total received damage - HP) / Total received damage`
+Character Dying percent: `1 - HP / Total received damage`
 Character Alive percent: `HP / Total received damage`
 Sword lose percent: `HP / Total received damage * 0.1`
 Goblin ear bonus item percent: `HP / Total received damage * 0.1`
@@ -144,13 +146,14 @@ When character die, no gold is returned.
 Wolf HP: 15
 Wolf attack: 3
 Reward: 150 loudcoin
-
+10% chance of sword lose
+10% chance of “Wolf tail”
 ```
 character should carry sword to fight wolf.
 Total received damage you get from Wolf is calculated by using `EnemyHP * EnemyAttack / SwordAttack`, and dying percentage is related to Total received damage you get from Wolf.
 
 ```
-Character Dying percent: `(Total received damage - HP) / Total received damage`
+Character Dying percent: `1 - HP / Total received damage`
 Character Alive percent: `HP / Total received damage`
 Sword lose percent: `HP / Total received damage * 0.1`
 Wolf tail bonus item percent: `HP / Total received damage * 0.1`
@@ -164,13 +167,15 @@ When character die, no gold is returned.
 Troll HP: 20
 Troll attack: 5
 Reward: 300 loudcoin
+10% chance of sword lose
+10% chance of “Troll toes”
 ```
 
 character should carry sword to fight troll.
 Total received damage you get from Troll is calculated by using `EnemyHP * EnemyAttack / SwordAttack`, and dying percentage is related to Total received damage you get from Troll.
 
 ```
-Character Dying percent: `(Total received damage - HP) / Total received damage`
+Character Dying percent: `1 - HP / Total received damage`
 Character Alive percent: `HP / Total received damage`
 Sword lose percent: `HP / Total received damage * 0.1`
 Troll toes bonus item percent: `HP / Total received damage * 0.1`
@@ -184,13 +189,15 @@ When character die, no gold is returned.
 Troll HP: 100
 Troll attack: 10
 Reward: 3000 loudcoin
+10% chance of sword lose
+GiantKiller badget on character
 ```
 
 character should carry iron sword to fight giant.
 Total received damage you get from Giant is calculated by using `EnemyHP * EnemyAttack / SwordAttack`, and dying percentage is related to Total received damage you get from Giant.
 
 ```
-Character Dying percent: `(Total received damage - HP) / Total received damage`
+Character Dying percent: `1 - HP / Total received damage`
 Character Alive percent: `HP / Total received damage`
 Sword lose percent: `HP / Total received damage * 0.1`
 ```

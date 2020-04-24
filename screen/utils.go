@@ -8,6 +8,20 @@ import (
 	loud "github.com/Pylons-tech/LOUD/data"
 )
 
+type TextLines []string
+
+func (tl TextLines) append(elems ...string) TextLines {
+	return append(tl, elems...)
+}
+
+func (tl TextLines) appendT(elems ...string) TextLines {
+	elemsT := []string{}
+	for _, el := range elems {
+		elemsT = append(elemsT, loud.Localize(el))
+	}
+	return append(tl, elemsT...)
+}
+
 func truncateRight(message string, width int) string {
 	if utf8.RuneCountInString(message) < width {
 		fmtString := fmt.Sprintf("%%-%vs", width)
@@ -71,6 +85,14 @@ func formatItem(item loud.Item) string {
 	return itemStr
 }
 
+func carryItemDesc(item *loud.Item) string {
+	if item == nil {
+		return ""
+	} else {
+		return "Carry: " + formatItem(*item)
+	}
+}
+
 func formatIntRange(r [2]int) string {
 	if r[0] == r[1] {
 		if r[0] == 0 {
@@ -106,6 +128,9 @@ func formatItemSpec(itemSpec loud.ItemSpec) string {
 
 func formatCharacter(ch loud.Character) string {
 	chStr := loud.Localize(ch.Name)
+	if ch.GiantKill > 0 {
+		chStr = fmt.Sprintf("🥇x%d %s", ch.GiantKill, chStr)
+	}
 	if ch.Level > 0 {
 		chStr += fmt.Sprintf(" Lv%d", ch.Level)
 	}
@@ -158,6 +183,10 @@ func InterfaceSlice(slice interface{}) []interface{} {
 }
 
 func (screen *GameScreen) renderTRLine(text1 string, text2 string, text3 string, isActiveLine bool, isDisabledLine bool) string {
+	text1 = loud.Localize(text1)
+	text2 = loud.Localize(text2)
+	text3 = loud.Localize(text3)
+
 	calcText := "│" + centerText(text1, " ", 20) + "│" + centerText(text2, " ", 15) + "│" + centerText(text3, " ", 15) + "│"
 	if isActiveLine && isDisabledLine {
 		onColor := screen.brownBoldFont()
@@ -173,7 +202,7 @@ func (screen *GameScreen) renderTRLine(text1 string, text2 string, text3 string,
 }
 
 func (screen *GameScreen) renderItemTableLine(text1 string, isActiveLine bool) string {
-	calcText := "│" + centerText(text1, " ", 52) + "│"
+	calcText := "│" + centerText(loud.Localize(text1), " ", 52) + "│"
 	if isActiveLine {
 		onColor := screen.blueBoldFont()
 		return onColor(calcText)
@@ -182,6 +211,8 @@ func (screen *GameScreen) renderItemTableLine(text1 string, isActiveLine bool) s
 }
 
 func (screen *GameScreen) renderItemTrdReqTableLine(text1 string, text2 string, isActiveLine bool, isDisabledLine bool) string {
+	text1 = loud.Localize(text1)
+	text2 = loud.Localize(text2)
 	calcText := "│" + centerText(text1, " ", 36) + "│" + centerText(text2, " ", 15) + "│"
 	if isActiveLine && isDisabledLine {
 		onColor := screen.brownBoldFont()

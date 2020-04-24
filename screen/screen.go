@@ -29,6 +29,7 @@ const bgcolor = 232
 // Screen represents a UI screen.
 type Screen interface {
 	SaveGame()
+	IsEndGameConfirmScreen() bool
 	UpdateFakeBlockHeight(int64)
 	SetScreenSize(int, int)
 	HandleInputKey(termbox.Event)
@@ -149,8 +150,8 @@ func (screen *GameScreen) pylonIcon() string {
 	return screen.drawProgressMeter(1, 1, 117, bgcolor, 1)
 }
 
-func (screen *GameScreen) loudIcon() string {
-	return screen.drawProgressMeter(1, 1, 208, bgcolor, 1)
+func (screen *GameScreen) goldIcon() string {
+	return "💰"
 }
 
 func (screen *GameScreen) buyLoudDesc(loudValue interface{}, pylonValue interface{}) string {
@@ -159,7 +160,7 @@ func (screen *GameScreen) buyLoudDesc(loudValue interface{}, pylonValue interfac
 		screen.pylonIcon(),
 		fmt.Sprintf("%v", pylonValue),
 		"\n  ↓\n",
-		screen.loudIcon(),
+		screen.goldIcon(),
 		fmt.Sprintf("%v", loudValue),
 	}, "")
 	return desc
@@ -168,7 +169,7 @@ func (screen *GameScreen) buyLoudDesc(loudValue interface{}, pylonValue interfac
 func (screen *GameScreen) sellLoudDesc(loudValue interface{}, pylonValue interface{}) string {
 	var desc = strings.Join([]string{
 		"\n",
-		screen.loudIcon(),
+		screen.goldIcon(),
 		fmt.Sprintf("%v", loudValue),
 		"\n  ↓\n",
 		screen.pylonIcon(),
@@ -267,10 +268,11 @@ func (screen *GameScreen) sellCharacterSpecDesc(activeCharacter loud.CharacterSp
 
 func (screen *GameScreen) tradeTableColorDesc() []string {
 	var infoLines = []string{}
-	infoLines = append(infoLines, "white     ➝ other's request")
-	infoLines = append(infoLines, screen.blueBoldFont()("bluebold")+"  ➝ selected request")
-	infoLines = append(infoLines, screen.brownBoldFont()("brownbold")+" ➝ my request + selected")
-	infoLines = append(infoLines, screen.brownFont()("brown")+"     ➝ my request")
+
+	infoLines = append(infoLines, loud.Localize("white trade line desc"))
+	infoLines = append(infoLines, screen.blueBoldFont()(loud.Localize("bluebold trade line desc")))
+	infoLines = append(infoLines, screen.brownBoldFont()(loud.Localize("brownbold trade line desc")))
+	infoLines = append(infoLines, screen.brownFont()(loud.Localize("brown trade line desc")))
 	infoLines = append(infoLines, "\n")
 	return infoLines
 }
@@ -339,7 +341,7 @@ func (screen *GameScreen) renderTRTable(requests []loud.TrdReq) []string {
 
 func (screen *GameScreen) renderITRTable(title string, theads [2]string, requestsSlice interface{}) []string {
 	requests := InterfaceSlice(requestsSlice)
-	infoLines := strings.Split(title, "\n")
+	infoLines := strings.Split(loud.Localize(title), "\n")
 	numHeaderLines := len(infoLines)
 	infoLines = append(infoLines, "╭────────────────────────────────────┬───────────────╮")
 	// infoLines = append(infoLines, "│ Item                │ Price (pylon) │")
@@ -574,6 +576,10 @@ func (screen *GameScreen) IsWaitScreen() bool {
 	return screen.scrStatus.IsWaitScreen()
 }
 
+func (screen *GameScreen) IsEndGameConfirmScreen() bool {
+	return screen.scrStatus == CONFIRM_ENDGAME
+}
+
 func (screen *GameScreen) InputActive() bool {
 	switch screen.scrStatus {
 	case CR8_BUY_LOUD_TRDREQ_ENT_LUDVAL,
@@ -596,7 +602,7 @@ func (screen *GameScreen) renderInputValue() {
 	move := cursor.MoveTo(screen.screenSize.Height-1, 2)
 
 	chatFunc := screen.colorFunc(fmt.Sprintf("231:%v", bgcolor))
-	chat := chatFunc("INPUT▶ ")
+	chat := chatFunc("👉👉👉 ")
 	fmtString := fmt.Sprintf("%%-%vs", inputWidth)
 
 	if screen.InputActive() {
@@ -624,14 +630,15 @@ func (screen *GameScreen) renderCharacterSheet() {
 	}
 
 	characters := screen.user.InventoryCharacters()
-	dfc := screen.user.GetDefaultCharacter()
-	dfcRestBlocks := uint64(0)
-	if dfc != nil {
-		HP = uint64(dfc.HP)
-		MaxHP = uint64(dfc.MaxHP)
-		dfcRestBlocks = screen.BlockSince(dfc.LastUpdate)
-		HP = min(HP+dfcRestBlocks, MaxHP)
+	activeCharacter := screen.user.GetActiveCharacter()
+	activeCharacterRestBlocks := uint64(0)
+	if activeCharacter != nil {
+		HP = uint64(activeCharacter.HP)
+		MaxHP = uint64(activeCharacter.MaxHP)
+		activeCharacterRestBlocks = screen.BlockSince(activeCharacter.LastUpdate)
+		HP = min(HP+activeCharacterRestBlocks, MaxHP)
 	}
+	activeWeapon := screen.user.GetActiveWeapon()
 
 	x := screen.screenSize.Width/2 - 1
 	width := (screen.screenSize.Width - x)
@@ -639,14 +646,14 @@ func (screen *GameScreen) renderCharacterSheet() {
 	infoLines := []string{
 		centerText(fmt.Sprintf("%v", screen.user.GetUserName()), " ", width),
 		centerText(loud.Localize("inventory"), "─", width),
-		screen.loudIcon() + truncateRight(fmt.Sprintf(" %s: %v", loud.Localize("gold"), screen.user.GetGold()), width-1),
+		screen.goldIcon() + truncateRight(fmt.Sprintf(" %v", screen.user.GetGold()), width-1),
 		"",
 	}
 
 	items := screen.user.InventoryItems()
-	for idx, item := range items {
+	for _, item := range items {
 		itemInfo := truncateRight(formatItem(item), width)
-		if idx == screen.user.GetDefaultItemIndex() {
+		if activeWeapon != nil && item.ID == activeWeapon.ID {
 			itemInfo = screen.blueBoldFont()(itemInfo)
 		}
 		infoLines = append(infoLines, itemInfo)
@@ -654,7 +661,7 @@ func (screen *GameScreen) renderCharacterSheet() {
 
 	for idx, character := range characters {
 		characterInfo := truncateRight(formatCharacter(character), width)
-		if idx == screen.user.GetDefaultCharacterIndex() {
+		if idx == screen.user.GetActiveCharacterIndex() {
 			characterInfo = screen.blueBoldFont()(characterInfo)
 		}
 		infoLines = append(infoLines, characterInfo)
@@ -672,17 +679,23 @@ func (screen *GameScreen) renderCharacterSheet() {
 	fmtFunc := screen.colorFunc(fmt.Sprintf("255:%v", bgcolor))
 
 	infoLines = append(infoLines,
-		fmtFunc(centerText(loud.Sprintf(" Active Character%s", warning), "─", width)),
+		fmtFunc(centerText(fmt.Sprintf(" %s%s", loud.Localize("Active Character"), warning), "─", width)),
 		screen.drawProgressMeter(HP, MaxHP, 196, bgcolor, 10)+fmtFunc(truncateRight(fmt.Sprintf(" HP: %v/%v", HP, MaxHP), width-10)),
 		// screen.drawProgressMeter(HP, MaxHP, 225, bgcolor, 10) + fmtFunc(truncateRight(fmt.Sprintf(" XP: %v/%v", HP, 10), width-10)),
 		// screen.drawProgressMeter(HP, MaxHP, 208, bgcolor, 10) + fmtFunc(truncateRight(fmt.Sprintf(" AP: %v/%v", HP, MaxHP), width-10)),
 		// screen.drawProgressMeter(HP, MaxHP, 117, bgcolor, 10) + fmtFunc(truncateRight(fmt.Sprintf(" RP: %v/%v", HP, MaxHP), width-10)),
 		// screen.drawProgressMeter(HP, MaxHP, 76, bgcolor, 10) + fmtFunc(truncateRight(fmt.Sprintf(" MP: %v/%v", HP, MaxHP), width-10)),
 	)
-	if dfc != nil {
+	if activeCharacter != nil {
 		infoLines = append(infoLines,
-			fmtFunc(truncateRight(formatCharacter(*dfc), width)),
-			fmtFunc(truncateRight(loud.Sprintf("rest blocks: %d", dfcRestBlocks), width)),
+			fmtFunc(truncateRight(formatCharacter(*activeCharacter), width)),
+			fmtFunc(truncateRight(fmt.Sprintf("%s: %d", loud.Localize("rest blocks"), activeCharacterRestBlocks), width)),
+		)
+	}
+	if activeWeapon != nil {
+		infoLines = append(infoLines,
+			centerText(fmt.Sprintf(" %s ", loud.Localize("Active Weapon")), "─", width),
+			fmtFunc(truncateRight(formatItem(*activeWeapon), width)),
 		)
 	}
 
@@ -694,16 +707,16 @@ func (screen *GameScreen) renderCharacterSheet() {
 	}
 
 	nodeLines := []string{
-		centerText(" pylons network status ", "─", width),
-		fmt.Sprintf("Address: %s 📋(M)", truncateRight(screen.user.GetAddress(), 32)),
+		centerText(" "+loud.Localize("pylons network status")+" ", "─", width),
+		fmt.Sprintf("%s: %s 📋(M)", loud.Localize("Address"), truncateRight(screen.user.GetAddress(), 32)),
 		screen.pylonIcon() + truncateRight(fmt.Sprintf(" %s: %v", "Pylon", screen.user.GetPylonAmount()), width-1),
 	}
 
-	if len(screen.user.GetLastTransaction()) > 0 {
-		nodeLines = append(nodeLines, loud.Sprintf("Last Tx: %s 📋(L)", truncateRight(screen.user.GetLastTransaction(), 32)))
+	if len(screen.user.GetLastTxHash()) > 0 {
+		nodeLines = append(nodeLines, fmt.Sprintf("%s: %s 📋(L)", loud.Localize("Last TxHash"), truncateRight(screen.user.GetLastTxHash(), 32)))
 	}
 
-	blockHeightText := truncateRight(loud.Sprintf("block height: %d(%d)", screen.blockHeight, screen.fakeBlockHeight), width-1)
+	blockHeightText := truncateRight(fmt.Sprintf("%s: %d(%d)", loud.Localize("block height"), screen.blockHeight, screen.fakeBlockHeight), width-1)
 	if screen.syncingData {
 		nodeLines = append(nodeLines, screen.blueBoldFont()(blockHeightText))
 	} else {
@@ -722,14 +735,14 @@ func (screen *GameScreen) renderCharacterSheet() {
 	screen.drawFill(x, lastLine+1, width, screen.screenSize.Height-(lastLine+2))
 }
 
-func (screen *GameScreen) RunActiveCharacterSelect() {
-	screen.user.SetDefaultCharacterIndex(screen.activeLine)
-	screen.SetScreenStatusAndRefresh(RSLT_SEL_DEF_CHAR)
+func (screen *GameScreen) RunActiveCharacterSelect(index int) {
+	screen.user.SetActiveCharacterIndex(index)
+	screen.SetScreenStatusAndRefresh(RSLT_SEL_ACT_CHAR)
 }
 
-func (screen *GameScreen) RunActiveWeaponSelect() {
-	screen.user.SetDefaultItemIndex(screen.activeLine)
-	screen.SetScreenStatusAndRefresh(RSLT_SEL_DEF_WEAPON)
+func (screen *GameScreen) RunActiveWeaponSelect(index int) {
+	screen.user.SetActiveWeaponIndex(index)
+	screen.SetScreenStatusAndRefresh(RSLT_SEL_ACT_WEAPON)
 }
 
 func (screen *GameScreen) RunCharacterHealthRestore() {
@@ -773,33 +786,39 @@ func (screen *GameScreen) RunActiveItemUpgrade() {
 	})
 }
 
-func (screen *GameScreen) RunActiveItemHuntRabbits() {
+func (screen *GameScreen) RunHuntRabbits() {
 	screen.RunTxProcess(W8_HUNT_RABBITS, RSLT_HUNT_RABBITS, func() (string, error) {
-		return loud.HuntRabbits(screen.user, screen.activeItem)
+		return loud.HuntRabbits(screen.user)
 	})
 }
 
-func (screen *GameScreen) RunActiveItemFightGiant() {
+func (screen *GameScreen) RunFightGiant() {
+	activeWeapon := screen.user.GetActiveWeapon()
+	if activeWeapon == nil || activeWeapon.Name != loud.IRON_SWORD {
+		screen.actionText = loud.Sprintf("You can't fight giant without iron sword.")
+		screen.FreshRender()
+		return
+	}
 	screen.RunTxProcess(W8_FIGHT_GIANT, RSLT_FIGHT_GIANT, func() (string, error) {
-		return loud.FightGiant(screen.user, screen.activeItem)
+		return loud.FightGiant(screen.user)
 	})
 }
 
-func (screen *GameScreen) RunActiveItemFightTroll() {
+func (screen *GameScreen) RunFightTroll() {
 	screen.RunTxProcess(W8_FIGHT_TROLL, RSLT_FIGHT_TROLL, func() (string, error) {
-		return loud.FightTroll(screen.user, screen.activeItem)
+		return loud.FightTroll(screen.user)
 	})
 }
 
-func (screen *GameScreen) RunActiveItemFightWolf() {
+func (screen *GameScreen) RunFightWolf() {
 	screen.RunTxProcess(W8_FIGHT_WOLF, RSLT_FIGHT_WOLF, func() (string, error) {
-		return loud.FightWolf(screen.user, screen.activeItem)
+		return loud.FightWolf(screen.user)
 	})
 }
 
-func (screen *GameScreen) RunActiveItemFightGoblin() {
+func (screen *GameScreen) RunFightGoblin() {
 	screen.RunTxProcess(W8_FIGHT_GOBLIN, RSLT_FIGHT_GOBLIN, func() (string, error) {
-		return loud.FightGoblin(screen.user, screen.activeItem)
+		return loud.FightGoblin(screen.user)
 	})
 }
 
@@ -952,7 +971,7 @@ func (screen *GameScreen) Render() {
 		move := cursor.MoveTo(screen.screenSize.Height/2, screen.screenSize.Width/2-utf8.RuneCountInString(dead)/2)
 		io.WriteString(os.Stdout, clear+move+dead)
 
-		detailedErrorMsg := loud.Localize("detailed error: " + loud.SomethingWentWrongMsg)
+		detailedErrorMsg := fmt.Sprintf("%s: %s", loud.Localize("detailed error"), loud.SomethingWentWrongMsg)
 		move = cursor.MoveTo(screen.screenSize.Height/2+3, screen.screenSize.Width/2-utf8.RuneCountInString(dead)/2)
 		io.WriteString(os.Stdout, move+detailedErrorMsg)
 		screen.refreshed = false
@@ -971,7 +990,7 @@ func (screen *GameScreen) Render() {
 		return
 	} else if HP == 0 {
 		clear := cursor.ClearEntireScreen()
-		dead := loud.Localize("dead")
+		dead := loud.Localize("dead desc")
 		move := cursor.MoveTo(screen.screenSize.Height/2, screen.screenSize.Width/2-utf8.RuneCountInString(dead)/2)
 		io.WriteString(os.Stdout, clear+move+dead)
 		screen.refreshed = false

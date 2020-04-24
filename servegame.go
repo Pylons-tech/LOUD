@@ -105,10 +105,14 @@ eventloop:
 		switch ev := termbox.PollEvent(); ev.Type {
 		case termbox.EventKey:
 			switch ev.Key {
-			case termbox.KeyEsc:
-				screenInstance.SaveGame()
-				screenInstance.Reset()
-				break eventloop
+			case termbox.KeyEnter:
+				if screenInstance.IsEndGameConfirmScreen() {
+					screenInstance.SaveGame()
+					screenInstance.Reset()
+					break eventloop
+				} else {
+					screenInstance.HandleInputKey(ev)
+				}
 			default:
 				screenInstance.HandleInputKey(ev)
 			}

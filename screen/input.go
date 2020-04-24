@@ -49,8 +49,8 @@ func (screen *GameScreen) HandleInputKeyLocationSwitch(input termbox.Event) bool
 	}
 
 	if newStus, ok := tarLctMap[Key]; ok {
-		if newStus == loud.FOREST && screen.user.GetDefaultCharacter() == nil {
-			screen.actionText = "You can't go to forest without character"
+		if newStus == loud.FOREST && screen.user.GetActiveCharacter() == nil {
+			screen.actionText = loud.Sprintf("You can't go to forest without character")
 			screen.FreshRender()
 		} else {
 			screen.user.SetLocation(newStus)
@@ -64,14 +64,20 @@ func (screen *GameScreen) HandleInputKeyHomeEntryPoint(input termbox.Event) bool
 	Key := string(input.Ch)
 
 	tarStusMap := map[string]ScreenStatus{
-		"1": SEL_DEFAULT_CHAR,
-		"2": SEL_DEFAULT_WEAPON,
+		"1": SEL_ACTIVE_CHAR,
+		"2": SEL_ACTIVE_WEAPON,
 		"3": SEL_HEALTH_RESTORE_CHAR,
 		"4": SEL_RENAME_CHAR,
 	}
 
 	if newStus, ok := tarStusMap[Key]; ok {
 		screen.scrStatus = newStus
+		switch newStus {
+		case SEL_ACTIVE_CHAR:
+			screen.activeLine = screen.user.GetActiveCharacterIndex()
+		case SEL_ACTIVE_WEAPON:
+			screen.activeLine = screen.user.GetActiveWeaponIndex()
+		}
 		screen.FreshRender()
 		return true
 	} else {
@@ -128,14 +134,31 @@ func (screen *GameScreen) HandleInputKeyForestEntryPoint(input termbox.Event) bo
 	Key := strings.ToUpper(string(input.Ch))
 
 	tarStusMap := map[string]ScreenStatus{
-		"1": SEL_HUNT_RABBITS_ITEM,
-		"2": SEL_FIGHT_GOBLIN_ITEM,
-		"3": SEL_FIGHT_WOLF_ITEM,
-		"4": SEL_FIGHT_TROLL_ITEM,
-		"5": SEL_FIGHT_GIANT_ITEM,
+		"1": CONFIRM_HUNT_RABBITS,
+		"2": CONFIRM_FIGHT_GOBLIN,
+		"3": CONFIRM_FIGHT_WOLF,
+		"4": CONFIRM_FIGHT_TROLL,
+		"5": CONFIRM_FIGHT_GIANT,
 	}
 
 	if newStus, ok := tarStusMap[Key]; ok {
+		activeWeapon := screen.user.GetActiveWeapon()
+		switch newStus {
+		case CONFIRM_FIGHT_GOBLIN,
+			CONFIRM_FIGHT_WOLF,
+			CONFIRM_FIGHT_TROLL:
+			if activeWeapon == nil {
+				screen.actionText = loud.Sprintf("You need a sword for this action!")
+				screen.FreshRender()
+				return true
+			}
+		case CONFIRM_FIGHT_GIANT:
+			if activeWeapon == nil || activeWeapon.Name != loud.IRON_SWORD {
+				screen.actionText = loud.Sprintf("You need an iron sword for this action!")
+				screen.FreshRender()
+				return true
+			}
+		}
 		screen.scrStatus = newStus
 		screen.FreshRender()
 		return true
@@ -163,12 +186,29 @@ func (screen *GameScreen) HandleInputKeyShopEntryPoint(input termbox.Event) bool
 }
 
 func (screen *GameScreen) MoveToNextStep() {
+	switch screen.scrStatus {
+	case CONFIRM_HUNT_RABBITS:
+		screen.RunHuntRabbits()
+		return
+	case CONFIRM_FIGHT_GIANT:
+		screen.RunFightGiant()
+		return
+	case CONFIRM_FIGHT_TROLL:
+		screen.RunFightTroll()
+		return
+	case CONFIRM_FIGHT_WOLF:
+		screen.RunFightWolf()
+		return
+	case CONFIRM_FIGHT_GOBLIN:
+		screen.RunFightGoblin()
+		return
+	}
 	nextMapper := map[ScreenStatus]ScreenStatus{
-		RSLT_HUNT_RABBITS:              SEL_HUNT_RABBITS_ITEM,
-		RSLT_FIGHT_GOBLIN:              SEL_FIGHT_GOBLIN_ITEM,
-		RSLT_FIGHT_TROLL:               SEL_FIGHT_TROLL_ITEM,
-		RSLT_FIGHT_WOLF:                SEL_FIGHT_WOLF_ITEM,
-		RSLT_FIGHT_GIANT:               SEL_FIGHT_GIANT_ITEM,
+		RSLT_HUNT_RABBITS:              CONFIRM_HUNT_RABBITS,
+		RSLT_FIGHT_GOBLIN:              CONFIRM_FIGHT_GOBLIN,
+		RSLT_FIGHT_TROLL:               CONFIRM_FIGHT_TROLL,
+		RSLT_FIGHT_WOLF:                CONFIRM_FIGHT_WOLF,
+		RSLT_FIGHT_GIANT:               CONFIRM_FIGHT_GIANT,
 		RSLT_BUY_LOUD_TRDREQ_CREATION:  SHW_LOUD_BUY_TRDREQS,
 		RSLT_FULFILL_BUY_LOUD_TRDREQ:   SHW_LOUD_BUY_TRDREQS,
 		RSLT_SELL_LOUD_TRDREQ_CREATION: SHW_LOUD_SELL_TRDREQS,
@@ -184,8 +224,8 @@ func (screen *GameScreen) MoveToNextStep() {
 		RSLT_FULFILL_BUYCHR_TRDREQ:     SHW_BUYCHR_TRDREQS,
 		RSLT_HEALTH_RESTORE_CHAR:       SEL_HEALTH_RESTORE_CHAR,
 		RSLT_RENAME_CHAR:               SEL_RENAME_CHAR,
-		RSLT_SEL_DEF_CHAR:              SEL_DEFAULT_CHAR,
-		RSLT_SEL_DEF_WEAPON:            SEL_DEFAULT_WEAPON,
+		RSLT_SEL_ACT_CHAR:              SEL_ACTIVE_CHAR,
+		RSLT_SEL_ACT_WEAPON:            SEL_ACTIVE_WEAPON,
 		RSLT_BUYITM:                    SEL_BUYITM,
 		RSLT_BUYCHR:                    SEL_BUYCHR,
 		RSLT_SELLITM:                   SEL_SELLITM,
@@ -218,6 +258,7 @@ func (screen *GameScreen) MoveToPrevStep() {
 		CR8_SELLCHR_TRDREQ_ENT_PYLVAL:   CR8_SELLCHR_TRDREQ_SEL_CHR,
 		CR8_BUYCHR_TRDREQ_SEL_CHR:       SHW_BUYCHR_TRDREQS,
 		CR8_BUYCHR_TRDREQ_ENT_PYLVAL:    CR8_BUYCHR_TRDREQ_SEL_CHR,
+		RENAME_CHAR_ENT_NEWNAME:         SEL_RENAME_CHAR,
 	}
 
 	nxtStatus := SHW_LOCATION
@@ -225,9 +266,19 @@ func (screen *GameScreen) MoveToPrevStep() {
 		nxtStatus = nextStatus
 	}
 
-	// move to home if it's somewhere else's 1st step
+	switch nxtStatus {
+	case CR8_BUY_LOUD_TRDREQ_ENT_LUDVAL,
+		CR8_SELL_LOUD_TRDREQ_ENT_LUDVAL:
+		// set loud value previously entered
+		screen.inputText = screen.loudEnterValue
+	case SHW_LOCATION:
+		// move to home if it's somewhere else's 1st step
+		if screen.scrStatus == SHW_LOCATION {
+			screen.user.SetLocation(loud.HOME)
+		}
+	}
+
 	if nxtStatus == SHW_LOCATION && screen.scrStatus == SHW_LOCATION {
-		screen.user.SetLocation(loud.HOME)
 	}
 
 	screen.scrStatus = nxtStatus
@@ -235,6 +286,16 @@ func (screen *GameScreen) MoveToPrevStep() {
 }
 
 func (screen *GameScreen) HandleFirstClassInputKeys(input termbox.Event) bool {
+	if input.Key == termbox.KeyEsc {
+		switch screen.scrStatus {
+		case CONFIRM_ENDGAME:
+			screen.scrStatus = SHW_LOCATION
+		default:
+			screen.scrStatus = CONFIRM_ENDGAME
+		}
+		screen.FreshRender()
+		return true
+	}
 	// implement first class commands, eg. development input keys
 	if screen.HandleInputKeyLocationSwitch(input) {
 		return true
@@ -242,6 +303,9 @@ func (screen *GameScreen) HandleFirstClassInputKeys(input termbox.Event) bool {
 	Key := strings.ToUpper(string(input.Ch))
 	switch Key {
 	case "J": // Create cookbook
+		if !loud.AutomateInput {
+			return false
+		}
 		screen.RunTxProcess(W8_CREATE_COOKBOOK, RSLT_CREATE_COOKBOOK, func() (string, error) {
 			return loud.CreateCookbook(screen.user)
 		})
@@ -262,9 +326,9 @@ func (screen *GameScreen) HandleFirstClassInputKeys(input termbox.Event) bool {
 		screen.RunTxProcess(W8_DEV_GET_TEST_ITEMS, RSLT_DEV_GET_TEST_ITEMS, func() (string, error) {
 			return loud.DevGetTestItems(screen.user)
 		})
-	case "L": // copy last transaction to CLIPBOARD
-		clipboard.WriteAll(screen.user.GetLastTransaction())
-	case "M": // copy last transaction to CLIPBOARD
+	case "L": // copy last txhash to CLIPBOARD
+		clipboard.WriteAll(screen.user.GetLastTxHash())
+	case "M": // copy user's cosmos address to CLIPBOARD
 		clipboard.WriteAll(screen.user.GetAddress())
 	case "E": // REFRESH
 		screen.Resync()
@@ -355,13 +419,12 @@ func (screen *GameScreen) HandleThirdClassInputKeys(input termbox.Event) bool {
 		return true
 	case "0", "1", "2", "3", "4", "5", "6", "7", "8", "9": // Numbers
 		switch screen.scrStatus {
-		case SEL_DEFAULT_CHAR:
+		case SEL_ACTIVE_CHAR:
 			screen.activeLine = loud.GetIndexFromString(Key)
-			characters := screen.user.InventoryCharacters()
-			if len(characters) <= screen.activeLine || screen.activeLine < 0 {
-				return false
-			}
-			screen.RunActiveCharacterSelect()
+			screen.RunActiveCharacterSelect(screen.activeLine)
+		case SEL_ACTIVE_WEAPON:
+			screen.activeLine = loud.GetIndexFromString(Key)
+			screen.RunActiveWeaponSelect(screen.activeLine)
 		case SEL_HEALTH_RESTORE_CHAR:
 			screen.activeLine = loud.GetIndexFromString(Key)
 			characters := screen.user.InventoryCharacters()
@@ -380,13 +443,6 @@ func (screen *GameScreen) HandleThirdClassInputKeys(input termbox.Event) bool {
 			screen.scrStatus = RENAME_CHAR_ENT_NEWNAME
 			screen.inputText = ""
 			screen.FreshRender()
-		case SEL_DEFAULT_WEAPON:
-			screen.activeLine = loud.GetIndexFromString(Key)
-			items := screen.user.InventorySwords()
-			if len(items) <= screen.activeLine || screen.activeLine < 0 {
-				return false
-			}
-			screen.RunActiveWeaponSelect()
 		case SEL_BUYITM:
 			screen.activeItem = loud.GetToBuyItemFromKey(Key)
 			if len(screen.activeItem.Name) == 0 {
@@ -399,33 +455,6 @@ func (screen *GameScreen) HandleThirdClassInputKeys(input termbox.Event) bool {
 				return false
 			}
 			screen.RunActiveCharacterBuy()
-		case SEL_HUNT_RABBITS_ITEM:
-			screen.activeItem = loud.GetWeaponItemFromKey(screen.user, Key)
-			screen.RunActiveItemHuntRabbits()
-		case SEL_FIGHT_GIANT_ITEM:
-			screen.activeItem = loud.GetIronSwordItemFromKey(screen.user, Key)
-			if len(screen.activeItem.Name) == 0 {
-				return false
-			}
-			screen.RunActiveItemFightGiant()
-		case SEL_FIGHT_TROLL_ITEM:
-			screen.activeItem = loud.GetSwordItemFromKey(screen.user, Key)
-			if len(screen.activeItem.Name) == 0 {
-				return false
-			}
-			screen.RunActiveItemFightTroll()
-		case SEL_FIGHT_WOLF_ITEM:
-			screen.activeItem = loud.GetSwordItemFromKey(screen.user, Key)
-			if len(screen.activeItem.Name) == 0 {
-				return false
-			}
-			screen.RunActiveItemFightWolf()
-		case SEL_FIGHT_GOBLIN_ITEM:
-			screen.activeItem = loud.GetSwordItemFromKey(screen.user, Key)
-			if len(screen.activeItem.Name) == 0 {
-				return false
-			}
-			screen.RunActiveItemFightGoblin()
 		case SEL_SELLITM:
 			screen.activeItem = loud.GetToSellItemFromKey(screen.user, Key)
 			if len(screen.activeItem.Name) == 0 {
@@ -496,13 +525,20 @@ func (screen *GameScreen) HandleThirdClassKeyEnterEvent() bool {
 			screen.scrStatus = CR8_BUYCHR_TRDREQ_ENT_PYLVAL
 			screen.inputText = ""
 			screen.FreshRender()
-		case SEL_DEFAULT_CHAR:
+		case SEL_ACTIVE_CHAR:
 			characters := screen.user.InventoryCharacters()
 			if len(characters) <= screen.activeLine || screen.activeLine < 0 {
 				return false
 			}
 			screen.activeCharacter = characters[screen.activeLine]
-			screen.RunActiveCharacterSelect()
+			screen.RunActiveCharacterSelect(screen.activeLine)
+		case SEL_ACTIVE_WEAPON:
+			items := screen.user.InventorySwords()
+			if len(items) <= screen.activeLine || screen.activeLine < 0 {
+				return false
+			}
+			screen.activeItem = items[screen.activeLine]
+			screen.RunActiveWeaponSelect(screen.activeLine)
 		case SEL_HEALTH_RESTORE_CHAR:
 			characters := screen.user.InventoryCharacters()
 			if len(characters) <= screen.activeLine || screen.activeLine < 0 {
@@ -519,13 +555,6 @@ func (screen *GameScreen) HandleThirdClassKeyEnterEvent() bool {
 			screen.scrStatus = RENAME_CHAR_ENT_NEWNAME
 			screen.inputText = ""
 			screen.FreshRender()
-		case SEL_DEFAULT_WEAPON:
-			items := screen.user.InventorySwords()
-			if len(items) <= screen.activeLine || screen.activeLine < 0 {
-				return false
-			}
-			screen.activeItem = items[screen.activeLine]
-			screen.RunActiveWeaponSelect()
 		case SEL_BUYITM:
 			items := loud.ShopItems
 			if len(items) <= screen.activeLine || screen.activeLine < 0 {
@@ -533,7 +562,6 @@ func (screen *GameScreen) HandleThirdClassKeyEnterEvent() bool {
 			}
 			screen.activeItem = items[screen.activeLine]
 			screen.RunActiveItemBuy()
-			log.Println("SEL_BUYITM", screen.activeItem)
 		case SEL_BUYCHR:
 			characters := loud.ShopCharacters
 			if len(characters) <= screen.activeLine || screen.activeLine < 0 {
@@ -541,42 +569,6 @@ func (screen *GameScreen) HandleThirdClassKeyEnterEvent() bool {
 			}
 			screen.activeCharacter = characters[screen.activeLine]
 			screen.RunActiveCharacterBuy()
-			log.Println("SEL_BUYCHR", screen.activeCharacter)
-		case SEL_HUNT_RABBITS_ITEM:
-			items := screen.user.InventorySwords()
-			if len(items) <= screen.activeLine || screen.activeLine < 0 {
-				return false
-			}
-			screen.activeItem = items[screen.activeLine]
-			screen.RunActiveItemHuntRabbits()
-		case SEL_FIGHT_GOBLIN_ITEM:
-			items := screen.user.InventorySwords()
-			if len(items) <= screen.activeLine || screen.activeLine < 0 {
-				return false
-			}
-			screen.activeItem = items[screen.activeLine]
-			screen.RunActiveItemFightGoblin()
-		case SEL_FIGHT_WOLF_ITEM:
-			items := screen.user.InventorySwords()
-			if len(items) <= screen.activeLine || screen.activeLine < 0 {
-				return false
-			}
-			screen.activeItem = items[screen.activeLine]
-			screen.RunActiveItemFightWolf()
-		case SEL_FIGHT_TROLL_ITEM:
-			items := screen.user.InventorySwords()
-			if len(items) <= screen.activeLine || screen.activeLine < 0 {
-				return false
-			}
-			screen.activeItem = items[screen.activeLine]
-			screen.RunActiveItemFightTroll()
-		case SEL_FIGHT_GIANT_ITEM:
-			items := screen.user.InventoryIronSwords()
-			if len(items) <= screen.activeLine || screen.activeLine < 0 {
-				return false
-			}
-			screen.activeItem = items[screen.activeLine]
-			screen.RunActiveItemFightGiant()
 		case SEL_SELLITM:
 			items := screen.user.InventoryItems()
 			if len(items) <= screen.activeLine || screen.activeLine < 0 {
@@ -604,6 +596,9 @@ func (screen *GameScreen) HandleThirdClassKeyEnterEvent() bool {
 
 func (screen *GameScreen) HandleTypingModeInputKeys(input termbox.Event) bool {
 	switch input.Key {
+	case termbox.KeyEsc:
+		screen.MoveToPrevStep()
+		return true
 	case termbox.KeyBackspace2,
 		termbox.KeyBackspace:
 

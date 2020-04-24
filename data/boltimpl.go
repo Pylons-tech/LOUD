@@ -68,18 +68,19 @@ func LoadWorldFromDB(filename string) World {
 
 // UserData is a JSON-serializable set of information about a User.
 type UserData struct {
-	Gold                  int
-	PylonAmount           int
-	Username              string `json:""`
-	Address               string
-	Location              UserLocation
-	Items                 []Item
-	DefaultItemIndex      int
-	Characters            []Character
-	DefaultCharacterIndex int
-	PrivKey               string
-	lastTransaction       string
-	lastUpdate            int64
+	Gold                 int
+	PylonAmount          int
+	Username             string `json:""`
+	Address              string
+	Location             UserLocation
+	Items                []Item
+	ActiveWeaponIndex    int
+	Characters           []Character
+	ActiveCharacterIndex int
+	PrivKey              string
+	lastTransaction      string
+	lastTxMetaData       string
+	lastUpdate           int64
 }
 
 type dbUser struct {
@@ -172,32 +173,42 @@ func (user *dbUser) SetItems(items []Item) {
 	user.UserData.Items = items
 }
 
-func (user *dbUser) SetDefaultItemIndex(idx int) {
-	user.UserData.DefaultItemIndex = idx
+func (user *dbUser) SetActiveWeaponIndex(idx int) {
+	user.UserData.ActiveWeaponIndex = idx
 }
 
-func (user *dbUser) GetDefaultItemIndex() int {
-	return user.UserData.DefaultItemIndex
+func (user *dbUser) GetActiveWeapon() *Item {
+	i := user.UserData.ActiveWeaponIndex
+	swords := user.InventorySwords()
+	if i < 0 || i >= len(swords) {
+		return nil
+	}
+	return &swords[i]
+}
+
+func (user *dbUser) GetActiveWeaponIndex() int {
+	return user.UserData.ActiveWeaponIndex
 }
 
 func (user *dbUser) SetCharacters(items []Character) {
 	user.UserData.Characters = items
 }
 
-func (user *dbUser) SetDefaultCharacterIndex(idx int) {
-	user.UserData.DefaultCharacterIndex = idx
+func (user *dbUser) SetActiveCharacterIndex(idx int) {
+	user.UserData.ActiveCharacterIndex = idx
 }
 
-func (user *dbUser) GetDefaultCharacterIndex() int {
-	return user.UserData.DefaultCharacterIndex
+func (user *dbUser) GetActiveCharacterIndex() int {
+	return user.UserData.ActiveCharacterIndex
 }
 
-func (user *dbUser) GetDefaultCharacter() *Character {
-	i := user.UserData.DefaultCharacterIndex
-	if i < 0 || i >= len(user.UserData.Characters) {
+func (user *dbUser) GetActiveCharacter() *Character {
+	i := user.UserData.ActiveCharacterIndex
+	chars := user.UserData.Characters
+	if i < 0 || i >= len(chars) {
 		return nil
 	}
-	return &user.UserData.Characters[i]
+	return &chars[i]
 }
 
 func (user *dbUser) InventoryItems() []Item {
@@ -272,12 +283,17 @@ func (user *dbUser) InventorySellableItems() []Item {
 	return uis
 }
 
-func (user *dbUser) GetLastTransaction() string {
+func (user *dbUser) GetLastTxHash() string {
 	return user.UserData.lastTransaction
 }
 
-func (user *dbUser) SetLastTransaction(tx string) {
+func (user *dbUser) GetLastTxMetaData() string {
+	return user.UserData.lastTxMetaData
+}
+
+func (user *dbUser) SetLastTransaction(tx, metadata string) {
 	user.UserData.lastTransaction = tx
+	user.UserData.lastTxMetaData = metadata
 }
 
 func (user *dbUser) SetLatestBlockHeight(h int64) {

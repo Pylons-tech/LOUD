@@ -27,6 +27,7 @@ type Character struct {
 	XP         float64
 	HP         int
 	MaxHP      int
+	GiantKill  int
 	LastUpdate int64
 }
 type CharacterSpec struct {

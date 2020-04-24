@@ -1,20 +1,17 @@
 {
-  "block height: %d(%d)": {
-    "one": "Altura del bloque: %d(%d)"
-  },
-  "buy item failed reason": {
+  "buy item failure reason": {
     "one": "Razón de compra fallida"
   },
-  "buy character failed reason": {
+  "buy character failure reason": {
     "one": "Razón de compra fallida"
   },
-  "hunt rabbits failed reason": {
+  "hunt rabbits failure reason": {
     "one": "Razón fallida de caza"
   },
-  "sell failed reason": {
+  "sell item failure reason": {
     "one": "Razón de venta fallida"
   },
-  "upgrade failed reason": {
+  "upgrade item failure reason": {
     "one": "Motivo fallido de actualización"
   },
   "Recipe Name does not exist!": {
@@ -33,16 +30,16 @@
     "one": "No tienes suficiente oro para actualizar este artículo"
   },
   "home": {
-    "one": "1) Select default character\n2) Select default weapon\n3) Restore character health\n4) Update character name\n"
+    "one": "1) Select active character\n2) Select active weapon\n3) Restore character health\n4) Update character name\n"
   },
   "forest": {
-    "one": "1) Cazar\n2) Goblin\n3) Wolf\n4) Troll\n5) Giant\n"
+    "one": "1) Rabbit(💰1+)\n2) Goblin(💰50)\n3) Wolf(💰150)\n4) Troll(💰300)\n5) Giant(💰3000)\n"
   },
   "shop": {
     "one": "1) Comprar Artículos\n2) Vender Artículos\n3) Mejorar Artículos\n"
   },
   "pylons central": {
-    "one": "1) Buy Characters\n2) Buy gold with pylons\n3) Sell Loud from orderbook / Create an order to buy Loud\n4) Buy Loud from orderbook / Create an order to Sell Loud\n5) Sell sword from orderbook / Create an order to buy sword\n6) Buy sword from orderbook / Create an order to sell sword\n7) Sell character from orderbook / Create an order to buy character\n8) Buy character from orderbook / Create an order to sell character\n"
+    "one": "1) Buy characters(🦘)\n2) Buy 💰5000 with 100 pylons\n3) Sell 💰 from orderbook / place order to buy 💰\n4) Buy 💰 from orderbook / place order to sell 💰\n5) Sell 🗡️  from orderbook / place order to buy 🗡️\n6) Buy 🗡️  from orderbook / place order to sell 🗡️\n7) Sell 🦘 from orderbook / place order to buy 🦘\n8) Buy 🦘 from orderbook / place order to sell 🦘\n"
   },
   "settings": {
     "one": "Idioma:\n1) English\n2) Español\n"
@@ -67,20 +64,6 @@
   },
   "go to develop": {
     "one": "D)evelop"
-  },
-  "Wooden sword": {
-    "one": "Espada de Madera",
-    "other": "Espadas de Madera"
-  },
-  "Copper sword": {
-    "one": "Espada de Cobre",
-    "other": "Espadas de Cobre"
-  },
-  "No item": {
-    "one": "No Artículo (0)"
-  },
-  "Go) on": {
-    "one": "Seguir(O)"
   },
   "home desc": {
     "one": "Estás en inicio.\nSi quieres cazar, dirígete al bosque.\nY si quieres comprar/vender algo, dirígete a la tienda."
@@ -118,28 +101,31 @@
   "select sell item desc": {
     "one": "Vas a vender un artículo.\nPor favor selecciona un artículo a vender."
   },
-  "select hunt rabbits item desc": {
-    "one": "Te estás preparando para cazar.\nPor favor selecciona un artículo a llevar."
+  "rabbits without sword outcome": {
+    "one": "Reward: 1 or 2\nCharacter dying percent: 10%\n"
   },
-  "select fight goblin item desc": {
-    "one": "You are preparing for fighting goblin.\nPlease select an item to carry."
+  "rabbits with a sword outcome": {
+    "one": "Reward: sword.attack/2 + 1\n5% chance of character lose\n5% chance of sword lose\n"
   },
-  "select fight troll item desc": {
-    "one": "You are preparing for fighting troll.\nPlease select an item to carry."
+  "goblin outcome": {
+    "one": "Reward: 50\nEnemy info (HP: 10, Attack: 1)\n10% chance of sword lose\n10% chance of getting \"Goblin ear\"\n"
   },
-  "select fight wolf item desc": {
-    "one": "You are preparing for fighting wolf.\nPlease select an item to carry."
+  "wolf outcome": {
+    "one": "Reward: 150\nEnemy info (HP: 15, Attack: 3)\n10% chance of sword lose\n10% chance of getting \"Wolf tail\"\n"
   },
-  "select fight giant item desc": {
-    "one": "You are preparing for fighting giant.\nPlease select an item to carry."
+  "troll outcome": {
+    "one": "Reward: 300\nEnemy info (HP: 20, Attack: 5)\n10% chance of sword lose\n10% chance of getting \"Troll toes\"\n"
+  },
+  "giant outcome": {
+    "one": "Reward: 3000\nEnemy info (HP: 100, Attack: 10)\n10% chance of sword lose\nGiantKiller badget on character\n"
   },
   "select upgrade item desc": {
     "one": "Vas a mejorar un artículo.\nPor favor selecciona un artículo para mejorar."
   },
-  "you are now buying loud from pylon": {
+  "Making gold from pylons": {
     "one": "Ahora estás comprando monedas fuertes de pylon"
   },
-  "you are now selling loud for pylon": {
+  "Making pylons from gold": {
     "one": "Ahora está vendiendo monedas ruidosas por pylon"
   },
   "Please wait for a moment to finish the process": {
@@ -175,47 +161,44 @@
   "You have bought %s from the shop": {
     "one": "Has comprado %s de la tienda"
   },
-  "You are now buying sword at %d": {
-    "one": "You are now buying sword at %d.\n"
+  "you have bought gold successfully from coin market at %.4f": {
+    "one": "you have bought gold successfully from coin market at %.4f.\n"
   },
-  "you have bought loud coin successfully from loud/pylon market": {
-    "one": "Has comprado una moneda fuerte con éxito en loud/pylon market"
+  "you have sold gold successfully from coin market at %.4f": {
+    "one": "you have sold gold successfully from coin market at %.4f.\n"
   },
-  "you have sold loud coin successfully from loud/pylon market": {
-    "one": "Has vendido monedas fuertes con éxito en el mercado loud/pylon"
-  },
-  "You are now waiting for loud buy request creation": {
+  "You are now waiting for gold buy request creation": {
     "one": "Ahora está esperando la creación de la orden de compra loud"
   },
-  "You are now waiting for loud sell request creation": {
+  "You are now waiting for gold sell request creation": {
     "one": "Ahora está esperando la creación de órdenes de venta loud"
   },
-  "loud buy request was successfully created": {
+  "gold buy request was successfully created": {
     "one": "La orden de compra Loud se creó con éxito."
   },
-  "loud sell request was successfully created": {
+  "gold sell request was successfully created": {
     "one": "La orden de venta Loud se creó correctamente."
   },
   "Please use it for hunting": {
     "one": "Por favor usar para cazar."
   },
-  "You did hunt rabbits and earned %d. Detailed result: %+v": {
-    "one": "You did hunt rabbits and earned %d. Detailed result: %+v"
+  "You did hunt rabbits and earned %d.": {
+    "one": "You did hunt rabbits and earned 💰%d."
   },
-  "You did fight with goblin and earned %d. Detailed result: %+v": {
-    "one": "You did fight with goblin and earned %d. Detailed result: %+v"
+  "You did fight with goblin and earned %d.": {
+    "one": "You did fight with goblin and earned 💰%d."
   },
-  "You did fight with troll and earned %d. Detailed result: %+v": {
-    "one": "You did fight with troll and earned %d. Detailed result: %+v"
+  "You did fight with troll and earned %d.": {
+    "one": "You did fight with troll and earned 💰%d."
   },
-  "You did fight with wolf and earned %d. Detailed result: %+v": {
-    "one": "You did fight with wolf and earned %d. Detailed result: %+v"
+  "You did fight with wolf and earned %d.": {
+    "one": "You did fight with wolf and earned 💰%d."
   },
-  "You did fight with giant and earned %d. Detailed result: %+v": {
-    "one": "You did fight with giant and earned %d. Detailed result: %+v"
+  "You did fight with giant and earned %d.": {
+    "one": "You did fight with giant and earned 💰%d."
   },
   "Bought gold with pylons. Amount is %d.": {
-    "one": "Bought gold with pylons. Amount is %d."
+    "one": "Bought gold with pylons. Amount is 💰%d."
   },
   "You sold %s for gold.": {
     "one": "You sold \"%s\" for %d gold."
@@ -229,14 +212,8 @@
   "health critical warning": {
     "one": " (Salud CRITICA) "
   },
-  "gold": {
-    "one": "Oro"
-  },
   "inventory": {
     "one": " Inventario "
-  },
-  "inventory chracters": {
-    "one": " Inventory Characters "
   },
   "screen size warning": {
     "one": "La pantalla es muy pequena. Haga su terminal mas larga. (120x38 minimo)"
@@ -246,5 +223,347 @@
   },
   "pylons network status": {
     "one": "Estado de Red de Pylons"
+  },
+  "You can't go to forest without character": {
+    "one": "You can't go to forest without character"
+  },
+  "You need a sword for this action!": {
+    "one": "You need a sword for this action!"
+  },
+  "You need an iron sword for this action!": {
+    "one": "You need an iron sword for this action!"
+  },
+  "Deselect": {
+    "one": "Deselect"
+  },
+  "Select ( ↵ )": {
+    "one": "Select ( ↵ )"
+  },
+  "Go on ( ↵ )": {
+    "one": "Go on ( ↵ )"
+  },
+  "Finish Enter ( ↵ )": {
+    "one": "Finish Enter ( ↵ )"
+  },
+  "Go back ( ⌫ ) - Backspace Key": {
+    "one": "Go back ( ⌫ ) - Backspace Key"
+  },
+  "Go back ( Esc )": {
+    "one": "Go back ( Esc )"
+  },
+  "End Game ( Esc )": {
+    "one": "End Game ( Esc )"
+  },
+  "Re)fresh Status": {
+    "one": "Re̲fresh Status (E)"
+  },
+  "Sell loud to fulfill selected request( ↵ )": {
+    "one": "Sell loud to fulfill selected request( ↵ )"
+  },
+  "place order to buy loud(R)": {
+    "one": "place order to buy loud(R)"
+  },
+  "Buy loud to fulfill selected request( ↵ )": {
+    "one": "Buy loud to fulfill selected request( ↵ )"
+  },
+  "place order to sell loud(R)": {
+    "one": "place order to sell loud(R)"
+  },
+  "Sell item to fulfill selected request( ↵ )": {
+    "one": "Sell item to fulfill selected request( ↵ )"
+  },
+  "place order to buy item(R)": {
+    "one": "Sell item to fulfill selected request( ↵ )"
+  },
+  "Buy item to fulfill selected request( ↵ )": {
+    "one": "Buy item to fulfill selected request( ↵ )"
+  },
+  "place order to sell item(R)": {
+    "one": "place order to sell item(R)"
+  },
+  "Sell character to fulfill selected request( ↵ )": {
+    "one": "Sell character to fulfill selected request( ↵ )"
+  },
+  "place order to buy character(R)": {
+    "one": "place order to buy character(R)"
+  },
+  "Buy character to fulfill selected request( ↵ )": {
+    "one": "Buy character to fulfill selected request( ↵ )"
+  },
+  "place order to sell character(R)": {
+    "one": "Buy character to fulfill selected request( ↵ )"
+  },
+  "white trade line desc": {
+    "one": "white     ➝ other's request"
+  },
+  "bluebold trade line desc": {
+    "one": "bluebold  ➝ selected request"
+  },
+  "brownbold trade line desc": {
+    "one": "brownbold ➝ my request + selected"
+  },
+  "brown trade line desc": {
+    "one": "brown     ➝ my request"
+  },
+  "LOUD price (pylon)": {
+    "one": "LOUD price (pylon)"
+  },
+  "Amount (loud)": {
+    "one": "Amount (loud)"
+  },
+  "Total (pylon)": {
+    "one": "Total (pylon)"
+  },
+  "Active Character": {
+    "one": "Active Character"
+  },
+  "Active Weapon": {
+    "one": "Active Weapon"
+  },
+  "rest blocks": {
+    "one": "rest blocks"
+  },
+  "Address": {
+    "one": "Address"
+  },
+  "Last TxHash": {
+    "one": "Last TxHash"
+  },
+  "block height": {
+    "one": "Block Height"
+  },
+  "You don't have required item to make %s": {
+    "one": "You don't have required item to make %s"
+  },
+  "You can't fight giant without iron sword.": {
+    "one": "You can't fight giant without iron sword."
+  },
+  "you haven't selected any buy request": {
+    "one": "you haven't selected any buy request"
+  },
+  "you haven't selected any sell request": {
+    "one": "you haven't selected any sell request"
+  },
+  "you haven't selected any buy item request": {
+    "one": "you haven't selected any buy item request"
+  },
+  "you haven't selected any sell item request": {
+    "one": "you haven't selected any sell item request"
+  },
+  "you haven't selected any buy character request": {
+    "one": "you haven't selected any buy character request"
+  },
+  "you haven't selected any sell character request": {
+    "one": "you haven't selected any sell character request"
+  },
+  "Something went wrong, please close using Esc key and see loud.log": {
+    "one": "Something went wrong, please close using Esc key and see loud.log"
+  },
+  "detailed error": {
+    "one": "detailed error"
+  },
+  "Detailed result": {
+    "one": "Detailed result"
+  },
+  "Are you really gonna end game?": {
+    "one": "Are you really gonna end game? 🥺"
+  },
+  "Buy item requests": {
+    "one": "Buy item requests"
+  },
+  "Item": {
+    "one": "Item"
+  },
+  "Price (pylon)": {
+    "one": "Price (pylon)"
+  },
+  "Sell item requests": {
+    "one": "Sell item requests"
+  },
+  "Character": {
+    "one": "Character"
+  },
+  "Sell character requests": {
+    "one": "Sell character requests"
+  },
+  "Buy character requests": {
+    "one": "Buy character requests"
+  },
+  "Please enter pylon amount to use (should be integer value)": {
+    "one": "Please enter pylon amount to use (should be integer value)"
+  },
+  "Please enter pylon amount to get (should be integer value)": {
+    "one": "Please enter pylon amount to get (should be integer value)"
+  }, 
+  "Please enter loud amount to buy (should be integer value)": {
+    "one": "Please enter loud amount to buy (should be integer value)"
+  },
+  "Please enter new character's name - it's costing pylons per letter.": {
+    "one": "Please enter new character's name - it's costing pylons per letter."
+  },
+  "Please enter loud amount to sell (should be integer value)": {
+    "one": "Please enter loud amount to sell (should be integer value)"
+  },
+  "Select item to sell": {
+    "one": "Select item to sell"
+  },
+  "Select character to sell": {
+    "one": "Select character to sell"
+  },
+  "Select item to buy": {
+    "one": "Select item to buy"
+  },
+  "Select character specs to get": {
+    "one": "Select character specs to get"
+  },
+  "Please select active character": {
+    "one": "Please select active character"
+  },
+  "Please select character to restore health": {
+    "one": "Please select character to restore health"
+  },
+  "Please select character to rename": {
+    "one": "Please select character to rename"
+  },
+  "Please select active weapon": {
+    "one": "Please select active weapon"
+  },
+  "You have successfully unset the active character!": {
+    "one": "You have successfully unset the active character!"
+  },
+  "You have successfully set the active character!": {
+    "one": "You have successfully set the active character!"
+  },
+  "You have successfully unset the active weapon!": {
+    "one": "You have successfully unset the active weapon!"
+  },
+  "You have successfully set the active weapon!": {
+    "one": "You have successfully set the active weapon!"
+  },
+  "You have successfully restored character's health!": {
+    "one": "You have successfully restored character's health!"
+  },
+  "You have successfully updated character's name to %s!": {
+    "one": "You have successfully updated character's name to %s!"
+  },
+  "Your character is dead while following rabbits accidently": {
+    "one": "Your character is dead while following rabbits accidently"
+  },
+  "You have lost your weapon accidently": {
+    "one": "You have lost your weapon accidently"
+  },
+  "You were killed by goblin accidently": {
+    "one": "You were killed by goblin accidently"
+  },
+  "You got bonus item called %s": {
+    "one": "You got bonus item called %s"
+  },
+  "You were killed by troll accidently": {
+    "one": "You were killed by troll accidently"
+  },
+  "You were killed by wolf accidently": {
+    "one": "You were killed by wolf accidently"
+  },
+  "You were killed by giant accidently": {
+    "one": "You were killed by giant accidently"
+  },
+  "Finished getting developer test items.": {
+    "one": "Finished getting developer test items."
+  },
+  "You got extra pylons for loud game": {
+    "one": "You got extra pylons for loud game"
+  },
+  "You switched user to %s": {
+    "one": "You switched user to %s"
+  },
+  "You created a new cookbook for a new game build": {
+    "one": "You created a new cookbook for a new game build"
+  },
+  "You sold %s for %d gold.": {
+    "one": "You sold \"%s\" for %d gold."
+  },
+  "item sell request was successfully created": {
+    "one": "item sell request was successfully created"
+  },
+  "character sell request was successfully created": {
+    "one": "character sell request was successfully created"
+  },
+  "item buy request was successfully created": {
+    "one": "item buy request was successfully created"
+  },
+  "character buy request was successfully created": {
+    "one": "character buy request was successfully created"
+  },
+  "successfully cancelled trade request": {
+    "one": "successfully cancelled trade request"
+  },
+  "you have bought item successfully from item/pylon market": {
+    "one": "you have bought item successfully from item/pylon market"
+  },
+  "you have bought character successfully from character/pylon market": {
+    "one": "you have bought character successfully from character/pylon market"
+  },
+  "you have sold item successfully from item/pylon market": {
+    "one": "you have sold item successfully from item/pylon market"
+  },
+  "you have sold character successfully from character/pylon market": {
+    "one": "you have sold character successfully from character/pylon market"
+  },
+  "You are now waiting to rename character from %s to %s.": {
+    "one": "You are now waiting to rename character from %s to %s."
+  },
+  "Buying gold with pylon": {
+    "one": "Buying gold with pylon"
+  },
+  "Getting dev test items from pylon": {
+    "one": "Getting dev test items from pylon"
+  },
+  "Waiting for Health restoring": {
+    "one": "Waiting for Health restoring"
+  },
+  "You are waiting for getting pylons process": {
+    "one": "You are waiting for getting pylons process"
+  },
+  "You are waiting for switching to new user": {
+    "one": "You are waiting for switching to new user"
+  },
+  "You are waiting for creating cookbook": {
+    "one": "You are waiting for creating cookbook"
+  },
+  "You are now waiting for item sell request creation": {
+    "one": "You are now waiting for item sell request creation"
+  },
+  "You are now waiting for character sell request creation": {
+    "one": "You are now waiting for character sell request creation"
+  },
+  "You are now waiting for item buy request creation": {
+    "one": "You are now waiting for item buy request creation"
+  },
+  "You are now waiting for character buy request creation": {
+    "one": "You are now waiting for character buy request creation"
+  },
+  "You are now waiting for cancelling one of your trades": {
+    "one": "You are now waiting for cancelling one of your trades"
+  },
+  "You are now buying item at %d": {
+    "one": "You are now buying item at %d"
+  },
+  "you are now buying character at %d.": {
+    "one": "you are now buying character at %d."
+  },
+  "you are now selling item at %d.": {
+    "one": "you are now selling item at %d."
+  },
+  "you are now selling character at %d.": {
+    "one": "you are now selling character at %d."
+  },
+  "gold": {
+    "one": "Gold"
+  }, 
+  "character": {
+    "one": "Character"
+  }, 
+  "weapon": {
+    "one": "weapon"
   }
 }
