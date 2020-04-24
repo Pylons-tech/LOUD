@@ -404,7 +404,7 @@ func ProcessTxResult(user User, txhash string) ([]byte, string) {
 
 	err = pylonSDK.GetAminoCdc().UnmarshalJSON(txHandleResBytes, &resp)
 	if err != nil {
-		errString := fmt.Sprintf("failed to parse transaction result; maybe this is get_pylons? txhash=%s", txhash)
+		errString := fmt.Sprintf("failed to parse transaction result; maybe this is get_pylons then ignore. txhash=%s", txhash)
 		log.Println(errString)
 		return []byte{}, errString
 	} else {

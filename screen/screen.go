@@ -576,6 +576,18 @@ func (screen *GameScreen) IsWaitScreen() bool {
 	return screen.scrStatus.IsWaitScreen()
 }
 
+func (screen *GameScreen) IsWaitScreenCmd(input termbox.Event) bool {
+	if input.Key == termbox.KeyEsc {
+		return true
+	}
+	Key := strings.ToUpper(string(input.Ch))
+	switch Key {
+	case "E", "M", "L": // Refresh, Cosmos address copy, TxHash copy
+		return true
+	}
+	return false
+}
+
 func (screen *GameScreen) IsEndGameConfirmScreen() bool {
 	return screen.scrStatus == CONFIRM_ENDGAME
 }

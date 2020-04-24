@@ -13,27 +13,26 @@ import (
 )
 
 func (screen *GameScreen) HandleInputKey(input termbox.Event) {
+	// initialize actionText since it's turning into a new command
 	screen.actionText = ""
-	if screen.IsWaitScreen() {
-		return
-	}
+
+	// log input command
 	Key := strings.ToUpper(string(input.Ch))
 	log.Println("Handling Key \"", Key, "\"", input.Ch)
-	if screen.InputActive() {
-		screen.HandleTypingModeInputKeys(input)
-	} else {
-		if screen.HandleFirstClassInputKeys(input) {
-			return
-		}
-		if screen.HandleSecondClassInputKeys(input) {
-			return
-		}
-		if screen.HandleThirdClassInputKeys(input) {
-			return
-		}
-	}
 
-	screen.Render()
+	if screen.IsWaitScreen() && !screen.IsWaitScreenCmd(input) {
+		// restrict commands on wait screen
+		return
+	} else if screen.InputActive() {
+		screen.HandleTypingModeInputKeys(input)
+		screen.Render()
+	} else if screen.HandleFirstClassInputKeys(input) {
+		return
+	} else if screen.HandleSecondClassInputKeys(input) {
+		return
+	} else if screen.HandleThirdClassInputKeys(input) {
+		return
+	}
 }
 
 func (screen *GameScreen) HandleInputKeyLocationSwitch(input termbox.Event) bool {
