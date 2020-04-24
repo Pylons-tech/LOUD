@@ -227,8 +227,8 @@ func (screen *GameScreen) renderUserCommands() {
 	}
 
 	infoLines = infoLines.append("\n")
-	infoLines = infoLines.appendEndGameCmd(screen)
 	infoLines = infoLines.appendRefreshCmd(screen)
+	infoLines = infoLines.appendEndGameCmd(screen)
 
 	// box start point (x, y)
 	x := 2
