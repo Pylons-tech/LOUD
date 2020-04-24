@@ -16,6 +16,7 @@ const (
 	FINISH_ENTER_CMD = "Finish Enter ( ↵ )"
 	GO_BACK_CMD      = "Go back ( ⌫ ) - Backspace Key"
 	GO_BACK_ESC_CMD  = "Go back ( Esc )"
+	END_GAME_ESC_CMD = "End Game ( Esc )"
 	REFRESH_CMD      = "Re)fresh Status"
 )
 
@@ -39,6 +40,23 @@ func (tl TextLines) appendSelectCmds(itemsSlice interface{}, fn func(interface{}
 	items := InterfaceSlice(itemsSlice)
 	for idx, item := range items {
 		tl = append(tl, fmt.Sprintf("%d) %s  ", idx+1, fn(item)))
+	}
+	return tl
+}
+
+func (tl TextLines) appendRefreshCmd(screen *GameScreen) TextLines {
+	refreshCmdTxt := loud.Localize(REFRESH_CMD)
+	if screen.syncingData {
+		tl = append(tl, screen.blueBoldFont()(refreshCmdTxt))
+	} else {
+		tl = append(tl, refreshCmdTxt)
+	}
+	return tl
+}
+
+func (tl TextLines) appendEndGameCmd(screen *GameScreen) TextLines {
+	if screen.scrStatus != CONFIRM_ENDGAME && !screen.InputActive() {
+		tl = tl.appendT(END_GAME_ESC_CMD)
 	}
 	return tl
 }
@@ -199,8 +217,7 @@ func (screen *GameScreen) renderUserCommands() {
 			appendGoOnBackCmds()
 	default:
 		if screen.IsResultScreen() { // eg. RSLT_BUY_LOUD_TRDREQ_CREATION
-			infoLines = infoLines.
-				appendT(GO_ON_ENTER_CMD)
+			infoLines = infoLines.appendT(GO_ON_ENTER_CMD)
 		} else if screen.InputActive() { // eg. CR8_BUYITM_TRDREQ_ENT_PYLVAL
 			infoLines = infoLines.
 				appendT(
@@ -209,13 +226,9 @@ func (screen *GameScreen) renderUserCommands() {
 		}
 	}
 
-	infoLines = append(infoLines, "\n")
-	refreshCmdTxt := loud.Localize(REFRESH_CMD)
-	if screen.syncingData {
-		infoLines = append(infoLines, screen.blueBoldFont()(refreshCmdTxt))
-	} else {
-		infoLines = append(infoLines, refreshCmdTxt)
-	}
+	infoLines = infoLines.append("\n")
+	infoLines = infoLines.appendEndGameCmd(screen)
+	infoLines = infoLines.appendRefreshCmd(screen)
 
 	// box start point (x, y)
 	x := 2
