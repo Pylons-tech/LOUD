@@ -7,7 +7,6 @@ import (
 	"math"
 	"os"
 	"strings"
-	"time"
 	"unicode/utf8"
 
 	"github.com/ahmetb/go-cursor"
@@ -279,17 +278,10 @@ func (screen *GameScreen) tradeTableColorDesc() []string {
 
 func (screen *GameScreen) redrawBorders() {
 	io.WriteString(os.Stdout, ansi.ColorCode(fmt.Sprintf("255:%v", bgcolor)))
-	screen.drawBox(1, 1, screen.screenSize.Width-1, screen.screenSize.Height-1)
-	screen.drawVerticalLine(screen.screenSize.Width/2-2, 1, screen.screenSize.Height)
-
-	y := screen.screenSize.Height
-	if y < 20 {
-		y = 5
-	} else {
-		y = (y / 2) - 2
-	}
-	screen.drawHorizontalLine(1, y+2, screen.screenSize.Width/2-3)
-	screen.drawHorizontalLine(1, screen.screenSize.Height-2, screen.screenSize.Width/2-3)
+	screen.drawBox(1, 1, screen.Width()-1, screen.Height()-1)
+	drawVerticalLine(screen.leftRightBorderX(), 1, screen.Height())
+	drawHorizontalLine(1, screen.situationCmdBorderY(), screen.leftInnerWidth())
+	drawHorizontalLine(1, screen.cmdInputBorderY(), screen.leftInnerWidth())
 }
 
 func (screen *GameScreen) blueBoldFont() func(string) string {
@@ -310,7 +302,7 @@ func (screen *GameScreen) renderTRTable(requests []loud.TrdReq) []string {
 	// infoLines = append(infoLines, "│ LOUD price (pylon) │ Amount (loud) │ Total (pylon) │")
 	infoLines = append(infoLines, screen.renderTRLine("LOUD price (pylon)", "Amount (loud)", "Total (pylon)", false, false))
 	infoLines = append(infoLines, "├────────────────────┼───────────────┼───────────────┤")
-	numLines := screen.screenSize.Height/2 - 7
+	numLines := screen.situationInnerHeight() - 5
 	if screen.activeLine >= len(requests) {
 		screen.activeLine = len(requests) - 1
 	}
@@ -347,7 +339,7 @@ func (screen *GameScreen) renderITRTable(title string, theads [2]string, request
 	// infoLines = append(infoLines, "│ Item                │ Price (pylon) │")
 	infoLines = append(infoLines, screen.renderItemTrdReqTableLine(theads[0], theads[1], false, false))
 	infoLines = append(infoLines, "├────────────────────────────────────┼───────────────┤")
-	numLines := screen.screenSize.Height/2 - 7 - numHeaderLines
+	numLines := screen.situationInnerHeight() - 5 - numHeaderLines
 	if screen.activeLine >= len(requests) {
 		screen.activeLine = len(requests) - 1
 	}
@@ -410,7 +402,7 @@ func (screen *GameScreen) renderITTable(header string, th string, itemSlice inte
 	// infoLines = append(infoLines, "│ Item                            │")
 	infoLines = append(infoLines, screen.renderItemTableLine(th, false))
 	infoLines = append(infoLines, "├────────────────────────────────────────────────────┤")
-	numLines := screen.screenSize.Height/2 - 7 - numHeaderLines
+	numLines := screen.situationInnerHeight() - 5 - numHeaderLines
 	if screen.activeLine >= len(items) {
 		screen.activeLine = len(items) - 1
 	}
@@ -455,26 +447,6 @@ func (screen *GameScreen) renderITTable(header string, th string, itemSlice inte
 	}
 	infoLines = append(infoLines, "╰────────────────────────────────────────────────────╯")
 	return infoLines
-}
-
-func (screen *GameScreen) drawVerticalLine(x, y, height int) {
-	color := ansi.ColorCode(fmt.Sprintf("255:%v", bgcolor))
-	for i := 1; i < height; i++ {
-		io.WriteString(os.Stdout, fmt.Sprintf("%s%s│", cursor.MoveTo(y+i, x), color))
-	}
-
-	io.WriteString(os.Stdout, fmt.Sprintf("%s%s┬", cursor.MoveTo(y, x), color))
-	io.WriteString(os.Stdout, fmt.Sprintf("%s%s┴", cursor.MoveTo(y+height, x), color))
-}
-
-func (screen *GameScreen) drawHorizontalLine(x, y, width int) {
-	color := ansi.ColorCode(fmt.Sprintf("255:%v", bgcolor))
-	for i := 1; i < width; i++ {
-		io.WriteString(os.Stdout, fmt.Sprintf("%s%s─", cursor.MoveTo(y, x+i), color))
-	}
-
-	io.WriteString(os.Stdout, fmt.Sprintf("%s%s├", cursor.MoveTo(y, x), color))
-	io.WriteString(os.Stdout, fmt.Sprintf("%s%s┤", cursor.MoveTo(y, x+width), color))
 }
 
 func (screen *GameScreen) drawProgressMeter(min, max, fgcolor, bgcolor, width uint64) string {
@@ -609,9 +581,9 @@ func (screen *GameScreen) InputActive() bool {
 }
 
 func (screen *GameScreen) renderInputValue() {
-	inputBoxWidth := uint32(screen.screenSize.Width/2) - 2
+	inputBoxWidth := uint32(screen.leftInnerWidth())
 	inputWidth := inputBoxWidth - 9
-	move := cursor.MoveTo(screen.screenSize.Height-1, 2)
+	move := cursor.MoveTo(screen.Height()-1, 2)
 
 	chatFunc := screen.colorFunc(fmt.Sprintf("231:%v", bgcolor))
 	chat := chatFunc("👉👉👉 ")
@@ -631,322 +603,6 @@ func (screen *GameScreen) renderInputValue() {
 	io.WriteString(os.Stdout, inputText)
 }
 
-func (screen *GameScreen) renderCharacterSheet() {
-	var HP uint64 = 0
-	var MaxHP uint64 = 0
-
-	// update blockHeight from newly synced data
-	if lbh := screen.user.GetLatestBlockHeight(); lbh > screen.blockHeight {
-		screen.blockHeight = lbh
-		screen.fakeBlockHeight = lbh
-	}
-
-	characters := screen.user.InventoryCharacters()
-	activeCharacter := screen.user.GetActiveCharacter()
-	activeCharacterRestBlocks := uint64(0)
-	if activeCharacter != nil {
-		HP = uint64(activeCharacter.HP)
-		MaxHP = uint64(activeCharacter.MaxHP)
-		activeCharacterRestBlocks = screen.BlockSince(activeCharacter.LastUpdate)
-		HP = min(HP+activeCharacterRestBlocks, MaxHP)
-	}
-	activeWeapon := screen.user.GetActiveWeapon()
-
-	x := screen.screenSize.Width/2 - 1
-	width := (screen.screenSize.Width - x)
-
-	infoLines := []string{
-		centerText(fmt.Sprintf("%v", screen.user.GetUserName()), " ", width),
-		centerText(loud.Localize("inventory"), "─", width),
-		screen.goldIcon() + truncateRight(fmt.Sprintf(" %v", screen.user.GetGold()), width-1),
-		"",
-	}
-
-	items := screen.user.InventoryItems()
-	for _, item := range items {
-		itemInfo := truncateRight(formatItem(item), width)
-		if activeWeapon != nil && item.ID == activeWeapon.ID {
-			itemInfo = screen.blueBoldFont()(itemInfo)
-		}
-		infoLines = append(infoLines, itemInfo)
-	}
-
-	for idx, character := range characters {
-		characterInfo := truncateRight(formatCharacter(character), width)
-		if idx == screen.user.GetActiveCharacterIndex() {
-			characterInfo = screen.blueBoldFont()(characterInfo)
-		}
-		infoLines = append(infoLines, characterInfo)
-	}
-
-	bgcolor := uint64(bgcolor)
-	warning := ""
-	if float32(HP) < float32(MaxHP)*.25 {
-		bgcolor = 124
-		warning = loud.Localize("health low warning")
-	} else if float32(HP) < float32(MaxHP)*.1 {
-		bgcolor = 160
-		warning = loud.Localize("health critical warning")
-	}
-	fmtFunc := screen.colorFunc(fmt.Sprintf("255:%v", bgcolor))
-
-	infoLines = append(infoLines,
-		fmtFunc(centerText(fmt.Sprintf(" %s%s", loud.Localize("Active Character"), warning), "─", width)),
-		screen.drawProgressMeter(HP, MaxHP, 196, bgcolor, 10)+fmtFunc(truncateRight(fmt.Sprintf(" HP: %v/%v", HP, MaxHP), width-10)),
-		// screen.drawProgressMeter(HP, MaxHP, 225, bgcolor, 10) + fmtFunc(truncateRight(fmt.Sprintf(" XP: %v/%v", HP, 10), width-10)),
-		// screen.drawProgressMeter(HP, MaxHP, 208, bgcolor, 10) + fmtFunc(truncateRight(fmt.Sprintf(" AP: %v/%v", HP, MaxHP), width-10)),
-		// screen.drawProgressMeter(HP, MaxHP, 117, bgcolor, 10) + fmtFunc(truncateRight(fmt.Sprintf(" RP: %v/%v", HP, MaxHP), width-10)),
-		// screen.drawProgressMeter(HP, MaxHP, 76, bgcolor, 10) + fmtFunc(truncateRight(fmt.Sprintf(" MP: %v/%v", HP, MaxHP), width-10)),
-	)
-	if activeCharacter != nil {
-		infoLines = append(infoLines,
-			fmtFunc(truncateRight(formatCharacter(*activeCharacter), width)),
-			fmtFunc(truncateRight(fmt.Sprintf("%s: %d", loud.Localize("rest blocks"), activeCharacterRestBlocks), width)),
-		)
-	}
-	if activeWeapon != nil {
-		infoLines = append(infoLines,
-			centerText(fmt.Sprintf(" %s ", loud.Localize("Active Weapon")), "─", width),
-			fmtFunc(truncateRight(formatItem(*activeWeapon), width)),
-		)
-	}
-
-	for index, line := range infoLines {
-		io.WriteString(os.Stdout, fmt.Sprintf("%s%s", cursor.MoveTo(2+index, x), line))
-		if index+2 > int(screen.screenSize.Height) {
-			break
-		}
-	}
-
-	nodeLines := []string{
-		centerText(" "+loud.Localize("pylons network status")+" ", "─", width),
-		fmt.Sprintf("%s: %s 📋(M)", loud.Localize("Address"), truncateRight(screen.user.GetAddress(), 32)),
-		screen.pylonIcon() + truncateRight(fmt.Sprintf(" %s: %v", "Pylon", screen.user.GetPylonAmount()), width-1),
-	}
-
-	if len(screen.user.GetLastTxHash()) > 0 {
-		nodeLines = append(nodeLines, fmt.Sprintf("%s: %s 📋(L)", loud.Localize("Last TxHash"), truncateRight(screen.user.GetLastTxHash(), 32)))
-	}
-
-	blockHeightText := truncateRight(fmt.Sprintf("%s: %d(%d)", loud.Localize("block height"), screen.blockHeight, screen.fakeBlockHeight), width-1)
-	if screen.syncingData {
-		nodeLines = append(nodeLines, screen.blueBoldFont()(blockHeightText))
-	} else {
-		nodeLines = append(nodeLines, blockHeightText)
-	}
-	nodeLines = append(nodeLines, centerText(" ❦ ", "─", width))
-
-	for index, line := range nodeLines {
-		io.WriteString(os.Stdout, fmt.Sprintf("%s%s", cursor.MoveTo(2+len(infoLines)+index, x), line))
-		if index+2 > int(screen.screenSize.Height) {
-			break
-		}
-	}
-
-	lastLine := len(infoLines) + len(nodeLines) + 1
-	screen.drawFill(x, lastLine+1, width, screen.screenSize.Height-(lastLine+2))
-}
-
-func (screen *GameScreen) RunActiveCharacterSelect(index int) {
-	screen.user.SetActiveCharacterIndex(index)
-	screen.SetScreenStatusAndRefresh(RSLT_SEL_ACT_CHAR)
-}
-
-func (screen *GameScreen) RunActiveWeaponSelect(index int) {
-	screen.user.SetActiveWeaponIndex(index)
-	screen.SetScreenStatusAndRefresh(RSLT_SEL_ACT_WEAPON)
-}
-
-func (screen *GameScreen) RunCharacterHealthRestore() {
-	screen.RunTxProcess(W8_HEALTH_RESTORE_CHAR, RSLT_HEALTH_RESTORE_CHAR, func() (string, error) {
-		return loud.RestoreHealth(screen.user, screen.activeCharacter)
-	})
-}
-
-func (screen *GameScreen) RunCharacterRename(newName string) {
-	screen.RunTxProcess(W8_RENAME_CHAR, RSLT_RENAME_CHAR, func() (string, error) {
-		return loud.RenameCharacter(screen.user, screen.activeCharacter, newName)
-	})
-}
-
-func (screen *GameScreen) RunActiveItemBuy() {
-	if !screen.user.HasPreItemForAnItem(screen.activeItem) {
-		screen.txFailReason = loud.Sprintf("You don't have required item to make %s", screen.activeItem.Name)
-		screen.SetScreenStatusAndRefresh(RSLT_BUYITM)
-		return
-	}
-	screen.RunTxProcess(W8_BUYITM, RSLT_BUYITM, func() (string, error) {
-		return loud.Buy(screen.user, screen.activeItem)
-	})
-}
-
-func (screen *GameScreen) RunActiveCharacterBuy() {
-	screen.RunTxProcess(W8_BUYCHR, RSLT_BUYCHR, func() (string, error) {
-		return loud.BuyCharacter(screen.user, screen.activeCharacter)
-	})
-}
-
-func (screen *GameScreen) RunActiveItemSell() {
-	screen.RunTxProcess(W8_SELLITM, RSLT_SELLITM, func() (string, error) {
-		return loud.Sell(screen.user, screen.activeItem)
-	})
-}
-
-func (screen *GameScreen) RunActiveItemUpgrade() {
-	screen.RunTxProcess(W8_UPGITM, RSLT_UPGITM, func() (string, error) {
-		return loud.Upgrade(screen.user, screen.activeItem)
-	})
-}
-
-func (screen *GameScreen) RunHuntRabbits() {
-	screen.RunTxProcess(W8_HUNT_RABBITS, RSLT_HUNT_RABBITS, func() (string, error) {
-		return loud.HuntRabbits(screen.user)
-	})
-}
-
-func (screen *GameScreen) RunFightGiant() {
-	activeWeapon := screen.user.GetActiveWeapon()
-	if activeWeapon == nil || activeWeapon.Name != loud.IRON_SWORD {
-		screen.actionText = loud.Sprintf("You can't fight giant without iron sword.")
-		screen.FreshRender()
-		return
-	}
-	screen.RunTxProcess(W8_FIGHT_GIANT, RSLT_FIGHT_GIANT, func() (string, error) {
-		return loud.FightGiant(screen.user)
-	})
-}
-
-func (screen *GameScreen) RunFightTroll() {
-	screen.RunTxProcess(W8_FIGHT_TROLL, RSLT_FIGHT_TROLL, func() (string, error) {
-		return loud.FightTroll(screen.user)
-	})
-}
-
-func (screen *GameScreen) RunFightWolf() {
-	screen.RunTxProcess(W8_FIGHT_WOLF, RSLT_FIGHT_WOLF, func() (string, error) {
-		return loud.FightWolf(screen.user)
-	})
-}
-
-func (screen *GameScreen) RunFightGoblin() {
-	screen.RunTxProcess(W8_FIGHT_GOBLIN, RSLT_FIGHT_GOBLIN, func() (string, error) {
-		return loud.FightGoblin(screen.user)
-	})
-}
-
-func (screen *GameScreen) RunSelectedLoudBuyTrdReq() {
-	if len(loud.BuyTrdReqs) <= screen.activeLine || screen.activeLine < 0 {
-		// when activeLine is not refering to real request but when it is refering to nil request
-		screen.txFailReason = loud.Localize("you haven't selected any buy request")
-		screen.SetScreenStatusAndRefresh(RSLT_FULFILL_BUY_LOUD_TRDREQ)
-	} else {
-		screen.activeTrdReq = loud.BuyTrdReqs[screen.activeLine]
-		if screen.activeTrdReq.IsMyTrdReq {
-			screen.RunTxProcess(W8_CANCEL_TRDREQ, RSLT_CANCEL_TRDREQ, func() (string, error) {
-				return loud.CancelTrade(screen.user, screen.activeTrdReq.ID)
-			})
-		} else {
-			screen.RunTxProcess(W8_FULFILL_BUY_LOUD_TRDREQ, RSLT_FULFILL_BUY_LOUD_TRDREQ, func() (string, error) {
-				return loud.FulfillTrade(screen.user, screen.activeTrdReq.ID)
-			})
-		}
-	}
-}
-
-func (screen *GameScreen) RunSelectedLoudSellTrdReq() {
-	if len(loud.SellTrdReqs) <= screen.activeLine || screen.activeLine < 0 {
-		screen.txFailReason = loud.Localize("you haven't selected any sell request")
-		screen.SetScreenStatusAndRefresh(RSLT_FULFILL_SELL_LOUD_TRDREQ)
-	} else {
-		screen.activeTrdReq = loud.SellTrdReqs[screen.activeLine]
-		if screen.activeTrdReq.IsMyTrdReq {
-			screen.RunTxProcess(W8_CANCEL_TRDREQ, RSLT_CANCEL_TRDREQ, func() (string, error) {
-				return loud.CancelTrade(screen.user, screen.activeTrdReq.ID)
-			})
-		} else {
-			screen.RunTxProcess(W8_FULFILL_SELL_LOUD_TRDREQ, RSLT_FULFILL_SELL_LOUD_TRDREQ, func() (string, error) {
-				return loud.FulfillTrade(screen.user, screen.activeTrdReq.ID)
-			})
-		}
-	}
-}
-
-func (screen *GameScreen) RunSelectedItemBuyTrdReq() {
-	if len(loud.ItemBuyTrdReqs) <= screen.activeLine || screen.activeLine < 0 {
-		screen.txFailReason = loud.Localize("you haven't selected any buy item request")
-		screen.SetScreenStatusAndRefresh(RSLT_FULFILL_BUYITM_TRDREQ)
-	} else {
-		atir := loud.ItemBuyTrdReqs[screen.activeLine]
-		screen.activeItemTrdReq = atir
-		if atir.IsMyTrdReq {
-			screen.RunTxProcess(W8_CANCEL_TRDREQ, RSLT_CANCEL_TRDREQ, func() (string, error) {
-				return loud.CancelTrade(screen.user, atir.ID)
-			})
-		} else {
-			screen.RunTxProcess(W8_FULFILL_BUYITM_TRDREQ, RSLT_FULFILL_BUYITM_TRDREQ, func() (string, error) {
-				return loud.FulfillTrade(screen.user, atir.ID)
-			})
-		}
-	}
-}
-
-func (screen *GameScreen) RunSelectedItemSellTrdReq() {
-	if len(loud.ItemSellTrdReqs) <= screen.activeLine || screen.activeLine < 0 {
-		screen.txFailReason = loud.Localize("you haven't selected any sell item request")
-		screen.SetScreenStatusAndRefresh(RSLT_FULFILL_SELLITM_TRDREQ)
-	} else {
-		sstr := loud.ItemSellTrdReqs[screen.activeLine]
-		screen.activeItemTrdReq = sstr
-		if sstr.IsMyTrdReq {
-			screen.RunTxProcess(W8_CANCEL_TRDREQ, RSLT_CANCEL_TRDREQ, func() (string, error) {
-				return loud.CancelTrade(screen.user, sstr.ID)
-			})
-		} else {
-			screen.RunTxProcess(W8_FULFILL_SELLITM_TRDREQ, RSLT_FULFILL_SELLITM_TRDREQ, func() (string, error) {
-				return loud.FulfillTrade(screen.user, sstr.ID)
-			})
-		}
-	}
-}
-
-func (screen *GameScreen) RunSelectedCharacterBuyTrdReq() {
-	if len(loud.CharacterBuyTrdReqs) <= screen.activeLine || screen.activeLine < 0 {
-		screen.txFailReason = loud.Localize("you haven't selected any buy character request")
-		screen.SetScreenStatusAndRefresh(RSLT_FULFILL_BUYCHR_TRDREQ)
-	} else {
-		cbtr := loud.CharacterBuyTrdReqs[screen.activeLine]
-		screen.activeItemTrdReq = cbtr
-		if cbtr.IsMyTrdReq {
-			screen.RunTxProcess(W8_CANCEL_TRDREQ, RSLT_CANCEL_TRDREQ, func() (string, error) {
-				return loud.CancelTrade(screen.user, cbtr.ID)
-			})
-		} else {
-			screen.RunTxProcess(W8_FULFILL_BUYCHR_TRDREQ, RSLT_FULFILL_BUYCHR_TRDREQ, func() (string, error) {
-				return loud.FulfillTrade(screen.user, cbtr.ID)
-			})
-		}
-	}
-}
-
-func (screen *GameScreen) RunSelectedCharacterSellTrdReq() {
-	if len(loud.CharacterSellTrdReqs) <= screen.activeLine || screen.activeLine < 0 {
-		screen.txFailReason = loud.Localize("you haven't selected any sell character request")
-		screen.SetScreenStatusAndRefresh(RSLT_FULFILL_SELLCHR_TRDREQ)
-	} else {
-		cstr := loud.CharacterSellTrdReqs[screen.activeLine]
-		screen.activeItemTrdReq = cstr
-		if cstr.IsMyTrdReq {
-			screen.RunTxProcess(W8_CANCEL_TRDREQ, RSLT_CANCEL_TRDREQ, func() (string, error) {
-				return loud.CancelTrade(screen.user, cstr.ID)
-			})
-		} else {
-			screen.RunTxProcess(W8_FULFILL_SELLCHR_TRDREQ, RSLT_FULFILL_SELLCHR_TRDREQ, func() (string, error) {
-				return loud.FulfillTrade(screen.user, cstr.ID)
-			})
-		}
-	}
-}
-
 func (screen *GameScreen) SetScreenStatusAndRefresh(newStatus ScreenStatus) {
 	screen.SetScreenStatus(newStatus)
 	screen.FreshRender()
@@ -957,34 +613,15 @@ func (screen *GameScreen) FreshRender() {
 	screen.Render()
 }
 
-func (screen *GameScreen) RunTxProcess(waitStatus ScreenStatus, resultStatus ScreenStatus, fn func() (string, error)) {
-	screen.SetScreenStatusAndRefresh(waitStatus)
-
-	log.Println("started sending request for ", waitStatus)
-	go func() {
-		txhash, err := fn()
-		log.Println("ended sending request for ", waitStatus)
-		if err != nil {
-			screen.txFailReason = err.Error()
-			screen.SetScreenStatusAndRefresh(resultStatus)
-		} else {
-			time.AfterFunc(1*time.Second, func() {
-				screen.txResult, screen.txFailReason = loud.ProcessTxResult(screen.user, txhash)
-				screen.SetScreenStatusAndRefresh(resultStatus)
-			})
-		}
-	}()
-}
-
 func (screen *GameScreen) Render() {
 	if len(loud.SomethingWentWrongMsg) > 0 {
 		clear := cursor.ClearEntireScreen()
 		dead := loud.Localize("Something went wrong, please close using Esc key and see loud.log")
-		move := cursor.MoveTo(screen.screenSize.Height/2, screen.screenSize.Width/2-utf8.RuneCountInString(dead)/2)
+		move := cursor.MoveTo(screen.Height()/2, screen.Width()/2-utf8.RuneCountInString(dead)/2)
 		io.WriteString(os.Stdout, clear+move+dead)
 
 		detailedErrorMsg := fmt.Sprintf("%s: %s", loud.Localize("detailed error"), loud.SomethingWentWrongMsg)
-		move = cursor.MoveTo(screen.screenSize.Height/2+3, screen.screenSize.Width/2-utf8.RuneCountInString(dead)/2)
+		move = cursor.MoveTo(screen.Height()/2+3, screen.Width()/2-utf8.RuneCountInString(dead)/2)
 		io.WriteString(os.Stdout, move+detailedErrorMsg)
 		screen.refreshed = false
 		return
@@ -992,20 +629,12 @@ func (screen *GameScreen) Render() {
 	if screen.scrStatus == "" {
 		screen.scrStatus = SHW_LOCATION
 	}
-	var HP uint64 = 10
 
-	if screen.screenSize.Height < 38 || screen.screenSize.Width < 120 {
+	if screen.Height() < 38 || screen.Width() < 120 {
 		clear := cursor.ClearEntireScreen()
 		move := cursor.MoveTo(1, 1)
 		io.WriteString(os.Stdout,
 			fmt.Sprintf("%s%s%s", clear, move, loud.Localize("screen size warning")))
-		return
-	} else if HP == 0 {
-		clear := cursor.ClearEntireScreen()
-		dead := loud.Localize("dead desc")
-		move := cursor.MoveTo(screen.screenSize.Height/2, screen.screenSize.Width/2-utf8.RuneCountInString(dead)/2)
-		io.WriteString(os.Stdout, clear+move+dead)
-		screen.refreshed = false
 		return
 	}
 

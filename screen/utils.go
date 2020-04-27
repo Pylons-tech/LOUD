@@ -2,8 +2,14 @@ package screen
 
 import (
 	"fmt"
+	"io"
 	"reflect"
 	"unicode/utf8"
+
+	"os"
+
+	"github.com/ahmetb/go-cursor"
+	"github.com/mgutz/ansi"
 
 	loud "github.com/Pylons-tech/LOUD/data"
 )
@@ -69,6 +75,39 @@ func centerText(message, pad string, width int) string {
 	}
 
 	return fmt.Sprintf("%s%s%s", string([]rune(leftString)[0:left]), message, string([]rune(leftString)[0:right]))
+}
+
+func fillRightWithSpace(message string, width int) string {
+	if utf8.RuneCountInString(message) > width {
+		return truncateRight(message, width)
+	}
+	leftover := width - utf8.RuneCountInString(message)
+
+	rightString := ""
+	for utf8.RuneCountInString(rightString) <= leftover {
+		rightString += " "
+	}
+	return message + rightString
+}
+
+func drawVerticalLine(x, y, height int) {
+	color := ansi.ColorCode(fmt.Sprintf("255:%v", bgcolor))
+	for i := 1; i < height; i++ {
+		io.WriteString(os.Stdout, fmt.Sprintf("%s%s│", cursor.MoveTo(y+i, x), color))
+	}
+
+	io.WriteString(os.Stdout, fmt.Sprintf("%s%s┬", cursor.MoveTo(y, x), color))
+	io.WriteString(os.Stdout, fmt.Sprintf("%s%s┴", cursor.MoveTo(y+height, x), color))
+}
+
+func drawHorizontalLine(x, y, width int) {
+	color := ansi.ColorCode(fmt.Sprintf("255:%v", bgcolor))
+	for i := 1; i < width; i++ {
+		io.WriteString(os.Stdout, fmt.Sprintf("%s%s─", cursor.MoveTo(y, x+i), color))
+	}
+
+	io.WriteString(os.Stdout, fmt.Sprintf("%s%s├", cursor.MoveTo(y, x), color))
+	io.WriteString(os.Stdout, fmt.Sprintf("%s%s┤", cursor.MoveTo(y, x+width), color))
 }
 
 func formatItem(item loud.Item) string {

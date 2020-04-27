@@ -165,21 +165,27 @@ func (screen *GameScreen) renderUserSituation() {
 	basicLines := strings.Split(desc, "\n")
 
 	for _, line := range basicLines {
-		infoLines = append(infoLines, loud.ChunkString(line, screen.screenSize.Width/2-4)...)
+		infoLines = append(infoLines, loud.ChunkString(line, screen.leftInnerWidth()-2)...)
 	}
 
-	// box start point (x, y)
+	// situation box start point (x, y)
 	x := 2
 	y := 2
+	h := screen.situationInnerHeight()
+	w := screen.leftInnerWidth()
 
 	bgcolor := uint64(bgcolor)
 	fmtFunc := screen.colorFunc(fmt.Sprintf("255:%v", bgcolor))
 	for index, line := range infoLines {
-		io.WriteString(os.Stdout, fmt.Sprintf("%s%s", cursor.MoveTo(y+index, x), fmtFunc(line)))
-		if index+2 > int(screen.screenSize.Height) {
+		io.WriteString(os.Stdout, fmt.Sprintf("%s%s",
+			cursor.MoveTo(y+index, x),
+			fmtFunc(fillRightWithSpace(line, screen.leftInnerWidth()))))
+		if index+2 > int(screen.Height()) {
 			break
 		}
 	}
+
+	screen.drawFill(x, y+len(infoLines), w, h-len(infoLines))
 }
 
 func (screen *GameScreen) TxResultSituationDesc() string {
