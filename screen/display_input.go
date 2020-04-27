@@ -13,12 +13,12 @@ func (screen *GameScreen) renderInputValue() {
 	inputWidth := inputBoxWidth - 9
 	move := cursor.MoveTo(screen.Height()-1, 2)
 
-	chatFunc := screen.colorFunc(fmt.Sprintf("231:%v", bgcolor))
+	chatFunc := screen.regularFont()
 	chat := chatFunc("👉👉👉 ")
 	fmtString := fmt.Sprintf("%%-%vs", inputWidth)
 
 	if screen.InputActive() {
-		chatFunc = screen.colorFunc(fmt.Sprintf("0+b:%v", bgcolor-1))
+		chatFunc = screen.inputActiveFont()
 	}
 
 	fixedChat := truncateLeft(screen.inputText, int(inputWidth))

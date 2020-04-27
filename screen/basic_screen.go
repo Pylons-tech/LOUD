@@ -87,7 +87,7 @@ func (screen *GameScreen) drawProgressMeter(min, max, fgcolor, bgcolor, width ui
 func (screen *GameScreen) drawFill(x, y, width, height int) {
 	color := ansi.ColorCode(fmt.Sprintf("0:%v", bgcolor))
 
-	midString := fmt.Sprintf("%%s%%s%%%vs", (width))
+	midString := fmt.Sprintf("%%s%%s%%%vs", width)
 	for i := 0; i <= height; i++ {
 		io.WriteString(os.Stdout, fmt.Sprintf(midString, cursor.MoveTo(y+i, x), color, " "))
 	}
@@ -218,7 +218,8 @@ func (screen *GameScreen) SetInputTextAndFreshRender(text string) {
 }
 
 func (screen *GameScreen) pylonIcon() string {
-	return screen.drawProgressMeter(1, 1, 117, bgcolor, 1)
+	// return "🔶"
+	return "🔷"
 }
 
 func (screen *GameScreen) goldIcon() string {
@@ -237,10 +238,22 @@ func (screen *GameScreen) brownFont() func(string) string {
 	return screen.colorFunc(fmt.Sprintf("%v:%v", 181, 232))
 }
 
+func (screen *GameScreen) regularFont() func(string) string {
+	return screen.colorFunc(fmt.Sprintf("255:%v", bgcolor))
+}
+
+func (screen *GameScreen) blinkBlueBoldFont() func(string) string {
+	return screen.colorFunc(fmt.Sprintf("%v+B:%v", 117, bgcolor))
+}
+
+func (screen *GameScreen) inputActiveFont() func(string) string {
+	return screen.colorFunc(fmt.Sprintf("0+b:%v", bgcolor-1))
+}
+
 func (screen *GameScreen) redrawBorders() {
 	io.WriteString(os.Stdout, ansi.ColorCode(fmt.Sprintf("255:%v", bgcolor)))
 	screen.drawBox(1, 1, screen.Width()-1, screen.Height()-1)
 	drawVerticalLine(screen.leftRightBorderX(), 1, screen.Height())
-	drawHorizontalLine(1, screen.situationCmdBorderY(), screen.leftInnerWidth())
-	drawHorizontalLine(1, screen.cmdInputBorderY(), screen.leftInnerWidth())
+	drawHorizontalLine(1, screen.situationCmdBorderY(), screen.leftInnerWidth()+1)
+	drawHorizontalLine(1, screen.cmdInputBorderY(), screen.leftInnerWidth()+1)
 }

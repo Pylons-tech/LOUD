@@ -35,7 +35,15 @@ func (screen *GameScreen) GetTxResponseOutput() (int64, []handlers.ExecuteRecipe
 }
 
 func (screen *GameScreen) renderUserSituation() {
+
+	// situation box start point (x, y)
+	x := 2
+	y := 2
+	w := screen.leftInnerWidth()
+	h := screen.situationInnerHeight()
+
 	infoLines := []string{}
+	tableLines := []string{}
 	desc := ""
 	activeWeapon := screen.user.GetActiveWeapon()
 	switch screen.scrStatus {
@@ -67,26 +75,26 @@ func (screen *GameScreen) renderUserSituation() {
 			}
 		}
 	case SHW_LOUD_BUY_TRDREQS:
-		infoLines = screen.renderTRTable(loud.BuyTrdReqs)
+		infoLines, tableLines = screen.renderTRTable(loud.BuyTrdReqs)
 	case SHW_LOUD_SELL_TRDREQS:
-		infoLines = screen.renderTRTable(loud.SellTrdReqs)
+		infoLines, tableLines = screen.renderTRTable(loud.SellTrdReqs)
 	case SHW_BUYITM_TRDREQS:
-		infoLines = screen.renderITRTable(
+		infoLines, tableLines = screen.renderITRTable(
 			"Buy item requests",
 			[2]string{"Item", "Price (pylon)"},
 			loud.ItemBuyTrdReqs)
 	case SHW_SELLITM_TRDREQS:
-		infoLines = screen.renderITRTable(
+		infoLines, tableLines = screen.renderITRTable(
 			"Sell item requests",
 			[2]string{"Item", "Price (pylon)"},
 			loud.ItemSellTrdReqs)
 	case SHW_SELLCHR_TRDREQS:
-		infoLines = screen.renderITRTable(
+		infoLines, tableLines = screen.renderITRTable(
 			"Sell character requests",
 			[2]string{"Character", "Price (pylon)"},
 			loud.CharacterSellTrdReqs)
 	case SHW_BUYCHR_TRDREQS:
-		infoLines = screen.renderITRTable(
+		infoLines, tableLines = screen.renderITRTable(
 			"Buy character requests",
 			[2]string{"Character", "Price (pylon)"},
 			loud.CharacterBuyTrdReqs)
@@ -95,44 +103,80 @@ func (screen *GameScreen) renderUserSituation() {
 	case CR8_SELL_LOUD_TRDREQ_ENT_PYLVAL:
 		desc = loud.Localize("Please enter pylon amount to get (should be integer value)")
 	case CR8_BUY_LOUD_TRDREQ_ENT_LUDVAL:
-		desc = loud.Localize("Please enter loud amount to buy (should be integer value)")
+		desc = loud.Localize("Please enter gold amount to buy (should be integer value)")
 	case RENAME_CHAR_ENT_NEWNAME:
 		desc = loud.Localize("Please enter new character's name - it's costing pylons per letter.")
 	case CR8_SELL_LOUD_TRDREQ_ENT_LUDVAL:
-		desc = loud.Localize("Please enter loud amount to sell (should be integer value)")
+		desc = loud.Localize("Please enter gold amount to sell (should be integer value)")
 
 	case CR8_SELLITM_TRDREQ_SEL_ITEM:
-		infoLines = screen.renderITTable("Select item to sell", "Item", screen.user.InventoryItems())
+		infoLines, tableLines = screen.renderITTable(
+			"Select item to sell",
+			"Item",
+			screen.user.InventoryItems())
 	case CR8_SELLCHR_TRDREQ_SEL_CHR:
-		infoLines = screen.renderITTable("Select character to sell", "Character", screen.user.InventoryCharacters())
+		infoLines, tableLines = screen.renderITTable(
+			"Select character to sell",
+			"Character",
+			screen.user.InventoryCharacters())
 	case CR8_SELLITM_TRDREQ_ENT_PYLVAL:
 		desc = loud.Localize("Please enter pylon amount to use (should be integer value)")
 	case CR8_SELLCHR_TRDREQ_ENT_PYLVAL:
 		desc = loud.Localize("Please enter pylon amount to use (should be integer value)")
 	case CR8_BUYITM_TRDREQ_SEL_ITEM:
-		infoLines = screen.renderITTable("Select item to buy", "Item", loud.WorldItemSpecs)
+		infoLines, tableLines = screen.renderITTable(
+			"Select item to buy",
+			"Item",
+			loud.WorldItemSpecs)
 	case CR8_BUYCHR_TRDREQ_SEL_CHR:
-		infoLines = screen.renderITTable("Select character specs to get", "Character", loud.WorldCharacterSpecs)
+		infoLines, tableLines = screen.renderITTable(
+			"Select character specs to get",
+			"Character",
+			loud.WorldCharacterSpecs)
 	case CR8_BUYITM_TRDREQ_ENT_PYLVAL:
 		desc = loud.Localize("Please enter pylon amount to use (should be integer value)")
 	case CR8_BUYCHR_TRDREQ_ENT_PYLVAL:
 		desc = loud.Localize("Please enter pylon amount to use (should be integer value)")
 	case SEL_ACTIVE_CHAR:
-		infoLines = screen.renderITTable("Please select active character", "Character", screen.user.InventoryCharacters())
+		infoLines, tableLines = screen.renderITTable(
+			"Please select active character",
+			"Character",
+			screen.user.InventoryCharacters())
 	case SEL_HEALTH_RESTORE_CHAR:
-		infoLines = screen.renderITTable("Please select character to restore health", "Character", screen.user.InventoryCharacters())
+		infoLines, tableLines = screen.renderITTable(
+			"Please select character to restore health",
+			"Character",
+			screen.user.InventoryCharacters())
 	case SEL_RENAME_CHAR:
-		infoLines = screen.renderITTable("Please select character to rename", "Character", screen.user.InventoryCharacters())
+		infoLines, tableLines = screen.renderITTable(
+			"Please select character to rename",
+			"Character",
+			screen.user.InventoryCharacters())
 	case SEL_ACTIVE_WEAPON:
-		infoLines = screen.renderITTable("Please select active weapon", "Item", screen.user.InventorySwords())
+		infoLines, tableLines = screen.renderITTable(
+			"Please select active weapon",
+			"Item",
+			screen.user.InventorySwords())
 	case SEL_BUYITM:
-		infoLines = screen.renderITTable("select buy item desc", "Item", loud.ShopItems)
+		infoLines, tableLines = screen.renderITTable(
+			"select buy item desc",
+			"Item",
+			loud.ShopItems)
 	case SEL_SELLITM:
-		infoLines = screen.renderITTable("select sell item desc", "Item", screen.user.InventorySellableItems())
+		infoLines, tableLines = screen.renderITTable(
+			"select sell item desc",
+			"Item",
+			screen.user.InventorySellableItems())
 	case SEL_UPGITM:
-		infoLines = screen.renderITTable("select upgrade item desc", "Item", screen.user.InventoryUpgradableItems())
+		infoLines, tableLines = screen.renderITTable(
+			"select upgrade item desc",
+			"Item",
+			screen.user.InventoryUpgradableItems())
 	case SEL_BUYCHR:
-		infoLines = screen.renderITTable("select buy character desc", "Character", loud.ShopCharacters)
+		infoLines, tableLines = screen.renderITTable(
+			"select buy character desc",
+			"Character",
+			loud.ShopCharacters)
 	case CONFIRM_HUNT_RABBITS:
 		if activeWeapon != nil {
 			desc = loud.Localize("rabbits with a sword outcome")
@@ -159,7 +203,7 @@ func (screen *GameScreen) renderUserSituation() {
 	}
 
 	if screen.IsWaitScreen() {
-		desc = screen.TxWaitSituationDesc()
+		infoLines, tableLines = screen.TxWaitSituationDesc(w - 2)
 	}
 
 	basicLines := strings.Split(desc, "\n")
@@ -168,24 +212,28 @@ func (screen *GameScreen) renderUserSituation() {
 		infoLines = append(infoLines, loud.ChunkString(line, screen.leftInnerWidth()-2)...)
 	}
 
-	// situation box start point (x, y)
-	x := 2
-	y := 2
-	h := screen.situationInnerHeight()
-	w := screen.leftInnerWidth()
-
-	bgcolor := uint64(bgcolor)
-	fmtFunc := screen.colorFunc(fmt.Sprintf("255:%v", bgcolor))
+	fmtFunc := screen.regularFont()
 	for index, line := range infoLines {
 		io.WriteString(os.Stdout, fmt.Sprintf("%s%s",
 			cursor.MoveTo(y+index, x),
-			fmtFunc(fillRightWithSpace(line, screen.leftInnerWidth()))))
+			fmtFunc(fillSpace(line, screen.leftInnerWidth()-3))))
 		if index+2 > int(screen.Height()) {
 			break
 		}
 	}
+	infoLen := len(infoLines)
 
-	screen.drawFill(x, y+len(infoLines), w, h-len(infoLines))
+	for index, line := range tableLines {
+		io.WriteString(os.Stdout, fmt.Sprintf("%s%s",
+			cursor.MoveTo(y+infoLen+index, x),
+			line))
+		if index+2 > int(screen.Height()) {
+			break
+		}
+	}
+	totalLen := infoLen + len(tableLines)
+
+	screen.drawFill(x, y+totalLen, w, h-totalLen-1)
 }
 
 func (screen *GameScreen) TxResultSituationDesc() string {
@@ -331,7 +379,7 @@ func (screen *GameScreen) TxResultSituationDesc() string {
 			desc = loud.Sprintf("Finished getting developer test items.")
 			desc += devDetailedResultDesc(resultTexts[:len(respOutput)])
 		case RSLT_GET_PYLONS:
-			desc = loud.Localize("You got extra pylons for loud game")
+			desc = loud.Localize("You got extra pylons for LOUD game")
 		case RSLT_SWITCH_USER:
 			desc = loud.Sprintf("You switched user to %s", screen.user.GetUserName())
 		case RSLT_CREATE_COOKBOOK:
@@ -384,7 +432,7 @@ func (screen *GameScreen) TxResultSituationDesc() string {
 	return desc
 }
 
-func (screen *GameScreen) TxWaitSituationDesc() string {
+func (screen *GameScreen) TxWaitSituationDesc(width int) ([]string, []string) {
 	desc := ""
 	activeWeapon := screen.user.GetActiveWeapon()
 	W8_TO_END := "\n" + loud.Localize("Please wait for a moment to finish the process")
@@ -480,6 +528,7 @@ func (screen *GameScreen) TxWaitSituationDesc() string {
 		desc += screen.buyLoudDesc(request.Amount, request.Total)
 	}
 	desc += "\n"
-	onColor := screen.colorFunc(fmt.Sprintf("%v+B:%v", 117, bgcolor))
-	return desc + onColor("......")
+	return strings.Split(desc, "\n"), []string{
+		screen.blinkBlueBoldFont()(fillSpace("......", width)),
+	}
 }

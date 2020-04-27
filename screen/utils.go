@@ -28,6 +28,23 @@ func (tl TextLines) appendT(elems ...string) TextLines {
 	return append(tl, elemsT...)
 }
 
+func NumberOfLetters(message string) int {
+	// customUnicodes := map[string]int{
+	// 	"💰": 1,
+	//  "🔶": 1,
+	//  "🔷": 1,
+	// 	"🥺": 1,
+	// 	"🗡️": 1,
+	// 	"🦘": 1,
+	// 	"⟳": 1,
+	// 	"📋": 1,
+	//  "🥇": 1,
+	//  "❦": 1,
+	//  "↓": 1,
+	// }
+	return utf8.RuneCountInString(message)
+}
+
 func truncateRight(message string, width int) string {
 	if utf8.RuneCountInString(message) < width {
 		fmtString := fmt.Sprintf("%%-%vs", width)
@@ -77,15 +94,20 @@ func centerText(message, pad string, width int) string {
 	return fmt.Sprintf("%s%s%s", string([]rune(leftString)[0:left]), message, string([]rune(leftString)[0:right]))
 }
 
-func fillRightWithSpace(message string, width int) string {
-	if utf8.RuneCountInString(message) > width {
+func fillSpace(message string, width int) string {
+	msgLen := utf8.RuneCountInString(message)
+	// msgLen := len(message)
+	if msgLen > width {
 		return truncateRight(message, width)
 	}
-	leftover := width - utf8.RuneCountInString(message)
+	leftover := width - msgLen
 
 	rightString := ""
-	for utf8.RuneCountInString(rightString) <= leftover {
+	rightLen := 0
+	for rightLen < leftover {
 		rightString += " "
+		rightLen = utf8.RuneCountInString(rightString)
+		// rightLen = len(rightString)
 	}
 	return message + rightString
 }
@@ -227,43 +249,39 @@ func (screen *GameScreen) renderTRLine(text1 string, text2 string, text3 string,
 	text3 = loud.Localize(text3)
 
 	calcText := "│" + centerText(text1, " ", 20) + "│" + centerText(text2, " ", 15) + "│" + centerText(text3, " ", 15) + "│"
+	onColor := screen.regularFont()
 	if isActiveLine && isDisabledLine {
-		onColor := screen.brownBoldFont()
-		return onColor(calcText)
+		onColor = screen.brownBoldFont()
 	} else if isActiveLine {
-		onColor := screen.blueBoldFont()
-		return onColor(calcText)
+		onColor = screen.blueBoldFont()
 	} else if isDisabledLine {
-		onColor := screen.brownFont()
-		return onColor(calcText)
+		onColor = screen.brownFont()
 	}
-	return calcText
+	return onColor(calcText)
 }
 
 func (screen *GameScreen) renderItemTableLine(text1 string, isActiveLine bool) string {
 	calcText := "│" + centerText(loud.Localize(text1), " ", 52) + "│"
+	onColor := screen.regularFont()
 	if isActiveLine {
-		onColor := screen.blueBoldFont()
-		return onColor(calcText)
+		onColor = screen.blueBoldFont()
 	}
-	return calcText
+	return onColor(calcText)
 }
 
 func (screen *GameScreen) renderItemTrdReqTableLine(text1 string, text2 string, isActiveLine bool, isDisabledLine bool) string {
 	text1 = loud.Localize(text1)
 	text2 = loud.Localize(text2)
 	calcText := "│" + centerText(text1, " ", 36) + "│" + centerText(text2, " ", 15) + "│"
+	onColor := screen.regularFont()
 	if isActiveLine && isDisabledLine {
-		onColor := screen.brownBoldFont()
-		return onColor(calcText)
+		onColor = screen.brownBoldFont()
 	} else if isActiveLine {
-		onColor := screen.blueBoldFont()
-		return onColor(calcText)
+		onColor = screen.blueBoldFont()
 	} else if isDisabledLine {
-		onColor := screen.brownFont()
-		return onColor(calcText)
+		onColor = screen.brownFont()
 	}
-	return calcText
+	return onColor(calcText)
 }
 
 func min(a, b uint64) uint64 {
