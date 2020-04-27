@@ -18,19 +18,19 @@ import (
 
 func (screen *GameScreen) Resync() {
 	screen.syncingData = true
-	screen.FreshRender()
+	screen.Render()
 	go func() {
 		log.Println("start syncing from node")
 		loud.SyncFromNode(screen.user)
 		log.Println("end syncing from node")
 		screen.syncingData = false
-		screen.FreshRender()
+		screen.Render()
 	}()
 }
 
 func (screen *GameScreen) FakeSync() {
 	screen.UpdateFakeBlockHeight(screen.fakeBlockHeight + 1)
-	screen.FreshRender()
+	screen.Render()
 }
 
 func (screen *GameScreen) GetTxFailReason() string {
@@ -174,7 +174,7 @@ func (screen *GameScreen) InputActive() bool {
 
 func (screen *GameScreen) SetScreenStatusAndRefresh(newStatus ScreenStatus) {
 	screen.SetScreenStatus(newStatus)
-	screen.FreshRender()
+	screen.Render()
 }
 
 func (screen *GameScreen) FreshRender() {
@@ -200,7 +200,7 @@ func (screen *GameScreen) SaveGame() {
 
 func (screen *GameScreen) UpdateFakeBlockHeight(h int64) {
 	screen.fakeBlockHeight = h
-	screen.FreshRender()
+	screen.Render()
 }
 
 func (screen *GameScreen) BlockSince(h int64) uint64 {
@@ -210,11 +210,6 @@ func (screen *GameScreen) BlockSince(h int64) uint64 {
 func (screen *GameScreen) SetInputTextAndRender(text string) {
 	screen.inputText = text
 	screen.Render()
-}
-
-func (screen *GameScreen) SetInputTextAndFreshRender(text string) {
-	screen.refreshed = false
-	screen.SetInputTextAndRender(text)
 }
 
 func (screen *GameScreen) pylonIcon() string {

@@ -25,7 +25,7 @@ func (screen *GameScreen) renderInputValue() {
 	inputText := fmt.Sprintf("%s%s%s", move, chat, chatFunc(fmt.Sprintf(fmtString, fixedChat)))
 
 	if !screen.InputActive() {
-		inputText = fmt.Sprintf("%s%s", move, chatFunc(screen.actionText))
+		inputText = fmt.Sprintf("%s%s", move, chatFunc(fillSpace(screen.actionText, int(inputBoxWidth))))
 	}
 
 	io.WriteString(os.Stdout, inputText)

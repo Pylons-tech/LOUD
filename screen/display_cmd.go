@@ -228,7 +228,7 @@ func (screen *GameScreen) renderUserCommands() {
 	for index, line := range infoLines {
 		io.WriteString(os.Stdout, fmt.Sprintf("%s%s",
 			cursor.MoveTo(y+index, x),
-			fmtFunc(fillSpace(line, w-2))))
+			fmtFunc(fillSpace(line, w))))
 	}
 
 	infoLen := len(infoLines)

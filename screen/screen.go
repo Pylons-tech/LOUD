@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"io"
 	"os"
-	"unicode/utf8"
 
 	"github.com/ahmetb/go-cursor"
 	"github.com/gliderlabs/ssh"
@@ -85,11 +84,11 @@ func (screen *GameScreen) Render() {
 	if len(loud.SomethingWentWrongMsg) > 0 {
 		clear := cursor.ClearEntireScreen()
 		dead := loud.Localize("Something went wrong, please close using Esc key and see loud.log")
-		move := cursor.MoveTo(screen.Height()/2, screen.Width()/2-utf8.RuneCountInString(dead)/2)
+		move := cursor.MoveTo(screen.Height()/2, screen.Width()/2-NumberOfSpaces(dead)/2)
 		io.WriteString(os.Stdout, clear+move+dead)
 
 		detailedErrorMsg := fmt.Sprintf("%s: %s", loud.Localize("detailed error"), loud.SomethingWentWrongMsg)
-		move = cursor.MoveTo(screen.Height()/2+3, screen.Width()/2-utf8.RuneCountInString(dead)/2)
+		move = cursor.MoveTo(screen.Height()/2+3, screen.Width()/2-NumberOfSpaces(dead)/2)
 		io.WriteString(os.Stdout, move+detailedErrorMsg)
 		screen.refreshed = false
 		return

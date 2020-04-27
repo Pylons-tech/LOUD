@@ -49,7 +49,7 @@ func (screen *GameScreen) renderCharacterSheet() {
 	infoLines := []string{
 		fmtFunc(centerText(fmt.Sprintf("%v", screen.user.GetUserName()), " ", width)),
 		fmtFunc(centerText(loud.Localize("inventory"), "─", width)),
-		fmtFunc(screen.goldIcon() + fillSpace(fmt.Sprintf(" %v", screen.user.GetGold()), width-2)),
+		fmtFunc(fillSpace(fmt.Sprintf("💰 %v", screen.user.GetGold()), width)),
 		fmtFunc(fillSpace("", width)),
 	}
 
@@ -65,7 +65,7 @@ func (screen *GameScreen) renderCharacterSheet() {
 	}
 
 	for idx, character := range characters {
-		characterInfo := fillSpace(formatCharacter(character), width-2)
+		characterInfo := fillSpace(formatCharacter(character), width)
 		if idx == screen.user.GetActiveCharacterIndex() {
 			characterInfo = screen.blueBoldFont()(characterInfo)
 		} else {
@@ -84,7 +84,7 @@ func (screen *GameScreen) renderCharacterSheet() {
 	)
 	if activeCharacter != nil {
 		infoLines = append(infoLines,
-			charFunc(fillSpace(formatCharacter(*activeCharacter), width-2)),
+			charFunc(fillSpace(formatCharacter(*activeCharacter), width)),
 			charFunc(fillSpace(fmt.Sprintf("%s: %d", loud.Localize("rest blocks"), activeCharacterRestBlocks), width)),
 		)
 	}
@@ -106,16 +106,16 @@ func (screen *GameScreen) renderCharacterSheet() {
 
 	nodeLines := []string{
 		fmtFunc(centerText(" "+loud.Localize("pylons network status")+" ", "─", width)),
-		fmtFunc(fillSpace(fmt.Sprintf("%s: %s 📋(M)", loud.Localize("Address"), truncateRight(screen.user.GetAddress(), 32)), width-2)),
-		fmtFunc(fillSpace(fmt.Sprintf("%s%s: %v", screen.pylonIcon(), "Pylon", screen.user.GetPylonAmount()), width-1)),
+		fmtFunc(fillSpace(fmt.Sprintf("%s: %s 📋(M)", loud.Localize("Address"), truncateRight(screen.user.GetAddress(), 32)), width)),
+		fmtFunc(fillSpace(fmt.Sprintf("%s%s: %v", screen.pylonIcon(), "Pylon", screen.user.GetPylonAmount()), width)),
 	}
 
 	if len(screen.user.GetLastTxHash()) > 0 {
 		txHashT := fmt.Sprintf("%s: %s 📋(L)", loud.Localize("Last TxHash"), truncateRight(screen.user.GetLastTxHash(), 32))
-		nodeLines = append(nodeLines, fmtFunc(fillSpace(txHashT, width-1)))
+		nodeLines = append(nodeLines, fmtFunc(fillSpace(txHashT, width)))
 	}
 
-	blockHeightText := fillSpace(fmt.Sprintf("%s ⟳ (E): %d(%d)", loud.Localize("block height"), screen.blockHeight, screen.fakeBlockHeight), width-2)
+	blockHeightText := fillSpace(fmt.Sprintf("%s ⟳ (E): %d(%d)", loud.Localize("block height"), screen.blockHeight, screen.fakeBlockHeight), width)
 	if screen.syncingData {
 		nodeLines = append(nodeLines, screen.blueBoldFont()(blockHeightText))
 	} else {

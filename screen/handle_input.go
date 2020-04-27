@@ -50,10 +50,10 @@ func (screen *GameScreen) HandleInputKeyLocationSwitch(input termbox.Event) bool
 	if newStus, ok := tarLctMap[Key]; ok {
 		if newStus == loud.FOREST && screen.user.GetActiveCharacter() == nil {
 			screen.actionText = loud.Sprintf("You can't go to forest without character")
-			screen.FreshRender()
+			screen.Render()
 		} else {
 			screen.user.SetLocation(newStus)
-			screen.FreshRender()
+			screen.Render()
 			return true
 		}
 	}
@@ -77,7 +77,7 @@ func (screen *GameScreen) HandleInputKeyHomeEntryPoint(input termbox.Event) bool
 		case SEL_ACTIVE_WEAPON:
 			screen.activeLine = screen.user.GetActiveWeaponIndex()
 		}
-		screen.FreshRender()
+		screen.Render()
 		return true
 	} else {
 		return false
@@ -104,7 +104,7 @@ func (screen *GameScreen) HandleInputKeyPylonsCentralEntryPoint(input termbox.Ev
 			})
 		} else {
 			screen.scrStatus = newStus
-			screen.FreshRender()
+			screen.Render()
 		}
 		return true
 	} else {
@@ -122,7 +122,7 @@ func (screen *GameScreen) HandleInputKeySettingsEntryPoint(input termbox.Event) 
 
 	if newLang, ok := tarLangMap[Key]; ok {
 		loud.GameLanguage = newLang
-		screen.FreshRender()
+		screen.Render()
 		return true
 	} else {
 		return false
@@ -148,18 +148,18 @@ func (screen *GameScreen) HandleInputKeyForestEntryPoint(input termbox.Event) bo
 			CONFIRM_FIGHT_TROLL:
 			if activeWeapon == nil {
 				screen.actionText = loud.Sprintf("You need a sword for this action!")
-				screen.FreshRender()
+				screen.Render()
 				return true
 			}
 		case CONFIRM_FIGHT_GIANT:
 			if activeWeapon == nil || activeWeapon.Name != loud.IRON_SWORD {
 				screen.actionText = loud.Sprintf("You need an iron sword for this action!")
-				screen.FreshRender()
+				screen.Render()
 				return true
 			}
 		}
 		screen.scrStatus = newStus
-		screen.FreshRender()
+		screen.Render()
 		return true
 	} else {
 		return false
@@ -177,7 +177,7 @@ func (screen *GameScreen) HandleInputKeyShopEntryPoint(input termbox.Event) bool
 
 	if newStus, ok := tarStusMap[Key]; ok {
 		screen.scrStatus = newStus
-		screen.FreshRender()
+		screen.Render()
 		return true
 	} else {
 		return false
@@ -240,7 +240,7 @@ func (screen *GameScreen) MoveToNextStep() {
 		screen.scrStatus = SHW_LOCATION
 	}
 	screen.txFailReason = ""
-	screen.FreshRender()
+	screen.Render()
 }
 
 func (screen *GameScreen) MoveToPrevStep() {
@@ -281,7 +281,7 @@ func (screen *GameScreen) MoveToPrevStep() {
 	}
 
 	screen.scrStatus = nxtStatus
-	screen.FreshRender()
+	screen.Render()
 }
 
 func (screen *GameScreen) HandleFirstClassInputKeys(input termbox.Event) bool {
@@ -292,7 +292,7 @@ func (screen *GameScreen) HandleFirstClassInputKeys(input termbox.Event) bool {
 		default:
 			screen.scrStatus = CONFIRM_ENDGAME
 		}
-		screen.FreshRender()
+		screen.Render()
 		return true
 	}
 	// implement first class commands, eg. development input keys
@@ -410,7 +410,7 @@ func (screen *GameScreen) HandleThirdClassInputKeys(input termbox.Event) bool {
 				screen.scrStatus = CR8_BUYCHR_TRDREQ_SEL_CHR
 			}
 			screen.inputText = ""
-			screen.FreshRender()
+			screen.Render()
 			return true
 		}
 	case "O": // GO ON
@@ -441,7 +441,7 @@ func (screen *GameScreen) HandleThirdClassInputKeys(input termbox.Event) bool {
 			screen.activeCharacter = characters[screen.activeLine]
 			screen.scrStatus = RENAME_CHAR_ENT_NEWNAME
 			screen.inputText = ""
-			screen.FreshRender()
+			screen.Render()
 		case SEL_BUYITM:
 			screen.activeItem = loud.GetToBuyItemFromKey(Key)
 			if len(screen.activeItem.Name) == 0 {
@@ -468,7 +468,7 @@ func (screen *GameScreen) HandleThirdClassInputKeys(input termbox.Event) bool {
 			}
 			screen.RunActiveItemUpgrade()
 		}
-		screen.FreshRender()
+		screen.Render()
 		return true
 	}
 	return false
@@ -498,7 +498,7 @@ func (screen *GameScreen) HandleThirdClassKeyEnterEvent() bool {
 			screen.activeItem = userItems[screen.activeLine]
 			screen.scrStatus = CR8_SELLITM_TRDREQ_ENT_PYLVAL
 			screen.inputText = ""
-			screen.FreshRender()
+			screen.Render()
 		case CR8_BUYITM_TRDREQ_SEL_ITEM:
 			if len(loud.WorldItemSpecs) <= screen.activeLine || screen.activeLine < 0 {
 				return false
@@ -506,7 +506,7 @@ func (screen *GameScreen) HandleThirdClassKeyEnterEvent() bool {
 			screen.activeItSpec = loud.WorldItemSpecs[screen.activeLine]
 			screen.scrStatus = CR8_BUYITM_TRDREQ_ENT_PYLVAL
 			screen.inputText = ""
-			screen.FreshRender()
+			screen.Render()
 		case CR8_SELLCHR_TRDREQ_SEL_CHR:
 			userCharacters := screen.user.InventoryCharacters()
 			if len(userCharacters) <= screen.activeLine || screen.activeLine < 0 {
@@ -515,7 +515,7 @@ func (screen *GameScreen) HandleThirdClassKeyEnterEvent() bool {
 			screen.activeCharacter = userCharacters[screen.activeLine]
 			screen.scrStatus = CR8_SELLCHR_TRDREQ_ENT_PYLVAL
 			screen.inputText = ""
-			screen.FreshRender()
+			screen.Render()
 		case CR8_BUYCHR_TRDREQ_SEL_CHR:
 			if len(loud.WorldCharacterSpecs) <= screen.activeLine || screen.activeLine < 0 {
 				return false
@@ -523,7 +523,7 @@ func (screen *GameScreen) HandleThirdClassKeyEnterEvent() bool {
 			screen.activeChSpec = loud.WorldCharacterSpecs[screen.activeLine]
 			screen.scrStatus = CR8_BUYCHR_TRDREQ_ENT_PYLVAL
 			screen.inputText = ""
-			screen.FreshRender()
+			screen.Render()
 		case SEL_ACTIVE_CHAR:
 			characters := screen.user.InventoryCharacters()
 			if len(characters) <= screen.activeLine || screen.activeLine < 0 {
@@ -553,7 +553,7 @@ func (screen *GameScreen) HandleThirdClassKeyEnterEvent() bool {
 			screen.activeCharacter = characters[screen.activeLine]
 			screen.scrStatus = RENAME_CHAR_ENT_NEWNAME
 			screen.inputText = ""
-			screen.FreshRender()
+			screen.Render()
 		case SEL_BUYITM:
 			items := loud.ShopItems
 			if len(items) <= screen.activeLine || screen.activeLine < 0 {
@@ -616,11 +616,11 @@ func (screen *GameScreen) HandleTypingModeInputKeys(input termbox.Event) bool {
 			screen.scrStatus = CR8_BUY_LOUD_TRDREQ_ENT_PYLVAL
 			screen.loudEnterValue = screen.inputText
 			screen.inputText = ""
-			screen.FreshRender()
+			screen.Render()
 		case CR8_BUY_LOUD_TRDREQ_ENT_PYLVAL:
 			screen.scrStatus = W8_BUY_LOUD_TRDREQ_CREATION
 			screen.pylonEnterValue = screen.inputText
-			screen.SetInputTextAndFreshRender("")
+			screen.SetInputTextAndRender("")
 			txhash, err := loud.CreateBuyLoudTrdReq(screen.user, screen.loudEnterValue, screen.pylonEnterValue)
 			log.Println("ended sending request for creating buy loud request")
 			if err != nil {
@@ -634,12 +634,12 @@ func (screen *GameScreen) HandleTypingModeInputKeys(input termbox.Event) bool {
 			}
 		case CR8_SELL_LOUD_TRDREQ_ENT_LUDVAL:
 			screen.scrStatus = CR8_SELL_LOUD_TRDREQ_ENT_PYLVAL
-			screen.FreshRender()
+			screen.Render()
 			screen.loudEnterValue = screen.inputText
 			screen.inputText = ""
 		case CR8_SELL_LOUD_TRDREQ_ENT_PYLVAL:
 			screen.scrStatus = W8_SELL_LOUD_TRDREQ_CREATION
-			screen.FreshRender()
+			screen.Render()
 			screen.pylonEnterValue = screen.inputText
 			screen.SetInputTextAndRender("")
 			txhash, err := loud.CreateSellLoudTrdReq(screen.user, screen.loudEnterValue, screen.pylonEnterValue)
@@ -657,7 +657,7 @@ func (screen *GameScreen) HandleTypingModeInputKeys(input termbox.Event) bool {
 		case CR8_SELLITM_TRDREQ_ENT_PYLVAL:
 			screen.scrStatus = W8_SELLITM_TRDREQ_CREATION
 			screen.pylonEnterValue = screen.inputText
-			screen.SetInputTextAndFreshRender("")
+			screen.SetInputTextAndRender("")
 			txhash, err := loud.CreateSellItemTrdReq(screen.user, screen.activeItem, screen.pylonEnterValue)
 			log.Println("ended sending request for creating sword -> pylon request")
 			if err != nil {
@@ -672,7 +672,7 @@ func (screen *GameScreen) HandleTypingModeInputKeys(input termbox.Event) bool {
 		case CR8_BUYITM_TRDREQ_ENT_PYLVAL:
 			screen.scrStatus = W8_BUYITM_TRDREQ_CREATION
 			screen.pylonEnterValue = screen.inputText
-			screen.SetInputTextAndFreshRender("")
+			screen.SetInputTextAndRender("")
 			txhash, err := loud.CreateBuyItemTrdReq(screen.user, screen.activeItSpec, screen.pylonEnterValue)
 			log.Println("ended sending request for creating sword -> pylon request")
 			if err != nil {
@@ -688,7 +688,7 @@ func (screen *GameScreen) HandleTypingModeInputKeys(input termbox.Event) bool {
 		case CR8_SELLCHR_TRDREQ_ENT_PYLVAL:
 			screen.scrStatus = W8_SELLCHR_TRDREQ_CREATION
 			screen.pylonEnterValue = screen.inputText
-			screen.SetInputTextAndFreshRender("")
+			screen.SetInputTextAndRender("")
 			txhash, err := loud.CreateSellCharacterTrdReq(screen.user, screen.activeCharacter, screen.pylonEnterValue)
 			log.Println("ended sending request for creating character -> pylon request")
 			if err != nil {
@@ -703,7 +703,7 @@ func (screen *GameScreen) HandleTypingModeInputKeys(input termbox.Event) bool {
 		case CR8_BUYCHR_TRDREQ_ENT_PYLVAL:
 			screen.scrStatus = W8_BUYCHR_TRDREQ_CREATION
 			screen.pylonEnterValue = screen.inputText
-			screen.SetInputTextAndFreshRender("")
+			screen.SetInputTextAndRender("")
 			txhash, err := loud.CreateBuyCharacterTrdReq(screen.user, screen.activeChSpec, screen.pylonEnterValue)
 			log.Println("ended sending request for creating character -> pylon request")
 			if err != nil {

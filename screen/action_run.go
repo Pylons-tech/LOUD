@@ -87,7 +87,7 @@ func (screen *GameScreen) RunFightGiant() {
 	activeWeapon := screen.user.GetActiveWeapon()
 	if activeWeapon == nil || activeWeapon.Name != loud.IRON_SWORD {
 		screen.actionText = loud.Sprintf("You can't fight giant without iron sword.")
-		screen.FreshRender()
+		screen.Render()
 		return
 	}
 	screen.RunTxProcess(W8_FIGHT_GIANT, RSLT_FIGHT_GIANT, func() (string, error) {

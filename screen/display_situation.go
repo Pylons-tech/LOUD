@@ -75,29 +75,33 @@ func (screen *GameScreen) renderUserSituation() {
 			}
 		}
 	case SHW_LOUD_BUY_TRDREQS:
-		infoLines, tableLines = screen.renderTRTable(loud.BuyTrdReqs)
+		infoLines, tableLines = screen.renderTRTable(loud.BuyTrdReqs, w)
 	case SHW_LOUD_SELL_TRDREQS:
-		infoLines, tableLines = screen.renderTRTable(loud.SellTrdReqs)
+		infoLines, tableLines = screen.renderTRTable(loud.SellTrdReqs, w)
 	case SHW_BUYITM_TRDREQS:
 		infoLines, tableLines = screen.renderITRTable(
 			"Buy item requests",
 			[2]string{"Item", "Price (pylon)"},
-			loud.ItemBuyTrdReqs)
+			loud.ItemBuyTrdReqs,
+			w)
 	case SHW_SELLITM_TRDREQS:
 		infoLines, tableLines = screen.renderITRTable(
 			"Sell item requests",
 			[2]string{"Item", "Price (pylon)"},
-			loud.ItemSellTrdReqs)
+			loud.ItemSellTrdReqs,
+			w)
 	case SHW_SELLCHR_TRDREQS:
 		infoLines, tableLines = screen.renderITRTable(
 			"Sell character requests",
 			[2]string{"Character", "Price (pylon)"},
-			loud.CharacterSellTrdReqs)
+			loud.CharacterSellTrdReqs,
+			w)
 	case SHW_BUYCHR_TRDREQS:
 		infoLines, tableLines = screen.renderITRTable(
 			"Buy character requests",
 			[2]string{"Character", "Price (pylon)"},
-			loud.CharacterBuyTrdReqs)
+			loud.CharacterBuyTrdReqs,
+			w)
 	case CR8_BUY_LOUD_TRDREQ_ENT_PYLVAL:
 		desc = loud.Localize("Please enter pylon amount to use (should be integer value)")
 	case CR8_SELL_LOUD_TRDREQ_ENT_PYLVAL:
@@ -113,12 +117,14 @@ func (screen *GameScreen) renderUserSituation() {
 		infoLines, tableLines = screen.renderITTable(
 			"Select item to sell",
 			"Item",
-			screen.user.InventoryItems())
+			screen.user.InventoryItems(),
+			w)
 	case CR8_SELLCHR_TRDREQ_SEL_CHR:
 		infoLines, tableLines = screen.renderITTable(
 			"Select character to sell",
 			"Character",
-			screen.user.InventoryCharacters())
+			screen.user.InventoryCharacters(),
+			w)
 	case CR8_SELLITM_TRDREQ_ENT_PYLVAL:
 		desc = loud.Localize("Please enter pylon amount to use (should be integer value)")
 	case CR8_SELLCHR_TRDREQ_ENT_PYLVAL:
@@ -127,12 +133,14 @@ func (screen *GameScreen) renderUserSituation() {
 		infoLines, tableLines = screen.renderITTable(
 			"Select item to buy",
 			"Item",
-			loud.WorldItemSpecs)
+			loud.WorldItemSpecs,
+			w)
 	case CR8_BUYCHR_TRDREQ_SEL_CHR:
 		infoLines, tableLines = screen.renderITTable(
 			"Select character specs to get",
 			"Character",
-			loud.WorldCharacterSpecs)
+			loud.WorldCharacterSpecs,
+			w)
 	case CR8_BUYITM_TRDREQ_ENT_PYLVAL:
 		desc = loud.Localize("Please enter pylon amount to use (should be integer value)")
 	case CR8_BUYCHR_TRDREQ_ENT_PYLVAL:
@@ -141,42 +149,47 @@ func (screen *GameScreen) renderUserSituation() {
 		infoLines, tableLines = screen.renderITTable(
 			"Please select active character",
 			"Character",
-			screen.user.InventoryCharacters())
+			screen.user.InventoryCharacters(),
+			w)
 	case SEL_HEALTH_RESTORE_CHAR:
 		infoLines, tableLines = screen.renderITTable(
 			"Please select character to restore health",
 			"Character",
-			screen.user.InventoryCharacters())
+			screen.user.InventoryCharacters(),
+			w)
 	case SEL_RENAME_CHAR:
 		infoLines, tableLines = screen.renderITTable(
 			"Please select character to rename",
 			"Character",
-			screen.user.InventoryCharacters())
+			screen.user.InventoryCharacters(),
+			w)
 	case SEL_ACTIVE_WEAPON:
 		infoLines, tableLines = screen.renderITTable(
 			"Please select active weapon",
 			"Item",
-			screen.user.InventorySwords())
+			screen.user.InventorySwords(),
+			w)
 	case SEL_BUYITM:
 		infoLines, tableLines = screen.renderITTable(
 			"select buy item desc",
 			"Item",
-			loud.ShopItems)
+			loud.ShopItems,
+			w)
 	case SEL_SELLITM:
 		infoLines, tableLines = screen.renderITTable(
 			"select sell item desc",
 			"Item",
-			screen.user.InventorySellableItems())
+			screen.user.InventorySellableItems(), w)
 	case SEL_UPGITM:
 		infoLines, tableLines = screen.renderITTable(
 			"select upgrade item desc",
 			"Item",
-			screen.user.InventoryUpgradableItems())
+			screen.user.InventoryUpgradableItems(), w)
 	case SEL_BUYCHR:
 		infoLines, tableLines = screen.renderITTable(
 			"select buy character desc",
 			"Character",
-			loud.ShopCharacters)
+			loud.ShopCharacters, w)
 	case CONFIRM_HUNT_RABBITS:
 		if activeWeapon != nil {
 			desc = loud.Localize("rabbits with a sword outcome")
@@ -203,7 +216,7 @@ func (screen *GameScreen) renderUserSituation() {
 	}
 
 	if screen.IsWaitScreen() {
-		infoLines, tableLines = screen.TxWaitSituationDesc(w - 2)
+		infoLines, tableLines = screen.TxWaitSituationDesc(w)
 	}
 
 	basicLines := strings.Split(desc, "\n")
@@ -216,7 +229,7 @@ func (screen *GameScreen) renderUserSituation() {
 	for index, line := range infoLines {
 		io.WriteString(os.Stdout, fmt.Sprintf("%s%s",
 			cursor.MoveTo(y+index, x),
-			fmtFunc(fillSpace(line, screen.leftInnerWidth()-3))))
+			fmtFunc(fillSpace(line, screen.leftInnerWidth()))))
 		if index+2 > int(screen.Height()) {
 			break
 		}
