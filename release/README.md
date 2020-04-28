@@ -1,3 +1,7 @@
+# Test result
+
+LOUD v0.0.5 app is tested on Mojave (10.14.5), High Sierra(10.13.6), and Sierra(10.12.6). 
+
 # How to install and run
 
 - download from github release or trusted source
