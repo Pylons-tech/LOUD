@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 
-if [[ -z "${GOPATH}" ]]; then
+# if [[ -z "${GOPATH}" ]]; then
   echo "export GOPATH"
   export GOPATH=$HOME/go
   mkdir $HOME/go
   mkdir $HOME/go/bin
-else
-  echo "GOPATH already exist"
-fi
+# else
+#   echo "GOPATH already exist"
+# fi
 
 # copy pylonscli to $GOPATH/bin directory
 echo "saving pylonscli to $GOPATH/bin/pylonscli"
@@ -25,6 +25,7 @@ osascript<<EOF
 tell application "Terminal"
   if not (exists window 1) then reopen
   activate
+  do script with command "export GOPATH=$HOME/go" in window 1
   do script with command "cd $PWD && clear && ./bin/loud $1 $2 $3 $4 $5" in window 1
   set number of rows of window 1 to 40 
   set number of columns of window 1 to 125
