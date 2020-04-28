@@ -1,14 +1,11 @@
 # How to install and run
 
-```
-./install_and_run.sh ${player_name}
-```
-
-# Run normally
-
-```
-./bin/loud ${player_name}
-```
+- download from github release or trusted source
+- Unzip the file
+- copy to non-download folder where terminal can do read/write
+- when opening first time, right click on app and select open - and it will show a popup and you can click open
+- from the second time, it will be okay to double click the app to open
+- That's it, enjoy LOUD game
 
 # How to test
 
