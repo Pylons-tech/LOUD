@@ -1,6 +1,7 @@
 package loud
 
 import (
+	"bufio"
 	"fmt"
 	"log"
 	"math/rand"
@@ -28,7 +29,11 @@ func SetupScreenAndEvents(world data.World, logFile *os.File) {
 	username := ""
 	log.Println("args SetupScreenAndEvents", args)
 	if len(args) < 2 {
-		log.Fatal("you didn't configure username when running!")
+		log.Println("you didn't configure username when running!")
+		log.Println("Please enter your username!")
+		reader := bufio.NewReader(os.Stdin)
+		text, _ := reader.ReadString('\n')
+		log.Println(text)
 	} else {
 		username = args[1]
 	}

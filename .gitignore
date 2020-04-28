@@ -4,8 +4,7 @@
 *.so
 *.dylib
 id_rsa
-/bin/
-/release/bin/
+bin/
 vendor/
 *.db
 *.zip
