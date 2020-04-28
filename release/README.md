@@ -5,6 +5,7 @@
 - copy to non-download folder where terminal can do read/write
 - when opening first time, right click on app and select open - and it will show a popup and you can click open
 - from the second time, it will be okay to double click the app to open
+- It will open a terminal, and you can just enter your username to start game!
 - That's it, enjoy LOUD game
 
 # How to test
