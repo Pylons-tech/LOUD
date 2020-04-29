@@ -23,16 +23,10 @@ func Printf(format string, v ...interface{}) {
 }
 
 func Fatalln(v ...interface{}) {
-	if isSetOutput && customLogOutput == nil {
-		return
-	}
 	oLog.Fatalln(v...)
 }
 
 func Fatal(v ...interface{}) {
-	if isSetOutput && customLogOutput == nil {
-		return
-	}
 	oLog.Fatal(v...)
 }
 
