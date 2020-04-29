@@ -72,7 +72,7 @@
     "one": "Hmm, you are fresh out of pylons.\nNo pylons, no LOUD. It's a sad reality.\nYou can either buy some pylons or sell some stuff on the market."
   },
   "home desc without character": {
-    "one": "Wecome to Legend of the Undead Dragon!\n\nTo play LOUD, you need at least one character.\nYou can manifest a fresh soul at Pylons Central\nor you can head to the market where other players may have one on offer."
+    "one": "Welcome to Legend of the Undead Dragon!\n \nTo play LOUD, you need at least one character.\nYou can manifest a fresh soul at Pylons Central\nor you can head to the market where other players may have one on offer."
   },
   "home desc with low HP": {
     "one": "Your character's health is very low.\nYou can restore health by resting. It's the safe idea."
@@ -174,7 +174,7 @@
     "one": "You are now waiting for gold sell request creation"
   },
   "gold buy request was successfully created": {
-    "one": "Loud buy request was successfully created."
+    "one": "Gold buy request was successfully created."
   },
   "gold sell request was successfully created": {
     "one": "Gold sell request was successfully created."
@@ -251,44 +251,41 @@
   "End Game ( Esc )": {
     "one": "End Game ( Esc )"
   },
-  "Re)fresh Status": {
-    "one": "Re̲fresh Status (E)"
+  "Sell gold to fulfill selected request( ↵ )": {
+    "one": "Sell gold to fulfill selected request( ↵ )"
   },
-  "Sell loud to fulfill selected request( ↵ )": {
-    "one": "Sell loud to fulfill selected request( ↵ )"
+  "Place order to buy gold(R)": {
+    "one": "Place order to buy gold(R)"
   },
-  "place order to buy loud(R)": {
-    "one": "place order to buy loud(R)"
+  "Buy gold to fulfill selected request( ↵ )": {
+    "one": "Buy gold to fulfill selected request( ↵ )"
   },
-  "Buy loud to fulfill selected request( ↵ )": {
-    "one": "Buy loud to fulfill selected request( ↵ )"
-  },
-  "place order to sell loud(R)": {
-    "one": "place order to sell loud(R)"
+  "place order to sell gold(R)": {
+    "one": "place order to sell gold(R)"
   },
   "Sell item to fulfill selected request( ↵ )": {
     "one": "Sell item to fulfill selected request( ↵ )"
   },
-  "place order to buy item(R)": {
-    "one": "Sell item to fulfill selected request( ↵ )"
+  "Place order to buy item(R)": {
+    "one": "Place order to buy item(R)"
   },
   "Buy item to fulfill selected request( ↵ )": {
     "one": "Buy item to fulfill selected request( ↵ )"
   },
-  "place order to sell item(R)": {
-    "one": "place order to sell item(R)"
+  "Place order to sell item(R)": {
+    "one": "Place order to sell item(R)"
   },
   "Sell character to fulfill selected request( ↵ )": {
     "one": "Sell character to fulfill selected request( ↵ )"
   },
-  "place order to buy character(R)": {
-    "one": "place order to buy character(R)"
+  "Place order to buy character(R)": {
+    "one": "Place order to buy character(R)"
   },
   "Buy character to fulfill selected request( ↵ )": {
     "one": "Buy character to fulfill selected request( ↵ )"
   },
-  "place order to sell character(R)": {
-    "one": "Buy character to fulfill selected request( ↵ )"
+  "Place order to sell character(R)": {
+    "one": "Place order to sell character(R)"
   },
   "white trade line desc": {
     "one": "white     ➝ other's request"
@@ -302,11 +299,11 @@
   "brown trade line desc": {
     "one": "brown     ➝ my request"
   },
-  "LOUD price (pylon)": {
-    "one": "LOUD price (pylon)"
+  "GOLD price (pylon)": {
+    "one": "GOLD price (pylon)"
   },
-  "Amount (loud)": {
-    "one": "Amount (loud)"
+  "Amount (gold)": {
+    "one": "Amount (gold)"
   },
   "Total (pylon)": {
     "one": "Total (pylon)"
@@ -392,14 +389,14 @@
   "Please enter pylon amount to get (should be integer value)": {
     "one": "Please enter pylon amount to get (should be integer value)"
   }, 
-  "Please enter loud amount to buy (should be integer value)": {
-    "one": "Please enter loud amount to buy (should be integer value)"
+  "Please enter gold amount to buy (should be integer value)": {
+    "one": "Please enter gold amount to buy (should be integer value)"
   },
   "Please enter new character's name - it's costing pylons per letter.": {
     "one": "Please enter new character's name - it's costing pylons per letter."
   },
-  "Please enter loud amount to sell (should be integer value)": {
-    "one": "Please enter loud amount to sell (should be integer value)"
+  "Please enter gold amount to sell (should be integer value)": {
+    "one": "Please enter gold amount to sell (should be integer value)"
   },
   "Select item to sell": {
     "one": "Select item to sell"
@@ -467,8 +464,8 @@
   "Finished getting developer test items.": {
     "one": "Finished getting developer test items."
   },
-  "You got extra pylons for loud game": {
-    "one": "You got extra pylons for loud game"
+  "You got extra pylons for LOUD game": {
+    "one": "You got extra pylons for LOUD game"
   },
   "You switched user to %s": {
     "one": "You switched user to %s"
@@ -562,5 +559,11 @@
   }, 
   "weapon": {
     "one": "weapon"
+  },
+  "no required item": {
+    "one": "no piece"
+  },
+  "not enough gold": {
+    "one": "gold lack"
   }
 }

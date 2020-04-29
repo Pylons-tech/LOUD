@@ -17,11 +17,10 @@ const (
 	GO_BACK_CMD      = "Go back ( ⌫ ) - Backspace Key"
 	GO_BACK_ESC_CMD  = "Go back ( Esc )"
 	END_GAME_ESC_CMD = "End Game ( Esc )"
-	REFRESH_CMD      = "Re)fresh Status"
 )
 
 func (tl TextLines) appendDeselectCmd() TextLines {
-	return append(tl, fmt.Sprintf("0) %s", loud.Localize("Deselect")))
+	return tl.append(fmt.Sprintf("0) %s", loud.Localize("Deselect")))
 }
 
 func (tl TextLines) appendSelectGoBackCmds() TextLines {
@@ -39,17 +38,19 @@ func (tl TextLines) appendGoOnBackCmds() TextLines {
 func (tl TextLines) appendSelectCmds(itemsSlice interface{}, fn func(interface{}) string) TextLines {
 	items := InterfaceSlice(itemsSlice)
 	for idx, item := range items {
-		tl = append(tl, fmt.Sprintf("%d) %s  ", idx+1, fn(item)))
+		tl = tl.append(fmt.Sprintf("%d) %s  ", idx+1, fn(item)))
 	}
 	return tl
 }
 
-func (tl TextLines) appendRefreshCmd(screen *GameScreen) TextLines {
-	refreshCmdTxt := loud.Localize(REFRESH_CMD)
-	if screen.syncingData {
-		tl = append(tl, screen.blueBoldFont()(refreshCmdTxt))
-	} else {
-		tl = append(tl, refreshCmdTxt)
+func (tl TextLines) appendCustomFontSelectCmds(itemsSlice interface{}, fn func(interface{}) TextLine) TextLines {
+	items := InterfaceSlice(itemsSlice)
+	for idx, item := range items {
+		fni := fn(item)
+		tl = append(tl, TextLine{
+			content: fmt.Sprintf("%d) %s  ", idx+1, fni.content),
+			font:    fni.font,
+		})
 	}
 	return tl
 }
@@ -62,8 +63,14 @@ func (tl TextLines) appendEndGameCmd(screen *GameScreen) TextLines {
 }
 
 func (screen *GameScreen) renderUserCommands() {
+	// cmd box start point (x, y)
+	x := 2
+	y := screen.cmdInnerStartY()
+	w := screen.leftInnerWidth()
+	h := screen.cmdInnerHeight()
 
 	infoLines := TextLines{}
+	tableLines := []string{}
 	switch screen.scrStatus {
 	case CONFIRM_ENDGAME:
 		infoLines = infoLines.
@@ -80,7 +87,26 @@ func (screen *GameScreen) renderUserCommands() {
 			loud.DEVELOP:  "develop",
 		}
 		cmdString := loud.Localize(cmdMap[screen.user.GetLocation()])
-		infoLines = strings.Split(cmdString, "\n")
+		infoLines = infoLines.
+			append(strings.Split(cmdString, "\n")...)
+
+		if screen.user.GetLocation() == loud.FOREST {
+			forestStusMap := map[int]ScreenStatus{
+				0: CONFIRM_HUNT_RABBITS,
+				1: CONFIRM_FIGHT_GOBLIN,
+				2: CONFIRM_FIGHT_WOLF,
+				3: CONFIRM_FIGHT_TROLL,
+				4: CONFIRM_FIGHT_GIANT,
+			}
+
+			for k, v := range forestStusMap {
+				if fst := screen.ForestStatusCheck(v); len(fst) > 0 {
+					infoLines[k].content += ": " + fst
+					infoLines[k].font = GREY
+				}
+			}
+		}
+
 		for _, loc := range []loud.UserLocation{
 			loud.HOME,
 			loud.FOREST,
@@ -96,46 +122,46 @@ func (screen *GameScreen) renderUserCommands() {
 		}
 	case SHW_LOUD_BUY_TRDREQS:
 		infoLines = infoLines.
-			append(screen.tradeTableColorDesc()...).
 			appendT(
-				"Sell loud to fulfill selected request( ↵ )",
-				"place order to buy loud(R)",
+				"Sell gold to fulfill selected request( ↵ )",
+				"Place order to buy gold(R)",
 				GO_BACK_CMD)
+		tableLines = screen.tradeTableColorDesc(w)
 	case SHW_LOUD_SELL_TRDREQS:
 		infoLines = infoLines.
-			append(screen.tradeTableColorDesc()...).
 			appendT(
-				"Buy loud to fulfill selected request( ↵ )",
-				"place order to sell loud(R)",
+				"Buy gold to fulfill selected request( ↵ )",
+				"place order to sell gold(R)",
 				GO_BACK_CMD)
+		tableLines = screen.tradeTableColorDesc(w)
 	case SHW_BUYITM_TRDREQS:
 		infoLines = infoLines.
-			append(screen.tradeTableColorDesc()...).
 			appendT(
 				"Sell item to fulfill selected request( ↵ )",
-				"place order to buy item(R)",
+				"Place order to buy item(R)",
 				GO_BACK_CMD)
+		tableLines = screen.tradeTableColorDesc(w)
 	case SHW_SELLITM_TRDREQS:
 		infoLines = infoLines.
-			append(screen.tradeTableColorDesc()...).
 			appendT(
 				"Buy item to fulfill selected request( ↵ )",
-				"place order to sell item(R)",
+				"Place order to sell item(R)",
 				GO_BACK_CMD)
+		tableLines = screen.tradeTableColorDesc(w)
 	case SHW_BUYCHR_TRDREQS:
 		infoLines = infoLines.
-			append(screen.tradeTableColorDesc()...).
 			appendT(
 				"Sell character to fulfill selected request( ↵ )",
-				"place order to buy character(R)",
+				"Place order to buy character(R)",
 				GO_BACK_CMD)
+		tableLines = screen.tradeTableColorDesc(w)
 	case SHW_SELLCHR_TRDREQS:
 		infoLines = infoLines.
-			append(screen.tradeTableColorDesc()...).
 			appendT(
 				"Buy character to fulfill selected request( ↵ )",
-				"place order to sell character(R)",
+				"Place order to sell character(R)",
 				GO_BACK_CMD)
+		tableLines = screen.tradeTableColorDesc(w)
 
 	case CR8_BUYCHR_TRDREQ_SEL_CHR,
 		CR8_SELLCHR_TRDREQ_SEL_CHR,
@@ -174,11 +200,26 @@ func (screen *GameScreen) renderUserCommands() {
 			appendSelectGoBackCmds()
 	case SEL_BUYITM:
 		infoLines = infoLines.
-			appendSelectCmds(
+			appendCustomFontSelectCmds(
 				loud.ShopItems,
-				func(it interface{}) string {
+				func(it interface{}) TextLine {
 					item := it.(loud.Item)
-					return formatItem(item) + screen.goldIcon() + fmt.Sprintf(" %d", item.Price)
+					preitemOk := screen.user.HasPreItemForAnItem(item)
+					goldEnough := item.Price <= screen.user.GetGold()
+					font := REGULAR
+					bonusText := ""
+					if !preitemOk {
+						font = GREY
+						bonusText = fmt.Sprintf(": %s", loud.Localize("no required item"))
+					}
+					if !goldEnough {
+						font = GREY
+						bonusText = fmt.Sprintf(": %s", loud.Localize("not enough gold"))
+					}
+					return TextLine{
+						content: formatItem(item) + fmt.Sprintf("💰 %d %s", item.Price, bonusText),
+						font:    font,
+					}
 				}).
 			appendSelectGoBackCmds()
 	case SEL_BUYCHR:
@@ -187,7 +228,7 @@ func (screen *GameScreen) renderUserCommands() {
 				loud.ShopCharacters,
 				func(it interface{}) string {
 					char := it.(loud.Character)
-					return formatCharacter(char) + screen.pylonIcon() + fmt.Sprintf(" %d", char.Price)
+					return fmt.Sprintf("%s  %s%d", formatCharacter(char), screen.pylonIcon(), char.Price)
 				}).
 			appendSelectGoBackCmds()
 	case SEL_SELLITM:
@@ -196,7 +237,7 @@ func (screen *GameScreen) renderUserCommands() {
 				screen.user.InventorySellableItems(),
 				func(it interface{}) string {
 					item := it.(loud.Item)
-					return formatItem(item) + screen.goldIcon() + fmt.Sprintf(" %s", item.GetSellPriceRange())
+					return formatItem(item) + fmt.Sprintf("💰 %s", item.GetSellPriceRange())
 				}).
 			appendSelectGoBackCmds()
 	case SEL_UPGITM:
@@ -205,7 +246,7 @@ func (screen *GameScreen) renderUserCommands() {
 				screen.user.InventoryUpgradableItems(),
 				func(it interface{}) string {
 					item := it.(loud.Item)
-					return formatItem(item) + screen.goldIcon() + fmt.Sprintf(" %d", item.GetUpgradePrice())
+					return formatItem(item) + fmt.Sprintf("💰 %d", item.GetUpgradePrice())
 				}).
 			appendSelectGoBackCmds()
 	case CONFIRM_HUNT_RABBITS,
@@ -226,21 +267,24 @@ func (screen *GameScreen) renderUserCommands() {
 		}
 	}
 
-	infoLines = infoLines.append("\n")
-	infoLines = infoLines.appendRefreshCmd(screen)
+	infoLines = infoLines.append("") // same as enter command
 	infoLines = infoLines.appendEndGameCmd(screen)
 
-	// box start point (x, y)
-	x := 2
-	y := screen.screenSize.Height/2 + 1
-
-	bgcolor := uint64(bgcolor)
-	fmtFunc := screen.colorFunc(fmt.Sprintf("255:%v", bgcolor))
 	for index, line := range infoLines {
+		lineFont := screen.getFont(line.font)
 		io.WriteString(os.Stdout, fmt.Sprintf("%s%s",
-			cursor.MoveTo(y+index, x), fmtFunc(line)))
-		if index+2 > int(screen.screenSize.Height) {
-			break
-		}
+			cursor.MoveTo(y+index, x),
+			lineFont(fillSpace(line.content, w))))
 	}
+
+	infoLen := len(infoLines)
+
+	for index, line := range tableLines {
+		io.WriteString(os.Stdout, fmt.Sprintf("%s%s",
+			cursor.MoveTo(y+infoLen+index, x),
+			line))
+	}
+	totalLen := infoLen + len(tableLines)
+
+	screen.drawFill(x, y+totalLen, w, h-totalLen)
 }

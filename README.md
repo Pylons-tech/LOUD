@@ -155,3 +155,12 @@ Just clone repos two times in different places something like below
 ```
 
 And then run `make` and `make ARGS="XXX XXX" run` on each folder.
+
+### How to create release version
+
+- Download Platypus app from https://sveinbjorn.org/platypus 
+- Run Platypus app and set sh script and icon for the game.
+- After generating game, right click on app and select "Open package contents"
+- Build pyloncli and loud game using go on a mac machine.
+- Go to "Contents/Resources/" and paste resource files there like "bin", "locale".
+- Publish new version

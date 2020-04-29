@@ -1,9 +1,9 @@
 package loud
 
 import (
-	"log"
 	"strings"
 
+	"github.com/Pylons-tech/LOUD/log"
 	bolt "github.com/coreos/bbolt"
 )
 
@@ -38,24 +38,23 @@ func (w *dbWorld) load() {
 	db, err := bolt.Open(w.filename, 0600, nil)
 
 	if err != nil {
-		panic(err)
-	}
+		log.Println("error reading database file:", err)
+	} else {
+		// Make default tables
+		db.Update(func(tx *bolt.Tx) error {
+			buckets := []string{"users"}
 
-	// Make default tables
-	db.Update(func(tx *bolt.Tx) error {
-		buckets := []string{"users"}
+			for _, bucket := range buckets {
+				_, err := tx.CreateBucketIfNotExists([]byte(bucket))
 
-		for _, bucket := range buckets {
-			_, err := tx.CreateBucketIfNotExists([]byte(bucket))
-
-			if err != nil {
-				return err
+				if err != nil {
+					return err
+				}
 			}
-		}
 
-		return nil
-	})
-
+			return nil
+		})
+	}
 	w.database = db
 }
 
@@ -102,12 +101,14 @@ func (user *dbUser) SetLocation(loc UserLocation) {
 
 func (user *dbUser) Reload() {
 	var record []byte
-	user.world.database.View(func(tx *bolt.Tx) error {
-		bucket := tx.Bucket([]byte("users"))
-		record = bucket.Get([]byte(user.UserData.Username))
+	if user.world.database != nil {
+		user.world.database.View(func(tx *bolt.Tx) error {
+			bucket := tx.Bucket([]byte("users"))
+			record = bucket.Get([]byte(user.UserData.Username))
 
-		return nil
-	})
+			return nil
+		})
+	}
 
 	if record == nil {
 		log.Printf("User %s does not exist, creating anew...", user.UserData.Username)
@@ -133,13 +134,15 @@ func (user *dbUser) Save() {
 		return
 	}
 
-	user.world.database.Update(func(tx *bolt.Tx) error {
-		bucket := tx.Bucket([]byte("users"))
+	if user.world.database != nil {
+		user.world.database.Update(func(tx *bolt.Tx) error {
+			bucket := tx.Bucket([]byte("users"))
 
-		err = bucket.Put([]byte(user.UserData.Username), bytes)
+			err = bucket.Put([]byte(user.UserData.Username), bytes)
 
-		return err
-	})
+			return err
+		})
+	}
 }
 
 func (user *dbUser) GetAddress() string {

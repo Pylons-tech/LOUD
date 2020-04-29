@@ -1,12 +1,28 @@
-# How to install and run
+# Test result
 
+LOUD v0.0.5 app is tested on Mojave (10.14.5), High Sierra(10.13.6), and Sierra(10.12.6). 
+
+# How to run
+
+- download from github release or trusted source
+- Unzip the file
+- copy to non-download folder where terminal can do read/write
+- when opening first time, right click on app and select open - and it will show a popup and you can click open
+- from the second time, it will be okay to double click the app to open
+- It will open a terminal, and you can just enter your username to start game!
+- That's it, enjoy LOUD game
+
+# How to run on terminal
+
+- Install and run
 ```
+cd $LOUD_APP_DIR/Contents/Resources/
 ./install_and_run.sh ${player_name}
 ```
 
-# Run normally
-
+- Run
 ```
+cd $LOUD_APP_DIR/Contents/Resources/
 ./bin/loud ${player_name}
 ```
 

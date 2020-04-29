@@ -7,7 +7,6 @@ import (
 	"errors"
 	"fmt"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"os"
 	"os/exec"
@@ -17,6 +16,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/Pylons-tech/LOUD/log"
 	testing "github.com/Pylons-tech/pylons/cmd/fixtures_test/evtesting"
 	pylonSDK "github.com/Pylons-tech/pylons/cmd/test"
 	"github.com/Pylons-tech/pylons/x/pylons/handlers"
@@ -404,7 +404,7 @@ func ProcessTxResult(user User, txhash string) ([]byte, string) {
 
 	err = pylonSDK.GetAminoCdc().UnmarshalJSON(txHandleResBytes, &resp)
 	if err != nil {
-		errString := fmt.Sprintf("failed to parse transaction result; maybe this is get_pylons? txhash=%s", txhash)
+		errString := fmt.Sprintf("failed to parse transaction result; maybe this is get_pylons then ignore. txhash=%s", txhash)
 		log.Println(errString)
 		return []byte{}, errString
 	} else {
