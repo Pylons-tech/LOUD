@@ -4,8 +4,6 @@ import (
 	"fmt"
 	"io"
 	"reflect"
-	"strings"
-	"unicode/utf8"
 
 	"os"
 
@@ -42,26 +40,6 @@ func (tl TextLines) appendT(elems ...string) TextLines {
 		})
 	}
 	return append(tl, elemsT...)
-}
-
-func NumberOfSpaces(message string) int {
-	customUnicodes := map[string]string{
-		"💰":  "xx",
-		"🔶":  "xx",
-		"🔷":  "xx",
-		"🥺":  "xx",
-		"🗡️": "x",
-		"🦘":  "xx",
-		"⟳":  "x",
-		"📋":  "xx",
-		"🥇":  "xx",
-		"❦":  "x",
-		"↓":  "x",
-	}
-	for k, v := range customUnicodes {
-		message = strings.ReplaceAll(message, k, v)
-	}
-	return utf8.RuneCountInString(message)
 }
 
 func truncateRight(message string, width int) string {
