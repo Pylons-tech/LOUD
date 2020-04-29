@@ -15,7 +15,7 @@ import (
 
 type TextLine struct {
 	content string
-	font    string
+	font    FontType
 }
 
 type TextLines []TextLine

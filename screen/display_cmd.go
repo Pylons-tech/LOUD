@@ -43,6 +43,18 @@ func (tl TextLines) appendSelectCmds(itemsSlice interface{}, fn func(interface{}
 	return tl
 }
 
+func (tl TextLines) appendCustomFontSelectCmds(itemsSlice interface{}, fn func(interface{}) TextLine) TextLines {
+	items := InterfaceSlice(itemsSlice)
+	for idx, item := range items {
+		fni := fn(item)
+		tl = append(tl, TextLine{
+			content: fmt.Sprintf("%d) %s  ", idx+1, fni.content),
+			font:    fni.font,
+		})
+	}
+	return tl
+}
+
 func (tl TextLines) appendEndGameCmd(screen *GameScreen) TextLines {
 	if screen.scrStatus != CONFIRM_ENDGAME && !screen.InputActive() {
 		tl = tl.appendT(END_GAME_ESC_CMD)
@@ -90,7 +102,7 @@ func (screen *GameScreen) renderUserCommands() {
 			for k, v := range forestStusMap {
 				if fst := screen.ForestStatusCheck(v); len(fst) > 0 {
 					infoLines[k].content += ": " + fst
-					infoLines[k].font = "grey"
+					infoLines[k].font = GREY
 				}
 			}
 		}
@@ -188,11 +200,26 @@ func (screen *GameScreen) renderUserCommands() {
 			appendSelectGoBackCmds()
 	case SEL_BUYITM:
 		infoLines = infoLines.
-			appendSelectCmds(
+			appendCustomFontSelectCmds(
 				loud.ShopItems,
-				func(it interface{}) string {
+				func(it interface{}) TextLine {
 					item := it.(loud.Item)
-					return formatItem(item) + screen.goldIcon() + fmt.Sprintf(" %d", item.Price)
+					preitemOk := screen.user.HasPreItemForAnItem(item)
+					goldEnough := item.Price <= screen.user.GetGold()
+					font := REGULAR
+					bonusText := ""
+					if !preitemOk {
+						font = GREY
+						bonusText = fmt.Sprintf(": %s", loud.Localize("no required item"))
+					}
+					if !goldEnough {
+						font = GREY
+						bonusText = fmt.Sprintf(": %s", loud.Localize("not enough gold"))
+					}
+					return TextLine{
+						content: formatItem(item) + fmt.Sprintf("💰 %d %s", item.Price, bonusText),
+						font:    font,
+					}
 				}).
 			appendSelectGoBackCmds()
 	case SEL_BUYCHR:
@@ -210,7 +237,7 @@ func (screen *GameScreen) renderUserCommands() {
 				screen.user.InventorySellableItems(),
 				func(it interface{}) string {
 					item := it.(loud.Item)
-					return formatItem(item) + screen.goldIcon() + fmt.Sprintf(" %s", item.GetSellPriceRange())
+					return formatItem(item) + fmt.Sprintf("💰 %s", item.GetSellPriceRange())
 				}).
 			appendSelectGoBackCmds()
 	case SEL_UPGITM:
@@ -219,7 +246,7 @@ func (screen *GameScreen) renderUserCommands() {
 				screen.user.InventoryUpgradableItems(),
 				func(it interface{}) string {
 					item := it.(loud.Item)
-					return formatItem(item) + screen.goldIcon() + fmt.Sprintf(" %d", item.GetUpgradePrice())
+					return formatItem(item) + fmt.Sprintf("💰 %d", item.GetUpgradePrice())
 				}).
 			appendSelectGoBackCmds()
 	case CONFIRM_HUNT_RABBITS,
@@ -243,15 +270,8 @@ func (screen *GameScreen) renderUserCommands() {
 	infoLines = infoLines.append("") // same as enter command
 	infoLines = infoLines.appendEndGameCmd(screen)
 
-	fmtFunc := screen.regularFont()
 	for index, line := range infoLines {
-		lineFont := fmtFunc
-		if len(line.font) > 0 {
-			switch line.font {
-			case "grey":
-				lineFont = screen.greyFont()
-			}
-		}
+		lineFont := screen.getFont(line.font)
 		io.WriteString(os.Stdout, fmt.Sprintf("%s%s",
 			cursor.MoveTo(y+index, x),
 			lineFont(fillSpace(line.content, w))))

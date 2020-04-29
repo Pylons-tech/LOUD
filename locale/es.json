@@ -562,5 +562,11 @@
   }, 
   "weapon": {
     "one": "weapon"
+  },
+  "no required item": {
+    "one": "no piece"
+  },
+  "not enough gold": {
+    "one": "gold lack"
   }
 }
