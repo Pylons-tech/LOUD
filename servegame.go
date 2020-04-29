@@ -32,11 +32,11 @@ func SetupScreenAndEvents(world data.World, logFile *os.File) {
 		log.Println("you didn't configure username when running!")
 		log.Println("Please enter your username!")
 		reader := bufio.NewReader(os.Stdin)
-		text, _ := reader.ReadString('\n')
-		log.Println(text)
+		username, _ = reader.ReadString('\n')
 	} else {
 		username = args[1]
 	}
+	log.Println("configured username as ", username)
 	user := world.GetUser(username)
 
 	SetupLoggingFile(logFile)

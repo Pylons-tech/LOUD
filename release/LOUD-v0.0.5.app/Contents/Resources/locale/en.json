@@ -72,7 +72,7 @@
     "one": "Hmm, you are fresh out of pylons.\nNo pylons, no LOUD. It's a sad reality.\nYou can either buy some pylons or sell some stuff on the market."
   },
   "home desc without character": {
-    "one": "Wecome to Legend of the Undead Dragon!\n\nTo play LOUD, you need at least one character.\nYou can manifest a fresh soul at Pylons Central\nor you can head to the market where other players may have one on offer."
+    "one": "Welcome to Legend of the Undead Dragon!\n \nTo play LOUD, you need at least one character.\nYou can manifest a fresh soul at Pylons Central\nor you can head to the market where other players may have one on offer."
   },
   "home desc with low HP": {
     "one": "Your character's health is very low.\nYou can restore health by resting. It's the safe idea."
