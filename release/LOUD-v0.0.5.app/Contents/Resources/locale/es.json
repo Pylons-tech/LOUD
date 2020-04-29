@@ -168,10 +168,10 @@
     "one": "you have sold gold successfully from coin market at %.4f.\n"
   },
   "You are now waiting for gold buy request creation": {
-    "one": "Ahora está esperando la creación de la orden de compra gold"
+    "one": "Ahora está esperando la creación de la orden de compra Gold"
   },
   "You are now waiting for gold sell request creation": {
-    "one": "Ahora está esperando la creación de órdenes de venta gold"
+    "one": "Ahora está esperando la creación de órdenes de venta Gold"
   },
   "gold buy request was successfully created": {
     "one": "La orden de compra Gold se creó con éxito."
@@ -562,5 +562,11 @@
   }, 
   "weapon": {
     "one": "weapon"
+  },
+  "no required item": {
+    "one": "no piece"
+  },
+  "not enough gold": {
+    "one": "gold lack"
   }
 }
