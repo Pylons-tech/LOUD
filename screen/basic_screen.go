@@ -3,7 +3,6 @@ package screen
 import (
 	"fmt"
 	"io"
-	"log"
 	"math"
 	"os"
 	"strings"
@@ -14,6 +13,7 @@ import (
 	"github.com/nsf/termbox-go"
 
 	loud "github.com/Pylons-tech/LOUD/data"
+	"github.com/Pylons-tech/LOUD/log"
 )
 
 func (screen *GameScreen) Resync() {

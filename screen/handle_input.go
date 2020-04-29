@@ -2,12 +2,12 @@ package screen
 
 import (
 	"fmt"
-	"log"
 	"strconv"
 	"strings"
 	"time"
 
 	loud "github.com/Pylons-tech/LOUD/data"
+	"github.com/Pylons-tech/LOUD/log"
 	"github.com/atotto/clipboard"
 	"github.com/nsf/termbox-go"
 )

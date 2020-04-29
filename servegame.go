@@ -3,7 +3,6 @@ package loud
 import (
 	"bufio"
 	"fmt"
-	"log"
 	"math/rand"
 	"os"
 	"os/signal"
@@ -13,6 +12,7 @@ import (
 	"github.com/nsf/termbox-go"
 
 	data "github.com/Pylons-tech/LOUD/data"
+	"github.com/Pylons-tech/LOUD/log"
 	screen "github.com/Pylons-tech/LOUD/screen"
 )
 

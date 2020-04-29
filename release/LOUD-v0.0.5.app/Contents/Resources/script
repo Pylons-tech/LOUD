@@ -26,7 +26,7 @@ tell application "Terminal"
   if not (exists window 1) then reopen
   activate
   do script with command "export GOPATH=$HOME/go" in window 1
-  do script with command "cd $PWD && clear && ./bin/loud $1 $2 $3 $4 $5" in window 1
+  do script with command "cd '$PWD' && clear && ./bin/loud $1 $2 $3 $4 $5" in window 1
   set number of rows of window 1 to 40 
   set number of columns of window 1 to 125
 end tell

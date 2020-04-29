@@ -3,10 +3,10 @@ package loud
 import (
 	"errors"
 	"fmt"
-	"log"
 	"strconv"
 	"time"
 
+	"github.com/Pylons-tech/LOUD/log"
 	pylonSDK "github.com/Pylons-tech/pylons/cmd/test"
 	"github.com/Pylons-tech/pylons/x/pylons/msgs"
 	"github.com/Pylons-tech/pylons/x/pylons/types"

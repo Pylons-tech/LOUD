@@ -1,10 +1,10 @@
 package screen
 
 import (
-	"log"
 	"time"
 
 	loud "github.com/Pylons-tech/LOUD/data"
+	"github.com/Pylons-tech/LOUD/log"
 )
 
 func (screen *GameScreen) RunTxProcess(waitStatus ScreenStatus, resultStatus ScreenStatus, fn func() (string, error)) {
