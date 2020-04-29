@@ -20,7 +20,7 @@ const (
 )
 
 func (tl TextLines) appendDeselectCmd() TextLines {
-	return append(tl, fmt.Sprintf("0) %s", loud.Localize("Deselect")))
+	return tl.append(fmt.Sprintf("0) %s", loud.Localize("Deselect")))
 }
 
 func (tl TextLines) appendSelectGoBackCmds() TextLines {
@@ -38,7 +38,7 @@ func (tl TextLines) appendGoOnBackCmds() TextLines {
 func (tl TextLines) appendSelectCmds(itemsSlice interface{}, fn func(interface{}) string) TextLines {
 	items := InterfaceSlice(itemsSlice)
 	for idx, item := range items {
-		tl = append(tl, fmt.Sprintf("%d) %s  ", idx+1, fn(item)))
+		tl = tl.append(fmt.Sprintf("%d) %s  ", idx+1, fn(item)))
 	}
 	return tl
 }
@@ -75,7 +75,26 @@ func (screen *GameScreen) renderUserCommands() {
 			loud.DEVELOP:  "develop",
 		}
 		cmdString := loud.Localize(cmdMap[screen.user.GetLocation()])
-		infoLines = strings.Split(cmdString, "\n")
+		infoLines = infoLines.
+			append(strings.Split(cmdString, "\n")...)
+
+		if screen.user.GetLocation() == loud.FOREST {
+			forestStusMap := map[int]ScreenStatus{
+				0: CONFIRM_HUNT_RABBITS,
+				1: CONFIRM_FIGHT_GOBLIN,
+				2: CONFIRM_FIGHT_WOLF,
+				3: CONFIRM_FIGHT_TROLL,
+				4: CONFIRM_FIGHT_GIANT,
+			}
+
+			for k, v := range forestStusMap {
+				if fst := screen.ForestStatusCheck(v); len(fst) > 0 {
+					infoLines[k].content += ": " + fst
+					infoLines[k].font = "grey"
+				}
+			}
+		}
+
 		for _, loc := range []loud.UserLocation{
 			loud.HOME,
 			loud.FOREST,
@@ -226,9 +245,16 @@ func (screen *GameScreen) renderUserCommands() {
 
 	fmtFunc := screen.regularFont()
 	for index, line := range infoLines {
+		lineFont := fmtFunc
+		if len(line.font) > 0 {
+			switch line.font {
+			case "grey":
+				lineFont = screen.greyFont()
+			}
+		}
 		io.WriteString(os.Stdout, fmt.Sprintf("%s%s",
 			cursor.MoveTo(y+index, x),
-			fmtFunc(fillSpace(line, w))))
+			lineFont(fillSpace(line.content, w))))
 	}
 
 	infoLen := len(infoLines)

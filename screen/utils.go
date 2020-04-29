@@ -15,16 +15,31 @@ import (
 	loud "github.com/Pylons-tech/LOUD/data"
 )
 
-type TextLines []string
+type TextLine struct {
+	content string
+	font    string
+}
+
+type TextLines []TextLine
 
 func (tl TextLines) append(elems ...string) TextLines {
-	return append(tl, elems...)
+	elemsT := []TextLine{}
+	for _, el := range elems {
+		elemsT = append(elemsT, TextLine{
+			content: el,
+			font:    "",
+		})
+	}
+	return append(tl, elemsT...)
 }
 
 func (tl TextLines) appendT(elems ...string) TextLines {
-	elemsT := []string{}
+	elemsT := []TextLine{}
 	for _, el := range elems {
-		elemsT = append(elemsT, loud.Localize(el))
+		elemsT = append(elemsT, TextLine{
+			content: loud.Localize(el),
+			font:    "",
+		})
 	}
 	return append(tl, elemsT...)
 }

@@ -237,6 +237,10 @@ func (screen *GameScreen) regularFont() func(string) string {
 	return screen.colorFunc(fmt.Sprintf("255:%v", bgcolor))
 }
 
+func (screen *GameScreen) greyFont() func(string) string {
+	return screen.colorFunc(fmt.Sprintf("%v:%v", 181, 232))
+}
+
 func (screen *GameScreen) blinkBlueBoldFont() func(string) string {
 	return screen.colorFunc(fmt.Sprintf("%v+B:%v", 117, bgcolor))
 }

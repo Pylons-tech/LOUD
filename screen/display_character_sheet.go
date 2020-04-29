@@ -107,7 +107,7 @@ func (screen *GameScreen) renderCharacterSheet() {
 	nodeLines := []string{
 		fmtFunc(centerText(" "+loud.Localize("pylons network status")+" ", "─", width)),
 		fmtFunc(fillSpace(fmt.Sprintf("%s: %s 📋(M)", loud.Localize("Address"), truncateRight(screen.user.GetAddress(), 32)), width)),
-		fmtFunc(fillSpace(fmt.Sprintf("%s%s: %v", screen.pylonIcon(), "Pylon", screen.user.GetPylonAmount()), width)),
+		fmtFunc(fillSpace(fmt.Sprintf("%s %s: %v", screen.pylonIcon(), "Pylon", screen.user.GetPylonAmount()), width)),
 	}
 
 	if len(screen.user.GetLastTxHash()) > 0 {
