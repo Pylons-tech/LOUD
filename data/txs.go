@@ -7,9 +7,9 @@ import (
 	"time"
 
 	"github.com/Pylons-tech/LOUD/log"
-	pylonSDK "github.com/Pylons-tech/pylons/cmd/test"
-	"github.com/Pylons-tech/pylons/x/pylons/msgs"
-	"github.com/Pylons-tech/pylons/x/pylons/types"
+	pylonSDK "github.com/Pylons-tech/pylons_sdk/cmd/test"
+	"github.com/Pylons-tech/pylons_sdk/x/pylons/msgs"
+	"github.com/Pylons-tech/pylons_sdk/x/pylons/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 

@@ -4,8 +4,8 @@ import (
 	"flag"
 	"testing"
 
-	pylonsFixture "github.com/Pylons-tech/pylons/cmd/fixtures_test"
-	pylonSDK "github.com/Pylons-tech/pylons/cmd/test"
+	pylonsFixture "github.com/Pylons-tech/pylons_sdk/cmd/fixtures_test"
+	pylonSDK "github.com/Pylons-tech/pylons_sdk/cmd/test"
 )
 
 var runSerialMode bool = false

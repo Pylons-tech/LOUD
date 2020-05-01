@@ -5,7 +5,7 @@ import (
 	"strings"
 
 	"github.com/Pylons-tech/LOUD/log"
-	pylonSDK "github.com/Pylons-tech/pylons/cmd/test"
+	pylonSDK "github.com/Pylons-tech/pylons_sdk/cmd/test"
 )
 
 var IsSyncingFromNode = false
