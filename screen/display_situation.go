@@ -310,7 +310,7 @@ func (screen *GameScreen) TxResultSituationDesc() string {
 			desc += "\n"
 			desc += loud.Localize("Please use it for hunting")
 		case RSLT_BUYCHR:
-			desc = loud.Sprintf("You have bought %s from the shop", formatCharacter(screen.activeCharacter))
+			desc = loud.Sprintf("You have bought %s from Pylons Central", formatCharacter(screen.activeCharacter))
 			desc += "\n"
 			desc += loud.Localize("Please use it for hunting")
 		case RSLT_HUNT_RABBITS:
