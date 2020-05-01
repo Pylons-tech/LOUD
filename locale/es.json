@@ -161,6 +161,9 @@
   "You have bought %s from the shop": {
     "one": "Has comprado %s de la tienda"
   },
+  "You have bought %s from Pylons Central": {
+    "one": "You have bought \"%s\" from Pylons Central"
+  },
   "you have bought gold successfully from coin market at %.4f": {
     "one": "you have bought gold successfully from coin market at %.4f.\n"
   },

@@ -6,6 +6,7 @@ import (
 	"math/rand"
 	"os"
 	"os/signal"
+	"strings"
 	"syscall"
 	"time"
 
@@ -33,10 +34,11 @@ func SetupScreenAndEvents(world data.World, logFile *os.File) {
 		log.Println("Please enter your username!")
 		reader := bufio.NewReader(os.Stdin)
 		username, _ = reader.ReadString('\n')
+		username = strings.TrimSuffix(username, "\n")
 	} else {
 		username = args[1]
 	}
-	log.Println("configured username as ", username)
+	log.Println("configured username as ", username, len(username))
 	user := world.GetUser(username)
 
 	SetupLoggingFile(logFile)
