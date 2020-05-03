@@ -23,7 +23,7 @@
                 }
             },
             {
-                "Ref": "./recipes/item_output/drop_ice_dragon_icy_shards.json"  
+                "Ref": "./recipes/item_output/drop_from_ice_dragon.json"  
             }
         ]
     },

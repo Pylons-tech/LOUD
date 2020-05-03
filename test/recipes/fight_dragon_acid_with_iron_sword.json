@@ -23,7 +23,7 @@
                 }
             },
             {
-                "Ref": "./recipes/item_output/drop_acid_dragon_poison_claw.json"  
+                "Ref": "./recipes/item_output/drop_from_acid_dragon.json"  
             }
         ]
     },

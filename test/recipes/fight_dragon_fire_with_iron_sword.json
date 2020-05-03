@@ -23,7 +23,7 @@
                 }
             },
             {
-                "Ref": "./recipes/item_output/drop_fire_dragon_fire_scale.json"  
+                "Ref": "./recipes/item_output/drop_from_fire_dragon.json"  
             }
         ]
     },
