@@ -4,7 +4,10 @@
         { "Rate":"1.0", "Key":"level", "Program": "1" },
         { "Rate":"1.0", "Key":"HP", "Program": "100" },
         { "Rate":"1.0", "Key":"MaxHP", "Program": "100" },
-        { "Rate":"1.0", "Key":"GiantKill", "Program": "0" }
+        { "Rate":"1.0", "Key":"GiantKill", "Program": "0" },
+        { "Rate":"1.0", "Key":"Special", "Program": "0" },
+        { "Rate":"1.0", "Key":"SpecialDragonKill", "Program": "0" },
+        { "Rate":"1.0", "Key":"UndeadDragonKill", "Program": "0" }
     ],
     "Strings":[
         { "Key":"Name", "Value": "Tiger", "Rate":"1.0" },
