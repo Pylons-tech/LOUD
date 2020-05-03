@@ -21,6 +21,9 @@
                 "ModifyItem": {
                     "ItemInputRef": 1 
                 }
+            },
+            {
+                "Ref": "./recipes/item_output/drop_ice_dragon_icy_shards.json"  
             }
         ]
     },
@@ -35,7 +38,11 @@
         },
         {
             "ResultEntries": ["0", "1", "2"],
-            "Weight": "HP * 9 / 10"
+            "Weight": "HP * 8 / 10"
+        },
+        {
+            "ResultEntries": ["0", "1", "2", "3"],
+            "Weight": "HP / 10"
         }
     ],
     "ExtraInfo":"",

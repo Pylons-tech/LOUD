@@ -46,6 +46,12 @@ loudcoin
     level: 1
     Name: Iron sword
 ```
+- Lv1 angel sword
+```
+    attack: 1000
+    level: 1
+    Name: Angel sword
+```
 ## Recipes
 
 ### Buy Wooden sword lv1
@@ -94,6 +100,13 @@ Output: Lv1 bronze sword
 Input item: Troll toes
 Price: 250 loudcoin
 Output: Lv1 iron sword
+```
+
+### Make angel sword
+```
+Input item: Drops from 3 special dragons; fire dragon, acid dragon, ice dragon
+Price: 20000 loudcoin
+Output: Lv1 angel sword
 ```
 
 ### Sword sell recipe, attack * (randi(2)+20) gold
@@ -185,12 +198,17 @@ When character die, no gold is returned.
 
 ### Fight Giant
 
+Warn. Character with bonus skill can't fight Giant.
+
 ```
-Troll HP: 100
-Troll attack: 10
+Giant HP: 100
+Giant attack: 10
 Reward: 3000 loudcoin
 10% chance of sword lose
 GiantKiller badget on character
+4% chance of fire bonus skill
+3% chance of ice bonus skill
+2% chance of acid bonus skill
 ```
 
 character should carry iron sword to fight giant.
@@ -200,6 +218,97 @@ Total received damage you get from Giant is calculated by using `EnemyHP * Enemy
 Character Dying percent: `1 - HP / Total received damage`
 Character Alive percent: `HP / Total received damage`
 Sword lose percent: `HP / Total received damage * 0.1`
+```
+
+When character die, no gold is returned.
+
+### Fight fire dragon
+
+```
+Fire Dragon HP: 300
+Fire Dragon attack: 30
+Reward: 10000 loudcoin
+10% chance of sword lose
+10% chance of “Fire scale” - drop from fire dragon
+FireDragonKiller badget on character
+```
+
+character should carry iron sword to fight Fire dragon.
+Total received damage you get from Fire dragon is calculated by using `EnemyHP * EnemyAttack / SwordAttack`, and dying percentage is related to Total received damage you get from Fire dragon.
+
+```
+Character Dying percent: `1 - HP / Total received damage`
+Character Alive percent: `HP / Total received damage`
+Sword lose percent: `HP / Total received damage * 0.1`
+Drop from fire dragon: `HP / Total received damage * 0.1`
+```
+
+When character die, no gold is returned.
+
+### Fight ice dragon
+
+```
+Ice Dragon HP: 300
+Ice Dragon attack: 30
+Reward: 10000 loudcoin
+10% chance of sword lose
+10% chance of “Icy shards” - drop from ice dragon
+IceDragonKiller badget on character
+```
+
+character should carry iron sword to fight Ice dragon.
+Total received damage you get from Ice dragon is calculated by using `EnemyHP * EnemyAttack / SwordAttack`, and dying percentage is related to Total received damage you get from Ice dragon.
+
+```
+Character Dying percent: `1 - HP / Total received damage`
+Character Alive percent: `HP / Total received damage`
+Sword lose percent: `HP / Total received damage * 0.1`
+Drop from ice dragon: `HP / Total received damage * 0.1`
+```
+
+When character die, no gold is returned.
+
+### Fight acid dragon
+
+```
+Acid Dragon HP: 300
+Acid Dragon attack: 30
+Reward: 10000 loudcoin
+10% chance of sword lose
+10% chance of “poison claws” - drop from acid dragon
+AcidDragonKiller badget on character
+```
+
+character should carry iron sword to fight Acid dragon.
+Total received damage you get from Acid dragon is calculated by using `EnemyHP * EnemyAttack / SwordAttack`, and dying percentage is related to Total received damage you get from Acid dragon.
+
+```
+Character Dying percent: `1 - HP / Total received damage`
+Character Alive percent: `HP / Total received damage`
+Sword lose percent: `HP / Total received damage * 0.1`
+Drop from acid dragon: `HP / Total received damage * 0.1`
+```
+
+When character die, no gold is returned.
+
+### Fight undead dragon
+
+```
+Undead Dragon HP: 1000
+Undead Dragon attack: 100
+Reward: 50000 loudcoin
+10% chance of sword lose
+UndeadDragonKiller badget on character
+```
+
+character should carry iron sword to fight Undead dragon.
+Total received damage you get from Undead dragon is calculated by using `EnemyHP * EnemyAttack / SwordAttack`, and dying percentage is related to Total received damage you get from Undead dragon.
+
+```
+Character Dying percent: `1 - HP / Total received damage`
+Character Alive percent: `HP / Total received damage`
+Sword lose percent: `HP / Total received damage * 0.1`
+Drop from Undead dragon: `HP / Total received damage * 0.1`
 ```
 
 When character die, no gold is returned.
