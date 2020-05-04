@@ -211,6 +211,13 @@ func formatCharacter(ch loud.Character) string {
 	return chStr
 }
 
+func formatCharacterP(ch *loud.Character) string {
+	if ch == nil {
+		return ""
+	}
+	return formatCharacter(*ch)
+}
+
 func formatCharacterSpec(chs loud.CharacterSpec) string {
 	chStr := loud.Localize(chs.Name)
 	lvlStr := formatIntRange(chs.Level)

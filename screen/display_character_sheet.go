@@ -84,7 +84,7 @@ func (screen *GameScreen) renderCharacterSheet() {
 	)
 	if activeCharacter != nil {
 		infoLines = append(infoLines,
-			charFunc(fillSpace(formatCharacter(*activeCharacter), width)),
+			charFunc(fillSpace(formatCharacterP(activeCharacter), width)),
 			charFunc(fillSpace(fmt.Sprintf("%s: %d", loud.Localize("rest blocks"), activeCharacterRestBlocks), width)),
 		)
 	}
