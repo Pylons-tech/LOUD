@@ -143,11 +143,18 @@ func formatItem(item loud.Item) string {
 	return itemStr
 }
 
+func formatItemP(item *loud.Item) string {
+	if item == nil {
+		return ""
+	}
+	return formatItem(*item)
+}
+
 func carryItemDesc(item *loud.Item) string {
 	if item == nil {
 		return ""
 	} else {
-		return "Carry: " + formatItem(*item)
+		return "Carry: " + formatItemP(item)
 	}
 }
 

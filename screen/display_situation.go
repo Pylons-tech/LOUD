@@ -466,19 +466,19 @@ func (screen *GameScreen) TxWaitSituationDesc(width int) ([]string, []string) {
 		desc += W8_TO_END
 	case W8_HUNT_RABBITS:
 		if activeWeapon != nil {
-			desc = loud.Sprintf("You are now hunting rabbits with %s", formatItem(*activeWeapon))
+			desc = loud.Sprintf("You are now hunting rabbits with %s", formatItemP(activeWeapon))
 		} else {
 			desc = loud.Sprintf("You are now hunting rabbits without weapon")
 		}
 		desc += W8_TO_END
 	case W8_FIGHT_GIANT:
-		desc = loud.Sprintf("You are now fighting with giant with %s", formatItem(*activeWeapon))
+		desc = loud.Sprintf("You are now fighting with giant with %s", formatItemP(activeWeapon))
 	case W8_FIGHT_GOBLIN:
-		desc = loud.Sprintf("You are now fighting with goblin with %s", formatItem(*activeWeapon))
+		desc = loud.Sprintf("You are now fighting with goblin with %s", formatItemP(activeWeapon))
 	case W8_FIGHT_TROLL:
-		desc = loud.Sprintf("You are now fighting with troll with %s", formatItem(*activeWeapon))
+		desc = loud.Sprintf("You are now fighting with troll with %s", formatItemP(activeWeapon))
 	case W8_FIGHT_WOLF:
-		desc = loud.Sprintf("You are now fighting with wolf with %s", formatItem(*activeWeapon))
+		desc = loud.Sprintf("You are now fighting with wolf with %s", formatItemP(activeWeapon))
 	case W8_BUY_GOLD_WITH_PYLONS:
 		desc = loud.Localize("Buying gold with pylon")
 		desc += W8_TO_END

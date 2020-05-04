@@ -91,7 +91,7 @@ func (screen *GameScreen) renderCharacterSheet() {
 	if activeWeapon != nil {
 		infoLines = append(infoLines,
 			fmtFunc(centerText(fmt.Sprintf(" %s ", loud.Localize("Active Weapon")), "─", width)),
-			fmtFunc(fillSpace(formatItem(*activeWeapon), width)),
+			fmtFunc(fillSpace(formatItemP(activeWeapon), width)),
 		)
 	}
 
