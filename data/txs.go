@@ -61,10 +61,6 @@ func DevGetTestItems(user User) (string, error) {
 	return ExecuteRecipe(user, RCP_GET_TEST_ITEMS, []string{})
 }
 
-func RestoreHealth(user User, char Character) (string, error) {
-	return ExecuteRecipe(user, RCP_RESTORE_HEALTH, []string{char.ID})
-}
-
 func RunHuntRecipe(rcpName string, user User) (string, error) {
 	activeCharacter := user.GetActiveCharacter()
 	activeCharacterID := ""

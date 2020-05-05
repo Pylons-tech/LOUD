@@ -144,12 +144,6 @@ func (screen *GameScreen) renderUserSituation() {
 			"Character",
 			screen.user.InventoryCharacters(),
 			w)
-	case SEL_HEALTH_RESTORE_CHAR:
-		infoLines, tableLines = screen.renderITTable(
-			"Please select character to restore health",
-			"Character",
-			screen.user.InventoryCharacters(),
-			w)
 	case SEL_RENAME_CHAR:
 		infoLines, tableLines = screen.renderITTable(
 			"Please select character to rename",
@@ -248,7 +242,6 @@ func (screen *GameScreen) TxResultSituationDesc() string {
 		RSLT_BUY_LOUD_TRDREQ_CREATION:  "loud buy request creation",
 		RSLT_SELL_LOUD_TRDREQ_CREATION: "loud sell request creation",
 		RSLT_SEL_ACT_CHAR:              "selecting active character",
-		RSLT_HEALTH_RESTORE_CHAR:       "selecting character to restore health",
 		RSLT_RENAME_CHAR:               "renaming character",
 		RSLT_SEL_ACT_WEAPON:            "selecting active weapon",
 		RSLT_BUYITM:                    "buy item",
@@ -294,8 +287,6 @@ func (screen *GameScreen) TxResultSituationDesc() string {
 			} else {
 				desc = loud.Localize("You have successfully set the active weapon!")
 			}
-		case RSLT_HEALTH_RESTORE_CHAR:
-			desc = loud.Localize("You have successfully restored character's health!")
 		case RSLT_RENAME_CHAR:
 			desc = loud.Sprintf("You have successfully updated character's name to %s!", screen.inputText)
 		case RSLT_BUYITM:
@@ -477,9 +468,6 @@ func (screen *GameScreen) TxWaitSituationDesc(width int) ([]string, []string) {
 		desc += W8_TO_END
 	case W8_DEV_GET_TEST_ITEMS:
 		desc = loud.Localize("Getting dev test items from pylon")
-		desc += W8_TO_END
-	case W8_HEALTH_RESTORE_CHAR:
-		desc = loud.Localize("Waiting for Health restoring")
 		desc += W8_TO_END
 	case W8_GET_PYLONS:
 		desc = loud.Localize("You are waiting for getting pylons process")

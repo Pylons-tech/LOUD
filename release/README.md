@@ -58,8 +58,4 @@ To fight other monsters, need to carry at least 1 sword.
 After fight goblin, wolf and troll, you can get bonus item as a chance.
 And they can be used when creating sword like Silver, bronze and iron swords.
 
-Health restore status is updated every 10s.
-So if you want to increase health, you can just wait for few mins to restore health.
-Or you can spend pylon to instantly restore health at Home(H) by pressing 3) Restore health.
-
 If you want to trade with items and coins, you can just place order or just fulfill the order under Pylons Central(M).

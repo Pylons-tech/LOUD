@@ -65,8 +65,7 @@ func (screen *GameScreen) HandleInputKeyHomeEntryPoint(input termbox.Event) bool
 	tarStusMap := map[string]ScreenStatus{
 		"1": SEL_ACTIVE_CHAR,
 		"2": SEL_ACTIVE_WEAPON,
-		"3": SEL_HEALTH_RESTORE_CHAR,
-		"4": SEL_RENAME_CHAR,
+		"3": SEL_RENAME_CHAR,
 	}
 
 	if newStus, ok := tarStusMap[Key]; ok {
@@ -226,7 +225,6 @@ func (screen *GameScreen) MoveToNextStep() {
 		RSLT_BUYCHR_TRDREQ_CREATION:    SHW_BUYCHR_TRDREQS,
 		RSLT_CANCEL_TRDREQ:             SHW_LOCATION,
 		RSLT_FULFILL_BUYCHR_TRDREQ:     SHW_BUYCHR_TRDREQS,
-		RSLT_HEALTH_RESTORE_CHAR:       SEL_HEALTH_RESTORE_CHAR,
 		RSLT_RENAME_CHAR:               SEL_RENAME_CHAR,
 		RSLT_SEL_ACT_CHAR:              SEL_ACTIVE_CHAR,
 		RSLT_SEL_ACT_WEAPON:            SEL_ACTIVE_WEAPON,
@@ -281,7 +279,6 @@ func (screen *GameScreen) MoveToPrevStep() {
 		RSLT_BUYCHR_TRDREQ_CREATION:     SHW_BUYCHR_TRDREQS,
 		RSLT_CANCEL_TRDREQ:              SHW_LOCATION,
 		RSLT_FULFILL_BUYCHR_TRDREQ:      SHW_BUYCHR_TRDREQS,
-		RSLT_HEALTH_RESTORE_CHAR:        SEL_HEALTH_RESTORE_CHAR,
 		RSLT_RENAME_CHAR:                SEL_RENAME_CHAR,
 		RSLT_SEL_ACT_CHAR:               SEL_ACTIVE_CHAR,
 		RSLT_SEL_ACT_WEAPON:             SEL_ACTIVE_WEAPON,
@@ -455,14 +452,6 @@ func (screen *GameScreen) HandleThirdClassInputKeys(input termbox.Event) bool {
 		case SEL_ACTIVE_WEAPON:
 			screen.activeLine = loud.GetIndexFromString(Key)
 			screen.RunActiveWeaponSelect(screen.activeLine)
-		case SEL_HEALTH_RESTORE_CHAR:
-			screen.activeLine = loud.GetIndexFromString(Key)
-			characters := screen.user.InventoryCharacters()
-			if len(characters) <= screen.activeLine || screen.activeLine < 0 {
-				return false
-			}
-			screen.activeCharacter = characters[screen.activeLine]
-			screen.RunCharacterHealthRestore()
 		case SEL_RENAME_CHAR:
 			screen.activeLine = loud.GetIndexFromString(Key)
 			characters := screen.user.InventoryCharacters()
@@ -569,13 +558,6 @@ func (screen *GameScreen) HandleThirdClassKeyEnterEvent() bool {
 			}
 			screen.activeItem = items[screen.activeLine]
 			screen.RunActiveWeaponSelect(screen.activeLine)
-		case SEL_HEALTH_RESTORE_CHAR:
-			characters := screen.user.InventoryCharacters()
-			if len(characters) <= screen.activeLine || screen.activeLine < 0 {
-				return false
-			}
-			screen.activeCharacter = characters[screen.activeLine]
-			screen.RunCharacterHealthRestore()
 		case SEL_RENAME_CHAR:
 			characters := screen.user.InventoryCharacters()
 			if len(characters) <= screen.activeLine || screen.activeLine < 0 {

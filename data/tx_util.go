@@ -70,7 +70,6 @@ var RcpIDs map[string]string = map[string]string{
 	RCP_FIGHT_WOLF:           "LOUD-fight-wolf-with-a-sword-recipe-v0.0.0-1583631194",
 
 	RCP_GET_TEST_ITEMS: "LOUD-dev-get-test-items-recipe-v0.0.0-1583801800",
-	RCP_RESTORE_HEALTH: "LOUD-health-restore-recipe-v0.0.1-1579652622",
 }
 
 // Remote mode

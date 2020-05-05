@@ -171,8 +171,7 @@ func (screen *GameScreen) renderUserCommands() {
 			appendT(
 				SEL_CMD,
 				GO_BACK_CMD)
-	case SEL_HEALTH_RESTORE_CHAR,
-		SEL_RENAME_CHAR:
+	case SEL_RENAME_CHAR:
 		infoLines = infoLines.
 			appendSelectCmds(
 				screen.user.InventoryCharacters(),

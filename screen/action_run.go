@@ -36,12 +36,6 @@ func (screen *GameScreen) RunActiveWeaponSelect(index int) {
 	screen.SetScreenStatusAndRefresh(RSLT_SEL_ACT_WEAPON)
 }
 
-func (screen *GameScreen) RunCharacterHealthRestore() {
-	screen.RunTxProcess(W8_HEALTH_RESTORE_CHAR, RSLT_HEALTH_RESTORE_CHAR, func() (string, error) {
-		return loud.RestoreHealth(screen.user, screen.activeCharacter)
-	})
-}
-
 func (screen *GameScreen) RunCharacterRename(newName string) {
 	screen.RunTxProcess(W8_RENAME_CHAR, RSLT_RENAME_CHAR, func() (string, error) {
 		return loud.RenameCharacter(screen.user, screen.activeCharacter, newName)

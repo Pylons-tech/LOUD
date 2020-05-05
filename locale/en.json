@@ -30,7 +30,7 @@
     "one": "You don't have enough gold to upgrade this item"
   },
   "home": {
-    "one": "1) Select active character\n2) Select active weapon\n3) Restore character health\n4) Update character name\n"
+    "one": "1) Select active character\n2) Select active weapon\n3) Update character name\n"
   },
   "forest": {
     "one": "1) Rabbit(💰1+)\n2) Goblin(💰50)\n3) Wolf(💰150)\n4) Troll(💰300)\n5) Giant(💰3000)\n"
@@ -202,12 +202,6 @@
   },
   "You have upgraded %s to get better hunt result": {
     "one": "You have upgraded \"%s\" from Lv1 to Lv2. Number goes up!"
-  },
-  "health low warning": {
-    "one": " (Health low) "
-  },
-  "health critical warning": {
-    "one": " (Health CRITICAL) "
   },
   "inventory": {
     "one": " Inventory "
@@ -413,9 +407,6 @@
   "Please select active character": {
     "one": "Please select active character"
   },
-  "Please select character to restore health": {
-    "one": "Please select character to restore health"
-  },
   "Please select character to rename": {
     "one": "Please select character to rename"
   },
@@ -433,9 +424,6 @@
   },
   "You have successfully set the active weapon!": {
     "one": "You have successfully set the active weapon!"
-  },
-  "You have successfully restored character's health!": {
-    "one": "You have successfully restored character's health!"
   },
   "You have successfully updated character's name to %s!": {
     "one": "You have successfully updated character's name to %s!"
@@ -511,9 +499,6 @@
   },
   "Getting dev test items from pylon": {
     "one": "Getting dev test items from pylon"
-  },
-  "Waiting for Health restoring": {
-    "one": "Waiting for Health restoring"
   },
   "You are waiting for getting pylons process": {
     "one": "You are waiting for getting pylons process"
