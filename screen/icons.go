@@ -33,6 +33,9 @@ func NumberOfSpaces(message string) int {
 		"🦐": "xx",
 		"🦖": "xx",
 		"🗿" "xx",
+		"🌊": "xx",
+		"🔥": "xx",
+		"🥗": "xx",
 	}
 	for k, v := range customUnicodes {
 		message = strings.ReplaceAll(message, k, v)

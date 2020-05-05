@@ -209,6 +209,16 @@ func formatCharacter(ch loud.Character) string {
 	if ch.UndeadDragonKill > 0 {
 		chStr = fmt.Sprintf("🐉x%d %s", ch.UndeadDragonKill, chStr)
 	}
+	if ch.Special > 0 {
+		switch ch.Special {
+		case loud.FIRE_SPECIAL:
+			chStr += fmt.Sprintf("🔥")
+		case loud.ICE_SPECIAL:
+			chStr += fmt.Sprintf("🌊")
+		case loud.ACID_SPECIAL:
+			chStr += fmt.Sprintf("🥗")
+		}
+	}
 	if ch.Level > 0 {
 		chStr += fmt.Sprintf(" Lv%d", ch.Level)
 	}
