@@ -27,15 +27,15 @@
     "Outputs": [
         {
             "ResultEntries": ["0", "1", "2"],
-            "Weight": "90"
+            "Weight": "95"
         },
         {
             "ResultEntries": ["0", "1"],
-            "Weight": "5"
+            "Weight": "3"
         },
         {
             "ResultEntries": [],
-            "Weight": "5"
+            "Weight": "2"
         }
     ],
     "ExtraInfo":"",

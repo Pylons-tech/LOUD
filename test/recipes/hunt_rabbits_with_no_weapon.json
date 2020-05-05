@@ -21,11 +21,11 @@
     "Outputs": [
         {
             "ResultEntries": ["0", "1"],
-            "Weight": "90"
+            "Weight": "95"
         },
         {
             "ResultEntries": [],
-            "Weight": "10"
+            "Weight": "5"
         }
     ],
     "ExtraInfo":"",

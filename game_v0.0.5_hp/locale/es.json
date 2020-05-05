@@ -1,33 +1,33 @@
 {
   "buy item failure reason": {
-    "one": "Buy Item Failure Reason"
+    "one": "Razón de compra fallida"
   },
   "buy character failure reason": {
-    "one": "Buy Character Failure Reason"
+    "one": "Razón de compra fallida"
   },
   "hunt rabbits failure reason": {
-    "one": "Hunt Rabbits Failure Reason"
+    "one": "Razón fallida de caza"
   },
   "sell item failure reason": {
-    "one": "Sell Failure Reason"
+    "one": "Razón de venta fallida"
   },
   "upgrade item failure reason": {
-    "one": "Upgrade Failure Reason"
+    "one": "Motivo fallido de actualización"
   },
   "Recipe Name does not exist!": {
-    "one": "Recipe Name does not exist!"
+    "one": "¡El nombre de la receta no existe!"
   },
   "You are trying to buy item which is not in shop": {
-    "one": "You are trying to buy an item which is not in the shop"
+    "one": "Estás intentando comprar algo que no está en la tienda"
   },
   "You are trying to buy character which is not in shop": {
-    "one": "You are trying to buy a character which is not in the shop"
+    "one": "Estás intentando comprar algo que no está en la tienda"
   },
   "You don't have enough gold to buy this item": {
-    "one": "You don't have enough gold to buy this item"
+    "one": "No tienes suficiente oro para comprar este artículo"
   },
   "You don't have enough gold to upgrade this item": {
-    "one": "You don't have enough gold to upgrade this item"
+    "one": "No tienes suficiente oro para actualizar este artículo"
   },
   "home": {
     "one": "1) Select active character\n2) Select active weapon\n3) Restore character health\n4) Update character name\n"
@@ -36,106 +36,109 @@
     "one": "1) Rabbit(💰1+)\n2) Goblin(💰50)\n3) Wolf(💰150)\n4) Troll(💰300)\n5) Giant(💰3000)\n"
   },
   "shop": {
-    "one": "1) Buy Items\n2) Sell Items\n3) Upgrade Items\n"
+    "one": "1) Comprar Artículos\n2) Vender Artículos\n3) Mejorar Artículos\n"
   },
   "pylons central": {
     "one": "1) Buy characters(🦘)\n2) Buy 💰5000 with 100 pylons\n3) Sell 💰 from orderbook / place order to buy 💰\n4) Buy 💰 from orderbook / place order to sell 💰\n5) Sell 🗡️  from orderbook / place order to buy 🗡️\n6) Buy 🗡️  from orderbook / place order to sell 🗡️\n7) Sell 🦘 from orderbook / place order to buy 🦘\n8) Buy 🦘 from orderbook / place order to sell 🦘\n"
   },
   "settings": {
-    "one": "Language:\n1) English\n2) Español\n"
+    "one": "Idioma:\n1) English\n2) Español\n"
   },
   "develop": {
     "one": "Create cookbook(j)\nSwitch user(z)\nGet initial py)lons\nDevMode Test Items(b)\n"
   },
   "go to home": {
-    "one": "H)ome"
+    "one": "Inicio(H)"
   },
   "go to forest": {
-    "one": "F)orest"
+    "one": "Bosque(F)"
   },
   "go to shop": {
-    "one": "S)hop"
+    "one": "Tienda(S)"
   },
   "go to pylons central": {
     "one": "Pylons C)entral"
   },
   "go to settings": {
-    "one": "Set)tings"
+    "one": "Ajust)es"
   },
   "go to develop": {
     "one": "D)evelop"
   },
   "home desc": {
-    "one": "You are at home. It's nice! Cozy. You're doing a puzzle.\nIf you like to kill something, though, head to the forest.\nYou can also head to the Blacksmith to work on your weapons."
+    "one": "Estás en inicio.\nSi quieres cazar, dirígete al bosque.\nY si quieres comprar/vender algo, dirígete a la tienda."
   },
   "home desc without pylon": {
-    "one": "Hmm, you are fresh out of pylons.\nNo pylons, no LOUD. It's a sad reality.\nYou can either buy some pylons or sell some stuff on the market."
+    "one": "You don't have pylon within account.\nTo buy characters, you need to purchase pylons or sell existing characters/items on market to get pylons."
   },
   "home desc without character": {
-    "one": "Welcome to Legend of the Undead Dragon!\n \nTo play LOUD, you need at least one character.\nYou can manifest a fresh soul at Pylons Central\nor you can head to the market where other players may have one on offer."
+    "one": "You don't have any character yet.\nYou can buy one from market or at the shop"
+  },
+  "home desc with low HP": {
+    "one": "Your character's health is very low.\nYou can restore health by spending gold or just doing rest for few mins."
   },
   "forest desc": {
-    "one": "You have reached the woods. Now you must kill things for unclear reasons.\nOr go back home to your puzzle."
+    "one": "Estás en el bosque.\nPuedes cazar aquí o regresar a inicio."
   },
   "shop desc": {
-    "one": "You are now at the blacksmith.\nIf you want you can buy or sell items here."
+    "one": "Estás en una tienda.\nSi quieres, puedes comprar o vender artículos aquí."
   },
   "pylons central desc": {
-    "one": "Got pylons? Get power.\nYou can trade for gold and items."
+    "one": "Ahora estás en un mercado.\nPuedes comerciar aquí por monedas y artículos."
   },
   "settings desc": {
-    "one": "Settings"
+    "one": "Ajustes"
   },
   "develop desc": {
     "one": "You are now testing things for development. Please enter commands you want to try"
   },
   "select buy character desc": {
-    "one": "Summon a weakling with huge potential from the ether? Hell yeah.\n"
+    "one": "You are gonna buy a character.\nPlease select a character to buy."
   },
   "select buy item desc": {
-    "one": "Buy a sword.\nJust do it.\nDon't be scared."
+    "one": "Vas a comprar un artículo.\nPor favor selecciona un artículo a comprar."
   },
   "select sell item desc": {
-    "one": "Sell a sword.\nNo we don't have plowshares."
+    "one": "Vas a vender un artículo.\nPor favor selecciona un artículo a vender."
   },
   "rabbits without sword outcome": {
-    "one": "Hunt Rabbits\n\nReward 💰1 - 2\nCharacter dying percent: 10%\n"
+    "one": "Reward: 1 or 2\nCharacter dying percent: 10%\n"
   },
   "rabbits with a sword outcome": {
-    "one": "Hunt Rabbits\n\nReward 💰sword.attack/2 + 1\n5% chance of character lose\n5% chance of sword lose\n"
+    "one": "Reward: sword.attack/2 + 1\n5% chance of character lose\n5% chance of sword lose\n"
   },
   "goblin outcome": {
-    "one": "Fight Goblin\n\nReward 💰50\nEnemy info (HP: 10, Attack: 1)\n10% chance of sword lose\n10% chance of getting \"Goblin ear\"\n"
+    "one": "Reward: 50\nEnemy info (HP: 10, Attack: 1)\n10% chance of sword lose\n10% chance of getting \"Goblin ear\"\n"
   },
   "wolf outcome": {
-    "one": "Fight Wolf\n\nReward 💰150\nEnemy info (HP: 15, Attack: 3)\n10% chance of sword lose\n10% chance of getting \"Wolf tail\"\n"
+    "one": "Reward: 150\nEnemy info (HP: 15, Attack: 3)\n10% chance of sword lose\n10% chance of getting \"Wolf tail\"\n"
   },
   "troll outcome": {
-    "one": "Fight Troll\n\nReward 💰300\nEnemy info (HP: 20, Attack: 5)\n10% chance of sword lose\n10% chance of getting \"Troll toes\"\n"
+    "one": "Reward: 300\nEnemy info (HP: 20, Attack: 5)\n10% chance of sword lose\n10% chance of getting \"Troll toes\"\n"
   },
   "giant outcome": {
-    "one": "Fight Giant\n\nReward 💰3000\nEnemy info (HP: 100, Attack: 10)\n10% chance of sword lose\nGiantKiller badget on character\n"
+    "one": "Reward: 3000\nEnemy info (HP: 100, Attack: 10)\n10% chance of sword lose\nGiantKiller badget on character\n"
   },
   "select upgrade item desc": {
-    "one": "Upgrading. Upgrading sounds good."
+    "one": "Vas a mejorar un artículo.\nPor favor selecciona un artículo para mejorar."
   },
   "Making gold from pylons": {
-    "one": "Making gold from pylons..."
+    "one": "Ahora estás comprando monedas fuertes de pylon"
   },
   "Making pylons from gold": {
-    "one": "Making pylons from gold..."
+    "one": "Ahora está vendiendo monedas ruidosas por pylon"
   },
   "Please wait for a moment to finish the process": {
-    "one": "Please wait for a moment to finish the process."
+    "one": "Por favor espere un momento a finalizar el proceso."
   },
   "You are now buying %s at the shop": {
-    "one": "You are now buying \"%s\" at the shop"
+    "one": "Ahora estás comprando \"%s\" en la tienda"
   },
   "You are now hunting rabbits with %s": {
-    "one": "You are now hunting rabbits with \"%s\"."
+    "one": "Estás cazando con \"%s\"."
   },
   "You are now hunting rabbits without weapon": {
-    "one": "You are now hunting rabbits."
+    "one": "Estás cazando sin arma."
   },
   "You are now fighting with giant with %s": {
     "one": "You are now fighting with giant with \"%s\"\n"
@@ -150,13 +153,13 @@
     "one": "You are now fighting with wolf with \"%s\"\n"
   },
   "You are now selling %s for gold": {
-    "one": "You are now selling \"%s\" for gold."
+    "one": "Estás vendiendo \"%s\" por oro."
   },
   "You are now upgrading %s": {
-    "one": "You are now upgrading %s."
+    "one": "Estás mejorando %s."
   },
   "You have bought %s from the shop": {
-    "one": "You have bought \"%s\" from the shop"
+    "one": "Has comprado %s de la tienda"
   },
   "You have bought %s from Pylons Central": {
     "one": "You have bought \"%s\" from Pylons Central"
@@ -168,58 +171,61 @@
     "one": "you have sold gold successfully from coin market at %.4f.\n"
   },
   "You are now waiting for gold buy request creation": {
-    "one": "You are now waiting for gold buy request creation"
+    "one": "Ahora está esperando la creación de la orden de compra Gold"
   },
   "You are now waiting for gold sell request creation": {
-    "one": "You are now waiting for gold sell request creation"
+    "one": "Ahora está esperando la creación de órdenes de venta Gold"
   },
   "gold buy request was successfully created": {
-    "one": "Gold buy request was successfully created."
+    "one": "La orden de compra Gold se creó con éxito."
   },
   "gold sell request was successfully created": {
-    "one": "Gold sell request was successfully created."
+    "one": "La orden de venta Gold se creó correctamente."
   },
   "Please use it for hunting": {
-    "one": "Please use it for hunting."
+    "one": "Por favor usar para cazar."
   },
   "You did hunt rabbits and earned %d.": {
-    "one": "You caught the rabbit. Chaching! 💰%d."
+    "one": "You did hunt rabbits and earned 💰%d."
   },
   "You did fight with goblin and earned %d.": {
-    "one": "You killed a goblin! 💰%d."
+    "one": "You did fight with goblin and earned 💰%d."
   },
   "You did fight with troll and earned %d.": {
-    "one": "You beat the troll and earned 💰%d."
+    "one": "You did fight with troll and earned 💰%d."
   },
   "You did fight with wolf and earned %d.": {
-    "one": "You killed a wolf! Have 💰%d."
+    "one": "You did fight with wolf and earned 💰%d."
   },
   "You did fight with giant and earned %d.": {
-    "one": "Giantslayer! Also you get 💰%d."
+    "one": "You did fight with giant and earned 💰%d."
   },
   "Bought gold with pylons. Amount is %d.": {
-    "one": "Bought gold with pylons. Hell yeah 💰%d."
+    "one": "Bought gold with pylons. Amount is 💰%d."
+  },
+  "You sold %s for gold.": {
+    "one": "You sold \"%s\" for %d gold."
   },
   "You have upgraded %s to get better hunt result": {
-    "one": "You have upgraded \"%s\" from Lv1 to Lv2. Number goes up!"
+    "one": "You have upgraded \"%s\" from Lv1 to Lv2 to get better hunt result"
   },
   "health low warning": {
-    "one": " (Health low) "
+    "one": " (Salud baja) "
   },
   "health critical warning": {
-    "one": " (Health CRITICAL) "
+    "one": " (Salud CRITICA) "
   },
   "inventory": {
-    "one": " Inventory "
+    "one": " Inventario "
   },
   "screen size warning": {
-    "one": "Screen is too small. Make your terminal larger. (120x38 minimum)"
+    "one": "La pantalla es muy pequena. Haga su terminal mas larga. (120x38 minimo)"
   },
-  "dead desc": {
-    "one": "You died. Respawning..."
+  "dead": {
+    "one": "Tu moriste. Reapareciendo..."
   },
   "pylons network status": {
-    "one": "Pylons Network Status"
+    "one": "Estado de Red de Pylons"
   },
   "You can't go to forest without character": {
     "one": "You can't go to forest without character"

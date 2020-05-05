@@ -74,9 +74,6 @@
   "home desc without character": {
     "one": "You don't have any character yet.\nYou can buy one from market or at the shop"
   },
-  "home desc with low HP": {
-    "one": "Your character's health is very low.\nYou can restore health by spending gold or just doing rest for few mins."
-  },
   "forest desc": {
     "one": "Estás en el bosque.\nPuedes cazar aquí o regresar a inicio."
   },

@@ -30,19 +30,19 @@
     "Outputs": [
         {
             "ResultEntries": [],
-            "Weight": "10 * 1 / int(input1.attack) - HP"
+            "Weight": "2"
         },
         {
             "ResultEntries": ["0", "1"],
-            "Weight": "HP / 10"
+            "Weight": "3"
         },
         {
             "ResultEntries": ["0", "1", "2"],
-            "Weight": "HP * 8 / 10"
+            "Weight": "85"
         },
         {
             "ResultEntries": ["0", "1", "2", "3"],
-            "Weight": "HP / 10"
+            "Weight": "10"
         }
     ],
     "ExtraInfo":"",

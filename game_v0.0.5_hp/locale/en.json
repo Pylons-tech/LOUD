@@ -74,6 +74,9 @@
   "home desc without character": {
     "one": "Welcome to Legend of the Undead Dragon!\n \nTo play LOUD, you need at least one character.\nYou can manifest a fresh soul at Pylons Central\nor you can head to the market where other players may have one on offer."
   },
+  "home desc with low HP": {
+    "one": "Your character's health is very low.\nYou can restore health by resting. It's the safe idea."
+  },
   "forest desc": {
     "one": "You have reached the woods. Now you must kill things for unclear reasons.\nOr go back home to your puzzle."
   },

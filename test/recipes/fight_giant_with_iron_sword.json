@@ -21,21 +21,31 @@
                 "ModifyItem": {
                     "ItemInputRef": 1 
                 }
+            },
+            {
+                "ModifyItem": {
+                    "ItemInputRef": 0,
+                    "ModifyParamsRef": "./recipes/upgrader/character_after_fighting_giant_getspecial.json"
+                }
             }
         ]
     },
     "Outputs": [
         {
             "ResultEntries": [],
-            "Weight": "100 * 10 / int(input1.attack) - HP"
+            "Weight": "5"
         },
         {
             "ResultEntries": ["0", "1"],
-            "Weight": "HP / 10"
+            "Weight": "3"
         },
         {
             "ResultEntries": ["0", "1", "2"],
-            "Weight": "HP * 9 / 10"
+            "Weight": "82"
+        },
+        {
+            "ResultEntries": ["1", "2", "3"],
+            "Weight": "10"
         }
     ],
     "ExtraInfo":"",
