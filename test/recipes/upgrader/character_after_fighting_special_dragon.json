@@ -1,11 +1,11 @@
 {
     "Doubles": [{
         "Key": "XP",
-        "Program": "XP + 2.0 + 300.0 * 30.0 * double(rand_int(3))"
+        "Program": "XP + double(300 * 30)"
     }],
     "Longs": [{
         "Key": "level", 
-        "Program": "level + int(XP / double(level * 10))"
+        "Program": "level + int(XP / double(level * level * level + 5))"
     }, {
         "Key": "SpecialDragonKill", 
         "Program": "SpecialDragonKill+1"

@@ -1,10 +1,10 @@
 {
     "Doubles": [{
         "Key": "XP",
-        "Program": "XP + 2.0 + 20.0 * 5.0 * double(rand_int(3))"
+        "Program": "XP + double(20 * 5)"
     }],
     "Longs": [{
         "Key": "level", 
-        "Program": "level + int(XP / double(level * 10))"
+        "Program": "level + int(XP / double(level * level * level + 5))"
     }]
 }
