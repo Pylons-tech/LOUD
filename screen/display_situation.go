@@ -379,6 +379,64 @@ func (screen *GameScreen) TxResultSituationDesc() string {
 					desc += loud.Sprintf("You have lost your weapon accidently")
 				}
 			}
+		case RSLT_FIGHT_DRAGONFIRE:
+			earnedAmount, respOutput := screen.GetTxResponseOutput()
+			resLen := len(respOutput)
+			resultTexts := []string{"gold", "character", "weapon", loud.DROP_DRAGONFIRE}
+			if resLen == 0 {
+				desc = loud.Sprintf("You were killed by fire dragon accidently")
+			} else {
+				desc = basicHuntResultDesc("You did fight with fire dragon and earned %d.", earnedAmount, resultTexts[:resLen])
+				switch resLen {
+				case 2:
+					desc += loud.Sprintf("You have lost your weapon accidently")
+				case 4:
+					desc += loud.Sprintf("You got bonus item called %s", loud.DROP_DRAGONFIRE)
+				}
+			}
+		case RSLT_FIGHT_DRAGONICE:
+			earnedAmount, respOutput := screen.GetTxResponseOutput()
+			resLen := len(respOutput)
+			resultTexts := []string{"gold", "character", "weapon", loud.DROP_DRAGONICE}
+			if resLen == 0 {
+				desc = loud.Sprintf("You were killed by ice dragon accidently")
+			} else {
+				desc = basicHuntResultDesc("You did fight with ice dragon and earned %d.", earnedAmount, resultTexts[:resLen])
+				switch resLen {
+				case 2:
+					desc += loud.Sprintf("You have lost your weapon accidently")
+				case 4:
+					desc += loud.Sprintf("You got bonus item called %s", loud.DROP_DRAGONICE)
+				}
+			}
+		case RSLT_FIGHT_DRAGONACID:
+			earnedAmount, respOutput := screen.GetTxResponseOutput()
+			resLen := len(respOutput)
+			resultTexts := []string{"gold", "character", "weapon", loud.DROP_DRAGONACID}
+			if resLen == 0 {
+				desc = loud.Sprintf("You were killed by acid dragon accidently")
+			} else {
+				desc = basicHuntResultDesc("You did fight with acid dragon and earned %d.", earnedAmount, resultTexts[:resLen])
+				switch resLen {
+				case 2:
+					desc += loud.Sprintf("You have lost your weapon accidently")
+				case 4:
+					desc += loud.Sprintf("You got bonus item called %s", loud.DROP_DRAGONACID)
+				}
+			}
+		case RSLT_FIGHT_DRAGONUNDEAD:
+			earnedAmount, respOutput := screen.GetTxResponseOutput()
+			resLen := len(respOutput)
+			resultTexts := []string{"gold", "character", "weapon"}
+			if resLen == 0 {
+				desc = loud.Sprintf("You were killed by undead dragon accidently")
+			} else {
+				desc = basicHuntResultDesc("You did fight with undead dragon and earned %d.", earnedAmount, resultTexts[:resLen])
+				switch resLen {
+				case 2:
+					desc += loud.Sprintf("You have lost your weapon accidently")
+				}
+			}
 		case RSLT_BUY_GOLD_WITH_PYLONS:
 			earnedAmount, _ := screen.GetTxResponseOutput()
 			desc = loud.Sprintf("Bought gold with pylons. Amount is %d.", earnedAmount)
@@ -469,6 +527,14 @@ func (screen *GameScreen) TxWaitSituationDesc(width int) ([]string, []string) {
 		desc += W8_TO_END
 	case W8_FIGHT_GIANT:
 		desc = loud.Sprintf("You are now fighting with giant with %s", formatItemP(activeWeapon))
+	case W8_FIGHT_DRAGONFIRE:
+		desc = loud.Sprintf("You are now fighting with fire dragon with %s", formatItemP(activeWeapon))
+	case W8_FIGHT_DRAGONICE:
+		desc = loud.Sprintf("You are now fighting with ice dragon with %s", formatItemP(activeWeapon))
+	case W8_FIGHT_DRAGONACID:
+		desc = loud.Sprintf("You are now fighting with acid dragon with %s", formatItemP(activeWeapon))
+	case W8_FIGHT_DRAGONUNDEAD:
+		desc = loud.Sprintf("You are now fighting with undead dragon with %s", formatItemP(activeWeapon))
 	case W8_FIGHT_GOBLIN:
 		desc = loud.Sprintf("You are now fighting with goblin with %s", formatItemP(activeWeapon))
 	case W8_FIGHT_TROLL:

@@ -149,9 +149,6 @@
   "You are now hunting rabbits without weapon": {
     "one": "Estás cazando sin arma."
   },
-  "You are now fighting with giant with %s": {
-    "one": "You are now fighting with giant with \"%s\"\n"
-  },
   "You are now fighting with goblin with %s": {
     "one": "You are now fighting with goblin with \"%s\"\n"
   },
@@ -160,6 +157,21 @@
   },
   "You are now fighting with wolf with %s": {
     "one": "You are now fighting with wolf with \"%s\"\n"
+  },
+  "You are now fighting with giant with %s": {
+    "one": "You are now fighting with giant with \"%s\"\n"
+  },
+  "You are now fighting with fire dragon with %s": {
+    "one": "You are now fighting with fire dragon with \"%s\"\n"
+  },
+  "You are now fighting with ice dragon with %s": {
+    "one": "You are now fighting with ice dragon with \"%s\"\n"
+  },
+  "You are now fighting with acid dragon with %s": {
+    "one": "You are now fighting with acid dragon with \"%s\"\n"
+  },
+  "You are now fighting with undead dragon with %s": {
+    "one": "You are now fighting with undead dragon with \"%s\"\n"
   },
   "You are now selling %s for gold": {
     "one": "Estás vendiendo \"%s\" por oro."
@@ -195,19 +207,31 @@
     "one": "Por favor usar para cazar."
   },
   "You did hunt rabbits and earned %d.": {
-    "one": "You did hunt rabbits and earned 💰%d."
+    "one": "You caught the rabbit. Chaching! 💰%d."
   },
   "You did fight with goblin and earned %d.": {
-    "one": "You did fight with goblin and earned 💰%d."
+    "one": "You killed a goblin! 💰%d."
   },
   "You did fight with troll and earned %d.": {
-    "one": "You did fight with troll and earned 💰%d."
+    "one": "You beat the troll and earned 💰%d."
   },
   "You did fight with wolf and earned %d.": {
-    "one": "You did fight with wolf and earned 💰%d."
+    "one": "You killed a wolf! Have 💰%d."
   },
   "You did fight with giant and earned %d.": {
-    "one": "You did fight with giant and earned 💰%d."
+    "one": "Giantslayer! Also you get 💰%d."
+  },
+  "You did fight with fire dragon and earned %d.": {
+    "one": "Fire dragon killer! Also you get 💰%d."
+  },
+  "You did fight with ice dragon and earned %d.": {
+    "one": "Ice dragon killer! Also you get 💰%d."
+  },
+  "You did fight with acid dragon and earned %d.": {
+    "one": "Acid dragon killer! Also you get 💰%d."
+  },
+  "You did fight with undead dragon and earned %d.": {
+    "one": "Undead dragon killer! Also you get 💰%d."
   },
   "Bought gold with pylons. Amount is %d.": {
     "one": "Bought gold with pylons. Amount is 💰%d."
@@ -475,6 +499,18 @@
   },
   "You were killed by giant accidently": {
     "one": "You were killed by giant accidently"
+  },
+  "You were killed by fire dragon accidently": {
+    "one": "You were killed by fire dragon accidently"
+  },
+  "You were killed by ice dragon accidently": {
+    "one": "You were killed by ice dragon accidently"
+  },
+  "You were killed by acid dragon accidently": {
+    "one": "You were killed by acid dragon accidently"
+  },
+  "You were killed by undead dragon accidently": {
+    "one": "You were killed by undead dragon accidently"
   },
   "Finished getting developer test items.": {
     "one": "Finished getting developer test items."
