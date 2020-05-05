@@ -194,7 +194,20 @@ func formatItemSpec(itemSpec loud.ItemSpec) string {
 func formatCharacter(ch loud.Character) string {
 	chStr := loud.Localize(ch.Name)
 	if ch.GiantKill > 0 {
-		chStr = fmt.Sprintf("🥇x%d %s", ch.GiantKill, chStr)
+		chStr = fmt.Sprintf("🗿x%d %s", ch.GiantKill, chStr)
+	}
+	if ch.SpecialDragonKill > 0 {
+		switch ch.Special {
+		case loud.FIRE_SPECIAL:
+			chStr = fmt.Sprintf("🦐x%d %s", ch.SpecialDragonKill, chStr)
+		case loud.ICE_SPECIAL:
+			chStr = fmt.Sprintf("🦕x%d %s", ch.SpecialDragonKill, chStr)
+		case loud.ACID_SPECIAL:
+			chStr = fmt.Sprintf("🦖x%d %s", ch.SpecialDragonKill, chStr)
+		}
+	}
+	if ch.UndeadDragonKill > 0 {
+		chStr = fmt.Sprintf("🐉x%d %s", ch.UndeadDragonKill, chStr)
 	}
 	if ch.Level > 0 {
 		chStr += fmt.Sprintf(" Lv%d", ch.Level)

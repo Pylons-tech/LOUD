@@ -37,6 +37,10 @@ func SyncFromNode(user User) {
 		XP, _ := rawItem.FindDouble("XP")
 		Level, _ := rawItem.FindLong("level")
 		GiantKill, _ := rawItem.FindLong("GiantKill")
+		Special, _ := rawItem.FindLong("Special")
+		SpecialDragonKill, _ := rawItem.FindLong("SpecialDragonKill")
+		UndeadDragonKill, _ := rawItem.FindLong("UndeadDragonKill")
+
 		Name, _ := rawItem.FindString("Name")
 		itemType, _ := rawItem.FindString("Type")
 		Attack, _ := rawItem.FindDouble("attack")
@@ -44,12 +48,15 @@ func SyncFromNode(user User) {
 
 		if itemType == "Character" {
 			myCharacters = append(myCharacters, Character{
-				Level:      Level,
-				Name:       Name,
-				ID:         rawItem.ID,
-				XP:         XP,
-				GiantKill:  GiantKill,
-				LastUpdate: LastUpdate,
+				Level:             Level,
+				Name:              Name,
+				ID:                rawItem.ID,
+				XP:                XP,
+				GiantKill:         GiantKill,
+				Special:           Special,
+				SpecialDragonKill: SpecialDragonKill,
+				UndeadDragonKill:  UndeadDragonKill,
+				LastUpdate:        LastUpdate,
 			})
 		} else {
 			myItems = append(myItems, Item{

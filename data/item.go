@@ -26,6 +26,9 @@ type Character struct {
 	Price      int
 	XP         float64
 	GiantKill  int
+	Special:           Special,
+	SpecialDragonKill: SpecialDragonKill,
+	UndeadDragonKill:  UndeadDragonKill,
 	LastUpdate int64
 }
 type CharacterSpec struct {
@@ -34,6 +37,13 @@ type CharacterSpec struct {
 	Price int
 	XP    [2]float64
 }
+
+const (
+	NO_SPECIAL = 0
+	FIRE_SPECIAL = 1
+	ICE_SPECIAL = 2
+	ACID_SPECIAL = 3
+)
 
 const (
 	WOODEN_SWORD string = "Wooden sword"
