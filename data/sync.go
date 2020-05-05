@@ -35,8 +35,6 @@ func SyncFromNode(user User) {
 	myCharacters := []Character{}
 	for _, rawItem := range rawItems {
 		XP, _ := rawItem.FindDouble("XP")
-		HP, _ := rawItem.FindLong("HP")
-		MaxHP, _ := rawItem.FindLong("MaxHP")
 		Level, _ := rawItem.FindLong("level")
 		GiantKill, _ := rawItem.FindLong("GiantKill")
 		Name, _ := rawItem.FindString("Name")
@@ -50,8 +48,6 @@ func SyncFromNode(user User) {
 				Name:       Name,
 				ID:         rawItem.ID,
 				XP:         XP,
-				HP:         HP,
-				MaxHP:      MaxHP,
 				GiantKill:  GiantKill,
 				LastUpdate: LastUpdate,
 			})
@@ -170,15 +166,11 @@ func SyncFromNode(user User) {
 					})
 				} else if tradeItem.ExtraInfo == CHAR_SELREQ_TRDINFO { // character sell request created by loud game
 					XP, _ := firstItemOutput.FindDouble("XP")
-					HP, _ := firstItemOutput.FindLong("HP")
-					MaxHP, _ := firstItemOutput.FindLong("MaxHP")
 					tCharacter := Character{
 						ID:    firstItemOutput.ID,
 						Level: level,
 						Name:  name,
 						XP:    XP,
-						HP:    HP,
-						MaxHP: MaxHP,
 					}
 					nSellCharacterTrdReqs = append(nSellCharacterTrdReqs, CharacterSellTrdReq{
 						ID:         tradeItem.ID,

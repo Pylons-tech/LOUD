@@ -202,12 +202,6 @@ func formatCharacter(ch loud.Character) string {
 	if ch.XP > 0 {
 		chStr += fmt.Sprintf(" XP=%.0f", ch.XP)
 	}
-	if ch.HP > 0 {
-		chStr += fmt.Sprintf(" HP=%d", ch.HP)
-	}
-	if ch.MaxHP > 0 {
-		chStr += fmt.Sprintf(" MaxHP=%d", ch.MaxHP)
-	}
 	return chStr
 }
 
@@ -227,14 +221,6 @@ func formatCharacterSpec(chs loud.CharacterSpec) string {
 	xpStr := formatFloat64Range(chs.XP)
 	if len(xpStr) > 0 {
 		chStr += fmt.Sprintf(" XP=%s", xpStr)
-	}
-	hpStr := formatIntRange(chs.HP)
-	if len(hpStr) > 0 {
-		chStr += fmt.Sprintf(" HP=%s", hpStr)
-	}
-	maxHpStr := formatIntRange(chs.MaxHP)
-	if len(maxHpStr) > 0 {
-		chStr += fmt.Sprintf(" MaxHP=%s", maxHpStr)
 	}
 	return chStr
 }

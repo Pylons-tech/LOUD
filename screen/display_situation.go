@@ -65,13 +65,6 @@ func (screen *GameScreen) renderUserSituation() {
 				desc = loud.Localize("home desc without character")
 			} else if screen.user.GetPylonAmount() == 0 {
 				desc = loud.Localize("home desc without pylon")
-			} else {
-				HP := uint64(activeCharacter.HP)
-				MaxHP := uint64(activeCharacter.MaxHP)
-				HP = min(HP+screen.BlockSince(activeCharacter.LastUpdate), MaxHP)
-				if float32(HP) < float32(MaxHP)*.25 {
-					desc = loud.Localize("home desc with low HP")
-				}
 			}
 		}
 	case SHW_LOUD_BUY_TRDREQS:

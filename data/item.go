@@ -25,8 +25,6 @@ type Character struct {
 	Level      int
 	Price      int
 	XP         float64
-	HP         int
-	MaxHP      int
 	GiantKill  int
 	LastUpdate int64
 }
@@ -35,8 +33,6 @@ type CharacterSpec struct {
 	Level [2]int
 	Price int
 	XP    [2]float64
-	HP    [2]int
-	MaxHP [2]int
 }
 
 const (
@@ -145,15 +141,11 @@ var WorldCharacterSpecs = []CharacterSpec{
 		Name:  "Lion",
 		Level: [2]int{1, 2},
 		XP:    [2]float64{1, 1000},
-		HP:    [2]int{1, 100},
-		MaxHP: [2]int{100, 100},
 	},
 	CharacterSpec{
 		Name:  "Liger",
 		Level: [2]int{2, 1000},
 		XP:    [2]float64{1, 1000},
-		HP:    [2]int{1, 100},
-		MaxHP: [2]int{100, 100},
 	},
 }
 
