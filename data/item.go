@@ -41,9 +41,14 @@ const (
 	SILVER_SWORD        = "Silver sword"
 	BRONZE_SWORD        = "Bronze sword"
 	IRON_SWORD          = "Iron sword"
-	GOBLIN_EAR          = "Goblin ear"
-	WOLF_TAIL           = "Wolf tail"
-	TROLL_TOES          = "Troll toes"
+	ANGEL_SWORD         = "Angel sword"
+
+	GOBLIN_EAR      = "Goblin ear"
+	WOLF_TAIL       = "Wolf tail"
+	TROLL_TOES      = "Troll toes"
+	DROP_DRAGONICE  = "Icy shards"
+	DROP_DRAGONFIRE = "Fire scale"
+	DROP_DRAGONACID = "Poison claws"
 )
 
 func (item Item) IsSword() bool {

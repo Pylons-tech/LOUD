@@ -14,7 +14,7 @@
         }
     ],
     "Strings":[
-        { "Key":"Name", "Value":"icy shards", "Rate":"1.0" },
+        { "Key":"Name", "Value":"Icy shards", "Rate":"1.0" },
         { "Key":"DropFrom", "Value":"Ice Dragon", "Rate":"1.0" }
     ]
 }

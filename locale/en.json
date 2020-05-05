@@ -33,7 +33,7 @@
     "one": "1) Select active character\n2) Select active weapon\n3) Update character name\n"
   },
   "forest": {
-    "one": "1) Rabbit(💰1+)\n2) Goblin(💰50)\n3) Wolf(💰150)\n4) Troll(💰300)\n5) Giant(💰3000)\n"
+    "one": "1) Rabbit(💰1+)\n2) Goblin(💰50)\n3) Wolf(💰150)\n4) Troll(💰300)\n5) Giant(💰3000)\n6) Fire Dragon(💰20000)\n7) Ice Dragon(💰20000)\n8) Acid Dragon(💰20000)\n9) Undead Dragon(💰50000)\n"
   },
   "shop": {
     "one": "1) Buy Items\n2) Sell Items\n3) Upgrade Items\n"
@@ -223,6 +223,18 @@
   },
   "You need an iron sword for this action!": {
     "one": "You need an iron sword for this action!"
+  },
+  "You need an angel sword for this action!": {
+    "one": "You need an iron sword for this action!"
+  },
+  "no sword!": {
+    "one": "no sword!"
+  },
+  "no iron sword!": {
+    "one": "no iron sword!"
+  },
+  "no angel sword!": {
+    "one": "no angel sword!"
   },
   "Deselect": {
     "one": "Deselect"

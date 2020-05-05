@@ -97,10 +97,14 @@ func (screen *GameScreen) renderUserCommands() {
 				2: CONFIRM_FIGHT_WOLF,
 				3: CONFIRM_FIGHT_TROLL,
 				4: CONFIRM_FIGHT_GIANT,
+				5: CONFIRM_FIGHT_DRAGONFIRE,
+				6: CONFIRM_FIGHT_DRAGONICE,
+				7: CONFIRM_FIGHT_DRAGONACID,
+				8: CONFIRM_FIGHT_DRAGONUNDEAD,
 			}
 
 			for k, v := range forestStusMap {
-				if fst := screen.ForestStatusCheck(v); len(fst) > 0 {
+				if _, fst := screen.ForestStatusCheck(v); len(fst) > 0 {
 					infoLines[k].content += ": " + fst
 					infoLines[k].font = GREY
 				}

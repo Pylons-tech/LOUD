@@ -128,21 +128,28 @@ func (screen *GameScreen) HandleInputKeySettingsEntryPoint(input termbox.Event) 
 	}
 }
 
-func (screen *GameScreen) ForestStatusCheck(newStus ScreenStatus) string {
+func (screen *GameScreen) ForestStatusCheck(newStus ScreenStatus) (string, string) {
 	activeWeapon := screen.user.GetActiveWeapon()
 	switch newStus {
 	case CONFIRM_FIGHT_GOBLIN,
 		CONFIRM_FIGHT_WOLF,
 		CONFIRM_FIGHT_TROLL:
 		if activeWeapon == nil {
-			return loud.Sprintf("You need a sword for this action!")
+			return loud.Sprintf("You need a sword for this action!"), loud.Sprintf("no sword!")
 		}
-	case CONFIRM_FIGHT_GIANT:
+	case CONFIRM_FIGHT_GIANT,
+		CONFIRM_FIGHT_DRAGONFIRE,
+		CONFIRM_FIGHT_DRAGONICE,
+		CONFIRM_FIGHT_DRAGONACID:
 		if activeWeapon == nil || activeWeapon.Name != loud.IRON_SWORD {
-			return loud.Sprintf("You need an iron sword for this action!")
+			return loud.Sprintf("You need an iron sword for this action!"), loud.Sprintf("no iron sword!")
+		}
+	case CONFIRM_FIGHT_DRAGONUNDEAD:
+		if activeWeapon == nil || activeWeapon.Name != loud.ANGEL_SWORD {
+			return loud.Sprintf("You need an angel sword for this action!"), loud.Sprintf("no angel sword!")
 		}
 	}
-	return ""
+	return "", ""
 }
 
 func (screen *GameScreen) HandleInputKeyForestEntryPoint(input termbox.Event) bool {
@@ -154,10 +161,14 @@ func (screen *GameScreen) HandleInputKeyForestEntryPoint(input termbox.Event) bo
 		"3": CONFIRM_FIGHT_WOLF,
 		"4": CONFIRM_FIGHT_TROLL,
 		"5": CONFIRM_FIGHT_GIANT,
+		"6": CONFIRM_FIGHT_DRAGONFIRE,
+		"7": CONFIRM_FIGHT_DRAGONICE,
+		"8": CONFIRM_FIGHT_DRAGONACID,
+		"9": CONFIRM_FIGHT_DRAGONUNDEAD,
 	}
 
 	if newStus, ok := tarStusMap[Key]; ok {
-		if fst := screen.ForestStatusCheck(newStus); len(fst) > 0 {
+		if fst, _ := screen.ForestStatusCheck(newStus); len(fst) > 0 {
 			screen.actionText = fst
 			screen.Render()
 			return true

@@ -14,7 +14,7 @@
         }
     ],
     "Strings":[
-        { "Key":"Name", "Value":"poison claws", "Rate":"1.0" },
+        { "Key":"Name", "Value":"Poison claws", "Rate":"1.0" },
         { "Key":"DropFrom", "Value":"Acid Dragon", "Rate":"1.0" }
     ]
 }

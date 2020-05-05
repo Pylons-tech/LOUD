@@ -14,7 +14,7 @@
         }
     ],
     "Strings":[
-        { "Key":"Name", "Value":"fire scale", "Rate":"1.0" },
+        { "Key":"Name", "Value":"Fire scale", "Rate":"1.0" },
         { "Key":"DropFrom", "Value":"Fire Dragon", "Rate":"1.0" }
     ]
 }
