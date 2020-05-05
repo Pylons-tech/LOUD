@@ -204,17 +204,29 @@ func (screen *GameScreen) MoveToNextStep() {
 	case CONFIRM_HUNT_RABBITS:
 		screen.RunHuntRabbits()
 		return
-	case CONFIRM_FIGHT_GIANT:
-		screen.RunFightGiant()
-		return
-	case CONFIRM_FIGHT_TROLL:
-		screen.RunFightTroll()
+	case CONFIRM_FIGHT_GOBLIN:
+		screen.RunFightGoblin()
 		return
 	case CONFIRM_FIGHT_WOLF:
 		screen.RunFightWolf()
 		return
-	case CONFIRM_FIGHT_GOBLIN:
-		screen.RunFightGoblin()
+	case CONFIRM_FIGHT_TROLL:
+		screen.RunFightTroll()
+		return
+	case CONFIRM_FIGHT_GIANT:
+		screen.RunFightGiant()
+		return
+	case CONFIRM_FIGHT_DRAGONFIRE:
+		screen.RunFightDragonFire()
+		return
+	case CONFIRM_FIGHT_DRAGONICE:
+		screen.RunFightDragonIce()
+		return
+	case CONFIRM_FIGHT_DRAGONACID:
+		screen.RunFightDragonAcid()
+		return
+	case CONFIRM_FIGHT_DRAGONUNDEAD:
+		screen.RunFightDragonUndead()
 		return
 	}
 	nextMapper := map[ScreenStatus]ScreenStatus{

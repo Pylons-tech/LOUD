@@ -99,22 +99,34 @@
     "one": "Vas a vender un artículo.\nPor favor selecciona un artículo a vender."
   },
   "rabbits without sword outcome": {
-    "one": "Reward: 1 or 2\nCharacter dying percent: 10%\n"
+    "one": "Hunt Rabbits\n\nReward 💰1 - 2\n5% chance of character dying\n"
   },
   "rabbits with a sword outcome": {
-    "one": "Reward: sword.attack/2 + 1\n5% chance of character lose\n5% chance of sword lose\n"
+    "one": "Hunt Rabbits\n\nReward 💰sword.attack/2 + 1\n2% chance of character dying\n3% chance of sword lose\n"
   },
   "goblin outcome": {
-    "one": "Reward: 50\nEnemy info (HP: 10, Attack: 1)\n10% chance of sword lose\n10% chance of getting \"Goblin ear\"\n"
+    "one": "Fight Goblin\n\nReward 💰50\nEnemy info (HP: 10, Attack: 1)\n2% chance of character dying\n3% chance of sword lose\n10% chance of getting \"Goblin ear\"\n"
   },
   "wolf outcome": {
-    "one": "Reward: 150\nEnemy info (HP: 15, Attack: 3)\n10% chance of sword lose\n10% chance of getting \"Wolf tail\"\n"
+    "one": "Fight Wolf\n\nReward 💰150\nEnemy info (HP: 15, Attack: 3)\n3% chance of character dying\n3% chance of sword lose\n10% chance of getting \"Wolf tail\"\n"
   },
   "troll outcome": {
-    "one": "Reward: 300\nEnemy info (HP: 20, Attack: 5)\n10% chance of sword lose\n10% chance of getting \"Troll toes\"\n"
+    "one": "Fight Troll\n\nReward 💰300\nEnemy info (HP: 20, Attack: 5)\n4% chance of character dying\n3% chance of sword lose\n10% chance of getting \"Troll toes\"\n"
   },
   "giant outcome": {
-    "one": "Reward: 3000\nEnemy info (HP: 100, Attack: 10)\n10% chance of sword lose\nGiantKiller badget on character\n"
+    "one": "Fight Giant\n\nReward 💰3000\nEnemy info (HP: 100, Attack: 10)\n5% chance of character dying\n3% chance of sword lose\n10% chance of bonus skill\nHmm.. 4%, 3%, 3% for fire, ice, acid\nGiantKiller badget on character\n"
+  },
+  "fire dragon outcome": {
+    "one": "Fight Fire Dragon\n\nReward 💰10000\nEnemy info (HP: 300, Attack: 30)\n7% chance for character dying\n3% chance of sword lose\n10% chance of getting \"Fire scale\"\nFireDragonKiller badget on character\n"
+  },
+  "ice dragon outcome": {    
+    "one": "Fight Ice Dragon\n\nReward 💰10000\nEnemy info (HP: 300, Attack: 30)\n7% chance for character dying\n3% chance of sword lose\n10% chance of getting \"Icy shards\"\nIceDragonKiller badget on character\n"
+  },
+  "acid dragon outcome": {    
+    "one": "Fight Acid Dragon\n\nReward 💰10000\nEnemy info (HP: 300, Attack: 30)\n7% chance for character dying\n3% chance of sword lose\n10% chance of getting \"Poison claws\"\nAcidDragonKiller badget on character\n"
+  },
+  "undead dragon outcome": {
+    "one": "Fight Fire Dragon\n\nReward 💰50000\nEnemy info (HP: 300, Attack: 30)\n7% chance for character dying\n3% chance of sword lose\nUndeadDragonKiller badget on character\n"
   },
   "select upgrade item desc": {
     "one": "Vas a mejorar un artículo.\nPor favor selecciona un artículo para mejorar."
@@ -328,6 +340,18 @@
   },
   "You can't fight giant without iron sword.": {
     "one": "You can't fight giant without iron sword."
+  },
+  "You can't fight fire dragon without iron sword.": {
+    "one": "You can't fight fire dragon without iron sword."
+  },
+  "You can't fight ice dragon without iron sword.": {
+    "one": "You can't fight ice dragon without iron sword."
+  },
+  "You can't fight acid dragon without iron sword.": {
+    "one": "You can't fight acid dragon without iron sword."
+  },
+  "You can't fight undead dragon without angel sword.": {
+    "one": "You can't fight undead dragon without angel sword."
   },
   "you haven't selected any buy request": {
     "one": "you haven't selected any buy request"

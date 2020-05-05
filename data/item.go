@@ -89,6 +89,12 @@ var ShopItems = []Item{
 		Price:   250,
 		PreItem: TROLL_TOES,
 	},
+	Item{
+		ID:    "006",
+		Name:  ANGEL_SWORD,
+		Level: 1,
+		Price: 20000,
+	},
 }
 
 var WorldItemSpecs = []ItemSpec{
@@ -113,18 +119,6 @@ var WorldItemSpecs = []ItemSpec{
 		Attack: [2]int{20, 20},
 	},
 	ItemSpec{
-		Name:  TROLL_TOES,
-		Level: [2]int{1, 1},
-	},
-	ItemSpec{
-		Name:  WOLF_TAIL,
-		Level: [2]int{1, 1},
-	},
-	ItemSpec{
-		Name:  GOBLIN_EAR,
-		Level: [2]int{1, 1},
-	},
-	ItemSpec{
 		Name:   SILVER_SWORD,
 		Level:  [2]int{1, 1},
 		Attack: [2]int{30, 30},
@@ -138,6 +132,35 @@ var WorldItemSpecs = []ItemSpec{
 		Name:   IRON_SWORD,
 		Level:  [2]int{1, 1},
 		Attack: [2]int{100, 100},
+	},
+	ItemSpec{
+		Name:  TROLL_TOES,
+		Level: [2]int{1, 1},
+	},
+	ItemSpec{
+		Name:  WOLF_TAIL,
+		Level: [2]int{1, 1},
+	},
+	ItemSpec{
+		Name:  GOBLIN_EAR,
+		Level: [2]int{1, 1},
+	},
+	ItemSpec{
+		Name:   ANGEL_SWORD,
+		Level:  [2]int{1, 1},
+		Attack: [2]int{1000, 1000},
+	},
+	ItemSpec{
+		Name:  DROP_DRAGONFIRE,
+		Level: [2]int{1, 1},
+	},
+	ItemSpec{
+		Name:  DROP_DRAGONICE,
+		Level: [2]int{1, 1},
+	},
+	ItemSpec{
+		Name:  DROP_DRAGONACID,
+		Level: [2]int{1, 1},
 	},
 }
 

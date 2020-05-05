@@ -196,6 +196,18 @@ func (screen *GameScreen) renderUserSituation() {
 	case CONFIRM_FIGHT_GIANT:
 		desc = loud.Localize("giant outcome")
 		desc += carryItemDesc(activeWeapon)
+	case CONFIRM_FIGHT_DRAGONFIRE:
+		desc = loud.Localize("fire dragon outcome")
+		desc += carryItemDesc(activeWeapon)
+	case CONFIRM_FIGHT_DRAGONICE:
+		desc = loud.Localize("ice dragon outcome")
+		desc += carryItemDesc(activeWeapon)
+	case CONFIRM_FIGHT_DRAGONACID:
+		desc = loud.Localize("acid dragon outcome")
+		desc += carryItemDesc(activeWeapon)
+	case CONFIRM_FIGHT_DRAGONUNDEAD:
+		desc = loud.Localize("undead dragon outcome")
+		desc += carryItemDesc(activeWeapon)
 	}
 
 	if screen.IsResultScreen() {

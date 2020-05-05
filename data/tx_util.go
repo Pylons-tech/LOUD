@@ -37,15 +37,20 @@ const (
 	RCP_BUY_WOODEN_SWORD    = "LOUD's Wooden sword lv1 buy recipe"
 	RCP_BUY_COPPER_SWORD    = "LOUD's Copper sword lv1 buy recipe"
 	RCP_BUY_BRONZE_SWORD    = "LOUD's Bronze sword lv1 make recipe"
-	RCP_BUY_IRON_SWORD      = "LOUD's Iron sword lv1 make recipe"
 	RCP_BUY_SILVER_SWORD    = "LOUD's Silver sword lv1 make recipe"
+	RCP_BUY_IRON_SWORD      = "LOUD's Iron sword lv1 make recipe"
+	RCP_BUY_ANGEL_SWORD     = "LOUD's Angel sword lv1 make recipe"
 
 	RCP_HUNT_RABBITS_NOSWORD = "LOUD's hunt rabbits without sword recipe"
 	RCP_HUNT_RABBITS_YESWORD = "LOUD's hunt rabbits with a sword recipe"
-	RCP_FIGHT_GIANT          = "LOUD's fight with giant with a sword recipe"
 	RCP_FIGHT_GOBLIN         = "LOUD's fight with goblin with a sword recipe"
-	RCP_FIGHT_TROLL          = "LOUD's fight with troll with a sword recipe"
 	RCP_FIGHT_WOLF           = "LOUD's fight with wolf with a sword recipe"
+	RCP_FIGHT_TROLL          = "LOUD's fight with troll with a sword recipe"
+	RCP_FIGHT_GIANT          = "LOUD's fight with giant with a sword recipe"
+	RCP_FIGHT_DRAGONFIRE     = "LOUD's fight with fire dragon with a sword recipe"
+	RCP_FIGHT_DRAGONICE      = "LOUD's fight with ice dragon with a sword recipe"
+	RCP_FIGHT_DRAGONACID     = "LOUD's fight with acid dragon with a sword recipe"
+	RCP_FIGHT_DRAGONUNDEAD   = "LOUD's fight with undead dragon with a sword recipe"
 
 	RCP_GET_TEST_ITEMS = "LOUD's Dev Get Test Items recipe"
 )
@@ -59,8 +64,9 @@ var RcpIDs map[string]string = map[string]string{
 	RCP_BUY_WOODEN_SWORD:    "LOUD-wooden-sword-lv1-buy-recipe-v0.1.0-1579053457",
 	RCP_BUY_COPPER_SWORD:    "LOUD-copper-sword-lv1-buy-recipe-v0.1.0-1579053457",
 	RCP_BUY_BRONZE_SWORD:    "LOUD-bronze-sword-lv1-make-recipe-v0.1.0-1579053457",
-	RCP_BUY_IRON_SWORD:      "LOUD-iron-sword-lv1-make-recipe-v0.1.0-1579053457",
 	RCP_BUY_SILVER_SWORD:    "LOUD-silver-sword-lv1-make-recipe-v0.1.0-1579053457",
+	RCP_BUY_IRON_SWORD:      "LOUD-iron-sword-lv1-make-recipe-v0.1.0-1579053457",
+	RCP_BUY_ANGEL_SWORD:     "LOUD-angel-sword-lv1-make-recipe-v0.1.0-1588471932",
 
 	RCP_HUNT_RABBITS_NOSWORD: "LOUD-hunt-rabbits-with-no-weapon-recipe-v0.1.0-1579053457",
 	RCP_HUNT_RABBITS_YESWORD: "LOUD-hunt-rabbits-with-a-sword-recipe-v0.1.0-1583631194",
@@ -68,6 +74,10 @@ var RcpIDs map[string]string = map[string]string{
 	RCP_FIGHT_GOBLIN:         "LOUD-fight-goblin-with-a-sword-recipe-v0.1.0-1583631194",
 	RCP_FIGHT_TROLL:          "LOUD-fight-troll-with-a-sword-recipe-v0.1.0-1583631194",
 	RCP_FIGHT_WOLF:           "LOUD-fight-wolf-with-a-sword-recipe-v0.1.0-1583631194",
+	RCP_FIGHT_DRAGONFIRE:     "LOUD-fight-fire-dragon-with-iron-sword-recipe-v0.1.0-1583631194",
+	RCP_FIGHT_DRAGONICE:      "LOUD-fight-ice-dragon-with-iron-sword-recipe-v0.1.0-1583631194",
+	RCP_FIGHT_DRAGONACID:     "LOUD-fight-acid-dragon-with-iron-sword-recipe-v0.1.0-1583631194",
+	RCP_FIGHT_DRAGONUNDEAD:   "LOUD-fight-undead-dragon-with-angel-sword-recipe-v0.1.0-1583631194",
 
 	RCP_GET_TEST_ITEMS: "LOUD-dev-get-test-items-recipe-v0.1.0-1583801800",
 }

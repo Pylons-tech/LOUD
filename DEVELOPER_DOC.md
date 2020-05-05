@@ -178,7 +178,7 @@ GiantKiller badget on character
 3% chance of sword lose
 4% chance of fire bonus skill
 3% chance of ice bonus skill
-2% chance of acid bonus skill
+3% chance of acid bonus skill
 ```
 
 Character should carry iron sword to fight giant.
