@@ -48,7 +48,6 @@ const (
 	RCP_FIGHT_WOLF           = "LOUD's fight with wolf with a sword recipe"
 
 	RCP_GET_TEST_ITEMS = "LOUD's Dev Get Test Items recipe"
-	RCP_RESTORE_HEALTH = "LOUD's health restore recipe"
 )
 
 var RcpIDs map[string]string = map[string]string{
@@ -394,7 +393,7 @@ func ProcessTxResult(user User, txhash string) ([]byte, string) {
 		return []byte{}, errString
 	}
 	LogFullTxResultByHash(txhash)
-	hmrErrMsg := pylonSDK.GetHumanReadableErrorFromTxHash(txhash, t)
+	hmrErrMsg, _ := pylonSDK.GetHumanReadableErrorFromTxHash(txhash, t)
 	if len(hmrErrMsg) > 0 {
 		errString := fmt.Sprintf("txhash=%s hmrErrMsg=%s", txhash, hmrErrMsg)
 		log.Println(errString)
