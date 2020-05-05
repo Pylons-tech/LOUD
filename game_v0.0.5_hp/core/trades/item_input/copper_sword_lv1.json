@@ -1,9 +1,0 @@
-{
-    "Doubles":null,
-    "Longs": [
-        { "Key": "level", "MinValue": "1", "MaxValue": "1" }
-    ],
-    "Strings":[
-        { "Key":"Name", "Value":"Copper sword" }
-    ] 
-}
