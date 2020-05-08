@@ -1,6 +1,9 @@
 package loud
 
-import "strings"
+import (
+	"fmt"
+	"strings"
+)
 
 type Item struct {
 	ID         string `json:""`
@@ -8,7 +11,7 @@ type Item struct {
 	Level      int
 	Attack     int
 	Price      int
-	PreItem    string `json:""`
+	PreItems   []string
 	LastUpdate int64
 }
 
@@ -20,16 +23,16 @@ type ItemSpec struct {
 }
 
 type Character struct {
-	ID         string `json:""`
-	Name       string `json:""`
-	Level      int
-	Price      int
-	XP         float64
-	GiantKill  int
-	Special:           Special,
-	SpecialDragonKill: SpecialDragonKill,
-	UndeadDragonKill:  UndeadDragonKill,
-	LastUpdate int64
+	ID                string `json:""`
+	Name              string `json:""`
+	Level             int
+	Price             int
+	XP                float64
+	GiantKill         int
+	Special           int
+	SpecialDragonKill int
+	UndeadDragonKill  int
+	LastUpdate        int64
 }
 type CharacterSpec struct {
 	Name  string `json:""`
@@ -39,9 +42,9 @@ type CharacterSpec struct {
 }
 
 const (
-	NO_SPECIAL = 0
+	NO_SPECIAL   = 0
 	FIRE_SPECIAL = 1
-	ICE_SPECIAL = 2
+	ICE_SPECIAL  = 2
 	ACID_SPECIAL = 3
 )
 
@@ -79,32 +82,44 @@ var ShopItems = []Item{
 		Price: 250,
 	},
 	Item{
-		ID:      "003",
-		Name:    SILVER_SWORD,
-		Level:   1,
-		Price:   250,
-		PreItem: GOBLIN_EAR,
+		ID:       "003",
+		Name:     SILVER_SWORD,
+		Level:    1,
+		Price:    250,
+		PreItems: []string{GOBLIN_EAR},
 	},
 	Item{
-		ID:      "004",
-		Name:    BRONZE_SWORD,
-		Level:   1,
-		Price:   250,
-		PreItem: WOLF_TAIL,
+		ID:       "004",
+		Name:     BRONZE_SWORD,
+		Level:    1,
+		Price:    250,
+		PreItems: []string{WOLF_TAIL},
 	},
 	Item{
-		ID:      "005",
-		Name:    IRON_SWORD,
-		Level:   1,
-		Price:   250,
-		PreItem: TROLL_TOES,
+		ID:       "005",
+		Name:     IRON_SWORD,
+		Level:    1,
+		Price:    250,
+		PreItems: []string{TROLL_TOES},
 	},
 	Item{
-		ID:    "006",
-		Name:  ANGEL_SWORD,
-		Level: 1,
-		Price: 20000,
+		ID:       "006",
+		Name:     ANGEL_SWORD,
+		Level:    1,
+		Price:    20000,
+		PreItems: []string{DROP_DRAGONFIRE, DROP_DRAGONICE, DROP_DRAGONACID},
 	},
+}
+
+func (item Item) PreItemStr() string {
+	switch len(item.PreItems) {
+	case 1:
+		return fmt.Sprintf("\"%s\"", item.PreItems[0])
+	case 3: // angel sword
+		return fmt.Sprintf("\"%s\"", Localize("drops of 3 special dragons"))
+	default:
+		return ""
+	}
 }
 
 var WorldItemSpecs = []ItemSpec{

@@ -117,16 +117,16 @@
     "one": "Fight Giant\n\nReward 💰3000\nEnemy info (HP: 100, Attack: 10)\n5% chance of character dying\n3% chance of sword lose\n10% chance of bonus skill\nHmm.. 4%, 3%, 3% for fire, ice, acid\nGiantKiller badget on character\n"
   },
   "fire dragon outcome": {
-    "one": "Fight Fire Dragon\n\nReward 💰10000\nEnemy info (HP: 300, Attack: 30)\n7% chance for character dying\n3% chance of sword lose\n10% chance of getting \"Fire scale\"\nFireDragonKiller badget on character\n"
+    "one": "Fight Fire Dragon\n\nReward 💰10000\nEnemy info (HP: 300, Attack: 30)\n2% chance for character dying\n3% chance of sword lose\n10% chance of getting \"Fire scale\"\nFireDragonKiller badget on character\n"
   },
   "ice dragon outcome": {    
-    "one": "Fight Ice Dragon\n\nReward 💰10000\nEnemy info (HP: 300, Attack: 30)\n7% chance for character dying\n3% chance of sword lose\n10% chance of getting \"Icy shards\"\nIceDragonKiller badget on character\n"
+    "one": "Fight Ice Dragon\n\nReward 💰10000\nEnemy info (HP: 300, Attack: 30)\n2% chance for character dying\n3% chance of sword lose\n10% chance of getting \"Icy shards\"\nIceDragonKiller badget on character\n"
   },
   "acid dragon outcome": {    
-    "one": "Fight Acid Dragon\n\nReward 💰10000\nEnemy info (HP: 300, Attack: 30)\n7% chance for character dying\n3% chance of sword lose\n10% chance of getting \"Poison claws\"\nAcidDragonKiller badget on character\n"
+    "one": "Fight Acid Dragon\n\nReward 💰10000\nEnemy info (HP: 300, Attack: 30)\n2% chance for character dying\n3% chance of sword lose\n10% chance of getting \"Poison claws\"\nAcidDragonKiller badget on character\n"
   },
   "undead dragon outcome": {
-    "one": "Fight Fire Dragon\n\nReward 💰50000\nEnemy info (HP: 300, Attack: 30)\n7% chance for character dying\n3% chance of sword lose\nUndeadDragonKiller badget on character\n"
+    "one": "Fight Fire Dragon\n\nReward 💰50000\nEnemy info (HP: 300, Attack: 30)\n2% chance for character dying\n3% chance of sword lose\nUndeadDragonKiller badget on character\n"
   },
   "select upgrade item desc": {
     "one": "Upgrading. Upgrading sounds good."
@@ -262,6 +262,30 @@
   },
   "You need an angel sword for this action!": {
     "one": "You need an iron sword for this action!"
+  },
+  "You need a character for this action!": {
+    "one": "You need a character for this action!"
+  },
+  "You need a fire character for this action!": {
+    "one": "You need a fire character for this action!"
+  },
+  "You need a ice character for this action!": {
+    "one": "You need a ice character for this action!"
+  },
+  "You need a acid character for this action!": {
+    "one": "You need a acid character for this action!"
+  },
+  "no fire character!": {
+    "one": "no fire character!"
+  },
+  "no ice character!": {
+    "one": "no ice character!"
+  },
+  "no acid character!": {
+    "one": "no acid character!"
+  },
+  "no character!": {
+    "one": "no character!"
   },
   "no sword!": {
     "one": "no sword!"
@@ -617,8 +641,8 @@
   "weapon": {
     "one": "weapon"
   },
-  "no required item": {
-    "one": "no piece"
+  "no material": {
+    "one": "no material"
   },
   "not enough gold": {
     "one": "gold lack"

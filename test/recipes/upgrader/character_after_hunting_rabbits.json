@@ -1,7 +1,7 @@
 {
     "Doubles": [{
         "Key": "XP",
-        "Program": "XP + 1"
+        "Program": "XP + 1.0"
     }],
     "Longs": [
         {

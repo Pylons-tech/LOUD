@@ -442,7 +442,17 @@ func (screen *GameScreen) TxResultSituationDesc() string {
 			desc = loud.Sprintf("Bought gold with pylons. Amount is %d.", earnedAmount)
 		case RSLT_DEV_GET_TEST_ITEMS:
 			_, respOutput := screen.GetTxResponseOutput()
-			resultTexts := []string{loud.WOLF_TAIL, loud.TROLL_TOES, loud.GOBLIN_EAR}
+			resultTexts := []string{
+				loud.WOLF_TAIL,
+				loud.TROLL_TOES,
+				loud.GOBLIN_EAR,
+				loud.DROP_DRAGONFIRE,
+				loud.DROP_DRAGONICE,
+				loud.DROP_DRAGONACID,
+				"Ruppell's Fox",
+				"Gentoo penguin",
+				"Colorado River toad",
+			}
 			desc = loud.Sprintf("Finished getting developer test items.")
 			desc += devDetailedResultDesc(resultTexts[:len(respOutput)])
 		case RSLT_GET_PYLONS:

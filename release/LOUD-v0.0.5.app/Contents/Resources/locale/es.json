@@ -566,10 +566,13 @@
   "weapon": {
     "one": "weapon"
   },
-  "no required item": {
-    "one": "no piece"
+  "no material": {
+    "one": "no material"
   },
   "not enough gold": {
     "one": "gold lack"
+  },
+  "drops of 3 special dragons": {
+    "one": "drops of 3 special dragons"
   }
 }

@@ -211,16 +211,22 @@ func (screen *GameScreen) renderUserCommands() {
 					goldEnough := item.Price <= screen.user.GetGold()
 					font := REGULAR
 					bonusText := ""
+					contentStr := ""
 					if !preitemOk {
 						font = GREY
-						bonusText = fmt.Sprintf(": %s", loud.Localize("no required item"))
+						bonusText = fmt.Sprintf(": %s", loud.Localize("no material"))
 					}
 					if !goldEnough {
 						font = GREY
 						bonusText = fmt.Sprintf(": %s", loud.Localize("not enough gold"))
 					}
+					if len(item.PreItems) > 0 {
+						contentStr = formatItem(item) + fmt.Sprintf("💰 %d + %s %s", item.Price, item.PreItemStr(), bonusText)
+					} else {
+						contentStr = formatItem(item) + fmt.Sprintf("💰 %d %s", item.Price, bonusText)
+					}
 					return TextLine{
-						content: formatItem(item) + fmt.Sprintf("💰 %d %s", item.Price, bonusText),
+						content: contentStr,
 						font:    font,
 					}
 				}).

@@ -27,7 +27,7 @@
     "Outputs": [
         {
             "ResultEntries": [],
-            "Weight": "12"
+            "Weight": "2"
         },
         {
             "ResultEntries": ["0", "1"],
@@ -40,7 +40,7 @@
     ],
     "ExtraInfo":"",
     "Sender":"eugen",
-    "Name": "LOUD's fight with undead dragon with a sword recipe",
+    "Name": "LOUD's fight with undead dragon with an angel sword recipe",
     "CookbookName": "Legend of Undead Dragon",
     "Description": "this recipe is used to fight with undead dragon with a sword.",
     "BlockInterval":"0"

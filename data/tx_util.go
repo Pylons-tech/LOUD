@@ -47,10 +47,10 @@ const (
 	RCP_FIGHT_WOLF           = "LOUD's fight with wolf with a sword recipe"
 	RCP_FIGHT_TROLL          = "LOUD's fight with troll with a sword recipe"
 	RCP_FIGHT_GIANT          = "LOUD's fight with giant with a sword recipe"
-	RCP_FIGHT_DRAGONFIRE     = "LOUD's fight with fire dragon with a sword recipe"
-	RCP_FIGHT_DRAGONICE      = "LOUD's fight with ice dragon with a sword recipe"
-	RCP_FIGHT_DRAGONACID     = "LOUD's fight with acid dragon with a sword recipe"
-	RCP_FIGHT_DRAGONUNDEAD   = "LOUD's fight with undead dragon with a sword recipe"
+	RCP_FIGHT_DRAGONFIRE     = "LOUD's fight with fire dragon with an iron sword recipe"
+	RCP_FIGHT_DRAGONICE      = "LOUD's fight with ice dragon with an iron sword recipe"
+	RCP_FIGHT_DRAGONACID     = "LOUD's fight with acid dragon with an iron sword recipe"
+	RCP_FIGHT_DRAGONUNDEAD   = "LOUD's fight with undead dragon with an angel sword recipe"
 
 	RCP_GET_TEST_ITEMS = "LOUD's Dev Get Test Items recipe"
 )

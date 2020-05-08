@@ -129,6 +129,24 @@ func (screen *GameScreen) HandleInputKeySettingsEntryPoint(input termbox.Event) 
 }
 
 func (screen *GameScreen) ForestStatusCheck(newStus ScreenStatus) (string, string) {
+	activeCharacter := screen.user.GetActiveCharacter()
+	if activeCharacter == nil {
+		return loud.Sprintf("You need a character for this action!"), loud.Sprintf("no character!")
+	}
+	switch newStus {
+	case CONFIRM_FIGHT_DRAGONFIRE:
+		if activeCharacter == nil || activeCharacter.Special != loud.FIRE_SPECIAL {
+			return loud.Sprintf("You need a fire character for this action!"), loud.Sprintf("no fire character!")
+		}
+	case CONFIRM_FIGHT_DRAGONICE:
+		if activeCharacter == nil || activeCharacter.Special != loud.ICE_SPECIAL {
+			return loud.Sprintf("You need a ice character for this action!"), loud.Sprintf("no ice character!")
+		}
+	case CONFIRM_FIGHT_DRAGONACID:
+		if activeCharacter == nil || activeCharacter.Special != loud.ACID_SPECIAL {
+			return loud.Sprintf("You need a acid character for this action!"), loud.Sprintf("no acid character!")
+		}
+	}
 	activeWeapon := screen.user.GetActiveWeapon()
 	switch newStus {
 	case CONFIRM_FIGHT_GOBLIN,

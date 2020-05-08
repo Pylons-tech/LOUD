@@ -137,9 +137,6 @@ func formatItem(item loud.Item) string {
 	if item.Attack > 0 {
 		itemStr += fmt.Sprintf(" attack=%d", item.Attack)
 	}
-	if len(item.PreItem) > 0 {
-		itemStr += fmt.Sprintf(" piece=\"%s\"", item.PreItem)
-	}
 	return itemStr
 }
 
