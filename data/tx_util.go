@@ -129,7 +129,11 @@ func init() {
 			restEndpoint = cfg.SDK.RestEndpoint
 			customNode = cfg.SDK.CliEndpoint
 			maxWaitBlock = cfg.SDK.MaxWaitBlock
+		} else {
+			log.Fatal("Couldn't parse config file cfgFileName=", cfgFileName)
 		}
+	} else {
+		log.Fatal("Couldn't read file cfgFileName=", cfgFileName)
 	}
 
 	pylonSDK.CLIOpts.CustomNode = customNode
