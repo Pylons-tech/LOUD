@@ -11,6 +11,13 @@ import (
 
 func (screen *GameScreen) renderCharacterSheet() {
 
+	scrBox := screen.GetCharacterSheetBox()
+	// situation box start point (x, y)
+	x := scrBox.X
+	y := scrBox.Y
+	w := scrBox.W
+	h := scrBox.H
+
 	// update blockHeight from newly synced data
 	if lbh := screen.user.GetLatestBlockHeight(); lbh > screen.blockHeight {
 		screen.blockHeight = lbh
@@ -25,9 +32,6 @@ func (screen *GameScreen) renderCharacterSheet() {
 	}
 	activeWeapon := screen.user.GetActiveWeapon()
 
-	x := screen.rightInnerStartX()
-	width := screen.rightInnerWidth()
-
 	charBkColor := uint64(bgcolor)
 	warning := ""
 
@@ -35,15 +39,15 @@ func (screen *GameScreen) renderCharacterSheet() {
 	fmtFunc := screen.regularFont()
 
 	infoLines := []string{
-		fmtFunc(centerText(fmt.Sprintf("%v", screen.user.GetUserName()), " ", width)),
-		fmtFunc(centerText(loud.Localize("inventory"), "─", width)),
-		fmtFunc(fillSpace(fmt.Sprintf("💰 %v", screen.user.GetGold()), width)),
-		fmtFunc(fillSpace("", width)),
+		fmtFunc(centerText(fmt.Sprintf("%v", screen.user.GetUserName()), " ", w)),
+		fmtFunc(centerText(loud.Localize("inventory"), "─", w)),
+		fmtFunc(fillSpace(fmt.Sprintf("💰 %v", screen.user.GetGold()), w)),
+		fmtFunc(fillSpace("", w)),
 	}
 
 	items := screen.user.InventoryItems()
 	for _, item := range items {
-		itemInfo := fillSpace(formatItem(item), width)
+		itemInfo := fillSpace(formatItem(item), w)
 		if activeWeapon != nil && item.ID == activeWeapon.ID {
 			itemInfo = screen.blueBoldFont()(itemInfo)
 		} else {
@@ -53,7 +57,7 @@ func (screen *GameScreen) renderCharacterSheet() {
 	}
 
 	for idx, character := range characters {
-		characterInfo := fillSpace(formatCharacter(character), width)
+		characterInfo := fillSpace(formatCharacter(character), w)
 		if idx == screen.user.GetActiveCharacterIndex() {
 			characterInfo = screen.blueBoldFont()(characterInfo)
 		} else {
@@ -62,64 +66,66 @@ func (screen *GameScreen) renderCharacterSheet() {
 		infoLines = append(infoLines, characterInfo)
 	}
 
+	// HP := uint64(100)
+	// MaxHP := uint64(100)
 	infoLines = append(infoLines,
-		charFunc(centerText(fmt.Sprintf(" %s%s", loud.Localize("Active Character"), warning), "─", width)),
-		// screen.drawProgressMeter(HP, MaxHP, 196, bgcolor, 10)+charFunc(fillSpace(fmt.Sprintf(" HP: %v/%v", HP, MaxHP), width-10)),
-		// screen.drawProgressMeter(HP, MaxHP, 225, bgcolor, 10) + charFunc(truncateRight(fmt.Sprintf(" XP: %v/%v", HP, 10), width-10)),
-		// screen.drawProgressMeter(HP, MaxHP, 208, bgcolor, 10) + charFunc(truncateRight(fmt.Sprintf(" AP: %v/%v", HP, MaxHP), width-10)),
-		// screen.drawProgressMeter(HP, MaxHP, 117, bgcolor, 10) + charFunc(truncateRight(fmt.Sprintf(" RP: %v/%v", HP, MaxHP), width-10)),
-		// screen.drawProgressMeter(HP, MaxHP, 76, bgcolor, 10) + charFunc(truncateRight(fmt.Sprintf(" MP: %v/%v", HP, MaxHP), width-10)),
+		charFunc(centerText(fmt.Sprintf(" %s%s", loud.Localize("Active Character"), warning), "─", w)),
+		// screen.drawProgressMeter(HP, MaxHP, 196, bgcolor, 10)+charFunc(fillSpace(fmt.Sprintf(" HP: %v/%v", HP, MaxHP), w-10)),
+		// screen.drawProgressMeter(HP, MaxHP, 225, bgcolor, 10)+charFunc(truncateRight(fmt.Sprintf(" XP: %v/%v", HP, 10), w-10)),
+		// screen.drawProgressMeter(HP, MaxHP, 208, bgcolor, 10)+charFunc(truncateRight(fmt.Sprintf(" AP: %v/%v", HP, MaxHP), w-10)),
+		// screen.drawProgressMeter(HP, MaxHP, 117, bgcolor, 10)+charFunc(truncateRight(fmt.Sprintf(" RP: %v/%v", HP, MaxHP), w-10)),
+		// screen.drawProgressMeter(HP, MaxHP, 76, bgcolor, 10)+charFunc(truncateRight(fmt.Sprintf(" MP: %v/%v", HP, MaxHP), w-10)),
 	)
 	if activeCharacter != nil {
 		infoLines = append(infoLines,
-			charFunc(fillSpace(formatCharacterP(activeCharacter), width)),
-			charFunc(fillSpace(fmt.Sprintf("%s: %d", loud.Localize("rest blocks"), activeCharacterRestBlocks), width)),
+			charFunc(fillSpace(formatCharacterP(activeCharacter), w)),
+			charFunc(fillSpace(fmt.Sprintf("%s: %d", loud.Localize("rest blocks"), activeCharacterRestBlocks), w)),
 		)
 	}
 	if activeWeapon != nil {
 		infoLines = append(infoLines,
-			fmtFunc(centerText(fmt.Sprintf(" %s ", loud.Localize("Active Weapon")), "─", width)),
-			fmtFunc(fillSpace(formatItemP(activeWeapon), width)),
+			fmtFunc(centerText(fmt.Sprintf(" %s ", loud.Localize("Active Weapon")), "─", w)),
+			fmtFunc(fillSpace(formatItemP(activeWeapon), w)),
 		)
 	}
 
 	for index, line := range infoLines {
 		io.WriteString(os.Stdout, fmt.Sprintf("%s%s",
-			cursor.MoveTo(2+index, x),
+			cursor.MoveTo(y+index, x),
 			line))
-		if index+2 > int(screen.Height()) {
+		if index >= h {
 			break
 		}
 	}
 
 	nodeLines := []string{
-		fmtFunc(centerText(" "+loud.Localize("pylons network status")+" ", "─", width)),
-		fmtFunc(fillSpace(fmt.Sprintf("%s: %s 📋(M)", loud.Localize("Address"), truncateRight(screen.user.GetAddress(), 32)), width)),
-		fmtFunc(fillSpace(fmt.Sprintf("%s %s: %v", screen.pylonIcon(), "Pylon", screen.user.GetPylonAmount()), width)),
+		fmtFunc(centerText(" "+loud.Localize("pylons network status")+" ", "─", w)),
+		fmtFunc(fillSpace(fmt.Sprintf("%s: %s 📋(M)", loud.Localize("Address"), truncateRight(screen.user.GetAddress(), 15)), w)),
+		fmtFunc(fillSpace(fmt.Sprintf("%s %s: %v", screen.pylonIcon(), "Pylon", screen.user.GetPylonAmount()), w)),
 	}
 
 	if len(screen.user.GetLastTxHash()) > 0 {
-		txHashT := fmt.Sprintf("%s: %s 📋(L)", loud.Localize("Last TxHash"), truncateRight(screen.user.GetLastTxHash(), 32))
-		nodeLines = append(nodeLines, fmtFunc(fillSpace(txHashT, width)))
+		txHashT := fmt.Sprintf("%s: %s 📋(L)", loud.Localize("Last TxHash"), truncateRight(screen.user.GetLastTxHash(), 15))
+		nodeLines = append(nodeLines, fmtFunc(fillSpace(txHashT, w)))
 	}
 
-	blockHeightText := fillSpace(fmt.Sprintf("%s ⟳ (E): %d(%d)", loud.Localize("block height"), screen.blockHeight, screen.fakeBlockHeight), width)
+	blockHeightText := fillSpace(fmt.Sprintf("%s ⟳ (E): %d(%d)", loud.Localize("block height"), screen.blockHeight, screen.fakeBlockHeight), w)
 	if screen.syncingData {
 		nodeLines = append(nodeLines, screen.blueBoldFont()(blockHeightText))
 	} else {
 		nodeLines = append(nodeLines, fmtFunc(blockHeightText))
 	}
-	nodeLines = append(nodeLines, fmtFunc(centerText(" ❦ ", "─", width)))
+	nodeLines = append(nodeLines, fmtFunc(centerText(" ❦ ", "─", w)))
 
 	for index, line := range nodeLines {
 		io.WriteString(os.Stdout, fmt.Sprintf("%s%s",
-			cursor.MoveTo(2+len(infoLines)+index, x),
+			cursor.MoveTo(y+len(infoLines)+index, x),
 			line))
-		if index+2 > int(screen.Height()) {
+		if index+len(infoLines) > h {
 			break
 		}
 	}
 
 	lastLine := len(infoLines) + len(nodeLines) + 1
-	screen.drawFill(x, lastLine+1, width, screen.Height()-(lastLine+2))
+	screen.drawFill(x, lastLine+1, w, h-lastLine)
 }

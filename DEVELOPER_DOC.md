@@ -165,7 +165,7 @@ Reward: 300 loudcoin
 Character should carry sword to fight troll.
 When character die, no gold is returned.
 
-### Fight Giant
+### Fight Giant 🗿
 
 Warn. Character with bonus skill can't fight Giant.
 

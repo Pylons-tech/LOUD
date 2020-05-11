@@ -100,7 +100,7 @@ func FightGoblin(user User) (string, error) {
 	return RunHuntRecipe(RCP_FIGHT_GOBLIN, user)
 }
 
-func FightGiant(user User) (string, error) {
+func FightGiant(user User) (string, error) { // 🗿
 	return RunHuntRecipe(RCP_FIGHT_GIANT, user)
 }
 

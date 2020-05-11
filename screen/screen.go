@@ -116,4 +116,5 @@ func (screen *GameScreen) Render() {
 	screen.renderUserSituation()
 	screen.renderCharacterSheet()
 	screen.renderInputValue()
+	screen.renderMenu()
 }

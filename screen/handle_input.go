@@ -47,12 +47,13 @@ func (screen *GameScreen) HandleInputKeyLocationSwitch(input termbox.Event) bool
 		"D": loud.DEVELOP,
 	}
 
-	if newStus, ok := tarLctMap[Key]; ok {
-		if newStus == loud.FOREST && screen.user.GetActiveCharacter() == nil {
+	if newLct, ok := tarLctMap[Key]; ok {
+		if newLct == loud.FOREST && screen.user.GetActiveCharacter() == nil {
 			screen.actionText = loud.Sprintf("You can't go to forest without character")
 			screen.Render()
 		} else {
-			screen.user.SetLocation(newStus)
+			screen.user.SetLocation(newLct)
+			screen.SetScreenStatus(SHW_LOCATION)
 			screen.Render()
 			return true
 		}

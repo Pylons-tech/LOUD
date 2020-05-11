@@ -37,14 +37,16 @@ func (screen *GameScreen) GetTxResponseOutput() (int64, []handlers.ExecuteRecipe
 func (screen *GameScreen) renderUserSituation() {
 
 	// situation box start point (x, y)
-	x := 2
-	y := 2
-	w := screen.leftInnerWidth()
-	h := screen.situationInnerHeight()
+	scrBox := screen.GetSituationBox()
+	x := scrBox.X
+	y := scrBox.Y
+	w := scrBox.W
+	h := scrBox.H
 
 	infoLines := []string{}
 	tableLines := []string{}
 	desc := ""
+	descfont := REGULAR
 	activeWeapon := screen.user.GetActiveWeapon()
 	switch screen.scrStatus {
 	case CONFIRM_ENDGAME:
@@ -211,7 +213,7 @@ func (screen *GameScreen) renderUserSituation() {
 	}
 
 	if screen.IsResultScreen() {
-		desc = screen.TxResultSituationDesc()
+		desc, descfont = screen.TxResultSituationDesc()
 	}
 
 	if screen.IsWaitScreen() {
@@ -221,7 +223,16 @@ func (screen *GameScreen) renderUserSituation() {
 	basicLines := strings.Split(desc, "\n")
 
 	for _, line := range basicLines {
-		infoLines = append(infoLines, loud.ChunkString(line, screen.leftInnerWidth()-2)...)
+		chunkedlines := loud.ChunkString(line, screen.leftInnerWidth()-2)
+		if descfont == REGULAR {
+			infoLines = append(infoLines, chunkedlines...)
+		} else {
+			chunkedColorfulLines := []string{}
+			for _, chli := range chunkedlines {
+				chunkedColorfulLines = append(chunkedColorfulLines, screen.getFont(descfont)(chli))
+			}
+			tableLines = append(chunkedColorfulLines, tableLines...)
+		}
 	}
 
 	fmtFunc := screen.regularFont()
@@ -248,8 +259,9 @@ func (screen *GameScreen) renderUserSituation() {
 	screen.drawFill(x, y+totalLen, w, h-totalLen-1)
 }
 
-func (screen *GameScreen) TxResultSituationDesc() string {
+func (screen *GameScreen) TxResultSituationDesc() (string, FontType) {
 	desc := ""
+	font := REGULAR
 	resDescMap := map[ScreenStatus]string{
 		RSLT_BUY_LOUD_TRDREQ_CREATION:  "loud buy request creation",
 		RSLT_SELL_LOUD_TRDREQ_CREATION: "loud sell request creation",
@@ -279,6 +291,7 @@ func (screen *GameScreen) TxResultSituationDesc() string {
 	}
 	if screen.txFailReason != "" {
 		desc = loud.Localize(resDescMap[screen.scrStatus]+" failure reason") + ": " + loud.Localize(screen.txFailReason)
+		font = RED_BOLD
 	} else {
 		switch screen.scrStatus {
 		case RSLT_BUY_LOUD_TRDREQ_CREATION:
@@ -315,10 +328,12 @@ func (screen *GameScreen) TxResultSituationDesc() string {
 			resultTexts := []string{"gold", "character", "weapon"}
 			if resLen == 0 {
 				desc = loud.Sprintf("Your character is dead while following rabbits accidently")
+				font = RED
 			} else {
 				desc = basicHuntResultDesc("You did hunt rabbits and earned %d.", earnedAmount, resultTexts[:resLen])
 				if resLen == 2 && screen.user.GetLastTxMetaData() == loud.RCP_HUNT_RABBITS_YESWORD {
 					desc += loud.Sprintf("You have lost your weapon accidently")
+					font = YELLOW
 				}
 			}
 		case RSLT_FIGHT_GOBLIN:
@@ -327,13 +342,16 @@ func (screen *GameScreen) TxResultSituationDesc() string {
 			resultTexts := []string{"gold", "character", "weapon", loud.GOBLIN_EAR}
 			if resLen == 0 {
 				desc = loud.Sprintf("You were killed by goblin accidently")
+				font = RED
 			} else {
 				desc = basicHuntResultDesc("You did fight with goblin and earned %d.", earnedAmount, resultTexts[:resLen])
 				switch resLen {
 				case 2:
 					desc += loud.Sprintf("You have lost your weapon accidently")
+					font = YELLOW
 				case 4:
 					desc += loud.Sprintf("You got bonus item called %s", loud.GOBLIN_EAR)
+					font = GREEN
 				}
 			}
 		case RSLT_FIGHT_TROLL:
@@ -342,13 +360,16 @@ func (screen *GameScreen) TxResultSituationDesc() string {
 			resultTexts := []string{"gold", "character", "weapon", loud.TROLL_TOES}
 			if resLen == 0 {
 				desc = loud.Sprintf("You were killed by troll accidently")
+				font = RED
 			} else {
 				desc = basicHuntResultDesc("You did fight with troll and earned %d.", earnedAmount, resultTexts[:resLen])
 				switch resLen {
 				case 2:
 					desc += loud.Sprintf("You have lost your weapon accidently")
+					font = YELLOW
 				case 4:
 					desc += loud.Sprintf("You got bonus item called %s", loud.TROLL_TOES)
+					font = GREEN
 				}
 			}
 		case RSLT_FIGHT_WOLF:
@@ -357,13 +378,16 @@ func (screen *GameScreen) TxResultSituationDesc() string {
 			resultTexts := []string{"gold", "character", "weapon", loud.WOLF_TAIL}
 			if resLen == 0 {
 				desc = loud.Sprintf("You were killed by wolf accidently")
+				font = RED
 			} else {
 				desc = basicHuntResultDesc("You did fight with wolf and earned %d.", earnedAmount, resultTexts[:resLen])
 				switch resLen {
 				case 2:
 					desc += loud.Sprintf("You have lost your weapon accidently")
+					font = YELLOW
 				case 4:
 					desc += loud.Sprintf("You got bonus item called %s", loud.WOLF_TAIL)
+					font = GREEN
 				}
 			}
 		case RSLT_FIGHT_GIANT:
@@ -372,11 +396,13 @@ func (screen *GameScreen) TxResultSituationDesc() string {
 			resultTexts := []string{"gold", "character", "weapon"}
 			if resLen == 0 {
 				desc = loud.Sprintf("You were killed by giant accidently")
+				font = RED
 			} else {
 				desc = basicHuntResultDesc("You did fight with giant and earned %d.", earnedAmount, resultTexts[:resLen])
 				switch resLen {
 				case 2:
 					desc += loud.Sprintf("You have lost your weapon accidently")
+					font = YELLOW
 				}
 			}
 		case RSLT_FIGHT_DRAGONFIRE:
@@ -385,13 +411,16 @@ func (screen *GameScreen) TxResultSituationDesc() string {
 			resultTexts := []string{"gold", "character", "weapon", loud.DROP_DRAGONFIRE}
 			if resLen == 0 {
 				desc = loud.Sprintf("You were killed by fire dragon accidently")
+				font = RED
 			} else {
 				desc = basicHuntResultDesc("You did fight with fire dragon and earned %d.", earnedAmount, resultTexts[:resLen])
 				switch resLen {
 				case 2:
 					desc += loud.Sprintf("You have lost your weapon accidently")
+					font = YELLOW
 				case 4:
 					desc += loud.Sprintf("You got bonus item called %s", loud.DROP_DRAGONFIRE)
+					font = GREEN
 				}
 			}
 		case RSLT_FIGHT_DRAGONICE:
@@ -400,13 +429,16 @@ func (screen *GameScreen) TxResultSituationDesc() string {
 			resultTexts := []string{"gold", "character", "weapon", loud.DROP_DRAGONICE}
 			if resLen == 0 {
 				desc = loud.Sprintf("You were killed by ice dragon accidently")
+				font = RED
 			} else {
 				desc = basicHuntResultDesc("You did fight with ice dragon and earned %d.", earnedAmount, resultTexts[:resLen])
 				switch resLen {
 				case 2:
 					desc += loud.Sprintf("You have lost your weapon accidently")
+					font = YELLOW
 				case 4:
 					desc += loud.Sprintf("You got bonus item called %s", loud.DROP_DRAGONICE)
+					font = GREEN
 				}
 			}
 		case RSLT_FIGHT_DRAGONACID:
@@ -415,13 +447,16 @@ func (screen *GameScreen) TxResultSituationDesc() string {
 			resultTexts := []string{"gold", "character", "weapon", loud.DROP_DRAGONACID}
 			if resLen == 0 {
 				desc = loud.Sprintf("You were killed by acid dragon accidently")
+				font = RED
 			} else {
 				desc = basicHuntResultDesc("You did fight with acid dragon and earned %d.", earnedAmount, resultTexts[:resLen])
 				switch resLen {
 				case 2:
 					desc += loud.Sprintf("You have lost your weapon accidently")
+					font = YELLOW
 				case 4:
 					desc += loud.Sprintf("You got bonus item called %s", loud.DROP_DRAGONACID)
+					font = GREEN
 				}
 			}
 		case RSLT_FIGHT_DRAGONUNDEAD:
@@ -430,11 +465,13 @@ func (screen *GameScreen) TxResultSituationDesc() string {
 			resultTexts := []string{"gold", "character", "weapon"}
 			if resLen == 0 {
 				desc = loud.Sprintf("You were killed by undead dragon accidently")
+				font = RED
 			} else {
 				desc = basicHuntResultDesc("You did fight with undead dragon and earned %d.", earnedAmount, resultTexts[:resLen])
 				switch resLen {
 				case 2:
 					desc += loud.Sprintf("You have lost your weapon accidently")
+					font = YELLOW
 				}
 			}
 		case RSLT_BUY_GOLD_WITH_PYLONS:
@@ -506,7 +543,7 @@ func (screen *GameScreen) TxResultSituationDesc() string {
 			desc += screen.sellCharacterSpecDesc(request.TCharacter, fmt.Sprintf("%d", request.Price))
 		}
 	}
-	return desc
+	return desc, font
 }
 
 func (screen *GameScreen) TxWaitSituationDesc(width int) ([]string, []string) {

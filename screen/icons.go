@@ -14,6 +14,8 @@ func (screen *GameScreen) goldIcon() string {
 	return "💰"
 }
 
+// icons list
+
 func NumberOfSpaces(message string) int {
 	customUnicodes := map[string]string{
 		"💰":  "xx",

@@ -11,12 +11,12 @@ import (
 )
 
 const (
-	SEL_CMD          = "Select ( ↵ )"
-	GO_ON_ENTER_CMD  = "Go on ( ↵ )"
-	FINISH_ENTER_CMD = "Finish Enter ( ↵ )"
-	GO_BACK_CMD      = "Go back ( ⌫ ) - Backspace Key"
-	GO_BACK_ESC_CMD  = "Go back ( Esc )"
-	END_GAME_ESC_CMD = "End Game ( Esc )"
+	SEL_CMD           = "Select ( ↵ )"
+	GO_ON_ENTER_CMD   = "Go on ( ↵ )"
+	FINISH_ENTER_CMD  = "Finish Enter ( ↵ )"
+	GO_BACK_CMD       = "Go back ( ⌫ ) - Backspace Key"
+	GO_BACK_ESC_CMD   = "Go back ( Esc )"
+	EXIT_GAME_ESC_CMD = "Exit Game ( Esc )"
 )
 
 func (tl TextLines) appendDeselectCmd() TextLines {
@@ -38,6 +38,9 @@ func (tl TextLines) appendGoOnBackCmds() TextLines {
 func (tl TextLines) appendSelectCmds(itemsSlice interface{}, fn func(interface{}) string) TextLines {
 	items := InterfaceSlice(itemsSlice)
 	for idx, item := range items {
+		if idx >= 5 {
+			break
+		}
 		tl = tl.append(fmt.Sprintf("%d) %s  ", idx+1, fn(item)))
 	}
 	return tl
@@ -55,19 +58,13 @@ func (tl TextLines) appendCustomFontSelectCmds(itemsSlice interface{}, fn func(i
 	return tl
 }
 
-func (tl TextLines) appendEndGameCmd(screen *GameScreen) TextLines {
-	if screen.scrStatus != CONFIRM_ENDGAME && !screen.InputActive() {
-		tl = tl.appendT(END_GAME_ESC_CMD)
-	}
-	return tl
-}
-
 func (screen *GameScreen) renderUserCommands() {
 	// cmd box start point (x, y)
-	x := 2
-	y := screen.cmdInnerStartY()
-	w := screen.leftInnerWidth()
-	h := screen.cmdInnerHeight()
+	scrBox := screen.GetCmdBox()
+	x := scrBox.X
+	y := scrBox.Y
+	w := scrBox.W
+	h := scrBox.H
 
 	infoLines := TextLines{}
 	tableLines := []string{}
@@ -108,20 +105,6 @@ func (screen *GameScreen) renderUserCommands() {
 					infoLines[k].content += ": " + fst
 					infoLines[k].font = GREY
 				}
-			}
-		}
-
-		for _, loc := range []loud.UserLocation{
-			loud.HOME,
-			loud.FOREST,
-			loud.SHOP,
-			loud.PYLCNTRL,
-			loud.SETTINGS,
-			loud.DEVELOP,
-		} {
-			if loc != screen.user.GetLocation() {
-				infoLines = infoLines.
-					append(loud.Localize("go to " + cmdMap[loc]))
 			}
 		}
 	case SHW_LOUD_BUY_TRDREQS:
@@ -280,9 +263,6 @@ func (screen *GameScreen) renderUserCommands() {
 		}
 	}
 
-	infoLines = infoLines.append("") // same as enter command
-	infoLines = infoLines.appendEndGameCmd(screen)
-
 	for index, line := range infoLines {
 		lineFont := screen.getFont(line.font)
 		io.WriteString(os.Stdout, fmt.Sprintf("%s%s",
@@ -299,5 +279,5 @@ func (screen *GameScreen) renderUserCommands() {
 	}
 	totalLen := infoLen + len(tableLines)
 
-	screen.drawFill(x, y+totalLen, w, h-totalLen)
+	screen.drawFill(x, y+totalLen, w, h-totalLen-1)
 }

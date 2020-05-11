@@ -33,7 +33,7 @@
     "one": "1) Select active character\n2) Select active weapon\n3) Update character name\n"
   },
   "forest": {
-    "one": "1) Rabbit(💰1+)\n2) Goblin(💰50)\n3) Wolf(💰150)\n4) Troll(💰300)\n5) Giant(💰3000)\n6) Fire Dragon(💰20000)\n7) Ice Dragon(💰20000)\n8) Acid Dragon(💰20000)\n9) Undead Dragon(💰50000)\n"
+    "one": "1) Rabbit(💰1+)\n2) Goblin(💰50)\n3) Wolf(💰150)\n4) Troll(💰300)\n5) Giant 🗿(💰3000)\n6) Fire Dragon(💰20000)\n7) Ice Dragon(💰20000)\n8) Acid Dragon(💰20000)\n9) Undead Dragon(💰50000)\n"
   },
   "shop": {
     "one": "1) Comprar Artículos\n2) Vender Artículos\n3) Mejorar Artículos\n"
@@ -114,7 +114,7 @@
     "one": "Fight Troll\n\nReward 💰300\nEnemy info (HP: 20, Attack: 5)\n4% chance of character dying\n3% chance of sword lose\n10% chance of getting \"Troll toes\"\n"
   },
   "giant outcome": {
-    "one": "Fight Giant\n\nReward 💰3000\nEnemy info (HP: 100, Attack: 10)\n5% chance of character dying\n3% chance of sword lose\n10% chance of bonus skill\nHmm.. 4%, 3%, 3% for fire, ice, acid\nGiantKiller badget on character\n"
+    "one": "Fight Giant 🗿\n\nReward 💰3000\nEnemy info (HP: 100, Attack: 10)\n5% chance of character dying\n3% chance of sword lose\n10% chance of bonus skill\nHmm.. 4%, 3%, 3% for fire, ice, acid\n🗿(GiantKiller) badget on character\n"
   },
   "fire dragon outcome": {
     "one": "Fight Fire Dragon\n\nReward 💰10000\nEnemy info (HP: 300, Attack: 30)\n2% chance for character dying\n3% chance of sword lose\n10% chance of getting \"Fire scale\"\nFireDragonKiller badget on character\n"
@@ -159,7 +159,7 @@
     "one": "You are now fighting with wolf with \"%s\"\n"
   },
   "You are now fighting with giant with %s": {
-    "one": "You are now fighting with giant with \"%s\"\n"
+    "one": "You are now fighting with 🗿(giant) with \"%s\"\n"
   },
   "You are now fighting with fire dragon with %s": {
     "one": "You are now fighting with fire dragon with \"%s\"\n"
@@ -219,7 +219,7 @@
     "one": "You killed a wolf! Have 💰%d."
   },
   "You did fight with giant and earned %d.": {
-    "one": "Giantslayer! Also you get 💰%d."
+    "one": "Giantslayer! 🗿 Also you get 💰%d."
   },
   "You did fight with fire dragon and earned %d.": {
     "one": "Fire dragon killer! Also you get 💰%d."
@@ -317,8 +317,8 @@
   "Go back ( Esc )": {
     "one": "Go back ( Esc )"
   },
-  "End Game ( Esc )": {
-    "one": "End Game ( Esc )"
+  "Exit Game ( Esc )": {
+    "one": "Exit Game ( Esc )"
   },
   "Sell gold to fulfill selected request( ↵ )": {
     "one": "Sell gold to fulfill selected request( ↵ )"
@@ -399,7 +399,7 @@
     "one": "You don't have required item to make %s"
   },
   "You can't fight giant without iron sword.": {
-    "one": "You can't fight giant without iron sword."
+    "one": "You can't fight 🗿(giant) without iron sword."
   },
   "You can't fight fire dragon without iron sword.": {
     "one": "You can't fight fire dragon without iron sword."
@@ -534,7 +534,7 @@
     "one": "You were killed by wolf accidently"
   },
   "You were killed by giant accidently": {
-    "one": "You were killed by giant accidently"
+    "one": "You were killed by 🗿(giant) accidently"
   },
   "You were killed by fire dragon accidently": {
     "one": "You were killed by fire dragon accidently"
