@@ -104,7 +104,7 @@
   "rabbits with a sword outcome": {
     "one": "Hunt Rabbits\n\nReward 💰sword.attack/2 + 1\n2% chance of character dying\n3% chance of sword lose\n"
   },
-  " outcome": {
+  "goblin outcome": {
     "one": "Fight Goblin 👺\n\nReward 💰50\nEnemy info (HP: 10, Attack: 1)\n2% chance of character dying\n3% chance of sword lose\n10% chance of getting \"Goblin ear\"\n"
   },
   "wolf outcome": {
@@ -236,9 +236,6 @@
   "Bought gold with pylons. Amount is %d.": {
     "one": "Bought gold with pylons. Amount is 💰%d."
   },
-  "You sold %s for gold.": {
-    "one": "You sold \"%s\" for %d gold."
-  },
   "You have upgraded %s to get better hunt result": {
     "one": "You have upgraded \"%s\" from Lv1 to Lv2 to get better hunt result"
   },
@@ -248,7 +245,7 @@
   "screen size warning": {
     "one": "La pantalla es muy pequena. Haga su terminal mas larga. (120x38 minimo)"
   },
-  "dead": {
+  "dead desc": {
     "one": "Tu moriste. Reapareciendo..."
   },
   "pylons network status": {
@@ -287,11 +284,11 @@
   "no acid character!": {
     "one": "no acid character!"
   },
-  "no sword!": {
-    "one": "no sword!"
-  },
   "no character!": {
     "one": "no character!"
+  },
+  "no sword!": {
+    "one": "no sword!"
   },
   "no iron sword!": {
     "one": "no iron sword!"
