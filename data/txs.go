@@ -92,11 +92,11 @@ func FightTroll(user User) (string, error) {
 	return RunHuntRecipe(RCP_FIGHT_TROLL, user)
 }
 
-func FightWolf(user User) (string, error) {
+func FightWolf(user User) (string, error) { // 🐺
 	return RunHuntRecipe(RCP_FIGHT_WOLF, user)
 }
 
-func FightGoblin(user User) (string, error) {
+func FightGoblin(user User) (string, error) { // 👺
 	return RunHuntRecipe(RCP_FIGHT_GOBLIN, user)
 }
 
@@ -104,19 +104,19 @@ func FightGiant(user User) (string, error) { // 🗿
 	return RunHuntRecipe(RCP_FIGHT_GIANT, user)
 }
 
-func FightDragonFire(user User) (string, error) {
+func FightDragonFire(user User) (string, error) { // 🦐
 	return RunHuntRecipe(RCP_FIGHT_DRAGONFIRE, user)
 }
 
-func FightDragonIce(user User) (string, error) {
+func FightDragonIce(user User) (string, error) { // 🦕
 	return RunHuntRecipe(RCP_FIGHT_DRAGONICE, user)
 }
 
-func FightDragonAcid(user User) (string, error) {
+func FightDragonAcid(user User) (string, error) { // 🦖
 	return RunHuntRecipe(RCP_FIGHT_DRAGONACID, user)
 }
 
-func FightDragonUndead(user User) (string, error) {
+func FightDragonUndead(user User) (string, error) { // 🐉
 	return RunHuntRecipe(RCP_FIGHT_DRAGONUNDEAD, user)
 }
 
