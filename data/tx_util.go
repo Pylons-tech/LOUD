@@ -16,6 +16,7 @@ import (
 	"strconv"
 	"strings"
 
+	cf "github.com/Pylons-tech/LOUD/config"
 	"github.com/Pylons-tech/LOUD/log"
 	testing "github.com/Pylons-tech/pylons_sdk/cmd/fixtures_test/evtesting"
 	pylonSDK "github.com/Pylons-tech/pylons_sdk/cmd/test"
@@ -26,6 +27,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/tendermint/tendermint/crypto/secp256k1"
 	"github.com/tyler-smith/go-bip39"
+	"gopkg.in/yaml.v2"
 )
 
 const (
@@ -85,6 +87,7 @@ var RcpIDs map[string]string = map[string]string{
 // Remote mode
 var customNode string = "35.223.7.2:26657"
 var restEndpoint string = "http://35.238.123.59:80"
+var maxWaitBlock int64
 
 // Local mode
 var customNodeLocal string = "localhost:26657"
@@ -96,6 +99,21 @@ var AutomateInput bool = false
 var AutomateRunCnt int = 0
 
 func init() {
+
+	var cfg cf.Config
+	configf, err := os.Open("config.yml")
+	if err == nil {
+		defer configf.Close()
+
+		decoder := yaml.NewDecoder(configf)
+		err = decoder.Decode(&cfg)
+		if err == nil {
+			restEndpoint = cfg.SDK.RestEndpoint
+			customNode = cfg.SDK.CliEndpoint
+			maxWaitBlock = cfg.SDK.MaxWaitBlock
+		}
+	}
+
 	args := os.Args
 
 	if len(args) > 1 {
@@ -116,6 +134,7 @@ func init() {
 	}
 
 	pylonSDK.CLIOpts.CustomNode = customNode
+	pylonSDK.CLIOpts.MaxWaitBlock = maxWaitBlock
 	if useRestTx {
 		pylonSDK.CLIOpts.RestEndpoint = restEndpoint
 	}
@@ -139,7 +158,7 @@ func RunSHCmd(args []string) ([]byte, error) {
 
 func CheckSignatureMatchWithAftiCli(t *testing.T, txhash string, privKey string, msgValue sdk.Msg, signer string, isBech32Addr bool) (bool, error) {
 
-	pylonSDK.WaitAndGetTxData(txhash, 3, t)
+	pylonSDK.WaitAndGetTxData(txhash, pylonSDK.GetMaxWaitBlock(), t)
 	tmpDir, err := ioutil.TempDir("", "pylons")
 	if err != nil {
 		panic(err.Error())
@@ -394,7 +413,7 @@ func ProcessTxResult(user User, txhash string) ([]byte, string) {
 
 	resp := handlers.ExecuteRecipeResp{}
 
-	txHandleResBytes, err := pylonSDK.WaitAndGetTxData(txhash, 3, t)
+	txHandleResBytes, err := pylonSDK.WaitAndGetTxData(txhash, pylonSDK.GetMaxWaitBlock(), t)
 	if err != nil {
 		errString := fmt.Sprintf("error getting tx result bytes %+v", err)
 		log.Println(errString)
