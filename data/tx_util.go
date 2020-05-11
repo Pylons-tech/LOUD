@@ -30,6 +30,9 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
+var LOUD_CBNAME = "Legend of Undead Dragon"
+var LOUD_CBID = "LOUD-v0.1.0-1579053457"
+
 const (
 	RCP_BUY_GOLD_WITH_PYLON = "LOUD's buy gold with pylons recipe"
 	RCP_BUY_CHARACTER       = "LOUD's Get Character recipe"
@@ -85,13 +88,9 @@ var RcpIDs map[string]string = map[string]string{
 }
 
 // Remote mode
-var customNode string = "35.223.7.2:26657"
-var restEndpoint string = "http://35.238.123.59:80"
+var customNode string
+var restEndpoint string
 var maxWaitBlock int64
-
-// Local mode
-var customNodeLocal string = "localhost:26657"
-var restEndpointLocal string = "http://localhost:1317"
 
 var useRestTx bool = false
 var useLocalDm bool = false
@@ -99,21 +98,6 @@ var AutomateInput bool = false
 var AutomateRunCnt int = 0
 
 func init() {
-
-	var cfg cf.Config
-	configf, err := os.Open("config.yml")
-	if err == nil {
-		defer configf.Close()
-
-		decoder := yaml.NewDecoder(configf)
-		err = decoder.Decode(&cfg)
-		if err == nil {
-			restEndpoint = cfg.SDK.RestEndpoint
-			customNode = cfg.SDK.CliEndpoint
-			maxWaitBlock = cfg.SDK.MaxWaitBlock
-		}
-	}
-
 	args := os.Args
 
 	if len(args) > 1 {
@@ -128,9 +112,24 @@ func init() {
 			}
 		}
 	}
+
+	cfgFileName := "config.yml"
 	if useLocalDm {
-		customNode = customNodeLocal
-		restEndpoint = restEndpointLocal
+		cfgFileName = "config_local.yml"
+	}
+
+	var cfg cf.Config
+	configf, err := os.Open(cfgFileName)
+	if err == nil {
+		defer configf.Close()
+
+		decoder := yaml.NewDecoder(configf)
+		err = decoder.Decode(&cfg)
+		if err == nil {
+			restEndpoint = cfg.SDK.RestEndpoint
+			customNode = cfg.SDK.CliEndpoint
+			maxWaitBlock = cfg.SDK.MaxWaitBlock
+		}
 	}
 
 	pylonSDK.CLIOpts.CustomNode = customNode

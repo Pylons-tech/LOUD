@@ -1,0 +1,7 @@
+# sdk configurations
+sdk:
+  max_wait_block: 3
+  rest_endpoint: http://localhost:1317
+  cli_endpoint: localhost:26657
+# app configurations
+app:

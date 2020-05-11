@@ -34,6 +34,9 @@ func SyncFromNode(user User) {
 	myItems := []Item{}
 	myCharacters := []Character{}
 	for _, rawItem := range rawItems {
+		if rawItem.CookbookID != LOUD_CBID {
+			continue
+		}
 		XP, _ := rawItem.FindDouble("XP")
 		Level, _ := rawItem.FindLong("level")
 		GiantKill, _ := rawItem.FindLong("GiantKill") // 🗿
