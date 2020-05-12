@@ -1,6 +1,30 @@
 # Test result
 
-LOUD v0.0.5 app is tested on Mojave (10.14.5), High Sierra(10.13.6), and Sierra(10.12.6). 
+LOUD v0.1.0 app is tested on Mojave (10.14.5), High Sierra(10.13.6), and Sierra(10.12.6).
+
+# Upgrades from v0.0.5
+1. Game items and characters modification
+- Added special bonus characters like fire bonus, ice bonus, acid bonus, special dragons and undead dragon, angel sword
+- Removed HP from recipes and set fixed % of dying per monsters
+- Updated level upgrade mechanism
+- Giant gives bonus skill by chance
+- Bonus character can't fight giant
+
+2. UI modifications
+- Tab UI navigation
+- Layout modification
+- Better game text
+- Add more visualizations using unicodes and colorful messages like green, red, orange
+- Inventory overflow issue fix
+
+3. Fix unexpected issues
+- Fixed issue reported by @Gopher JK, non-rabbit sword lose & no active weapon case result description issue
+- Fixed other issues that was found during development
+
+4. Enhancement of app reporting system
+- Better logging system to get specific error logs from users
+- Make users to be able to change configuration at Package content (e.g. rest and cli endpoint and maximum wait block)
+
 
 # How to run
 

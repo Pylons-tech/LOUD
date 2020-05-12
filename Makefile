@@ -21,7 +21,3 @@ run:
 fixture_tests:
 	rm ./test/nonce.json || true
 	go test -v ./test/ ${ARGS}
-
-fixture_tests_v0.0.5_hp:
-	rm ./test_v0.0.5_hp/nonce.json || true
-	go test -v ./test_v0.0.5_hp/ ${ARGS}
