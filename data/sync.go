@@ -34,11 +34,16 @@ func SyncFromNode(user User) {
 	myItems := []Item{}
 	myCharacters := []Character{}
 	for _, rawItem := range rawItems {
+		if rawItem.CookbookID != LOUD_CBID {
+			continue
+		}
 		XP, _ := rawItem.FindDouble("XP")
-		HP, _ := rawItem.FindLong("HP")
-		MaxHP, _ := rawItem.FindLong("MaxHP")
 		Level, _ := rawItem.FindLong("level")
-		GiantKill, _ := rawItem.FindLong("GiantKill")
+		GiantKill, _ := rawItem.FindLong("GiantKill") // 🗿
+		Special, _ := rawItem.FindLong("Special")
+		SpecialDragonKill, _ := rawItem.FindLong("SpecialDragonKill")
+		UndeadDragonKill, _ := rawItem.FindLong("UndeadDragonKill")
+
 		Name, _ := rawItem.FindString("Name")
 		itemType, _ := rawItem.FindString("Type")
 		Attack, _ := rawItem.FindDouble("attack")
@@ -46,14 +51,15 @@ func SyncFromNode(user User) {
 
 		if itemType == "Character" {
 			myCharacters = append(myCharacters, Character{
-				Level:      Level,
-				Name:       Name,
-				ID:         rawItem.ID,
-				XP:         XP,
-				HP:         HP,
-				MaxHP:      MaxHP,
-				GiantKill:  GiantKill,
-				LastUpdate: LastUpdate,
+				Level:             Level,
+				Name:              Name,
+				ID:                rawItem.ID,
+				XP:                XP,
+				GiantKill:         GiantKill,
+				Special:           Special,
+				SpecialDragonKill: SpecialDragonKill,
+				UndeadDragonKill:  UndeadDragonKill,
+				LastUpdate:        LastUpdate,
 			})
 		} else {
 			myItems = append(myItems, Item{
@@ -170,15 +176,11 @@ func SyncFromNode(user User) {
 					})
 				} else if tradeItem.ExtraInfo == CHAR_SELREQ_TRDINFO { // character sell request created by loud game
 					XP, _ := firstItemOutput.FindDouble("XP")
-					HP, _ := firstItemOutput.FindLong("HP")
-					MaxHP, _ := firstItemOutput.FindLong("MaxHP")
 					tCharacter := Character{
 						ID:    firstItemOutput.ID,
 						Level: level,
 						Name:  name,
 						XP:    XP,
-						HP:    HP,
-						MaxHP: MaxHP,
 					}
 					nSellCharacterTrdReqs = append(nSellCharacterTrdReqs, CharacterSellTrdReq{
 						ID:         tradeItem.ID,

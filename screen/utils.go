@@ -137,17 +137,21 @@ func formatItem(item loud.Item) string {
 	if item.Attack > 0 {
 		itemStr += fmt.Sprintf(" attack=%d", item.Attack)
 	}
-	if len(item.PreItem) > 0 {
-		itemStr += fmt.Sprintf(" piece=\"%s\"", item.PreItem)
-	}
 	return itemStr
+}
+
+func formatItemP(item *loud.Item) string {
+	if item == nil {
+		return ""
+	}
+	return formatItem(*item)
 }
 
 func carryItemDesc(item *loud.Item) string {
 	if item == nil {
 		return ""
 	} else {
-		return "Carry: " + formatItem(*item)
+		return "Carry: " + formatItemP(item)
 	}
 }
 
@@ -184,24 +188,51 @@ func formatItemSpec(itemSpec loud.ItemSpec) string {
 	return itemStr
 }
 
+func formatSpecial(special int) string {
+	switch special {
+	case loud.FIRE_SPECIAL:
+		return "🔥"
+	case loud.ICE_SPECIAL:
+		return "🌊"
+	case loud.ACID_SPECIAL:
+		return "🥗"
+	}
+	return ""
+}
+
 func formatCharacter(ch loud.Character) string {
 	chStr := loud.Localize(ch.Name)
 	if ch.GiantKill > 0 {
-		chStr = fmt.Sprintf("🥇x%d %s", ch.GiantKill, chStr)
+		chStr = fmt.Sprintf("🗿x%d %s", ch.GiantKill, chStr)
 	}
+	if ch.SpecialDragonKill > 0 {
+		switch ch.Special {
+		case loud.FIRE_SPECIAL:
+			chStr = fmt.Sprintf("🦐x%d %s", ch.SpecialDragonKill, chStr)
+		case loud.ICE_SPECIAL:
+			chStr = fmt.Sprintf("🦕x%d %s", ch.SpecialDragonKill, chStr)
+		case loud.ACID_SPECIAL:
+			chStr = fmt.Sprintf("🦖x%d %s", ch.SpecialDragonKill, chStr)
+		}
+	}
+	if ch.UndeadDragonKill > 0 {
+		chStr = fmt.Sprintf("🐉x%d %s", ch.UndeadDragonKill, chStr)
+	}
+	chStr += formatSpecial(ch.Special)
 	if ch.Level > 0 {
 		chStr += fmt.Sprintf(" Lv%d", ch.Level)
 	}
 	if ch.XP > 0 {
 		chStr += fmt.Sprintf(" XP=%.0f", ch.XP)
 	}
-	if ch.HP > 0 {
-		chStr += fmt.Sprintf(" HP=%d", ch.HP)
-	}
-	if ch.MaxHP > 0 {
-		chStr += fmt.Sprintf(" MaxHP=%d", ch.MaxHP)
-	}
 	return chStr
+}
+
+func formatCharacterP(ch *loud.Character) string {
+	if ch == nil {
+		return ""
+	}
+	return formatCharacter(*ch)
 }
 
 func formatCharacterSpec(chs loud.CharacterSpec) string {
@@ -213,14 +244,6 @@ func formatCharacterSpec(chs loud.CharacterSpec) string {
 	xpStr := formatFloat64Range(chs.XP)
 	if len(xpStr) > 0 {
 		chStr += fmt.Sprintf(" XP=%s", xpStr)
-	}
-	hpStr := formatIntRange(chs.HP)
-	if len(hpStr) > 0 {
-		chStr += fmt.Sprintf(" HP=%s", hpStr)
-	}
-	maxHpStr := formatIntRange(chs.MaxHP)
-	if len(maxHpStr) > 0 {
-		chStr += fmt.Sprintf(" MaxHP=%s", maxHpStr)
 	}
 	return chStr
 }

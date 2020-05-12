@@ -1,5 +1,5 @@
 {
-    "ID": "LOUD-dev-get-test-items-recipe-v0.0.0-1583801800",
+    "ID": "LOUD-dev-get-test-items-recipe-v0.1.0-1589223853",
     "CoinInputs":[{
         "Coin": "pylon",
         "Count": "1"
@@ -16,19 +16,37 @@
             },
             {
                 "Ref": "./recipes/item_output/wolf_tail.json"
+            },
+            {
+                "Ref": "./recipes/item_output/drop_from_acid_dragon.json"
+            },
+            {
+                "Ref": "./recipes/item_output/drop_from_fire_dragon.json"
+            },
+            {
+                "Ref": "./recipes/item_output/drop_from_ice_dragon.json"
+            },
+            {
+                "Ref": "./recipes/item_output/character_fire_lv1.json"
+            },
+            {
+                "Ref": "./recipes/item_output/character_ice_lv1.json"
+            },
+            {
+                "Ref": "./recipes/item_output/character_acid_lv1.json"
             }
         ]
     },
     "Outputs": [
         {
-            "ResultEntries": ["0", "1", "2"],
+            "ResultEntries": ["0", "1", "2", "3", "4", "5", "6", "7", "8"],
             "Weight": "1"
         }
     ],
     "ExtraInfo":"",
     "Sender":"eugen",
     "Name": "LOUD's Dev Get Test Items recipe",
-    "CookbookName": "Legend of Undead Dragon",
+    "CookbookName": "Legend of Undead Dragon v0.1.0",
     "Description": "this recipe is used to create character.",
     "BlockInterval":"0"
 }

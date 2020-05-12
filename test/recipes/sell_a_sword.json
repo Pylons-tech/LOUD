@@ -1,5 +1,5 @@
 {
-    "ID": "LOUD-sell-a-sword-recipe-v0.0.0-1583631194",
+    "ID": "LOUD-sell-a-sword-recipe-v0.1.0-1589223853",
     "CoinInputs":[],
     "ItemInputRefs":[
         "./recipes/item_input/sword.json"
@@ -19,7 +19,7 @@
     "ExtraInfo":"",
     "Sender":"eugen",
     "Name": "LOUD's sword sell recipe",
-    "CookbookName": "Legend of Undead Dragon",
+    "CookbookName": "Legend of Undead Dragon v0.1.0",
     "Description": "this recipe is used to sell a sword.",
     "BlockInterval":"0"
 }

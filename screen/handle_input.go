@@ -47,12 +47,13 @@ func (screen *GameScreen) HandleInputKeyLocationSwitch(input termbox.Event) bool
 		"D": loud.DEVELOP,
 	}
 
-	if newStus, ok := tarLctMap[Key]; ok {
-		if newStus == loud.FOREST && screen.user.GetActiveCharacter() == nil {
+	if newLct, ok := tarLctMap[Key]; ok {
+		if newLct == loud.FOREST && screen.user.GetActiveCharacter() == nil {
 			screen.actionText = loud.Sprintf("You can't go to forest without character")
 			screen.Render()
 		} else {
-			screen.user.SetLocation(newStus)
+			screen.user.SetLocation(newLct)
+			screen.SetScreenStatus(SHW_LOCATION)
 			screen.Render()
 			return true
 		}
@@ -65,8 +66,7 @@ func (screen *GameScreen) HandleInputKeyHomeEntryPoint(input termbox.Event) bool
 	tarStusMap := map[string]ScreenStatus{
 		"1": SEL_ACTIVE_CHAR,
 		"2": SEL_ACTIVE_WEAPON,
-		"3": SEL_HEALTH_RESTORE_CHAR,
-		"4": SEL_RENAME_CHAR,
+		"3": SEL_RENAME_CHAR,
 	}
 
 	if newStus, ok := tarStusMap[Key]; ok {
@@ -129,21 +129,50 @@ func (screen *GameScreen) HandleInputKeySettingsEntryPoint(input termbox.Event) 
 	}
 }
 
-func (screen *GameScreen) ForestStatusCheck(newStus ScreenStatus) string {
+func (screen *GameScreen) ForestStatusCheck(newStus ScreenStatus) (string, string) {
+	activeCharacter := screen.user.GetActiveCharacter()
+	if activeCharacter == nil {
+		return loud.Sprintf("You need a character for this action!"), loud.Sprintf("no character!")
+	}
+	switch newStus {
+	case CONFIRM_FIGHT_GIANT:
+		if activeCharacter == nil || activeCharacter.Special != loud.NO_SPECIAL {
+			return loud.Sprintf("You need no special character for this action!"), loud.Sprintf("no non-special character!")
+		}
+	case CONFIRM_FIGHT_DRAGONFIRE:
+		if activeCharacter == nil || activeCharacter.Special != loud.FIRE_SPECIAL {
+			return loud.Sprintf("You need a fire character for this action!"), loud.Sprintf("no fire character!")
+		}
+	case CONFIRM_FIGHT_DRAGONICE:
+		if activeCharacter == nil || activeCharacter.Special != loud.ICE_SPECIAL {
+			return loud.Sprintf("You need a ice character for this action!"), loud.Sprintf("no ice character!")
+		}
+	case CONFIRM_FIGHT_DRAGONACID:
+		if activeCharacter == nil || activeCharacter.Special != loud.ACID_SPECIAL {
+			return loud.Sprintf("You need a acid character for this action!"), loud.Sprintf("no acid character!")
+		}
+	}
 	activeWeapon := screen.user.GetActiveWeapon()
 	switch newStus {
 	case CONFIRM_FIGHT_GOBLIN,
 		CONFIRM_FIGHT_WOLF,
 		CONFIRM_FIGHT_TROLL:
 		if activeWeapon == nil {
-			return loud.Sprintf("You need a sword for this action!")
+			return loud.Sprintf("You need a sword for this action!"), loud.Sprintf("no sword!")
 		}
-	case CONFIRM_FIGHT_GIANT:
+	case CONFIRM_FIGHT_GIANT,
+		CONFIRM_FIGHT_DRAGONFIRE,
+		CONFIRM_FIGHT_DRAGONICE,
+		CONFIRM_FIGHT_DRAGONACID:
 		if activeWeapon == nil || activeWeapon.Name != loud.IRON_SWORD {
-			return loud.Sprintf("You need an iron sword for this action!")
+			return loud.Sprintf("You need an iron sword for this action!"), loud.Sprintf("no iron sword!")
+		}
+	case CONFIRM_FIGHT_DRAGONUNDEAD:
+		if activeWeapon == nil || activeWeapon.Name != loud.ANGEL_SWORD {
+			return loud.Sprintf("You need an angel sword for this action!"), loud.Sprintf("no angel sword!")
 		}
 	}
-	return ""
+	return "", ""
 }
 
 func (screen *GameScreen) HandleInputKeyForestEntryPoint(input termbox.Event) bool {
@@ -155,10 +184,14 @@ func (screen *GameScreen) HandleInputKeyForestEntryPoint(input termbox.Event) bo
 		"3": CONFIRM_FIGHT_WOLF,
 		"4": CONFIRM_FIGHT_TROLL,
 		"5": CONFIRM_FIGHT_GIANT,
+		"6": CONFIRM_FIGHT_DRAGONFIRE,
+		"7": CONFIRM_FIGHT_DRAGONICE,
+		"8": CONFIRM_FIGHT_DRAGONACID,
+		"9": CONFIRM_FIGHT_DRAGONUNDEAD,
 	}
 
 	if newStus, ok := tarStusMap[Key]; ok {
-		if fst := screen.ForestStatusCheck(newStus); len(fst) > 0 {
+		if fst, _ := screen.ForestStatusCheck(newStus); len(fst) > 0 {
 			screen.actionText = fst
 			screen.Render()
 			return true
@@ -190,21 +223,35 @@ func (screen *GameScreen) HandleInputKeyShopEntryPoint(input termbox.Event) bool
 }
 
 func (screen *GameScreen) MoveToNextStep() {
+	activeCharacter := screen.user.GetActiveCharacter()
+
 	switch screen.scrStatus {
 	case CONFIRM_HUNT_RABBITS:
 		screen.RunHuntRabbits()
 		return
-	case CONFIRM_FIGHT_GIANT:
-		screen.RunFightGiant()
-		return
-	case CONFIRM_FIGHT_TROLL:
-		screen.RunFightTroll()
+	case CONFIRM_FIGHT_GOBLIN:
+		screen.RunFightGoblin()
 		return
 	case CONFIRM_FIGHT_WOLF:
 		screen.RunFightWolf()
 		return
-	case CONFIRM_FIGHT_GOBLIN:
-		screen.RunFightGoblin()
+	case CONFIRM_FIGHT_TROLL:
+		screen.RunFightTroll()
+		return
+	case CONFIRM_FIGHT_GIANT:
+		screen.RunFightGiant()
+		return
+	case CONFIRM_FIGHT_DRAGONFIRE:
+		screen.RunFightDragonFire()
+		return
+	case CONFIRM_FIGHT_DRAGONICE:
+		screen.RunFightDragonIce()
+		return
+	case CONFIRM_FIGHT_DRAGONACID:
+		screen.RunFightDragonAcid()
+		return
+	case CONFIRM_FIGHT_DRAGONUNDEAD:
+		screen.RunFightDragonUndead()
 		return
 	}
 	nextMapper := map[ScreenStatus]ScreenStatus{
@@ -213,6 +260,10 @@ func (screen *GameScreen) MoveToNextStep() {
 		RSLT_FIGHT_TROLL:               CONFIRM_FIGHT_TROLL,
 		RSLT_FIGHT_WOLF:                CONFIRM_FIGHT_WOLF,
 		RSLT_FIGHT_GIANT:               CONFIRM_FIGHT_GIANT,
+		RSLT_FIGHT_DRAGONFIRE:          CONFIRM_FIGHT_DRAGONFIRE,
+		RSLT_FIGHT_DRAGONICE:           CONFIRM_FIGHT_DRAGONICE,
+		RSLT_FIGHT_DRAGONACID:          CONFIRM_FIGHT_DRAGONACID,
+		RSLT_FIGHT_DRAGONUNDEAD:        CONFIRM_FIGHT_DRAGONUNDEAD,
 		RSLT_BUY_LOUD_TRDREQ_CREATION:  SHW_LOUD_BUY_TRDREQS,
 		RSLT_FULFILL_BUY_LOUD_TRDREQ:   SHW_LOUD_BUY_TRDREQS,
 		RSLT_SELL_LOUD_TRDREQ_CREATION: SHW_LOUD_SELL_TRDREQS,
@@ -226,7 +277,6 @@ func (screen *GameScreen) MoveToNextStep() {
 		RSLT_BUYCHR_TRDREQ_CREATION:    SHW_BUYCHR_TRDREQS,
 		RSLT_CANCEL_TRDREQ:             SHW_LOCATION,
 		RSLT_FULFILL_BUYCHR_TRDREQ:     SHW_BUYCHR_TRDREQS,
-		RSLT_HEALTH_RESTORE_CHAR:       SEL_HEALTH_RESTORE_CHAR,
 		RSLT_RENAME_CHAR:               SEL_RENAME_CHAR,
 		RSLT_SEL_ACT_CHAR:              SEL_ACTIVE_CHAR,
 		RSLT_SEL_ACT_WEAPON:            SEL_ACTIVE_WEAPON,
@@ -237,6 +287,12 @@ func (screen *GameScreen) MoveToNextStep() {
 	}
 	if nextStatus, ok := nextMapper[screen.scrStatus]; ok {
 		if screen.user.GetLocation() == loud.DEVELOP {
+			screen.scrStatus = SHW_LOCATION
+		} else if screen.user.GetLocation() == loud.FOREST && activeCharacter == nil {
+			// move back to home in forest if no active character
+			screen.scrStatus = SHW_LOCATION
+		} else if nextStatus == CONFIRM_FIGHT_GIANT && activeCharacter.Special != loud.NO_SPECIAL {
+			// go back to forest entrypoint when Special is not empty
 			screen.scrStatus = SHW_LOCATION
 		} else {
 			screen.scrStatus = nextStatus
@@ -249,6 +305,8 @@ func (screen *GameScreen) MoveToNextStep() {
 }
 
 func (screen *GameScreen) MoveToPrevStep() {
+	activeCharacter := screen.user.GetActiveCharacter()
+
 	prevMapper := map[ScreenStatus]ScreenStatus{
 		CR8_BUY_LOUD_TRDREQ_ENT_LUDVAL:  SHW_LOUD_BUY_TRDREQS,
 		CR8_BUY_LOUD_TRDREQ_ENT_PYLVAL:  CR8_BUY_LOUD_TRDREQ_ENT_LUDVAL,
@@ -268,6 +326,10 @@ func (screen *GameScreen) MoveToPrevStep() {
 		RSLT_FIGHT_TROLL:                CONFIRM_FIGHT_TROLL,
 		RSLT_FIGHT_WOLF:                 CONFIRM_FIGHT_WOLF,
 		RSLT_FIGHT_GIANT:                CONFIRM_FIGHT_GIANT,
+		RSLT_FIGHT_DRAGONFIRE:           CONFIRM_FIGHT_DRAGONFIRE,
+		RSLT_FIGHT_DRAGONICE:            CONFIRM_FIGHT_DRAGONICE,
+		RSLT_FIGHT_DRAGONACID:           CONFIRM_FIGHT_DRAGONACID,
+		RSLT_FIGHT_DRAGONUNDEAD:         CONFIRM_FIGHT_DRAGONUNDEAD,
 		RSLT_BUY_LOUD_TRDREQ_CREATION:   SHW_LOUD_BUY_TRDREQS,
 		RSLT_FULFILL_BUY_LOUD_TRDREQ:    SHW_LOUD_BUY_TRDREQS,
 		RSLT_SELL_LOUD_TRDREQ_CREATION:  SHW_LOUD_SELL_TRDREQS,
@@ -281,7 +343,6 @@ func (screen *GameScreen) MoveToPrevStep() {
 		RSLT_BUYCHR_TRDREQ_CREATION:     SHW_BUYCHR_TRDREQS,
 		RSLT_CANCEL_TRDREQ:              SHW_LOCATION,
 		RSLT_FULFILL_BUYCHR_TRDREQ:      SHW_BUYCHR_TRDREQS,
-		RSLT_HEALTH_RESTORE_CHAR:        SEL_HEALTH_RESTORE_CHAR,
 		RSLT_RENAME_CHAR:                SEL_RENAME_CHAR,
 		RSLT_SEL_ACT_CHAR:               SEL_ACTIVE_CHAR,
 		RSLT_SEL_ACT_WEAPON:             SEL_ACTIVE_WEAPON,
@@ -302,13 +363,21 @@ func (screen *GameScreen) MoveToPrevStep() {
 		// set loud value previously entered
 		screen.inputText = screen.loudEnterValue
 	case SHW_LOCATION:
-		// move to home if it's somewhere else's 1st step
+		// move to home if it's somewhere else's entrypoint
 		if screen.scrStatus == SHW_LOCATION {
 			screen.user.SetLocation(loud.HOME)
 		}
+	case CONFIRM_FIGHT_GIANT:
+		if activeCharacter.Special != loud.NO_SPECIAL {
+			// go back to forest entrypoint when Special is not empty
+			screen.scrStatus = SHW_LOCATION
+		}
 	}
 
-	if nxtStatus == SHW_LOCATION && screen.scrStatus == SHW_LOCATION {
+	if screen.user.GetLocation() == loud.FOREST && activeCharacter == nil {
+		// move back to home in forest if no active character
+		screen.scrStatus = SHW_LOCATION
+		screen.user.SetLocation(loud.HOME)
 	}
 
 	screen.scrStatus = nxtStatus
@@ -455,14 +524,6 @@ func (screen *GameScreen) HandleThirdClassInputKeys(input termbox.Event) bool {
 		case SEL_ACTIVE_WEAPON:
 			screen.activeLine = loud.GetIndexFromString(Key)
 			screen.RunActiveWeaponSelect(screen.activeLine)
-		case SEL_HEALTH_RESTORE_CHAR:
-			screen.activeLine = loud.GetIndexFromString(Key)
-			characters := screen.user.InventoryCharacters()
-			if len(characters) <= screen.activeLine || screen.activeLine < 0 {
-				return false
-			}
-			screen.activeCharacter = characters[screen.activeLine]
-			screen.RunCharacterHealthRestore()
 		case SEL_RENAME_CHAR:
 			screen.activeLine = loud.GetIndexFromString(Key)
 			characters := screen.user.InventoryCharacters()
@@ -569,13 +630,6 @@ func (screen *GameScreen) HandleThirdClassKeyEnterEvent() bool {
 			}
 			screen.activeItem = items[screen.activeLine]
 			screen.RunActiveWeaponSelect(screen.activeLine)
-		case SEL_HEALTH_RESTORE_CHAR:
-			characters := screen.user.InventoryCharacters()
-			if len(characters) <= screen.activeLine || screen.activeLine < 0 {
-				return false
-			}
-			screen.activeCharacter = characters[screen.activeLine]
-			screen.RunCharacterHealthRestore()
 		case SEL_RENAME_CHAR:
 			characters := screen.user.InventoryCharacters()
 			if len(characters) <= screen.activeLine || screen.activeLine < 0 {

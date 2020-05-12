@@ -1,6 +1,30 @@
 # Test result
 
-LOUD v0.0.5 app is tested on Mojave (10.14.5), High Sierra(10.13.6), and Sierra(10.12.6). 
+LOUD v0.1.0 app is tested on Mojave (10.14.5), High Sierra(10.13.6), and Sierra(10.12.6).
+
+# Upgrades from v0.0.5
+1. Game items and characters modification
+- Added special bonus characters like fire bonus, ice bonus, acid bonus, special dragons and undead dragon, angel sword
+- Removed HP from recipes and set fixed % of dying per monsters
+- Updated level upgrade mechanism
+- Giant gives bonus skill by chance
+- Bonus character can't fight giant
+
+2. UI modifications
+- Tab UI navigation
+- Layout modification
+- Better game text
+- Add more visualizations using unicodes and colorful messages like green, red, orange
+- Inventory overflow issue fix
+
+3. Fix unexpected issues
+- Fixed issue reported by @Gopher JK, non-rabbit sword lose & no active weapon case result description issue
+- Fixed other issues that was found during development
+
+4. Enhancement of app reporting system
+- Better logging system to get specific error logs from users
+- Make users to be able to change configuration at Package content (e.g. rest and cli endpoint and maximum wait block)
+
 
 # How to run
 
@@ -51,15 +75,11 @@ To test things easily
 To sell item (wooden sword and copper sword) and upgrade item (wooden sword and copper sword) can be tested under shop.
 
 After that can go to Forest (F)
-In forest, you can try to Hunt Rabbits(1), Fight Goblin, Wolf, Troll or Giant(2-5)
+In forest, you can try to Hunt Rabbits(1), Fight Goblin, Wolf, Troll or Giant 🗿(2-5)
 To fight Giant, you need to carry iron sword.
 To fight other monsters, need to carry at least 1 sword.
 
 After fight goblin, wolf and troll, you can get bonus item as a chance.
 And they can be used when creating sword like Silver, bronze and iron swords.
-
-Health restore status is updated every 10s.
-So if you want to increase health, you can just wait for few mins to restore health.
-Or you can spend pylon to instantly restore health at Home(H) by pressing 3) Restore health.
 
 If you want to trade with items and coins, you can just place order or just fulfill the order under Pylons Central(M).

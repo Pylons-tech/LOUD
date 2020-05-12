@@ -14,7 +14,7 @@
             "property": [
                 {
                     "owner": "eugen",
-                    "cookbooks": ["Legend of Undead Dragon"]
+                    "cookbooks": ["Legend of Undead Dragon v0.1.0"]
                 }
             ]
         }
@@ -218,6 +218,26 @@
         }
     },
     {
+        "ID": "CREATE_MAKE_ANGEL_SWORD_LV1_RECIPE",
+        "runAfter": {
+            "precondition": ["CREATE_LOUD_COOKBOOK"],
+            "blockWait": 0
+        },
+        "action": "create_recipe",
+        "paramsRef": "./recipes/make_angel_sword_lv1.json",
+        "output": {
+            "txResult": {
+                "status": "Success"
+            },
+            "property": [
+                {
+                    "owner": "eugen",
+                    "recipes": ["LOUD's Angel sword lv1 make recipe"]
+                }
+            ]
+        }
+    },
+    {
         "ID": "CREATE_MAKE_SILVER_SWORD_LV1_RECIPE",
         "runAfter": {
             "precondition": ["CREATE_LOUD_COOKBOOK"],
@@ -358,13 +378,13 @@
         }
     },
     {
-        "ID": "CREATE_RESTORE_HEALTH_RECIPE",
+        "ID": "CREATE_FIGHT_DRAGON_FIRE_WITH_IRON_SWORD_RECIPE",
         "runAfter": {
             "precondition": ["CREATE_LOUD_COOKBOOK"],
             "blockWait": 0
         },
         "action": "create_recipe",
-        "paramsRef": "./recipes/health_restore_lv1.json",
+        "paramsRef": "./recipes/fight_dragon_fire_with_iron_sword.json",
         "output": {
             "txResult": {
                 "status": "Success"
@@ -372,7 +392,67 @@
             "property": [
                 {
                     "owner": "eugen",
-                    "recipes": ["LOUD's health restore recipe"]
+                    "recipes": ["LOUD's fight with fire dragon with an iron sword recipe"]
+                }
+            ]
+        }
+    },
+    {
+        "ID": "CREATE_FIGHT_DRAGON_ACID_WITH_IRON_SWORD_RECIPE",
+        "runAfter": {
+            "precondition": ["CREATE_LOUD_COOKBOOK"],
+            "blockWait": 0
+        },
+        "action": "create_recipe",
+        "paramsRef": "./recipes/fight_dragon_acid_with_iron_sword.json",
+        "output": {
+            "txResult": {
+                "status": "Success"
+            },
+            "property": [
+                {
+                    "owner": "eugen",
+                    "recipes": ["LOUD's fight with acid dragon with an iron sword recipe"]
+                }
+            ]
+        }
+    },
+    {
+        "ID": "CREATE_FIGHT_DRAGON_ICE_WITH_IRON_SWORD_RECIPE",
+        "runAfter": {
+            "precondition": ["CREATE_LOUD_COOKBOOK"],
+            "blockWait": 0
+        },
+        "action": "create_recipe",
+        "paramsRef": "./recipes/fight_dragon_ice_with_iron_sword.json",
+        "output": {
+            "txResult": {
+                "status": "Success"
+            },
+            "property": [
+                {
+                    "owner": "eugen",
+                    "recipes": ["LOUD's fight with ice dragon with an iron sword recipe"]
+                }
+            ]
+        }
+    },
+    {
+        "ID": "CREATE_FIGHT_DRAGON_UNDEAD_WITH_IRON_SWORD_RECIPE",
+        "runAfter": {
+            "precondition": ["CREATE_LOUD_COOKBOOK"],
+            "blockWait": 0
+        },
+        "action": "create_recipe",
+        "paramsRef": "./recipes/fight_dragon_undead_with_angel_sword.json",
+        "output": {
+            "txResult": {
+                "status": "Success"
+            },
+            "property": [
+                {
+                    "owner": "eugen",
+                    "recipes": ["LOUD's fight with undead dragon with an angel sword recipe"]
                 }
             ]
         }

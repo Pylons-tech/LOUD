@@ -61,10 +61,6 @@ func DevGetTestItems(user User) (string, error) {
 	return ExecuteRecipe(user, RCP_GET_TEST_ITEMS, []string{})
 }
 
-func RestoreHealth(user User, char Character) (string, error) {
-	return ExecuteRecipe(user, RCP_RESTORE_HEALTH, []string{char.ID})
-}
-
 func RunHuntRecipe(rcpName string, user User) (string, error) {
 	activeCharacter := user.GetActiveCharacter()
 	activeCharacterID := ""
@@ -96,16 +92,32 @@ func FightTroll(user User) (string, error) {
 	return RunHuntRecipe(RCP_FIGHT_TROLL, user)
 }
 
-func FightWolf(user User) (string, error) {
+func FightWolf(user User) (string, error) { // 🐺
 	return RunHuntRecipe(RCP_FIGHT_WOLF, user)
 }
 
-func FightGoblin(user User) (string, error) {
+func FightGoblin(user User) (string, error) { // 👺
 	return RunHuntRecipe(RCP_FIGHT_GOBLIN, user)
 }
 
-func FightGiant(user User) (string, error) {
+func FightGiant(user User) (string, error) { // 🗿
 	return RunHuntRecipe(RCP_FIGHT_GIANT, user)
+}
+
+func FightDragonFire(user User) (string, error) { // 🦐
+	return RunHuntRecipe(RCP_FIGHT_DRAGONFIRE, user)
+}
+
+func FightDragonIce(user User) (string, error) { // 🦕
+	return RunHuntRecipe(RCP_FIGHT_DRAGONICE, user)
+}
+
+func FightDragonAcid(user User) (string, error) { // 🦖
+	return RunHuntRecipe(RCP_FIGHT_DRAGONACID, user)
+}
+
+func FightDragonUndead(user User) (string, error) { // 🐉
+	return RunHuntRecipe(RCP_FIGHT_DRAGONUNDEAD, user)
 }
 
 func BuyCharacter(user User, ch Character) (string, error) {
@@ -160,6 +172,15 @@ func Buy(user User, item Item) (string, error) {
 		if item.Level == 1 {
 			rcpName = RCP_BUY_IRON_SWORD
 			itemIDs = []string{user.InventoryItemIDByName(TROLL_TOES)}
+		}
+	case ANGEL_SWORD:
+		if item.Level == 1 {
+			rcpName = RCP_BUY_ANGEL_SWORD
+			itemIDs = []string{
+				user.InventoryItemIDByName(DROP_DRAGONFIRE),
+				user.InventoryItemIDByName(DROP_DRAGONICE),
+				user.InventoryItemIDByName(DROP_DRAGONACID),
+			}
 		}
 	default:
 		return "", errors.New("You are trying to buy item which is not in shop")

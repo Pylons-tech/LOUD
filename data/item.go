@@ -1,6 +1,9 @@
 package loud
 
-import "strings"
+import (
+	"fmt"
+	"strings"
+)
 
 type Item struct {
 	ID         string `json:""`
@@ -8,7 +11,7 @@ type Item struct {
 	Level      int
 	Attack     int
 	Price      int
-	PreItem    string `json:""`
+	PreItems   []string
 	LastUpdate int64
 }
 
@@ -20,24 +23,30 @@ type ItemSpec struct {
 }
 
 type Character struct {
-	ID         string `json:""`
-	Name       string `json:""`
-	Level      int
-	Price      int
-	XP         float64
-	HP         int
-	MaxHP      int
-	GiantKill  int
-	LastUpdate int64
+	ID                string `json:""`
+	Name              string `json:""`
+	Level             int
+	Price             int
+	XP                float64
+	GiantKill         int
+	Special           int
+	SpecialDragonKill int
+	UndeadDragonKill  int
+	LastUpdate        int64
 }
 type CharacterSpec struct {
 	Name  string `json:""`
 	Level [2]int
 	Price int
 	XP    [2]float64
-	HP    [2]int
-	MaxHP [2]int
 }
+
+const (
+	NO_SPECIAL   = 0
+	FIRE_SPECIAL = 1
+	ICE_SPECIAL  = 2
+	ACID_SPECIAL = 3
+)
 
 const (
 	WOODEN_SWORD string = "Wooden sword"
@@ -45,9 +54,14 @@ const (
 	SILVER_SWORD        = "Silver sword"
 	BRONZE_SWORD        = "Bronze sword"
 	IRON_SWORD          = "Iron sword"
-	GOBLIN_EAR          = "Goblin ear"
-	WOLF_TAIL           = "Wolf tail"
-	TROLL_TOES          = "Troll toes"
+	ANGEL_SWORD         = "Angel sword"
+
+	GOBLIN_EAR      = "Goblin ear"
+	WOLF_TAIL       = "Wolf tail"
+	TROLL_TOES      = "Troll toes"
+	DROP_DRAGONICE  = "Icy shards"
+	DROP_DRAGONFIRE = "Fire scale"
+	DROP_DRAGONACID = "Poison claws"
 )
 
 func (item Item) IsSword() bool {
@@ -68,26 +82,44 @@ var ShopItems = []Item{
 		Price: 250,
 	},
 	Item{
-		ID:      "003",
-		Name:    SILVER_SWORD,
-		Level:   1,
-		Price:   250,
-		PreItem: GOBLIN_EAR,
+		ID:       "003",
+		Name:     SILVER_SWORD,
+		Level:    1,
+		Price:    250,
+		PreItems: []string{GOBLIN_EAR},
 	},
 	Item{
-		ID:      "004",
-		Name:    BRONZE_SWORD,
-		Level:   1,
-		Price:   250,
-		PreItem: WOLF_TAIL,
+		ID:       "004",
+		Name:     BRONZE_SWORD,
+		Level:    1,
+		Price:    250,
+		PreItems: []string{WOLF_TAIL},
 	},
 	Item{
-		ID:      "005",
-		Name:    IRON_SWORD,
-		Level:   1,
-		Price:   250,
-		PreItem: TROLL_TOES,
+		ID:       "005",
+		Name:     IRON_SWORD,
+		Level:    1,
+		Price:    250,
+		PreItems: []string{TROLL_TOES},
 	},
+	Item{
+		ID:       "006",
+		Name:     ANGEL_SWORD,
+		Level:    1,
+		Price:    20000,
+		PreItems: []string{DROP_DRAGONFIRE, DROP_DRAGONICE, DROP_DRAGONACID},
+	},
+}
+
+func (item Item) PreItemStr() string {
+	switch len(item.PreItems) {
+	case 1:
+		return fmt.Sprintf("\"%s\"", item.PreItems[0])
+	case 3: // angel sword
+		return fmt.Sprintf("\"%s\"", Localize("drops of 3 special dragons"))
+	default:
+		return ""
+	}
 }
 
 var WorldItemSpecs = []ItemSpec{
@@ -112,18 +144,6 @@ var WorldItemSpecs = []ItemSpec{
 		Attack: [2]int{20, 20},
 	},
 	ItemSpec{
-		Name:  TROLL_TOES,
-		Level: [2]int{1, 1},
-	},
-	ItemSpec{
-		Name:  WOLF_TAIL,
-		Level: [2]int{1, 1},
-	},
-	ItemSpec{
-		Name:  GOBLIN_EAR,
-		Level: [2]int{1, 1},
-	},
-	ItemSpec{
 		Name:   SILVER_SWORD,
 		Level:  [2]int{1, 1},
 		Attack: [2]int{30, 30},
@@ -138,6 +158,35 @@ var WorldItemSpecs = []ItemSpec{
 		Level:  [2]int{1, 1},
 		Attack: [2]int{100, 100},
 	},
+	ItemSpec{
+		Name:  TROLL_TOES,
+		Level: [2]int{1, 1},
+	},
+	ItemSpec{
+		Name:  WOLF_TAIL,
+		Level: [2]int{1, 1},
+	},
+	ItemSpec{
+		Name:  GOBLIN_EAR,
+		Level: [2]int{1, 1},
+	},
+	ItemSpec{
+		Name:   ANGEL_SWORD,
+		Level:  [2]int{1, 1},
+		Attack: [2]int{1000, 1000},
+	},
+	ItemSpec{
+		Name:  DROP_DRAGONFIRE,
+		Level: [2]int{1, 1},
+	},
+	ItemSpec{
+		Name:  DROP_DRAGONICE,
+		Level: [2]int{1, 1},
+	},
+	ItemSpec{
+		Name:  DROP_DRAGONACID,
+		Level: [2]int{1, 1},
+	},
 }
 
 var WorldCharacterSpecs = []CharacterSpec{
@@ -145,15 +194,11 @@ var WorldCharacterSpecs = []CharacterSpec{
 		Name:  "Lion",
 		Level: [2]int{1, 2},
 		XP:    [2]float64{1, 1000},
-		HP:    [2]int{1, 100},
-		MaxHP: [2]int{100, 100},
 	},
 	CharacterSpec{
 		Name:  "Liger",
 		Level: [2]int{2, 1000},
 		XP:    [2]float64{1, 1000},
-		HP:    [2]int{1, 100},
-		MaxHP: [2]int{100, 100},
 	},
 }
 

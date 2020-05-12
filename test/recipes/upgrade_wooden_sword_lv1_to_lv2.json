@@ -1,5 +1,5 @@
 {
-    "ID": "LOUD-upgrade-wooden-sword-lv1-to-lv2-recipe-v0.0.0-1579053457",
+    "ID": "LOUD-upgrade-wooden-sword-lv1-to-lv2-recipe-v0.1.0-1589223853",
     "CoinInputs":[{
         "Coin": "loudcoin",
         "Count": "100"
@@ -27,7 +27,7 @@
     "ExtraInfo":"",
     "Sender":"eugen",
     "Name": "LOUD's Wooden sword lv1 to lv2 upgrade recipe",
-    "CookbookName": "Legend of Undead Dragon",
+    "CookbookName": "Legend of Undead Dragon v0.1.0",
     "Description": "this recipe is used to upgrade wooden sword level.",
     "BlockInterval":"0"
 }

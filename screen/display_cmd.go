@@ -11,12 +11,12 @@ import (
 )
 
 const (
-	SEL_CMD          = "Select ( ↵ )"
-	GO_ON_ENTER_CMD  = "Go on ( ↵ )"
-	FINISH_ENTER_CMD = "Finish Enter ( ↵ )"
-	GO_BACK_CMD      = "Go back ( ⌫ ) - Backspace Key"
-	GO_BACK_ESC_CMD  = "Go back ( Esc )"
-	END_GAME_ESC_CMD = "End Game ( Esc )"
+	SEL_CMD           = "Select ( ↵ )"
+	GO_ON_ENTER_CMD   = "Go on ( ↵ )"
+	FINISH_ENTER_CMD  = "Finish Enter ( ↵ )"
+	GO_BACK_CMD       = "Go back ( ⌫ ) - Backspace Key"
+	GO_BACK_ESC_CMD   = "Go back ( Esc )"
+	EXIT_GAME_ESC_CMD = "Exit Game ( Esc )"
 )
 
 func (tl TextLines) appendDeselectCmd() TextLines {
@@ -38,6 +38,9 @@ func (tl TextLines) appendGoOnBackCmds() TextLines {
 func (tl TextLines) appendSelectCmds(itemsSlice interface{}, fn func(interface{}) string) TextLines {
 	items := InterfaceSlice(itemsSlice)
 	for idx, item := range items {
+		if idx >= 5 {
+			break
+		}
 		tl = tl.append(fmt.Sprintf("%d) %s  ", idx+1, fn(item)))
 	}
 	return tl
@@ -55,19 +58,13 @@ func (tl TextLines) appendCustomFontSelectCmds(itemsSlice interface{}, fn func(i
 	return tl
 }
 
-func (tl TextLines) appendEndGameCmd(screen *GameScreen) TextLines {
-	if screen.scrStatus != CONFIRM_ENDGAME && !screen.InputActive() {
-		tl = tl.appendT(END_GAME_ESC_CMD)
-	}
-	return tl
-}
-
 func (screen *GameScreen) renderUserCommands() {
 	// cmd box start point (x, y)
-	x := 2
-	y := screen.cmdInnerStartY()
-	w := screen.leftInnerWidth()
-	h := screen.cmdInnerHeight()
+	scrBox := screen.GetCmdBox()
+	x := scrBox.X
+	y := scrBox.Y
+	w := scrBox.W
+	h := scrBox.H
 
 	infoLines := TextLines{}
 	tableLines := []string{}
@@ -97,27 +94,17 @@ func (screen *GameScreen) renderUserCommands() {
 				2: CONFIRM_FIGHT_WOLF,
 				3: CONFIRM_FIGHT_TROLL,
 				4: CONFIRM_FIGHT_GIANT,
+				5: CONFIRM_FIGHT_DRAGONFIRE,
+				6: CONFIRM_FIGHT_DRAGONICE,
+				7: CONFIRM_FIGHT_DRAGONACID,
+				8: CONFIRM_FIGHT_DRAGONUNDEAD,
 			}
 
 			for k, v := range forestStusMap {
-				if fst := screen.ForestStatusCheck(v); len(fst) > 0 {
+				if _, fst := screen.ForestStatusCheck(v); len(fst) > 0 {
 					infoLines[k].content += ": " + fst
 					infoLines[k].font = GREY
 				}
-			}
-		}
-
-		for _, loc := range []loud.UserLocation{
-			loud.HOME,
-			loud.FOREST,
-			loud.SHOP,
-			loud.PYLCNTRL,
-			loud.SETTINGS,
-			loud.DEVELOP,
-		} {
-			if loc != screen.user.GetLocation() {
-				infoLines = infoLines.
-					append(loud.Localize("go to " + cmdMap[loc]))
 			}
 		}
 	case SHW_LOUD_BUY_TRDREQS:
@@ -171,8 +158,7 @@ func (screen *GameScreen) renderUserCommands() {
 			appendT(
 				SEL_CMD,
 				GO_BACK_CMD)
-	case SEL_HEALTH_RESTORE_CHAR,
-		SEL_RENAME_CHAR:
+	case SEL_RENAME_CHAR:
 		infoLines = infoLines.
 			appendSelectCmds(
 				screen.user.InventoryCharacters(),
@@ -208,16 +194,22 @@ func (screen *GameScreen) renderUserCommands() {
 					goldEnough := item.Price <= screen.user.GetGold()
 					font := REGULAR
 					bonusText := ""
+					contentStr := ""
 					if !preitemOk {
 						font = GREY
-						bonusText = fmt.Sprintf(": %s", loud.Localize("no required item"))
+						bonusText = fmt.Sprintf(": %s", loud.Localize("no material"))
 					}
 					if !goldEnough {
 						font = GREY
 						bonusText = fmt.Sprintf(": %s", loud.Localize("not enough gold"))
 					}
+					if len(item.PreItems) > 0 {
+						contentStr = formatItem(item) + fmt.Sprintf("💰 %d + %s %s", item.Price, item.PreItemStr(), bonusText)
+					} else {
+						contentStr = formatItem(item) + fmt.Sprintf("💰 %d %s", item.Price, bonusText)
+					}
 					return TextLine{
-						content: formatItem(item) + fmt.Sprintf("💰 %d %s", item.Price, bonusText),
+						content: contentStr,
 						font:    font,
 					}
 				}).
@@ -253,7 +245,11 @@ func (screen *GameScreen) renderUserCommands() {
 		CONFIRM_FIGHT_GOBLIN,
 		CONFIRM_FIGHT_TROLL,
 		CONFIRM_FIGHT_WOLF,
-		CONFIRM_FIGHT_GIANT:
+		CONFIRM_FIGHT_GIANT,
+		CONFIRM_FIGHT_DRAGONFIRE,
+		CONFIRM_FIGHT_DRAGONICE,
+		CONFIRM_FIGHT_DRAGONACID,
+		CONFIRM_FIGHT_DRAGONUNDEAD:
 		infoLines = infoLines.
 			appendGoOnBackCmds()
 	default:
@@ -266,9 +262,6 @@ func (screen *GameScreen) renderUserCommands() {
 					GO_BACK_ESC_CMD)
 		}
 	}
-
-	infoLines = infoLines.append("") // same as enter command
-	infoLines = infoLines.appendEndGameCmd(screen)
 
 	for index, line := range infoLines {
 		lineFont := screen.getFont(line.font)
@@ -286,5 +279,5 @@ func (screen *GameScreen) renderUserCommands() {
 	}
 	totalLen := infoLen + len(tableLines)
 
-	screen.drawFill(x, y+totalLen, w, h-totalLen)
+	screen.drawFill(x, y+totalLen, w, h-totalLen-1)
 }

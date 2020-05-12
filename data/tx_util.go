@@ -16,6 +16,7 @@ import (
 	"strconv"
 	"strings"
 
+	cf "github.com/Pylons-tech/LOUD/config"
 	"github.com/Pylons-tech/LOUD/log"
 	testing "github.com/Pylons-tech/pylons_sdk/cmd/fixtures_test/evtesting"
 	pylonSDK "github.com/Pylons-tech/pylons_sdk/cmd/test"
@@ -26,7 +27,11 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/tendermint/tendermint/crypto/secp256k1"
 	"github.com/tyler-smith/go-bip39"
+	"gopkg.in/yaml.v2"
 )
+
+var LOUD_CBNAME = "Legend of Undead Dragon v0.1.0"
+var LOUD_CBID = "LOUD-v0.1.0-1589223853"
 
 const (
 	RCP_BUY_GOLD_WITH_PYLON = "LOUD's buy gold with pylons recipe"
@@ -37,50 +42,55 @@ const (
 	RCP_BUY_WOODEN_SWORD    = "LOUD's Wooden sword lv1 buy recipe"
 	RCP_BUY_COPPER_SWORD    = "LOUD's Copper sword lv1 buy recipe"
 	RCP_BUY_BRONZE_SWORD    = "LOUD's Bronze sword lv1 make recipe"
-	RCP_BUY_IRON_SWORD      = "LOUD's Iron sword lv1 make recipe"
 	RCP_BUY_SILVER_SWORD    = "LOUD's Silver sword lv1 make recipe"
+	RCP_BUY_IRON_SWORD      = "LOUD's Iron sword lv1 make recipe"
+	RCP_BUY_ANGEL_SWORD     = "LOUD's Angel sword lv1 make recipe"
 
 	RCP_HUNT_RABBITS_NOSWORD = "LOUD's hunt rabbits without sword recipe"
 	RCP_HUNT_RABBITS_YESWORD = "LOUD's hunt rabbits with a sword recipe"
-	RCP_FIGHT_GIANT          = "LOUD's fight with giant with a sword recipe"
 	RCP_FIGHT_GOBLIN         = "LOUD's fight with goblin with a sword recipe"
-	RCP_FIGHT_TROLL          = "LOUD's fight with troll with a sword recipe"
 	RCP_FIGHT_WOLF           = "LOUD's fight with wolf with a sword recipe"
+	RCP_FIGHT_TROLL          = "LOUD's fight with troll with a sword recipe"
+	RCP_FIGHT_GIANT          = "LOUD's fight with giant with a sword recipe" // 🗿
+	RCP_FIGHT_DRAGONFIRE     = "LOUD's fight with fire dragon with an iron sword recipe"
+	RCP_FIGHT_DRAGONICE      = "LOUD's fight with ice dragon with an iron sword recipe"
+	RCP_FIGHT_DRAGONACID     = "LOUD's fight with acid dragon with an iron sword recipe"
+	RCP_FIGHT_DRAGONUNDEAD   = "LOUD's fight with undead dragon with an angel sword recipe"
 
 	RCP_GET_TEST_ITEMS = "LOUD's Dev Get Test Items recipe"
-	RCP_RESTORE_HEALTH = "LOUD's health restore recipe"
 )
 
 var RcpIDs map[string]string = map[string]string{
-	RCP_BUY_GOLD_WITH_PYLON: "LOUD-buy-gold-from-pylons-recipe-v0.0.1-1579652622",
-	RCP_BUY_CHARACTER:       "LOUD-get-character-recipe-v0.0.0-1583801800",
-	RCP_SELL_SWORD:          "LOUD-sell-a-sword-recipe-v0.0.0-1583631194",
-	RCP_COPPER_SWORD_UPG:    "LOUD-upgrade-copper-sword-lv1-to-lv2-recipe-v0.0.0-1579053457",
-	RCP_WOODEN_SWORD_UPG:    "LOUD-upgrade-wooden-sword-lv1-to-lv2-recipe-v0.0.0-1579053457",
-	RCP_BUY_WOODEN_SWORD:    "LOUD-wooden-sword-lv1-buy-recipe-v0.0.0-1579053457",
-	RCP_BUY_COPPER_SWORD:    "LOUD-copper-sword-lv1-buy-recipe-v0.0.0-1579053457",
-	RCP_BUY_BRONZE_SWORD:    "LOUD-bronze-sword-lv1-make-recipe-v0.0.0-1579053457",
-	RCP_BUY_IRON_SWORD:      "LOUD-iron-sword-lv1-make-recipe-v0.0.0-1579053457",
-	RCP_BUY_SILVER_SWORD:    "LOUD-silver-sword-lv1-make-recipe-v0.0.0-1579053457",
+	RCP_BUY_GOLD_WITH_PYLON: "LOUD-buy-gold-from-pylons-recipe-v0.1.0-1589223853",
+	RCP_BUY_CHARACTER:       "LOUD-get-character-recipe-v0.1.0-1589223853",
+	RCP_SELL_SWORD:          "LOUD-sell-a-sword-recipe-v0.1.0-1589223853",
+	RCP_COPPER_SWORD_UPG:    "LOUD-upgrade-copper-sword-lv1-to-lv2-recipe-v0.1.0-1589223853",
+	RCP_WOODEN_SWORD_UPG:    "LOUD-upgrade-wooden-sword-lv1-to-lv2-recipe-v0.1.0-1589223853",
+	RCP_BUY_WOODEN_SWORD:    "LOUD-wooden-sword-lv1-buy-recipe-v0.1.0-1589223853",
+	RCP_BUY_COPPER_SWORD:    "LOUD-copper-sword-lv1-buy-recipe-v0.1.0-1589223853",
+	RCP_BUY_BRONZE_SWORD:    "LOUD-bronze-sword-lv1-make-recipe-v0.1.0-1589223853",
+	RCP_BUY_SILVER_SWORD:    "LOUD-silver-sword-lv1-make-recipe-v0.1.0-1589223853",
+	RCP_BUY_IRON_SWORD:      "LOUD-iron-sword-lv1-make-recipe-v0.1.0-1589223853",
+	RCP_BUY_ANGEL_SWORD:     "LOUD-angel-sword-lv1-make-recipe-v0.1.0-1589223853",
 
-	RCP_HUNT_RABBITS_NOSWORD: "LOUD-hunt-rabbits-with-no-weapon-recipe-v0.0.0-1579053457",
-	RCP_HUNT_RABBITS_YESWORD: "LOUD-hunt-rabbits-with-a-sword-recipe-v0.0.0-1583631194",
-	RCP_FIGHT_GIANT:          "LOUD-fight-giant-with-iron-sword-recipe-v0.0.0-1583631194",
-	RCP_FIGHT_GOBLIN:         "LOUD-fight-goblin-with-a-sword-recipe-v0.0.0-1583631194",
-	RCP_FIGHT_TROLL:          "LOUD-fight-troll-with-a-sword-recipe-v0.0.0-1583631194",
-	RCP_FIGHT_WOLF:           "LOUD-fight-wolf-with-a-sword-recipe-v0.0.0-1583631194",
+	RCP_HUNT_RABBITS_NOSWORD: "LOUD-hunt-rabbits-with-no-weapon-recipe-v0.1.0-1589223853",
+	RCP_HUNT_RABBITS_YESWORD: "LOUD-hunt-rabbits-with-a-sword-recipe-v0.1.0-1589223853",
+	RCP_FIGHT_GIANT:          "LOUD-fight-giant-with-iron-sword-recipe-v0.1.0-1589223853",
+	RCP_FIGHT_GOBLIN:         "LOUD-fight-goblin-with-a-sword-recipe-v0.1.0-1589223853",
+	RCP_FIGHT_TROLL:          "LOUD-fight-troll-with-a-sword-recipe-v0.1.0-1589223853",
+	RCP_FIGHT_WOLF:           "LOUD-fight-wolf-with-a-sword-recipe-v0.1.0-1589223853",
+	RCP_FIGHT_DRAGONFIRE:     "LOUD-fight-fire-dragon-with-iron-sword-recipe-v0.1.0-1589223853",
+	RCP_FIGHT_DRAGONICE:      "LOUD-fight-ice-dragon-with-iron-sword-recipe-v0.1.0-1589223853",
+	RCP_FIGHT_DRAGONACID:     "LOUD-fight-acid-dragon-with-iron-sword-recipe-v0.1.0-1589223853",
+	RCP_FIGHT_DRAGONUNDEAD:   "LOUD-fight-undead-dragon-with-angel-sword-recipe-v0.1.0-1589223853",
 
-	RCP_GET_TEST_ITEMS: "LOUD-dev-get-test-items-recipe-v0.0.0-1583801800",
-	RCP_RESTORE_HEALTH: "LOUD-health-restore-recipe-v0.0.1-1579652622",
+	RCP_GET_TEST_ITEMS: "LOUD-dev-get-test-items-recipe-v0.1.0-1589223853",
 }
 
 // Remote mode
-var customNode string = "35.223.7.2:26657"
-var restEndpoint string = "http://35.238.123.59:80"
-
-// Local mode
-var customNodeLocal string = "localhost:26657"
-var restEndpointLocal string = "http://localhost:1317"
+var customNode string
+var restEndpoint string
+var maxWaitBlock int64
 
 var useRestTx bool = false
 var useLocalDm bool = false
@@ -102,12 +112,32 @@ func init() {
 			}
 		}
 	}
+
+	cfgFileName := "config.yml"
 	if useLocalDm {
-		customNode = customNodeLocal
-		restEndpoint = restEndpointLocal
+		cfgFileName = "config_local.yml"
+	}
+
+	var cfg cf.Config
+	configf, err := os.Open(cfgFileName)
+	if err == nil {
+		defer configf.Close()
+
+		decoder := yaml.NewDecoder(configf)
+		err = decoder.Decode(&cfg)
+		if err == nil {
+			restEndpoint = cfg.SDK.RestEndpoint
+			customNode = cfg.SDK.CliEndpoint
+			maxWaitBlock = cfg.SDK.MaxWaitBlock
+		} else {
+			log.Fatal("Couldn't parse config file cfgFileName=", cfgFileName)
+		}
+	} else {
+		log.Fatal("Couldn't read file cfgFileName=", cfgFileName)
 	}
 
 	pylonSDK.CLIOpts.CustomNode = customNode
+	pylonSDK.CLIOpts.MaxWaitBlock = maxWaitBlock
 	if useRestTx {
 		pylonSDK.CLIOpts.RestEndpoint = restEndpoint
 	}
@@ -131,7 +161,7 @@ func RunSHCmd(args []string) ([]byte, error) {
 
 func CheckSignatureMatchWithAftiCli(t *testing.T, txhash string, privKey string, msgValue sdk.Msg, signer string, isBech32Addr bool) (bool, error) {
 
-	pylonSDK.WaitAndGetTxData(txhash, 3, t)
+	pylonSDK.WaitAndGetTxData(txhash, pylonSDK.GetMaxWaitBlock(), t)
 	tmpDir, err := ioutil.TempDir("", "pylons")
 	if err != nil {
 		panic(err.Error())
@@ -386,7 +416,7 @@ func ProcessTxResult(user User, txhash string) ([]byte, string) {
 
 	resp := handlers.ExecuteRecipeResp{}
 
-	txHandleResBytes, err := pylonSDK.WaitAndGetTxData(txhash, 3, t)
+	txHandleResBytes, err := pylonSDK.WaitAndGetTxData(txhash, pylonSDK.GetMaxWaitBlock(), t)
 	if err != nil {
 		errString := fmt.Sprintf("error getting tx result bytes %+v", err)
 		log.Println(errString)
@@ -394,7 +424,7 @@ func ProcessTxResult(user User, txhash string) ([]byte, string) {
 		return []byte{}, errString
 	}
 	LogFullTxResultByHash(txhash)
-	hmrErrMsg := pylonSDK.GetHumanReadableErrorFromTxHash(txhash, t)
+	hmrErrMsg, _ := pylonSDK.GetHumanReadableErrorFromTxHash(txhash, t)
 	if len(hmrErrMsg) > 0 {
 		errString := fmt.Sprintf("txhash=%s hmrErrMsg=%s", txhash, hmrErrMsg)
 		log.Println(errString)

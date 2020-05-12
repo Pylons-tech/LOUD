@@ -12,7 +12,7 @@ func (screen *GameScreen) renderTRTable(requests []loud.TrdReq, width int) ([]st
 	tableLines = append(tableLines, screen.regularFont()(fillSpace("╭────────────────────┬───────────────┬───────────────╮", width)))
 	tableLines = append(tableLines, screen.renderTRLine("GOLD price (pylon)", "Amount (gold)", "Total (pylon)", false, false, width))
 	tableLines = append(tableLines, screen.regularFont()(fillSpace("├────────────────────┼───────────────┼───────────────┤", width)))
-	numLines := screen.situationInnerHeight() - 5
+	numLines := screen.GetSituationBox().H - 5
 	if screen.activeLine >= len(requests) {
 		screen.activeLine = len(requests) - 1
 	}
@@ -51,7 +51,7 @@ func (screen *GameScreen) renderITRTable(title string, theads [2]string, request
 	tableLines = append(tableLines, screen.regularFont()(fillSpace("╭────────────────────────────────────┬───────────────╮", width)))
 	tableLines = append(tableLines, screen.renderItemTrdReqTableLine(theads[0], theads[1], false, false, width))
 	tableLines = append(tableLines, screen.regularFont()(fillSpace("├────────────────────────────────────┼───────────────┤", width)))
-	numLines := screen.situationInnerHeight() - 5 - numHeaderLines
+	numLines := screen.GetSituationBox().H - 5 - numHeaderLines
 	if screen.activeLine >= len(requests) {
 		screen.activeLine = len(requests) - 1
 	}
@@ -114,7 +114,7 @@ func (screen *GameScreen) renderITTable(header string, th string, itemSlice inte
 	items := InterfaceSlice(itemSlice)
 	infoLines := strings.Split(loud.Localize(header), "\n")
 	numHeaderLines := len(infoLines)
-	numLines := screen.situationInnerHeight() - 5 - numHeaderLines
+	numLines := screen.GetSituationBox().H - 5 - numHeaderLines
 	fmtFunc := screen.regularFont()
 
 	tableLines := []string{}

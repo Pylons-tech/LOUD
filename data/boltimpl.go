@@ -219,13 +219,15 @@ func (user *dbUser) InventoryItems() []Item {
 }
 
 func (user *dbUser) HasPreItemForAnItem(item Item) bool {
-	if len(item.PreItem) == 0 {
+	if len(item.PreItems) == 0 {
 		return true
 	}
-	if len(user.InventoryItemIDByName(item.PreItem)) != 0 {
-		return true
+	for _, pi := range item.PreItems {
+		if len(user.InventoryItemIDByName(pi)) == 0 {
+			return false
+		}
 	}
-	return false
+	return true
 }
 
 func (user *dbUser) InventoryItemIDByName(name string) string {

@@ -118,6 +118,8 @@ After creating eugen account on remote, check eugen account created correctly on
 ```
 pylonscli query account $(pylonscli keys show -a eugen) --node 35.223.7.2:26657
 ```
+Update cookbook name, id and recipe ID for correct version and timestamp.
+**Warn:** If cookbook name does not change, it's refering to old version of cookbook since now it's finding cookbooks by name.
 
 Create recipes and cookbooks by running
 ```

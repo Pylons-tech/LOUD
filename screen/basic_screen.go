@@ -211,11 +211,3 @@ func (screen *GameScreen) SetInputTextAndRender(text string) {
 	screen.inputText = text
 	screen.Render()
 }
-
-func (screen *GameScreen) redrawBorders() {
-	io.WriteString(os.Stdout, ansi.ColorCode(fmt.Sprintf("255:%v", bgcolor)))
-	screen.drawBox(1, 1, screen.Width()-1, screen.Height()-1)
-	drawVerticalLine(screen.leftRightBorderX(), 1, screen.Height())
-	drawHorizontalLine(1, screen.situationCmdBorderY(), screen.leftInnerWidth()+1)
-	drawHorizontalLine(1, screen.cmdInputBorderY(), screen.leftInnerWidth()+1)
-}
