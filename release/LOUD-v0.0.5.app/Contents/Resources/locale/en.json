@@ -275,6 +275,12 @@
   "You need a acid character for this action!": {
     "one": "You need a acid character for this action!"
   },
+  "You need no special character for this action!": {
+    "one": "You need no special character for this action!"
+  },
+  "no non-special character!": {
+    "one": "no non-special character!"
+  },
   "no fire character!": {
     "one": "no fire character!"
   },

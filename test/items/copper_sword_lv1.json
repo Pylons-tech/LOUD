@@ -2,6 +2,6 @@
     "Doubles": [],
     "Longs": [{ "Key": "level", "Value": "1" }],
     "Strings": [{ "Key": "Name","Value": "Copper sword" }],
-    "CookbookName": "Legend of Undead Dragon",
+    "CookbookName": "Legend of Undead Dragon v0.1.0",
     "Sender": "eugen"
 }

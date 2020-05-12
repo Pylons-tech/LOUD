@@ -1,5 +1,5 @@
 {
-    "ID": "LOUD-fight-acid-dragon-with-iron-sword-recipe-v0.1.0-1583631194",
+    "ID": "LOUD-fight-acid-dragon-with-iron-sword-recipe-v0.1.0-1589223853",
     "CoinInputs":[],
     "ItemInputRefs":[
         "./recipes/item_input/character_acid.json",
@@ -48,7 +48,7 @@
     "ExtraInfo":"",
     "Sender":"eugen",
     "Name": "LOUD's fight with acid dragon with an iron sword recipe",
-    "CookbookName": "Legend of Undead Dragon",
+    "CookbookName": "Legend of Undead Dragon v0.1.0",
     "Description": "this recipe is used to fight with acid dragon with a sword.",
     "BlockInterval":"0"
 }

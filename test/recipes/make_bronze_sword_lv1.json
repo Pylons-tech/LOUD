@@ -1,5 +1,5 @@
 {
-    "ID": "LOUD-bronze-sword-lv1-make-recipe-v0.1.0-1579053457",
+    "ID": "LOUD-bronze-sword-lv1-make-recipe-v0.1.0-1589223853",
     "CoinInputs":[{
         "Coin": "loudcoin",
         "Count": "250"
@@ -22,7 +22,7 @@
     "ExtraInfo":"",
     "Sender":"eugen",
     "Name": "LOUD's Bronze sword lv1 make recipe",
-    "CookbookName": "Legend of Undead Dragon",
+    "CookbookName": "Legend of Undead Dragon v0.1.0",
     "Description": "this recipe is used to make bronze sword lv1.",
     "BlockInterval":"0"
 }

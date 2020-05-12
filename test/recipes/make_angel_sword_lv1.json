@@ -1,5 +1,5 @@
 {
-    "ID": "LOUD-angel-sword-lv1-make-recipe-v0.1.0-1588471932",
+    "ID": "LOUD-angel-sword-lv1-make-recipe-v0.1.0-1589223853",
     "CoinInputs":[{
         "Coin": "loudcoin",
         "Count": "20000"
@@ -24,7 +24,7 @@
     "ExtraInfo":"",
     "Sender":"eugen",
     "Name": "LOUD's Angel sword lv1 make recipe",
-    "CookbookName": "Legend of Undead Dragon",
+    "CookbookName": "Legend of Undead Dragon v0.1.0",
     "Description": "this recipe is used to make angel sword lv1.",
     "BlockInterval":"0"
 }

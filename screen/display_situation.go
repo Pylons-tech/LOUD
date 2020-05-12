@@ -393,16 +393,21 @@ func (screen *GameScreen) TxResultSituationDesc() (string, FontType) {
 		case RSLT_FIGHT_GIANT:
 			earnedAmount, respOutput := screen.GetTxResponseOutput()
 			resLen := len(respOutput)
-			resultTexts := []string{"gold", "character", "weapon"}
 			if resLen == 0 {
 				desc = loud.Sprintf("You were killed by giant accidently")
 				font = RED
 			} else {
-				desc = basicHuntResultDesc("You did fight with giant and earned %d.", earnedAmount, resultTexts[:resLen])
+				desc = loud.Sprintf("You did fight with giant and earned %d.", earnedAmount)
 				switch resLen {
 				case 2:
 					desc += loud.Sprintf("You have lost your weapon accidently")
 					font = YELLOW
+				case 3:
+					activeCharacter := screen.user.GetActiveCharacter()
+					if activeCharacter.Special != loud.NO_SPECIAL { // Got special from this fight
+						desc += loud.Sprintf("You got special from this fight!!")
+						font = GREEN
+					}
 				}
 			}
 		case RSLT_FIGHT_DRAGONFIRE:

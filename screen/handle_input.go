@@ -135,6 +135,10 @@ func (screen *GameScreen) ForestStatusCheck(newStus ScreenStatus) (string, strin
 		return loud.Sprintf("You need a character for this action!"), loud.Sprintf("no character!")
 	}
 	switch newStus {
+	case CONFIRM_FIGHT_GIANT:
+		if activeCharacter == nil || activeCharacter.Special != loud.NO_SPECIAL {
+			return loud.Sprintf("You need no special character for this action!"), loud.Sprintf("no non-special character!")
+		}
 	case CONFIRM_FIGHT_DRAGONFIRE:
 		if activeCharacter == nil || activeCharacter.Special != loud.FIRE_SPECIAL {
 			return loud.Sprintf("You need a fire character for this action!"), loud.Sprintf("no fire character!")
@@ -219,6 +223,8 @@ func (screen *GameScreen) HandleInputKeyShopEntryPoint(input termbox.Event) bool
 }
 
 func (screen *GameScreen) MoveToNextStep() {
+	activeCharacter := screen.user.GetActiveCharacter()
+
 	switch screen.scrStatus {
 	case CONFIRM_HUNT_RABBITS:
 		screen.RunHuntRabbits()
@@ -282,6 +288,12 @@ func (screen *GameScreen) MoveToNextStep() {
 	if nextStatus, ok := nextMapper[screen.scrStatus]; ok {
 		if screen.user.GetLocation() == loud.DEVELOP {
 			screen.scrStatus = SHW_LOCATION
+		} else if screen.user.GetLocation() == loud.FOREST && activeCharacter == nil {
+			// move back to home in forest if no active character
+			screen.scrStatus = SHW_LOCATION
+		} else if nextStatus == CONFIRM_FIGHT_GIANT && activeCharacter.Special != loud.NO_SPECIAL {
+			// go back to forest entrypoint when Special is not empty
+			screen.scrStatus = SHW_LOCATION
 		} else {
 			screen.scrStatus = nextStatus
 		}
@@ -293,6 +305,8 @@ func (screen *GameScreen) MoveToNextStep() {
 }
 
 func (screen *GameScreen) MoveToPrevStep() {
+	activeCharacter := screen.user.GetActiveCharacter()
+
 	prevMapper := map[ScreenStatus]ScreenStatus{
 		CR8_BUY_LOUD_TRDREQ_ENT_LUDVAL:  SHW_LOUD_BUY_TRDREQS,
 		CR8_BUY_LOUD_TRDREQ_ENT_PYLVAL:  CR8_BUY_LOUD_TRDREQ_ENT_LUDVAL,
@@ -349,13 +363,21 @@ func (screen *GameScreen) MoveToPrevStep() {
 		// set loud value previously entered
 		screen.inputText = screen.loudEnterValue
 	case SHW_LOCATION:
-		// move to home if it's somewhere else's 1st step
+		// move to home if it's somewhere else's entrypoint
 		if screen.scrStatus == SHW_LOCATION {
 			screen.user.SetLocation(loud.HOME)
 		}
+	case CONFIRM_FIGHT_GIANT:
+		if activeCharacter.Special != loud.NO_SPECIAL {
+			// go back to forest entrypoint when Special is not empty
+			screen.scrStatus = SHW_LOCATION
+		}
 	}
 
-	if nxtStatus == SHW_LOCATION && screen.scrStatus == SHW_LOCATION {
+	if screen.user.GetLocation() == loud.FOREST && activeCharacter == nil {
+		// move back to home in forest if no active character
+		screen.scrStatus = SHW_LOCATION
+		screen.user.SetLocation(loud.HOME)
 	}
 
 	screen.scrStatus = nxtStatus

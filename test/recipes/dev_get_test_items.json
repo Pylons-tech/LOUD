@@ -1,5 +1,5 @@
 {
-    "ID": "LOUD-dev-get-test-items-recipe-v0.1.0-1583801800",
+    "ID": "LOUD-dev-get-test-items-recipe-v0.1.0-1589223853",
     "CoinInputs":[{
         "Coin": "pylon",
         "Count": "1"
@@ -46,7 +46,7 @@
     "ExtraInfo":"",
     "Sender":"eugen",
     "Name": "LOUD's Dev Get Test Items recipe",
-    "CookbookName": "Legend of Undead Dragon",
+    "CookbookName": "Legend of Undead Dragon v0.1.0",
     "Description": "this recipe is used to create character.",
     "BlockInterval":"0"
 }
