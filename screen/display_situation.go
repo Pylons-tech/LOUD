@@ -229,7 +229,7 @@ func (screen *GameScreen) renderUserSituation() {
 		} else {
 			chunkedColorfulLines := []string{}
 			for _, chli := range chunkedlines {
-				chunkedColorfulLines = append(chunkedColorfulLines, screen.getFont(descfont)(chli))
+				chunkedColorfulLines = append(chunkedColorfulLines, screen.getFont(descfont)(fillSpace(chli, w)))
 			}
 			tableLines = append(chunkedColorfulLines, tableLines...)
 		}
@@ -239,7 +239,7 @@ func (screen *GameScreen) renderUserSituation() {
 	for index, line := range infoLines {
 		io.WriteString(os.Stdout, fmt.Sprintf("%s%s",
 			cursor.MoveTo(y+index, x),
-			fmtFunc(fillSpace(line, screen.leftInnerWidth()))))
+			fmtFunc(fillSpace(line, w))))
 		if index+2 > int(screen.Height()) {
 			break
 		}

@@ -45,18 +45,13 @@ func (screen *GameScreen) renderCharacterSheet() {
 		fmtFunc(fillSpace("", w)),
 	}
 
-	items := screen.user.InventoryItems()
-	for _, item := range items {
-		itemInfo := fillSpace(formatItem(item), w)
-		if activeWeapon != nil && item.ID == activeWeapon.ID {
-			itemInfo = screen.blueBoldFont()(itemInfo)
-		} else {
-			itemInfo = fmtFunc(itemInfo)
-		}
-		infoLines = append(infoLines, itemInfo)
-	}
+	MAX_INVENTORY_LEN := h - 15
 
 	for idx, character := range characters {
+		if len(infoLines) > MAX_INVENTORY_LEN {
+			infoLines = append(infoLines, "...")
+			break
+		}
 		characterInfo := fillSpace(formatCharacter(character), w)
 		if idx == screen.user.GetActiveCharacterIndex() {
 			characterInfo = screen.blueBoldFont()(characterInfo)
@@ -64,6 +59,21 @@ func (screen *GameScreen) renderCharacterSheet() {
 			characterInfo = fmtFunc(characterInfo)
 		}
 		infoLines = append(infoLines, characterInfo)
+	}
+
+	items := screen.user.InventoryItems()
+	for _, item := range items {
+		if len(infoLines) > MAX_INVENTORY_LEN {
+			infoLines = append(infoLines, "...")
+			break
+		}
+		itemInfo := fillSpace(formatItem(item), w)
+		if activeWeapon != nil && item.ID == activeWeapon.ID {
+			itemInfo = screen.blueBoldFont()(itemInfo)
+		} else {
+			itemInfo = fmtFunc(itemInfo)
+		}
+		infoLines = append(infoLines, itemInfo)
 	}
 
 	// HP := uint64(100)
@@ -89,13 +99,12 @@ func (screen *GameScreen) renderCharacterSheet() {
 		)
 	}
 
+	lenInfoLines := len(infoLines)
+
 	for index, line := range infoLines {
 		io.WriteString(os.Stdout, fmt.Sprintf("%s%s",
 			cursor.MoveTo(y+index, x),
 			line))
-		if index >= h {
-			break
-		}
 	}
 
 	nodeLines := []string{
@@ -119,13 +128,10 @@ func (screen *GameScreen) renderCharacterSheet() {
 
 	for index, line := range nodeLines {
 		io.WriteString(os.Stdout, fmt.Sprintf("%s%s",
-			cursor.MoveTo(y+len(infoLines)+index, x),
+			cursor.MoveTo(y+lenInfoLines+index, x),
 			line))
-		if index+len(infoLines) > h {
-			break
-		}
 	}
 
-	lastLine := len(infoLines) + len(nodeLines) + 1
+	lastLine := lenInfoLines + len(nodeLines) + 1
 	screen.drawFill(x, lastLine+1, w, h-lastLine)
 }
