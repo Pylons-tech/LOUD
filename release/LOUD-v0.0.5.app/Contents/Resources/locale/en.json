@@ -530,6 +530,9 @@
   "You got bonus item called %s": {
     "one": "You got bonus item called %s"
   },
+  "You got %s (special) from the giant!!": {
+    "one": "You got %s (special) from the giant!!"
+  },
   "You were killed by troll accidently": {
     "one": "You were killed by 👻(troll) accidently"
   },

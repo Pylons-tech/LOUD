@@ -557,6 +557,9 @@
   "You got extra pylons for LOUD game": {
     "one": "You got extra pylons for LOUD game"
   },
+  "You got %s (special) from the giant!!": {
+    "one": "You got %s (special) from the giant!!"
+  },
   "You switched user to %s": {
     "one": "You switched user to %s"
   },
