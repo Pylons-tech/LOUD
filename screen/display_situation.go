@@ -12,10 +12,6 @@ import (
 	"github.com/ahmetb/go-cursor"
 )
 
-func basicHuntResultDesc(format string, earnedAmount int64, res []string) string {
-	return loud.Sprintf(format, earnedAmount) + devDetailedResultDesc(res)
-}
-
 func devDetailedResultDesc(res []string) string {
 	resT := []string{}
 	for _, it := range res {
@@ -325,12 +321,13 @@ func (screen *GameScreen) TxResultSituationDesc() (string, FontType) {
 		case RSLT_HUNT_RABBITS:
 			earnedAmount, respOutput := screen.GetTxResponseOutput()
 			resLen := len(respOutput)
-			resultTexts := []string{"gold", "character", "weapon"}
 			if resLen == 0 {
 				desc = loud.Sprintf("Your character is dead while following rabbits accidently")
 				font = RED
 			} else {
-				desc = basicHuntResultDesc("You did hunt rabbits and earned %d.", earnedAmount, resultTexts[:resLen])
+				desc = loud.Sprintf("You did hunt rabbits and earned %d.", earnedAmount)
+				// resultTexts := []string{"gold", "character", "weapon"}
+				// desc = devDetailedResultDesc(resultTexts[:resLen])
 				if resLen == 2 && screen.user.GetLastTxMetaData() == loud.RCP_HUNT_RABBITS_YESWORD {
 					desc += loud.Sprintf("You have lost your weapon accidently")
 					font = YELLOW
@@ -339,12 +336,14 @@ func (screen *GameScreen) TxResultSituationDesc() (string, FontType) {
 		case RSLT_FIGHT_GOBLIN:
 			earnedAmount, respOutput := screen.GetTxResponseOutput()
 			resLen := len(respOutput)
-			resultTexts := []string{"gold", "character", "weapon", loud.GOBLIN_EAR}
 			if resLen == 0 {
 				desc = loud.Sprintf("You were killed by goblin accidently")
 				font = RED
 			} else {
-				desc = basicHuntResultDesc("You did fight with goblin and earned %d.", earnedAmount, resultTexts[:resLen])
+				desc = loud.Sprintf("You did fight with goblin and earned %d.", earnedAmount)
+				// resultTexts := []string{"gold", "character", "weapon", loud.GOBLIN_EAR}
+				// desc += devDetailedResultDesc(resultTexts[:resLen])
+
 				switch resLen {
 				case 2:
 					desc += loud.Sprintf("You have lost your weapon accidently")
@@ -359,12 +358,13 @@ func (screen *GameScreen) TxResultSituationDesc() (string, FontType) {
 		case RSLT_FIGHT_TROLL:
 			earnedAmount, respOutput := screen.GetTxResponseOutput()
 			resLen := len(respOutput)
-			resultTexts := []string{"gold", "character", "weapon", loud.TROLL_TOES}
 			if resLen == 0 {
 				desc = loud.Sprintf("You were killed by troll accidently")
 				font = RED
 			} else {
-				desc = basicHuntResultDesc("You did fight with troll and earned %d.", earnedAmount, resultTexts[:resLen])
+				desc = loud.Sprintf("You did fight with troll and earned %d.", earnedAmount)
+				// resultTexts := []string{"gold", "character", "weapon", loud.TROLL_TOES}
+				// desc = devDetailedResultDesc(resultTexts[:resLen])
 				switch resLen {
 				case 2:
 					desc += loud.Sprintf("You have lost your weapon accidently")
@@ -379,12 +379,13 @@ func (screen *GameScreen) TxResultSituationDesc() (string, FontType) {
 		case RSLT_FIGHT_WOLF:
 			earnedAmount, respOutput := screen.GetTxResponseOutput()
 			resLen := len(respOutput)
-			resultTexts := []string{"gold", "character", "weapon", loud.WOLF_TAIL}
 			if resLen == 0 {
 				desc = loud.Sprintf("You were killed by wolf accidently")
 				font = RED
 			} else {
-				desc = basicHuntResultDesc("You did fight with wolf and earned %d.", earnedAmount, resultTexts[:resLen])
+				desc = loud.Sprintf("You did fight with wolf and earned %d.", earnedAmount)
+				// resultTexts := []string{"gold", "character", "weapon", loud.WOLF_TAIL}
+				// desc = devDetailedResultDesc(resultTexts[:resLen])
 				switch resLen {
 				case 2:
 					desc += loud.Sprintf("You have lost your weapon accidently")
@@ -421,12 +422,13 @@ func (screen *GameScreen) TxResultSituationDesc() (string, FontType) {
 		case RSLT_FIGHT_DRAGONFIRE:
 			earnedAmount, respOutput := screen.GetTxResponseOutput()
 			resLen := len(respOutput)
-			resultTexts := []string{"gold", "character", "weapon", loud.DROP_DRAGONFIRE}
 			if resLen == 0 {
 				desc = loud.Sprintf("You were killed by fire dragon accidently")
 				font = RED
 			} else {
-				desc = basicHuntResultDesc("You did fight with fire dragon and earned %d.", earnedAmount, resultTexts[:resLen])
+				desc = loud.Sprintf("You did fight with fire dragon and earned %d.", earnedAmount)
+				// resultTexts := []string{"gold", "character", "weapon", loud.DROP_DRAGONFIRE}
+				// desc = devDetailedResultDesc(resultTexts[:resLen])
 				switch resLen {
 				case 2:
 					desc += loud.Sprintf("You have lost your weapon accidently")
@@ -441,12 +443,13 @@ func (screen *GameScreen) TxResultSituationDesc() (string, FontType) {
 		case RSLT_FIGHT_DRAGONICE:
 			earnedAmount, respOutput := screen.GetTxResponseOutput()
 			resLen := len(respOutput)
-			resultTexts := []string{"gold", "character", "weapon", loud.DROP_DRAGONICE}
 			if resLen == 0 {
 				desc = loud.Sprintf("You were killed by ice dragon accidently")
 				font = RED
 			} else {
-				desc = basicHuntResultDesc("You did fight with ice dragon and earned %d.", earnedAmount, resultTexts[:resLen])
+				desc = loud.Sprintf("You did fight with ice dragon and earned %d.", earnedAmount)
+				// resultTexts := []string{"gold", "character", "weapon", loud.DROP_DRAGONICE}
+				// desc = devDetailedResultDesc(resultTexts[:resLen])
 				switch resLen {
 				case 2:
 					desc += loud.Sprintf("You have lost your weapon accidently")
@@ -461,12 +464,13 @@ func (screen *GameScreen) TxResultSituationDesc() (string, FontType) {
 		case RSLT_FIGHT_DRAGONACID:
 			earnedAmount, respOutput := screen.GetTxResponseOutput()
 			resLen := len(respOutput)
-			resultTexts := []string{"gold", "character", "weapon", loud.DROP_DRAGONACID}
 			if resLen == 0 {
 				desc = loud.Sprintf("You were killed by acid dragon accidently")
 				font = RED
 			} else {
-				desc = basicHuntResultDesc("You did fight with acid dragon and earned %d.", earnedAmount, resultTexts[:resLen])
+				desc = loud.Sprintf("You did fight with acid dragon and earned %d.", earnedAmount)
+				// resultTexts := []string{"gold", "character", "weapon", loud.DROP_DRAGONACID}
+				// desc = devDetailedResultDesc(resultTexts[:resLen])
 				switch resLen {
 				case 2:
 					desc += loud.Sprintf("You have lost your weapon accidently")
@@ -481,12 +485,13 @@ func (screen *GameScreen) TxResultSituationDesc() (string, FontType) {
 		case RSLT_FIGHT_DRAGONUNDEAD:
 			earnedAmount, respOutput := screen.GetTxResponseOutput()
 			resLen := len(respOutput)
-			resultTexts := []string{"gold", "character", "weapon"}
 			if resLen == 0 {
 				desc = loud.Sprintf("You were killed by undead dragon accidently")
 				font = RED
 			} else {
-				desc = basicHuntResultDesc("You did fight with undead dragon and earned %d.", earnedAmount, resultTexts[:resLen])
+				desc = loud.Sprintf("You did fight with undead dragon and earned %d.", earnedAmount)
+				// resultTexts := []string{"gold", "character", "weapon"}
+				// desc = devDetailedResultDesc(resultTexts[:resLen])
 				switch resLen {
 				case 2:
 					desc += loud.Sprintf("You have lost your weapon accidently")
