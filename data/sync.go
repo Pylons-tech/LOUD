@@ -39,7 +39,7 @@ func SyncFromNode(user User) {
 		}
 		XP, _ := rawItem.FindDouble("XP")
 		Level, _ := rawItem.FindLong("level")
-		GiantKill, _ := rawItem.FindLong("GiantKill") // 🗿 
+		GiantKill, _ := rawItem.FindLong("GiantKill") // 🗿
 		Special, _ := rawItem.FindLong("Special")
 		SpecialDragonKill, _ := rawItem.FindLong("SpecialDragonKill")
 		UndeadDragonKill, _ := rawItem.FindLong("UndeadDragonKill")
