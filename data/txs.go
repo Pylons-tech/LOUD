@@ -92,7 +92,7 @@ func FightTroll(user User) (string, error) {
 	return RunHuntRecipe(RCP_FIGHT_TROLL, user)
 }
 
-func FightWolf(user User) (string, error) { // 🐺 
+func FightWolf(user User) (string, error) { // 🐺
 	return RunHuntRecipe(RCP_FIGHT_WOLF, user)
 }
 
