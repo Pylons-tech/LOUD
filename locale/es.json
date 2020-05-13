@@ -655,5 +655,20 @@
   },
   "not enough gold": {
     "one": "gold lack"
+  },
+  "You can make silver sword with Goblin ear at the shop!": {
+    "one": "You can make silver sword with Goblin ear at the shop!"
+  },
+  "You can make iron sword with Troll toes at the shop!": {
+    "one": "You can make iron sword with Troll toes at the shop!"
+  },
+  "You can make bronze sword with Wolf tail at the shop!": {
+    "one": "You can make bronze sword with Wolf tail at the shop!"
+  },
+  "You can now fight with %s with this character!": {
+    "one": "You can now fight with %s with this character!"
+  },
+  "Once you have drops from 3 special dragons, you can create angel sword at the shop!": {
+    "one": "Once you have drops from 3 special dragons, you can create angel sword at the shop!"
   }
 }

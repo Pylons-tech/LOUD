@@ -200,6 +200,18 @@ func formatSpecial(special int) string {
 	return ""
 }
 
+func formatSpecialDragon(special int) string {
+	switch special {
+	case loud.FIRE_SPECIAL:
+		return "Fire dragon"
+	case loud.ICE_SPECIAL:
+		return "Ice dragon"
+	case loud.ACID_SPECIAL:
+		return "Acid dragon"
+	}
+	return ""
+}
+
 func formatCharacter(ch loud.Character) string {
 	chStr := loud.Localize(ch.Name)
 	chStr = formatSpecial(ch.Special) + chStr

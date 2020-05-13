@@ -351,6 +351,8 @@ func (screen *GameScreen) TxResultSituationDesc() (string, FontType) {
 					font = YELLOW
 				case 4:
 					desc += loud.Sprintf("You got bonus item called %s", loud.GOBLIN_EAR)
+					desc += "\n"
+					desc += loud.Sprintf("You can make silver sword with Goblin ear at the shop!")
 					font = GREEN
 				}
 			}
@@ -369,6 +371,8 @@ func (screen *GameScreen) TxResultSituationDesc() (string, FontType) {
 					font = YELLOW
 				case 4:
 					desc += loud.Sprintf("You got bonus item called %s", loud.TROLL_TOES)
+					desc += "\n"
+					desc += loud.Sprintf("You can make iron sword with Troll toes at the shop!")
 					font = GREEN
 				}
 			}
@@ -387,6 +391,7 @@ func (screen *GameScreen) TxResultSituationDesc() (string, FontType) {
 					font = YELLOW
 				case 4:
 					desc += loud.Sprintf("You got bonus item called %s", loud.WOLF_TAIL)
+					desc += loud.Sprintf("You can make bronze sword with Wolf tail at the shop!")
 					font = GREEN
 				}
 			}
@@ -406,6 +411,7 @@ func (screen *GameScreen) TxResultSituationDesc() (string, FontType) {
 					activeCharacter := screen.user.GetActiveCharacter()
 					if activeCharacter.Special != loud.NO_SPECIAL { // Got special from this fight
 						desc += loud.Sprintf("You got %s (special) from the giant!!", formatSpecial(activeCharacter.Special))
+						desc += loud.Sprintf("You can now fight with %s with this character!", formatSpecialDragon(activeCharacter.Special))
 						font = GREEN
 					}
 				}
@@ -425,6 +431,7 @@ func (screen *GameScreen) TxResultSituationDesc() (string, FontType) {
 					font = YELLOW
 				case 4:
 					desc += loud.Sprintf("You got bonus item called %s", loud.DROP_DRAGONFIRE)
+					desc += loud.Sprintf("Once you have drops from 3 special dragons, you can create angel sword at the shop!")
 					font = GREEN
 				}
 			}
@@ -443,6 +450,7 @@ func (screen *GameScreen) TxResultSituationDesc() (string, FontType) {
 					font = YELLOW
 				case 4:
 					desc += loud.Sprintf("You got bonus item called %s", loud.DROP_DRAGONICE)
+					desc += loud.Sprintf("Once you have drops from 3 special dragons, you can create angel sword at the shop!")
 					font = GREEN
 				}
 			}
@@ -461,6 +469,7 @@ func (screen *GameScreen) TxResultSituationDesc() (string, FontType) {
 					font = YELLOW
 				case 4:
 					desc += loud.Sprintf("You got bonus item called %s", loud.DROP_DRAGONACID)
+					desc += loud.Sprintf("Once you have drops from 3 special dragons, you can create angel sword at the shop!")
 					font = GREEN
 				}
 			}
