@@ -111,17 +111,8 @@ Input: Any item which has `attack` and `level` attributes
 ### Hunt rabbits recipe without sword
 ```
 Reward: 1 or 2
-5% chance of character dying
+1% chance of character dying
 When character die, no gold is returned.
-```
-
-### Hunt rabbits recipe with a sword
-
-```
-Reward: 1 + `attack / 2`
-2% chance of character dying
-3% chance of sword lose
-When character die, no gold or sword is returned.
 ```
 
 ### Fight Goblin 👺

@@ -18,14 +18,15 @@ type User interface {
 	SetPylonAmount(int)
 	SetItems([]Item)
 	SetCharacters([]Character)
-	SetActiveWeaponIndex(idx int)
 	SetActiveCharacterIndex(idx int)
+	SetFightMonster(string)
 	SetLocation(UserLocation)
 	SetLastTransaction(string, string)
 	SetLatestBlockHeight(int64)
 	InventoryItems() []Item
 	HasPreItemForAnItem(Item) bool
 	InventoryItemIDByName(string) string
+	InventoryAngelSwords() []Item
 	InventoryIronSwords() []Item
 	InventorySwords() []Item
 	InventoryCharacters() []Character
@@ -33,10 +34,9 @@ type User interface {
 	InventorySellableItems() []Item
 	GetLocation() UserLocation
 	GetPrivKey() string
-	GetActiveWeaponIndex() int
 	GetActiveCharacterIndex() int
 	GetActiveCharacter() *Character
-	GetActiveWeapon() *Item
+	GetFightWeapon() *Item
 	GetAddress() string
 	GetGold() int
 	GetPylonAmount() int

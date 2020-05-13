@@ -49,12 +49,22 @@ const (
 )
 
 const (
-	WOODEN_SWORD string = "Wooden sword"
-	COPPER_SWORD        = "Copper sword"
-	SILVER_SWORD        = "Silver sword"
-	BRONZE_SWORD        = "Bronze sword"
-	IRON_SWORD          = "Iron sword"
-	ANGEL_SWORD         = "Angel sword"
+	RABBIT        string = "Rabbit"
+	GOBLIN               = "Goblin"
+	WOLF                 = "Wolf"
+	TROLL                = "Troll"
+	GIANT                = "Giant"
+	DRAGON_FIRE          = "Fire dragon"
+	DRAGON_ICE           = "Ice dragon"
+	DRAGON_ACID          = "Acid dragon"
+	DRAGON_UNDEAD        = "Undead dragon"
+
+	WOODEN_SWORD = "Wooden sword"
+	COPPER_SWORD = "Copper sword"
+	SILVER_SWORD = "Silver sword"
+	BRONZE_SWORD = "Bronze sword"
+	IRON_SWORD   = "Iron sword"
+	ANGEL_SWORD  = "Angel sword"
 
 	GOBLIN_EAR      = "Goblin ear"
 	WOLF_TAIL       = "Wolf tail"

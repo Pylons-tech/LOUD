@@ -73,10 +73,10 @@ type UserData struct {
 	Address              string
 	Location             UserLocation
 	Items                []Item
-	ActiveWeaponIndex    int
 	Characters           []Character
 	ActiveCharacterIndex int
 	PrivKey              string
+	targetMonster        string
 	lastTransaction      string
 	lastTxMetaData       string
 	lastUpdate           int64
@@ -176,23 +176,32 @@ func (user *dbUser) SetItems(items []Item) {
 	user.UserData.Items = items
 }
 
-func (user *dbUser) SetActiveWeaponIndex(idx int) {
-	user.UserData.ActiveWeaponIndex = idx
+func (user *dbUser) SetFightMonster(monster string) {
+	user.targetMonster = monster
 }
 
-func (user *dbUser) GetActiveWeapon() *Item {
-	i := user.UserData.ActiveWeaponIndex
-	swords := user.InventorySwords()
-	if i < 0 || i >= len(swords) {
+func (user *dbUser) GetFightWeapon() *Item {
+	switch user.targetMonster {
+	case RABBIT: // no weapon is needed
 		return nil
+	case GOBLIN, WOLF, TROLL: // any sword is ok
+		weapons := user.InventorySwords()
+		if len := len(weapons); len > 0 {
+			return &weapons[len-1]
+		}
+	case GIANT, DRAGON_FIRE, DRAGON_ICE, DRAGON_ACID: // iron sword is needed
+		weapons := user.InventoryIronSwords()
+		if len := len(weapons); len > 0 {
+			return &weapons[len-1]
+		}
+	case DRAGON_UNDEAD: // angel sword is needed
+		weapons := user.InventoryAngelSwords()
+		if len := len(weapons); len > 0 {
+			return &weapons[len-1]
+		}
 	}
-	return &swords[i]
+	return nil
 }
-
-func (user *dbUser) GetActiveWeaponIndex() int {
-	return user.UserData.ActiveWeaponIndex
-}
-
 func (user *dbUser) SetCharacters(items []Character) {
 	user.UserData.Characters = items
 }
@@ -238,6 +247,17 @@ func (user *dbUser) InventoryItemIDByName(name string) string {
 		}
 	}
 	return ""
+}
+
+func (user *dbUser) InventoryAngelSwords() []Item {
+	iis := user.InventoryItems()
+	uis := []Item{}
+	for _, ii := range iis {
+		if ii.Name == ANGEL_SWORD {
+			uis = append(uis, ii)
+		}
+	}
+	return uis
 }
 
 func (user *dbUser) InventoryIronSwords() []Item {

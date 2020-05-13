@@ -175,15 +175,6 @@ func (screen *GameScreen) renderUserCommands() {
 					return formatCharacter(it.(loud.Character))
 				}).
 			appendSelectGoBackCmds()
-	case SEL_ACTIVE_WEAPON:
-		infoLines = infoLines.
-			appendDeselectCmd().
-			appendSelectCmds(
-				screen.user.InventorySwords(),
-				func(it interface{}) string {
-					return formatItem(it.(loud.Item))
-				}).
-			appendSelectGoBackCmds()
 	case SEL_BUYITM:
 		infoLines = infoLines.
 			appendCustomFontSelectCmds(

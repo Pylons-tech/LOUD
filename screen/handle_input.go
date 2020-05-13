@@ -65,8 +65,7 @@ func (screen *GameScreen) HandleInputKeyHomeEntryPoint(input termbox.Event) bool
 
 	tarStusMap := map[string]ScreenStatus{
 		"1": SEL_ACTIVE_CHAR,
-		"2": SEL_ACTIVE_WEAPON,
-		"3": SEL_RENAME_CHAR,
+		"2": SEL_RENAME_CHAR,
 	}
 
 	if newStus, ok := tarStusMap[Key]; ok {
@@ -74,8 +73,6 @@ func (screen *GameScreen) HandleInputKeyHomeEntryPoint(input termbox.Event) bool
 		switch newStus {
 		case SEL_ACTIVE_CHAR:
 			screen.activeLine = screen.user.GetActiveCharacterIndex()
-		case SEL_ACTIVE_WEAPON:
-			screen.activeLine = screen.user.GetActiveWeaponIndex()
 		}
 		screen.Render()
 		return true
@@ -152,23 +149,22 @@ func (screen *GameScreen) ForestStatusCheck(newStus ScreenStatus) (string, strin
 			return loud.Sprintf("You need a acid character for this action!"), loud.Sprintf("no acid character!")
 		}
 	}
-	activeWeapon := screen.user.GetActiveWeapon()
 	switch newStus {
 	case CONFIRM_FIGHT_GOBLIN,
 		CONFIRM_FIGHT_WOLF,
 		CONFIRM_FIGHT_TROLL:
-		if activeWeapon == nil {
+		if len(screen.user.InventorySwords()) == 0 {
 			return loud.Sprintf("You need a sword for this action!"), loud.Sprintf("no sword!")
 		}
 	case CONFIRM_FIGHT_GIANT,
 		CONFIRM_FIGHT_DRAGONFIRE,
 		CONFIRM_FIGHT_DRAGONICE,
 		CONFIRM_FIGHT_DRAGONACID:
-		if activeWeapon == nil || activeWeapon.Name != loud.IRON_SWORD {
+		if len(screen.user.InventoryIronSwords()) == 0 {
 			return loud.Sprintf("You need an iron sword for this action!"), loud.Sprintf("no iron sword!")
 		}
 	case CONFIRM_FIGHT_DRAGONUNDEAD:
-		if activeWeapon == nil || activeWeapon.Name != loud.ANGEL_SWORD {
+		if len(screen.user.InventoryAngelSwords()) == 0 {
 			return loud.Sprintf("You need an angel sword for this action!"), loud.Sprintf("no angel sword!")
 		}
 	}
@@ -177,6 +173,18 @@ func (screen *GameScreen) ForestStatusCheck(newStus ScreenStatus) (string, strin
 
 func (screen *GameScreen) HandleInputKeyForestEntryPoint(input termbox.Event) bool {
 	Key := strings.ToUpper(string(input.Ch))
+
+	monsterMap := map[string]string{
+		"1": loud.RABBIT,
+		"2": loud.GOBLIN,
+		"3": loud.WOLF,
+		"4": loud.TROLL,
+		"5": loud.GIANT,
+		"6": loud.DRAGON_FIRE,
+		"7": loud.DRAGON_ICE,
+		"8": loud.DRAGON_ACID,
+		"9": loud.DRAGON_UNDEAD,
+	}
 
 	tarStusMap := map[string]ScreenStatus{
 		"1": CONFIRM_HUNT_RABBITS,
@@ -196,6 +204,7 @@ func (screen *GameScreen) HandleInputKeyForestEntryPoint(input termbox.Event) bo
 			screen.Render()
 			return true
 		}
+		screen.user.SetFightMonster(monsterMap[Key])
 		screen.scrStatus = newStus
 		screen.Render()
 		return true
@@ -279,7 +288,6 @@ func (screen *GameScreen) MoveToNextStep() {
 		RSLT_FULFILL_BUYCHR_TRDREQ:     SHW_BUYCHR_TRDREQS,
 		RSLT_RENAME_CHAR:               SEL_RENAME_CHAR,
 		RSLT_SEL_ACT_CHAR:              SEL_ACTIVE_CHAR,
-		RSLT_SEL_ACT_WEAPON:            SEL_ACTIVE_WEAPON,
 		RSLT_BUYITM:                    SEL_BUYITM,
 		RSLT_BUYCHR:                    SEL_BUYCHR,
 		RSLT_SELLITM:                   SEL_SELLITM,
@@ -345,7 +353,6 @@ func (screen *GameScreen) MoveToPrevStep() {
 		RSLT_FULFILL_BUYCHR_TRDREQ:      SHW_BUYCHR_TRDREQS,
 		RSLT_RENAME_CHAR:                SEL_RENAME_CHAR,
 		RSLT_SEL_ACT_CHAR:               SEL_ACTIVE_CHAR,
-		RSLT_SEL_ACT_WEAPON:             SEL_ACTIVE_WEAPON,
 		RSLT_BUYITM:                     SEL_BUYITM,
 		RSLT_BUYCHR:                     SEL_BUYCHR,
 		RSLT_SELLITM:                    SEL_SELLITM,
@@ -521,9 +528,6 @@ func (screen *GameScreen) HandleThirdClassInputKeys(input termbox.Event) bool {
 		case SEL_ACTIVE_CHAR:
 			screen.activeLine = loud.GetIndexFromString(Key)
 			screen.RunActiveCharacterSelect(screen.activeLine)
-		case SEL_ACTIVE_WEAPON:
-			screen.activeLine = loud.GetIndexFromString(Key)
-			screen.RunActiveWeaponSelect(screen.activeLine)
 		case SEL_RENAME_CHAR:
 			screen.activeLine = loud.GetIndexFromString(Key)
 			characters := screen.user.InventoryCharacters()
@@ -623,13 +627,6 @@ func (screen *GameScreen) HandleThirdClassKeyEnterEvent() bool {
 			}
 			screen.activeCharacter = characters[screen.activeLine]
 			screen.RunActiveCharacterSelect(screen.activeLine)
-		case SEL_ACTIVE_WEAPON:
-			items := screen.user.InventorySwords()
-			if len(items) <= screen.activeLine || screen.activeLine < 0 {
-				return false
-			}
-			screen.activeItem = items[screen.activeLine]
-			screen.RunActiveWeaponSelect(screen.activeLine)
 		case SEL_RENAME_CHAR:
 			characters := screen.user.InventoryCharacters()
 			if len(characters) <= screen.activeLine || screen.activeLine < 0 {

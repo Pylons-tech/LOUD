@@ -43,7 +43,7 @@ func (screen *GameScreen) renderUserSituation() {
 	tableLines := []string{}
 	desc := ""
 	descfont := REGULAR
-	activeWeapon := screen.user.GetActiveWeapon()
+	activeWeapon := screen.user.GetFightWeapon()
 	switch screen.scrStatus {
 	case CONFIRM_ENDGAME:
 		desc = loud.Localize("Are you really gonna end game?")
@@ -148,12 +148,6 @@ func (screen *GameScreen) renderUserSituation() {
 			"Character",
 			screen.user.InventoryCharacters(),
 			w)
-	case SEL_ACTIVE_WEAPON:
-		infoLines, tableLines = screen.renderITTable(
-			"Please select active weapon",
-			"Item",
-			screen.user.InventorySwords(),
-			w)
 	case SEL_BUYITM:
 		infoLines, tableLines = screen.renderITTable(
 			"select buy item desc",
@@ -176,12 +170,7 @@ func (screen *GameScreen) renderUserSituation() {
 			"Character",
 			loud.ShopCharacters, w)
 	case CONFIRM_HUNT_RABBITS:
-		if activeWeapon != nil {
-			desc = loud.Localize("rabbits with a sword outcome")
-			desc += carryItemDesc(activeWeapon)
-		} else {
-			desc = loud.Localize("rabbits without sword outcome")
-		}
+		desc = loud.Localize("rabbits without sword outcome")
 	case CONFIRM_FIGHT_GOBLIN:
 		desc = loud.Localize("goblin outcome")
 		desc += carryItemDesc(activeWeapon)
@@ -263,7 +252,6 @@ func (screen *GameScreen) TxResultSituationDesc() (string, FontType) {
 		RSLT_SELL_LOUD_TRDREQ_CREATION: "loud sell request creation",
 		RSLT_SEL_ACT_CHAR:              "selecting active character",
 		RSLT_RENAME_CHAR:               "renaming character",
-		RSLT_SEL_ACT_WEAPON:            "selecting active weapon",
 		RSLT_BUYITM:                    "buy item",
 		RSLT_BUYCHR:                    "buy character",
 		RSLT_HUNT_RABBITS:              "hunt rabbits",
@@ -302,12 +290,6 @@ func (screen *GameScreen) TxResultSituationDesc() (string, FontType) {
 			} else {
 				desc = loud.Localize("You have successfully set the active character!")
 			}
-		case RSLT_SEL_ACT_WEAPON:
-			if screen.user.GetActiveWeapon() == nil {
-				desc = loud.Localize("You have successfully unset the active weapon!")
-			} else {
-				desc = loud.Localize("You have successfully set the active weapon!")
-			}
 		case RSLT_RENAME_CHAR:
 			desc = loud.Sprintf("You have successfully updated character's name to %s!", screen.inputText)
 		case RSLT_BUYITM:
@@ -328,10 +310,6 @@ func (screen *GameScreen) TxResultSituationDesc() (string, FontType) {
 				desc = loud.Sprintf("You did hunt rabbits and earned %d.", earnedAmount)
 				// resultTexts := []string{"gold", "character", "weapon"}
 				// desc = devDetailedResultDesc(resultTexts[:resLen])
-				if resLen == 2 && screen.user.GetLastTxMetaData() == loud.RCP_HUNT_RABBITS_YESWORD {
-					desc += loud.Sprintf("You have lost your weapon accidently")
-					font = YELLOW
-				}
 			}
 		case RSLT_FIGHT_GOBLIN:
 			earnedAmount, respOutput := screen.GetTxResponseOutput()
@@ -572,7 +550,7 @@ func (screen *GameScreen) TxResultSituationDesc() (string, FontType) {
 
 func (screen *GameScreen) TxWaitSituationDesc(width int) ([]string, []string) {
 	desc := ""
-	activeWeapon := screen.user.GetActiveWeapon()
+	activeWeapon := screen.user.GetFightWeapon()
 	W8_TO_END := "\n" + loud.Localize("Please wait for a moment to finish the process")
 	switch screen.scrStatus {
 	case W8_RENAME_CHAR:

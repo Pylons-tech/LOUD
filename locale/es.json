@@ -30,7 +30,7 @@
     "one": "No tienes suficiente oro para actualizar este artículo"
   },
   "home": {
-    "one": "1) Select active character\n2) Select active weapon\n3) Update character name\n"
+    "one": "1) Select active character\n2) Update character name\n"
   },
   "forest": {
     "one": "1) Rabbit(💰 1+)\n2) Goblin 👺 (💰 50)\n3) Wolf 🐺 (💰 150)\n4) Troll 👻 (💰 300)\n5) Giant 🗿 (💰 3000)\n6) Fire Dragon 🦐 (💰 20000)\n7) Ice Dragon 🦈 (💰 20000)\n8) Acid Dragon 🐊 (💰 20000)\n9) Undead Dragon 🐉 (💰 50000)\n"
@@ -100,9 +100,6 @@
   },
   "rabbits without sword outcome": {
     "one": "Hunt Rabbits\n\nReward 💰 1 - 2\n5% chance of character dying\n"
-  },
-  "rabbits with a sword outcome": {
-    "one": "Hunt Rabbits\n\nReward 💰 sword.attack/2 + 1\n2% chance of character dying\n3% chance of sword lose\n"
   },
   "goblin outcome": {
     "one": "Fight Goblin 👺\n\nReward 💰 50\nEnemy info (HP: 10, Attack: 1)\n2% chance of character dying\n3% chance of sword lose\n10% chance of getting \"Goblin ear\"\n"
@@ -383,9 +380,6 @@
   "Active Character": {
     "one": "Active Character"
   },
-  "Active Weapon": {
-    "one": "Active Weapon"
-  },
   "rest blocks": {
     "one": "rest blocks"
   },
@@ -500,20 +494,11 @@
   "Please select character to rename": {
     "one": "Please select character to rename"
   },
-  "Please select active weapon": {
-    "one": "Please select active weapon"
-  },
   "You have successfully unset the active character!": {
     "one": "You have successfully unset the active character!"
   },
   "You have successfully set the active character!": {
     "one": "You have successfully set the active character!"
-  },
-  "You have successfully unset the active weapon!": {
-    "one": "You have successfully unset the active weapon!"
-  },
-  "You have successfully set the active weapon!": {
-    "one": "You have successfully set the active weapon!"
   },
   "You have successfully updated character's name to %s!": {
     "one": "You have successfully updated character's name to %s!"

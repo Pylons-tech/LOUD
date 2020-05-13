@@ -31,11 +31,6 @@ func (screen *GameScreen) RunActiveCharacterSelect(index int) {
 	screen.SetScreenStatusAndRefresh(RSLT_SEL_ACT_CHAR)
 }
 
-func (screen *GameScreen) RunActiveWeaponSelect(index int) {
-	screen.user.SetActiveWeaponIndex(index)
-	screen.SetScreenStatusAndRefresh(RSLT_SEL_ACT_WEAPON)
-}
-
 func (screen *GameScreen) RunCharacterRename(newName string) {
 	screen.RunTxProcess(W8_RENAME_CHAR, RSLT_RENAME_CHAR, func() (string, error) {
 		return loud.RenameCharacter(screen.user, screen.activeCharacter, newName)
@@ -78,8 +73,7 @@ func (screen *GameScreen) RunHuntRabbits() {
 }
 
 func (screen *GameScreen) RunFightGiant() {
-	activeWeapon := screen.user.GetActiveWeapon()
-	if activeWeapon == nil || activeWeapon.Name != loud.IRON_SWORD {
+	if len(screen.user.InventoryIronSwords()) == 0 {
 		screen.actionText = loud.Sprintf("You can't fight giant without iron sword.")
 		screen.Render()
 		return
@@ -90,8 +84,7 @@ func (screen *GameScreen) RunFightGiant() {
 }
 
 func (screen *GameScreen) RunFightDragonFire() {
-	activeWeapon := screen.user.GetActiveWeapon()
-	if activeWeapon == nil || activeWeapon.Name != loud.IRON_SWORD {
+	if len(screen.user.InventoryIronSwords()) == 0 {
 		screen.actionText = loud.Sprintf("You can't fight fire dragon without iron sword.")
 		screen.Render()
 		return
@@ -102,8 +95,7 @@ func (screen *GameScreen) RunFightDragonFire() {
 }
 
 func (screen *GameScreen) RunFightDragonIce() {
-	activeWeapon := screen.user.GetActiveWeapon()
-	if activeWeapon == nil || activeWeapon.Name != loud.IRON_SWORD {
+	if len(screen.user.InventoryIronSwords()) == 0 {
 		screen.actionText = loud.Sprintf("You can't fight ice dragon without iron sword.")
 		screen.Render()
 		return
@@ -114,8 +106,7 @@ func (screen *GameScreen) RunFightDragonIce() {
 }
 
 func (screen *GameScreen) RunFightDragonAcid() {
-	activeWeapon := screen.user.GetActiveWeapon()
-	if activeWeapon == nil || activeWeapon.Name != loud.IRON_SWORD {
+	if len(screen.user.InventoryIronSwords()) == 0 {
 		screen.actionText = loud.Sprintf("You can't fight acid dragon without iron sword.")
 		screen.Render()
 		return
@@ -126,8 +117,7 @@ func (screen *GameScreen) RunFightDragonAcid() {
 }
 
 func (screen *GameScreen) RunFightDragonUndead() {
-	activeWeapon := screen.user.GetActiveWeapon()
-	if activeWeapon == nil || activeWeapon.Name != loud.ANGEL_SWORD {
+	if len(screen.user.InventoryAngelSwords()) == 0 {
 		screen.actionText = loud.Sprintf("You can't fight undead dragon without angel sword.")
 		screen.Render()
 		return
