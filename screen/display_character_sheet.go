@@ -109,12 +109,12 @@ func (screen *GameScreen) renderCharacterSheet() {
 
 	nodeLines := []string{
 		fmtFunc(centerText(" "+loud.Localize("pylons network status")+" ", "─", w)),
-		fmtFunc(fillSpace(fmt.Sprintf("%s: %s 📋(M)", loud.Localize("Address"), truncateRight(screen.user.GetAddress(), 15)), w)),
+		fmtFunc(fillSpace(fmt.Sprintf("%s: %s 📋 (M)", loud.Localize("Address"), truncateRight(screen.user.GetAddress(), 15)), w)),
 		fmtFunc(fillSpace(fmt.Sprintf("%s %s: %v", screen.pylonIcon(), "Pylon", screen.user.GetPylonAmount()), w)),
 	}
 
 	if len(screen.user.GetLastTxHash()) > 0 {
-		txHashT := fmt.Sprintf("%s: %s 📋(L)", loud.Localize("Last TxHash"), truncateRight(screen.user.GetLastTxHash(), 15))
+		txHashT := fmt.Sprintf("%s: %s 📋 (L)", loud.Localize("Last TxHash"), truncateRight(screen.user.GetLastTxHash(), 15))
 		nodeLines = append(nodeLines, fmtFunc(fillSpace(txHashT, w)))
 	}
 

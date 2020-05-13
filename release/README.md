@@ -75,7 +75,7 @@ To test things easily
 To sell item (wooden sword and copper sword) and upgrade item (wooden sword and copper sword) can be tested under shop.
 
 After that can go to Forest (F)
-In forest, you can try to Hunt Rabbits(1), Fight Goblin, Wolf, Troll or Giant 🗿(2-5)
+In forest, you can try to Hunt Rabbits(1), Fight Goblin, Wolf, Troll or Giant 🗿 (2-5)
 To fight Giant, you need to carry iron sword.
 To fight other monsters, need to carry at least 1 sword.
 

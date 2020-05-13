@@ -124,7 +124,7 @@ Reward: 1 + `attack / 2`
 When character die, no gold or sword is returned.
 ```
 
-### Fight Goblin 👺
+### Fight Goblin 👺 
 
 ```
 Goblin HP: 10
@@ -138,7 +138,7 @@ Reward: 50 loudcoin
 Character should carry sword to fight goblin.
 When character die, no gold is returned.
 
-### Fight Wolf 🐺
+### Fight Wolf 🐺 
 
 ```
 Wolf HP: 15
@@ -151,7 +151,7 @@ Reward: 150 loudcoin
 Character should carry sword to fight wolf.
 When character die, no gold is returned.
 
-### Fight Troll 👻
+### Fight Troll 👻 
 
 ```
 Troll HP: 20
@@ -165,7 +165,7 @@ Reward: 300 loudcoin
 Character should carry sword to fight troll.
 When character die, no gold is returned.
 
-### Fight Giant 🗿
+### Fight Giant 🗿 
 
 Warn. Character with bonus skill can't fight Giant.
 
@@ -184,7 +184,7 @@ GiantKiller badget on character
 Character should carry iron sword to fight giant.
 When character die, no gold is returned.
 
-### Fight fire dragon 🦐
+### Fight fire dragon 🦐 
 
 ```
 Fire Dragon HP: 300
@@ -199,7 +199,7 @@ FireDragonKiller badget on character
 Character should carry iron sword to fight Fire dragon.
 When character die, no gold is returned.
 
-### Fight ice dragon 🦕
+### Fight ice dragon 🦈 
 
 ```
 Ice Dragon HP: 300
@@ -214,7 +214,7 @@ IceDragonKiller badget on character
 Character should carry iron sword to fight Ice dragon.
 When character die, no gold is returned.
 
-### Fight acid dragon 🦖
+### Fight acid dragon 🐊 
 
 ```
 Acid Dragon HP: 300
@@ -229,7 +229,7 @@ AcidDragonKiller badget on character
 Character should carry iron sword to fight Acid dragon.
 When character die, no gold is returned.
 
-### Fight undead dragon 🐉
+### Fight undead dragon 🐉 
 
 ```
 Undead Dragon HP: 1000
