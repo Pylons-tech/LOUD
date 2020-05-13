@@ -202,6 +202,7 @@ func formatSpecial(special int) string {
 
 func formatCharacter(ch loud.Character) string {
 	chStr := loud.Localize(ch.Name)
+	chStr = formatSpecial(ch.Special) + chStr
 	if ch.GiantKill > 0 {
 		chStr = fmt.Sprintf("🗿 x%d %s", ch.GiantKill, chStr)
 	}
@@ -218,7 +219,6 @@ func formatCharacter(ch loud.Character) string {
 	if ch.UndeadDragonKill > 0 {
 		chStr = fmt.Sprintf("🐉 x%d %s", ch.UndeadDragonKill, chStr)
 	}
-	chStr += formatSpecial(ch.Special)
 	if ch.Level > 0 {
 		chStr += fmt.Sprintf(" Lv%d", ch.Level)
 	}
