@@ -199,7 +199,7 @@ FireDragonKiller badget on character
 Character should carry iron sword to fight Fire dragon.
 When character die, no gold is returned.
 
-### Fight ice dragon 🦕
+### Fight ice dragon 🦈
 
 ```
 Ice Dragon HP: 300
@@ -214,7 +214,7 @@ IceDragonKiller badget on character
 Character should carry iron sword to fight Ice dragon.
 When character die, no gold is returned.
 
-### Fight acid dragon 🦖
+### Fight acid dragon 🐊
 
 ```
 Acid Dragon HP: 300

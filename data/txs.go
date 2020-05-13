@@ -108,11 +108,11 @@ func FightDragonFire(user User) (string, error) { // 🦐
 	return RunHuntRecipe(RCP_FIGHT_DRAGONFIRE, user)
 }
 
-func FightDragonIce(user User) (string, error) { // 🦕
+func FightDragonIce(user User) (string, error) { // 🦈
 	return RunHuntRecipe(RCP_FIGHT_DRAGONICE, user)
 }
 
-func FightDragonAcid(user User) (string, error) { // 🦖
+func FightDragonAcid(user User) (string, error) { // 🐊
 	return RunHuntRecipe(RCP_FIGHT_DRAGONACID, user)
 }
 

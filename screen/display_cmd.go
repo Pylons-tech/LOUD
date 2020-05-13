@@ -220,7 +220,7 @@ func (screen *GameScreen) renderUserCommands() {
 				loud.ShopCharacters,
 				func(it interface{}) string {
 					char := it.(loud.Character)
-					return fmt.Sprintf("%s  %s%d", formatCharacter(char), screen.pylonIcon(), char.Price)
+					return fmt.Sprintf("%s  %s %d", formatCharacter(char), screen.pylonIcon(), char.Price)
 				}).
 			appendSelectGoBackCmds()
 	case SEL_SELLITM:

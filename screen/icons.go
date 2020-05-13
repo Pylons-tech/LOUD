@@ -18,21 +18,21 @@ func (screen *GameScreen) goldIcon() string {
 
 func NumberOfSpaces(message string) int {
 	customUnicodes := map[string]string{
-		"💰":  "xx",
-		"🔶":  "xx",
-		"🔷":  "xx",
-		"🥺":  "xx",
-		"🗡️": "x",
-		"🦘":  "xx",
-		"⟳":  "x",
-		"📋":  "xx",
-		"🥇":  "xx",
-		"❦":  "x",
-		"↓":  "x",
+		"💰":  "xx", // Gold
+		"🔶":  "xx", //
+		"🔷":  "xx", // pylon
+		"👀":  "xx", // leave emoji 👀
+		"🗡️": "x", // sword
+		"🐧":  "xx", // character emoji 🐧
+		"⟳":  "x", // refresh emoji
+		"📋":  "xx", // copy emoji
+		"🥇":  "xx", // metal emoji
+		"❦":  "x", // 
+		"↓":  "x", // arrow emoji
 		"🐉":  "xx", // Undead dragon
-		"🦕":  "xx", // Ice dragon
+		"🦈":  "xx", // Ice dragon 🦈 
 		"🦐":  "xx", // Fire dragon
-		"🦖":  "xx", // Acid dragon
+		"🐊":  "xx", // Acid dragon 🐊 
 		"🗿":  "xx", // Giant
 		"👺":  "xx", // Goblin
 		"🐺":  "xx", // Wolf
