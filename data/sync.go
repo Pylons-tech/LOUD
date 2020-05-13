@@ -71,8 +71,18 @@ func SyncFromNode(user User) {
 			})
 		}
 	}
-	user.SetItems(myItems)
+	// Sort characters by level
+	sort.SliceStable(myCharacters, func(i, j int) bool {
+		return myCharacters[i].Level > myCharacters[j].Level
+	})
 	user.SetCharacters(myCharacters)
+
+	// Sort items by attack
+	sort.SliceStable(myItems, func(i, j int) bool {
+		return myItems[i].Attack > myItems[j].Attack
+	})
+	user.SetItems(myItems)
+
 	log.Println("myItems=", myItems)
 	log.Println("myCharacters=", myCharacters)
 
