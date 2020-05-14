@@ -35,7 +35,7 @@ func (tl TextLines) appendGoOnBackCmds() TextLines {
 		GO_BACK_CMD)
 }
 
-var MAX_SHORTCUT_ITEM_CMDSEL = 3
+var MAX_SHORTCUT_ITEM_CMDSEL = 5
 
 func (tl TextLines) appendSelectCmds(itemsSlice interface{}, fn func(interface{}) string) TextLines {
 	items := InterfaceSlice(itemsSlice)
@@ -66,6 +66,26 @@ func (tl TextLines) appendCustomFontSelectCmds(itemsSlice interface{}, fn func(i
 		})
 	}
 	return tl
+}
+
+func (tl TextLines) appendCustomFontSelectCmdsScreenCharacters(screen *GameScreen) TextLines {
+	return tl.appendCustomFontSelectCmds(
+		screen.user.InventoryCharacters(),
+		func(idx int, it interface{}) TextLine {
+			return TextLine{
+				content: formatCharacter(it.(loud.Character)),
+				font:    screen.getFontByActiveIndex(idx),
+			}
+		})
+}
+
+func (screen *GameScreen) getFontByActiveIndex(idx int) FontType {
+	activeLine := screen.activeLine
+	font := REGULAR
+	if activeLine == idx {
+		font = BLUE_BOLD
+	}
+	return font
 }
 
 func (screen *GameScreen) renderUserCommands() {
@@ -170,28 +190,12 @@ func (screen *GameScreen) renderUserCommands() {
 				GO_BACK_CMD)
 	case SEL_RENAME_CHAR:
 		infoLines = infoLines.
-			appendSelectCmds(
-				screen.user.InventoryCharacters(),
-				func(it interface{}) string {
-					return formatCharacter(it.(loud.Character))
-				}).
+			appendCustomFontSelectCmdsScreenCharacters(screen).
 			appendSelectGoBackCmds()
 	case SEL_ACTIVE_CHAR:
 		infoLines = infoLines.
 			appendDeselectCmd().
-			appendCustomFontSelectCmds(
-				screen.user.InventoryCharacters(),
-				func(idx int, it interface{}) TextLine {
-					activeLine := screen.activeLine
-					font := REGULAR
-					if activeLine == idx {
-						font = BLUE_BOLD
-					}
-					return TextLine{
-						content: formatCharacter(it.(loud.Character)),
-						font:    font,
-					}
-				}).
+			appendCustomFontSelectCmdsScreenCharacters(screen).
 			appendSelectGoBackCmds()
 	case SEL_BUYITM:
 		infoLines = infoLines.
@@ -212,6 +216,14 @@ func (screen *GameScreen) renderUserCommands() {
 						font = GREY
 						bonusText = fmt.Sprintf(": %s", loud.Localize("not enough gold"))
 					}
+					if idx == screen.activeLine {
+						switch font {
+						case REGULAR:
+							font = BLUE_BOLD
+						case GREY:
+							font = GREY_BOLD
+						}
+					}
 					if len(item.PreItems) > 0 {
 						contentStr = formatItem(item) + fmt.Sprintf("💰 %d + %s %s", item.Price, item.PreItemStr(), bonusText)
 					} else {
@@ -225,29 +237,38 @@ func (screen *GameScreen) renderUserCommands() {
 			appendSelectGoBackCmds()
 	case SEL_BUYCHR:
 		infoLines = infoLines.
-			appendSelectCmds(
+			appendCustomFontSelectCmds(
 				loud.ShopCharacters,
-				func(it interface{}) string {
+				func(idx int, it interface{}) TextLine {
 					char := it.(loud.Character)
-					return fmt.Sprintf("%s  %s %d", formatCharacter(char), screen.pylonIcon(), char.Price)
+					return TextLine{
+						content: fmt.Sprintf("%s  🔷 %d", formatCharacter(char), char.Price),
+						font:    screen.getFontByActiveIndex(idx),
+					}
 				}).
 			appendSelectGoBackCmds()
 	case SEL_SELLITM:
 		infoLines = infoLines.
-			appendSelectCmds(
+			appendCustomFontSelectCmds(
 				screen.user.InventorySellableItems(),
-				func(it interface{}) string {
+				func(idx int, it interface{}) TextLine {
 					item := it.(loud.Item)
-					return formatItem(item) + fmt.Sprintf("💰 %s", item.GetSellPriceRange())
+					return TextLine{
+						content: formatItem(item) + fmt.Sprintf("💰 %s", item.GetSellPriceRange()),
+						font:    screen.getFontByActiveIndex(idx),
+					}
 				}).
 			appendSelectGoBackCmds()
 	case SEL_UPGITM:
 		infoLines = infoLines.
-			appendSelectCmds(
+			appendCustomFontSelectCmds(
 				screen.user.InventoryUpgradableItems(),
-				func(it interface{}) string {
+				func(idx int, it interface{}) TextLine {
 					item := it.(loud.Item)
-					return formatItem(item) + fmt.Sprintf("💰 %d", item.GetUpgradePrice())
+					return TextLine{
+						content: formatItem(item) + fmt.Sprintf("💰 %d", item.GetUpgradePrice()),
+						font:    screen.getFontByActiveIndex(idx),
+					}
 				}).
 			appendSelectGoBackCmds()
 	case CONFIRM_HUNT_RABBITS,

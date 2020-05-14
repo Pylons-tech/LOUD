@@ -18,6 +18,7 @@ const (
 	INPUT_ACTIVE_FONT          = "input_active_font"
 	BROWN_BOLD                 = "brown_bold"
 	BLUE_BOLD                  = "blue_bold"
+	GREY_BOLD                  = "grey_bold"
 )
 
 func (screen *GameScreen) getFont(ft FontType) func(string) string {
@@ -38,6 +39,8 @@ func (screen *GameScreen) getFont(ft FontType) func(string) string {
 		return screen.redBoldFont()
 	case BLUE_BOLD:
 		return screen.blueBoldFont()
+	case GREY_BOLD:
+		return screen.greyBoldFont()
 	case BLINK_BLUE_BOLD:
 		return screen.blinkBlueBoldFont()
 	case INPUT_ACTIVE_FONT:
@@ -67,6 +70,10 @@ func (screen *GameScreen) redBoldFont() func(string) string {
 
 func (screen *GameScreen) blueBoldFont() func(string) string {
 	return screen.colorFunc(fmt.Sprintf("%v+bh:%v", 117, 232))
+}
+
+func (screen *GameScreen) greyBoldFont() func(string) string {
+	return screen.colorFunc(fmt.Sprintf("%v+bh:%v", 181, 232))
 }
 
 func (screen *GameScreen) brownBoldFont() func(string) string {
