@@ -217,6 +217,16 @@ func formatSpecialDragon(special int) string {
 	return ""
 }
 
+func formatBigNumber(number int) string {
+	if number > 1000000 {
+		return fmt.Sprintf("%dM", number/1000000)
+	}
+	if number > 1000 {
+		return fmt.Sprintf("%dk", number/1000)
+	}
+	return fmt.Sprintf("%d", number)
+}
+
 func formatCharacter(ch loud.Character) string {
 	chStr := loud.Localize(ch.Name)
 	chStr = formatSpecial(ch.Special) + chStr
@@ -240,7 +250,7 @@ func formatCharacter(ch loud.Character) string {
 		chStr += fmt.Sprintf(" Lv%d", ch.Level)
 	}
 	if ch.XP > 0 {
-		chStr += fmt.Sprintf(" XP=%.0f", ch.XP)
+		chStr += fmt.Sprintf(" XP=%s", formatBigNumber(int(ch.XP)))
 	}
 	return chStr
 }
