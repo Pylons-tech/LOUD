@@ -104,14 +104,14 @@ func fillSpace(message string, width int) string {
 	}
 	leftover := width - msgLen
 
-	rightString := ""
-	rightLen := 0
-	for rightLen < leftover {
-		rightString += " "
-		rightLen = NumberOfSpaces(rightString)
-		// rightLen = len(rightString)
+	fillString := ""
+	fillLen := 0
+	for fillLen < leftover {
+		fillString += " "
+		fillLen = NumberOfSpaces(fillString)
+		// fillLen = len(rightString)
 	}
-	return message + rightString
+	return message + fillString
 }
 
 func drawVerticalLine(x, y, height int) {

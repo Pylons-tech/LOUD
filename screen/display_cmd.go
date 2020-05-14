@@ -137,6 +137,14 @@ func (screen *GameScreen) renderUserCommands() {
 				}
 			}
 		}
+		if screen.user.GetLocation() == loud.SETTINGS && len(infoLines) > 2 {
+			switch loud.GameLanguage {
+			case "en":
+				infoLines[1].font = BLUE_BOLD
+			case "es":
+				infoLines[2].font = BLUE_BOLD
+			}
+		}
 	case SHW_LOUD_BUY_TRDREQS:
 		infoLines = infoLines.
 			appendT(
