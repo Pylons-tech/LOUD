@@ -442,7 +442,7 @@ func (screen *GameScreen) HandleFirstClassInputKeys(input termbox.Event) bool {
 		screen.RunTxProcess(W8_GET_PYLONS, RSLT_GET_PYLONS, func() (string, error) {
 			return loud.GetExtraPylons(screen.user)
 		})
-	case "B": // DEV ITEMS GET (troll toes, goblin ear, wolf tail)
+	case "B": // DEV ITEMS GET (troll toes, goblin ear, wolf tail and drops of 3 special dragons)
 		screen.RunTxProcess(W8_DEV_GET_TEST_ITEMS, RSLT_DEV_GET_TEST_ITEMS, func() (string, error) {
 			return loud.DevGetTestItems(screen.user)
 		})

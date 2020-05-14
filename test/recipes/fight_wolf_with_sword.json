@@ -8,7 +8,7 @@
     "Entries":{
         "CoinOutputs":[{
             "Coin":"loudcoin",
-            "Count": "150"
+            "Count": "1"
         }],
         "ItemOutputs":[
             {
@@ -38,11 +38,11 @@
         },
         {
             "ResultEntries": ["0", "1", "2"],
-            "Weight": "84"
+            "Weight": "54"
         },
         {
             "ResultEntries": ["0", "1", "2", "3"],
-            "Weight": "10"
+            "Weight": "40"
         }
     ],
     "ExtraInfo":"",

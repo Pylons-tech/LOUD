@@ -50,32 +50,32 @@ It is described as loudcoin denom.
 ### Buy Wooden sword lv1
 ```
 Output: Lv1 wooden sword
-Price: 100 loudcoin
+Price: 100 💰
 ```
 
 ### Wooden sword lv1 to lv2 upgrade
 ```
 Output: Lv2 wooden sword
-Price: 100 loudcoin
+Price: 100 💰
 Input item: Lv1 wooden sword
 ```
 
 ### Buy Copper sword lv1
 ```
 Output: Lv1 copper sword
-Price: 250 loudcoin
+Price: 250 💰
 ```
 ### Copper sword lv1 to lv2 upgrade
 ```
 Output: Lv2 copper sword
-Price: 100 loudcoin
+Price: 100 💰
 Input item: Lv1 copper sword
 ```
 
 ### Make silver sword
 ```
 Input item: Goblin ear
-Price: 250 loudcoin
+Price: 50 💰
 Output: Lv1 silver sword
 ```
 
@@ -83,7 +83,7 @@ Output: Lv1 silver sword
 
 ```
 Input item: Wolf tail
-Price: 250 loudcoin
+Price: 10 💰
 Output: Lv1 bronze sword
 ```
 
@@ -91,20 +91,20 @@ Output: Lv1 bronze sword
 
 ```
 Input item: Troll toes
-Price: 250 loudcoin
+Price: 250 💰
 Output: Lv1 iron sword
 ```
 
 ### Make angel sword
 ```
 Input item: Drops from 3 special dragons; fire dragon, acid dragon, ice dragon
-Price: 20000 loudcoin
+Price: 20000 💰
 Output: Lv1 angel sword
 ```
 
 ### Sword sell recipe, attack * (randi(2)+20) gold
 ```
-Output: `attack * (randi(2)+20)` loudcoin
+Output: `attack * (randi(2)+20)` 💰
 Input: Any item which has `attack` and `level` attributes
 ```
 
@@ -120,10 +120,10 @@ When character die, no gold is returned.
 ```
 Goblin HP: 10
 Goblin attack: 1
-Reward: 50 loudcoin
+Reward: 50 💰
 2% chance of character dying
 3% chance of sword lose
-10% chance of "Goblin ear"
+20% chance of "Goblin ear"
 ```
 
 Character should carry sword to fight goblin.
@@ -134,10 +134,10 @@ When character die, no gold is returned.
 ```
 Wolf HP: 15
 Wolf attack: 3
-Reward: 150 loudcoin
+Reward: 1 💰
 3% chance of character dying
 3% chance of sword lose
-10% chance of “Wolf tail”
+40% chance of “Wolf tail”
 ```
 Character should carry sword to fight wolf.
 When character die, no gold is returned.
@@ -147,7 +147,7 @@ When character die, no gold is returned.
 ```
 Troll HP: 20
 Troll attack: 5
-Reward: 300 loudcoin
+Reward: 300 💰
 4% chance of character dying
 3% chance of sword lose
 10% chance of “Troll toes”
@@ -163,7 +163,7 @@ Warn. Character with bonus skill can't fight Giant.
 ```
 Giant HP: 100
 Giant attack: 10
-Reward: 3000 loudcoin
+Reward: 3000 💰
 GiantKiller badget on character
 5% chance of character dying
 3% chance of sword lose
@@ -180,7 +180,7 @@ When character die, no gold is returned.
 ```
 Fire Dragon HP: 300
 Fire Dragon attack: 30
-Reward: 10000 loudcoin
+Reward: 10000 💰
 2% chance for character dying
 3% chance of sword lose
 10% chance of “Fire scale” - drop from fire dragon
@@ -195,7 +195,7 @@ When character die, no gold is returned.
 ```
 Ice Dragon HP: 300
 Ice Dragon attack: 30
-Reward: 10000 loudcoin
+Reward: 10000 💰
 2% chance for character dying
 3% chance of sword lose
 10% chance of “Icy shards” - drop from ice dragon
@@ -210,7 +210,7 @@ When character die, no gold is returned.
 ```
 Acid Dragon HP: 300
 Acid Dragon attack: 30
-Reward: 10000 loudcoin
+Reward: 10000 💰
 2% chance for character dying
 3% chance of sword lose
 10% chance of “poison claws” - drop from acid dragon
@@ -225,7 +225,7 @@ When character die, no gold is returned.
 ```
 Undead Dragon HP: 1000
 Undead Dragon attack: 100
-Reward: 50000 loudcoin
+Reward: 50000 💰
 2% chance of character dying
 3% chance of sword lose
 UndeadDragonKiller badget on character

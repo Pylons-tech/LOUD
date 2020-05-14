@@ -38,11 +38,11 @@
         },
         {
             "ResultEntries": ["0", "1", "2"],
-            "Weight": "85"
+            "Weight": "75"
         },
         {
             "ResultEntries": ["0", "1", "2", "3"],
-            "Weight": "10"
+            "Weight": "20"
         }
     ],
     "ExtraInfo":"",

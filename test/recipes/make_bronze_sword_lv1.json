@@ -2,7 +2,7 @@
     "ID": "LOUD-bronze-sword-lv1-make-recipe-v0.1.0-1589223853",
     "CoinInputs":[{
         "Coin": "loudcoin",
-        "Count": "250"
+        "Count": "10"
     }],
     "ItemInputRefs": [
         "./recipes/item_input/wolf_tail.json"

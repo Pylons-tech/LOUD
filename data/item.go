@@ -95,14 +95,14 @@ var ShopItems = []Item{
 		ID:       "003",
 		Name:     SILVER_SWORD,
 		Level:    1,
-		Price:    250,
+		Price:    50,
 		PreItems: []string{GOBLIN_EAR},
 	},
 	Item{
 		ID:       "004",
 		Name:     BRONZE_SWORD,
 		Level:    1,
-		Price:    250,
+		Price:    10,
 		PreItems: []string{WOLF_TAIL},
 	},
 	Item{
