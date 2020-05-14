@@ -48,7 +48,12 @@ func truncateRight(message string, width int) string {
 
 		return fmt.Sprintf(fmtString, message)
 	}
-	return string([]rune(message)[0:width-1]) + ellipsis
+	runeMsg := []rune(message)
+	runeMsgLen := len(runeMsg)
+	if runeMsgLen > width {
+		runeMsgLen = width
+	}
+	return string(runeMsg[0:runeMsgLen-1]) + ellipsis
 }
 
 func truncateLeft(message string, width int) string {
