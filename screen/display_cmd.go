@@ -35,10 +35,13 @@ func (tl TextLines) appendGoOnBackCmds() TextLines {
 		GO_BACK_CMD)
 }
 
+var MAX_SHORTCUT_ITEM_CMDSEL = 3
+
 func (tl TextLines) appendSelectCmds(itemsSlice interface{}, fn func(interface{}) string) TextLines {
 	items := InterfaceSlice(itemsSlice)
 	for idx, item := range items {
-		if idx >= 5 {
+		if idx >= MAX_SHORTCUT_ITEM_CMDSEL {
+			tl = tl.append("...")
 			break
 		}
 		tl = tl.append(fmt.Sprintf("%d) %s  ", idx+1, fn(item)))
@@ -46,10 +49,17 @@ func (tl TextLines) appendSelectCmds(itemsSlice interface{}, fn func(interface{}
 	return tl
 }
 
-func (tl TextLines) appendCustomFontSelectCmds(itemsSlice interface{}, fn func(interface{}) TextLine) TextLines {
+func (tl TextLines) appendCustomFontSelectCmds(itemsSlice interface{}, fn func(int, interface{}) TextLine) TextLines {
 	items := InterfaceSlice(itemsSlice)
 	for idx, item := range items {
-		fni := fn(item)
+		if idx >= MAX_SHORTCUT_ITEM_CMDSEL {
+			tl = append(tl, TextLine{
+				content: fmt.Sprintf("..."),
+				font:    REGULAR,
+			})
+			break
+		}
+		fni := fn(idx, item)
 		tl = append(tl, TextLine{
 			content: fmt.Sprintf("%d) %s  ", idx+1, fni.content),
 			font:    fni.font,
@@ -169,17 +179,25 @@ func (screen *GameScreen) renderUserCommands() {
 	case SEL_ACTIVE_CHAR:
 		infoLines = infoLines.
 			appendDeselectCmd().
-			appendSelectCmds(
+			appendCustomFontSelectCmds(
 				screen.user.InventoryCharacters(),
-				func(it interface{}) string {
-					return formatCharacter(it.(loud.Character))
+				func(idx int, it interface{}) TextLine {
+					activeLine := screen.activeLine
+					font := REGULAR
+					if activeLine == idx {
+						font = BLUE_BOLD
+					}
+					return TextLine{
+						content: formatCharacter(it.(loud.Character)),
+						font:    font,
+					}
 				}).
 			appendSelectGoBackCmds()
 	case SEL_BUYITM:
 		infoLines = infoLines.
 			appendCustomFontSelectCmds(
 				loud.ShopItems,
-				func(it interface{}) TextLine {
+				func(idx int, it interface{}) TextLine {
 					item := it.(loud.Item)
 					preitemOk := screen.user.HasPreItemForAnItem(item)
 					goldEnough := item.Price <= screen.user.GetGold()
