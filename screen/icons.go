@@ -28,6 +28,8 @@ func NumberOfSpaces(message string) int {
 		"📋":  "xx", // copy emoji
 		"🥇":  "xx", // metal emoji
 		"❦":  "x",  //
+		"←":  "x",  // arrow left
+		"↑":  "x",  // arrow up
 		"↓":  "x",  // arrow down emoji
 		"➝":  "x",  // arrow right emoji
 		"🐉":  "xx", // Undead dragon
