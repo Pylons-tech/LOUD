@@ -47,6 +47,9 @@
   "develop": {
     "one": "Create cookbook(j)\nSwitch user(z)\nGet initial py)lons\nDevMode Test Items(b)\n"
   },
+  "help": {
+    "one": "\n"
+  },
   "go to home": {
     "one": "Inicio(H)"
   },
@@ -64,6 +67,9 @@
   },
   "go to develop": {
     "one": "D)evelop"
+  },
+  "go to help": {
+    "one": "Help)"
   },
   "home desc": {
     "one": "Estás en inicio.\nSi quieres cazar, dirígete al bosque.\nY si quieres comprar/vender algo, dirígete a la tienda."
@@ -88,6 +94,9 @@
   },
   "develop desc": {
     "one": "You are now testing things for development. Please enter commands you want to try"
+  },
+  "help desc": {
+    "one": "This is help page for LOUD game."
   },
   "select buy character desc": {
     "one": "You are gonna buy a character.\nPlease select a character to buy."
@@ -355,6 +364,9 @@
   },
   "Place order to sell character(R)": {
     "one": "Place order to sell character(R)"
+  },
+  "trade request tables colors meaning": {
+    "one": "Trade request table's colors and bold/highlighted text have below meanings."
   },
   "white trade line desc": {
     "one": "white     ➝ other's request"

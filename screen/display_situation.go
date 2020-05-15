@@ -55,6 +55,7 @@ func (screen *GameScreen) renderUserSituation() {
 			loud.PYLCNTRL: loud.Localize("pylons central desc"),
 			loud.SETTINGS: loud.Localize("settings desc"),
 			loud.DEVELOP:  loud.Localize("develop desc"),
+			loud.HELP:     loud.Localize("help desc"),
 		}
 		desc = locationDescMap[screen.user.GetLocation()]
 		if screen.user.GetLocation() == loud.HOME {
@@ -64,6 +65,9 @@ func (screen *GameScreen) renderUserSituation() {
 			} else if screen.user.GetPylonAmount() == 0 {
 				desc = loud.Localize("home desc without pylon")
 			}
+		}
+		if screen.user.GetLocation() == loud.HELP {
+			tableLines = screen.tradeTableColorDesc(w)
 		}
 	case SHW_LOUD_BUY_TRDREQS:
 		infoLines, tableLines = screen.renderTRTable(loud.BuyTrdReqs, w)

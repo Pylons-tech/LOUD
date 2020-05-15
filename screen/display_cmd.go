@@ -112,6 +112,7 @@ func (screen *GameScreen) renderUserCommands() {
 			loud.PYLCNTRL: "pylons central",
 			loud.SETTINGS: "settings",
 			loud.DEVELOP:  "develop",
+			loud.HELP:     "help",
 		}
 		cmdString := loud.Localize(cmdMap[screen.user.GetLocation()])
 		infoLines = infoLines.
@@ -151,42 +152,36 @@ func (screen *GameScreen) renderUserCommands() {
 				"Sell gold to fulfill selected request( ↵ )",
 				"Place order to buy gold(R)",
 				GO_BACK_CMD)
-		tableLines = screen.tradeTableColorDesc(w)
 	case SHW_LOUD_SELL_TRDREQS:
 		infoLines = infoLines.
 			appendT(
 				"Buy gold to fulfill selected request( ↵ )",
 				"place order to sell gold(R)",
 				GO_BACK_CMD)
-		tableLines = screen.tradeTableColorDesc(w)
 	case SHW_BUYITM_TRDREQS:
 		infoLines = infoLines.
 			appendT(
 				"Sell item to fulfill selected request( ↵ )",
 				"Place order to buy item(R)",
 				GO_BACK_CMD)
-		tableLines = screen.tradeTableColorDesc(w)
 	case SHW_SELLITM_TRDREQS:
 		infoLines = infoLines.
 			appendT(
 				"Buy item to fulfill selected request( ↵ )",
 				"Place order to sell item(R)",
 				GO_BACK_CMD)
-		tableLines = screen.tradeTableColorDesc(w)
 	case SHW_BUYCHR_TRDREQS:
 		infoLines = infoLines.
 			appendT(
 				"Sell character to fulfill selected request( ↵ )",
 				"Place order to buy character(R)",
 				GO_BACK_CMD)
-		tableLines = screen.tradeTableColorDesc(w)
 	case SHW_SELLCHR_TRDREQS:
 		infoLines = infoLines.
 			appendT(
 				"Buy character to fulfill selected request( ↵ )",
 				"Place order to sell character(R)",
 				GO_BACK_CMD)
-		tableLines = screen.tradeTableColorDesc(w)
 
 	case CR8_BUYCHR_TRDREQ_SEL_CHR,
 		CR8_SELLCHR_TRDREQ_SEL_CHR,

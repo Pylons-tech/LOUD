@@ -121,7 +121,8 @@ func (screen *GameScreen) sellCharacterSpecDesc(activeCharacter loud.CharacterSp
 
 func (screen *GameScreen) tradeTableColorDesc(width int) []string {
 	var infoLines = []string{screen.regularFont()(fillSpace("", width))}
-
+	infoLines = append(infoLines, screen.regularFont()(fillSpace(loud.Localize("trade request tables colors meaning"), width)))
+	infoLines = append(infoLines, screen.regularFont()(fillSpace("", width)))
 	infoLines = append(infoLines, screen.regularFont()(fillSpace(loud.Localize("white trade line desc"), width)))
 	infoLines = append(infoLines, screen.blueBoldFont()(fillSpace(loud.Localize("bluebold trade line desc"), width)))
 	infoLines = append(infoLines, screen.brownBoldFont()(fillSpace(loud.Localize("brownbold trade line desc"), width)))

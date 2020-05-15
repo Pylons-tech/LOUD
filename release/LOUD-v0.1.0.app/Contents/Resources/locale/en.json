@@ -47,6 +47,9 @@
   "develop": {
     "one": "Create cookbook(j)\nSwitch user(z)\nGet initial py)lons\nDevMode Test Items(b)\n"
   },
+  "help": {
+    "one": "\n"
+  },
   "go to home": {
     "one": "H)ome"
   },
@@ -64,6 +67,9 @@
   },
   "go to develop": {
     "one": "D)evelop"
+  },
+  "go to help": {
+    "one": "Help)"
   },
   "home desc": {
     "one": "You are at home. It's nice! Cozy. You're doing a puzzle.\nIf you like to kill something, though, head to the forest.\nYou can also head to the Blacksmith to work on your weapons."
@@ -88,6 +94,9 @@
   },
   "develop desc": {
     "one": "You are now testing things for development. Please enter commands you want to try"
+  },
+  "help desc": {
+    "one": "This is help page for LOUD game."
   },
   "select buy character desc": {
     "one": "Summon a weakling with huge potential from the ether? Hell yeah.\n"
@@ -356,6 +365,9 @@
   "Place order to sell character(R)": {
     "one": "Place order to sell character(R)"
   },
+  "trade request tables colors meaning": {
+    "one": "Trade request table's colors and bold/highlighted text have below meanings."
+  },
   "white trade line desc": {
     "one": "white     ➝ other's request"
   },
@@ -515,9 +527,6 @@
   "You got bonus item called %s": {
     "one": "You got bonus item called %s"
   },
-  "You got %s (special) from the giant!!": {
-    "one": "You got %s (special) from the giant!!"
-  },
   "You were killed by troll accidently": {
     "one": "You were killed by 👻 (troll) accidently"
   },
@@ -544,6 +553,9 @@
   },
   "You got extra pylons for LOUD game": {
     "one": "You got extra pylons for LOUD game"
+  },
+  "You got %s (special) from the giant!!": {
+    "one": "You got %s (special) from the giant!!"
   },
   "You switched user to %s": {
     "one": "You switched user to %s"

@@ -9,6 +9,7 @@ const (
 	PYLCNTRL
 	SETTINGS
 	DEVELOP
+	HELP
 )
 
 // User represents an active user in the system.

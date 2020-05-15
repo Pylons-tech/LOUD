@@ -45,6 +45,7 @@ func (screen *GameScreen) HandleInputKeyLocationSwitch(input termbox.Event) bool
 		"T": loud.SETTINGS,
 		"C": loud.PYLCNTRL,
 		"D": loud.DEVELOP,
+		"P": loud.HELP,
 	}
 
 	if newLct, ok := tarLctMap[Key]; ok {

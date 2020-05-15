@@ -32,6 +32,7 @@ func (screen *GameScreen) renderMenu() {
 		loud.PYLCNTRL: "pylons central",
 		loud.SETTINGS: "settings",
 		loud.DEVELOP:  "develop",
+		loud.HELP:     "help",
 	}
 
 	locations := []loud.UserLocation{
@@ -41,6 +42,7 @@ func (screen *GameScreen) renderMenu() {
 		loud.PYLCNTRL,
 		loud.SETTINGS,
 		loud.DEVELOP,
+		loud.HELP,
 	}
 
 	menuDisplays := []MenuDisplay{}
