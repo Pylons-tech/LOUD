@@ -36,7 +36,7 @@ var LOUD_CBID = "LOUD-v0.1.0-1589223853"
 const (
 	RCP_BUY_GOLD_WITH_PYLON = "LOUD's buy gold with pylons recipe"
 	RCP_BUY_CHARACTER       = "LOUD's Get Character recipe"
-	RCP_SELL_SWORD          = "LOUD's sword sell recipe"
+	RCP_SELL_SWORD          = "LOUD's item sell recipe"
 	RCP_COPPER_SWORD_UPG    = "LOUD's Copper sword lv1 to lv2 upgrade recipe"
 	RCP_WOODEN_SWORD_UPG    = "LOUD's Wooden sword lv1 to lv2 upgrade recipe"
 	RCP_BUY_WOODEN_SWORD    = "LOUD's Wooden sword lv1 buy recipe"
@@ -62,7 +62,7 @@ const (
 var RcpIDs map[string]string = map[string]string{
 	RCP_BUY_GOLD_WITH_PYLON: "LOUD-buy-gold-from-pylons-recipe-v0.1.0-1589223853",
 	RCP_BUY_CHARACTER:       "LOUD-get-character-recipe-v0.1.0-1589223853",
-	RCP_SELL_SWORD:          "LOUD-sell-a-sword-recipe-v0.1.0-1589223853",
+	RCP_SELL_SWORD:          "LOUD-sell-an-item-recipe-v0.1.0-1589223853",
 	RCP_COPPER_SWORD_UPG:    "LOUD-upgrade-copper-sword-lv1-to-lv2-recipe-v0.1.0-1589223853",
 	RCP_WOODEN_SWORD_UPG:    "LOUD-upgrade-wooden-sword-lv1-to-lv2-recipe-v0.1.0-1589223853",
 	RCP_BUY_WOODEN_SWORD:    "LOUD-wooden-sword-lv1-buy-recipe-v0.1.0-1589223853",

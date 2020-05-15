@@ -438,13 +438,13 @@
         }
     },
     {
-        "ID": "CREATE_SELL_A_SWORD_RECIPE",
+        "ID": "CREATE_SELL_AN_ITEM_RECIPE",
         "runAfter": {
             "precondition": ["CREATE_LOUD_COOKBOOK"],
             "blockWait": 0
         },
         "action": "create_recipe",
-        "paramsRef": "./recipes/sell_a_sword.json",
+        "paramsRef": "./recipes/sell_an_item.json",
         "output": {
             "txResult": {
                 "status": "Success"
@@ -452,7 +452,7 @@
             "property": [
                 {
                     "owner": "eugen",
-                    "recipes": ["LOUD's sword sell recipe"]
+                    "recipes": ["LOUD's item sell recipe"]
                 }
             ]
         }

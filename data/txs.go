@@ -191,8 +191,7 @@ func Sell(user User, item Item) (string, error) {
 	itemIDs := []string{item.ID}
 
 	rcpName := ""
-	switch item.Name {
-	case WOODEN_SWORD, COPPER_SWORD:
+	if item.Value > 0 {
 		rcpName = RCP_SELL_SWORD
 	}
 	return ExecuteRecipe(user, rcpName, itemIDs)

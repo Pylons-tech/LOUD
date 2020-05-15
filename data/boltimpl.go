@@ -301,9 +301,7 @@ func (user *dbUser) InventorySellableItems() []Item {
 	iis := user.InventoryItems()
 	uis := []Item{}
 	for _, ii := range iis {
-		if ii.Name == COPPER_SWORD || ii.Name == WOODEN_SWORD {
-			uis = append(uis, ii)
-		}
+		uis = append(uis, ii)
 	}
 	return uis
 }

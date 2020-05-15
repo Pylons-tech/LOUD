@@ -11,6 +11,7 @@ type Item struct {
 	Level      int
 	Attack     int
 	Price      int
+	Value      int
 	PreItems   []string
 	LastUpdate int64
 }
@@ -213,21 +214,9 @@ var WorldCharacterSpecs = []CharacterSpec{
 }
 
 func (item *Item) GetSellPriceRange() string {
-	switch item.Name {
-	case WOODEN_SWORD:
-		if item.Level == 1 { // attack 3
-			return "60-63"
-		} else if item.Level == 2 { // attack 6
-			return "120-126"
-		}
-	case COPPER_SWORD:
-		if item.Level == 1 { // attack 10
-			return "200-210"
-		} else if item.Level == 2 { // attack 20
-			return "400-440"
-		}
-	}
-	return "-1"
+	minPrice := item.Value * 8 / 10
+	maxPrice := minPrice + 20
+	return fmt.Sprintf("%d-%d", minPrice, maxPrice)
 }
 
 func (item *Item) GetUpgradePrice() int {

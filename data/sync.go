@@ -47,6 +47,7 @@ func SyncFromNode(user User) {
 		Name, _ := rawItem.FindString("Name")
 		itemType, _ := rawItem.FindString("Type")
 		Attack, _ := rawItem.FindDouble("attack")
+		Value, _ := rawItem.FindLong("value")
 		LastUpdate := rawItem.LastUpdate
 
 		if itemType == "Character" {
@@ -66,6 +67,7 @@ func SyncFromNode(user User) {
 				Level:      Level,
 				Name:       Name,
 				Attack:     int(Attack),
+				Value:      Value,
 				ID:         rawItem.ID,
 				LastUpdate: LastUpdate,
 			})
