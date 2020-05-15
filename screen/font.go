@@ -2,6 +2,8 @@ package screen
 
 import (
 	"fmt"
+
+	loud "github.com/Pylons-tech/LOUD/data"
 )
 
 type FontType string
@@ -106,4 +108,48 @@ func (screen *GameScreen) blinkBlueBoldFont() func(string) string {
 
 func (screen *GameScreen) inputActiveFont() func(string) string {
 	return screen.colorFunc(fmt.Sprintf("0+b:%v", bgcolor-1))
+}
+
+func (screen *GameScreen) getFontByActiveIndex(idx int) FontType {
+	activeLine := screen.activeLine
+	font := REGULAR
+	if activeLine == idx {
+		font = BLUE_BOLD
+	}
+	return font
+}
+
+func (screen *GameScreen) getFontOfTR(idx int, isMyTR bool) FontType {
+	font := REGULAR
+	isActiveLine := screen.activeLine == idx
+	isDisabledLine := isMyTR
+	if isActiveLine && isDisabledLine {
+		font = BROWN_BOLD
+	} else if isActiveLine {
+		font = BLUE_BOLD
+	} else if isDisabledLine {
+		font = BROWN
+	}
+	return font
+}
+
+func (screen *GameScreen) getFontOfShopItem(idx int, item loud.Item) FontType {
+	preitemOk := screen.user.HasPreItemForAnItem(item)
+	goldEnough := item.Price <= screen.user.GetGold()
+	font := REGULAR
+	if !preitemOk {
+		font = GREY
+	}
+	if !goldEnough {
+		font = GREY
+	}
+	if idx == screen.activeLine {
+		switch font {
+		case REGULAR:
+			font = BLUE_BOLD
+		case GREY:
+			font = GREY_BOLD
+		}
+	}
+	return font
 }

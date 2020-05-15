@@ -79,15 +79,6 @@ func (tl TextLines) appendCustomFontSelectCmdsScreenCharacters(screen *GameScree
 		})
 }
 
-func (screen *GameScreen) getFontByActiveIndex(idx int) FontType {
-	activeLine := screen.activeLine
-	font := REGULAR
-	if activeLine == idx {
-		font = BLUE_BOLD
-	}
-	return font
-}
-
 func (screen *GameScreen) renderUserCommands() {
 	// cmd box start point (x, y)
 	scrBox := screen.GetCmdBox()
@@ -208,24 +199,14 @@ func (screen *GameScreen) renderUserCommands() {
 					item := it.(loud.Item)
 					preitemOk := screen.user.HasPreItemForAnItem(item)
 					goldEnough := item.Price <= screen.user.GetGold()
-					font := REGULAR
+					font := screen.getFontOfShopItem(idx, it.(loud.Item))
 					bonusText := ""
 					contentStr := ""
 					if !preitemOk {
-						font = GREY
 						bonusText = fmt.Sprintf(": %s", loud.Localize("no material"))
 					}
 					if !goldEnough {
-						font = GREY
 						bonusText = fmt.Sprintf(": %s", loud.Localize("not enough gold"))
-					}
-					if idx == screen.activeLine {
-						switch font {
-						case REGULAR:
-							font = BLUE_BOLD
-						case GREY:
-							font = GREY_BOLD
-						}
 					}
 					if len(item.PreItems) > 0 {
 						contentStr = formatItem(item) + fmt.Sprintf("💰 %d + %s %s", item.Price, item.PreItemStr(), bonusText)

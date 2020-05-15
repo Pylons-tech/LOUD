@@ -113,13 +113,13 @@ func (screen *GameScreen) renderUserSituation() {
 			"Select item to sell",
 			"Item",
 			screen.user.InventoryItems(),
-			w)
+			w, nil)
 	case CR8_SELLCHR_TRDREQ_SEL_CHR:
 		infoLines, tableLines = screen.renderITTable(
 			"Select character to sell",
 			"Character",
 			screen.user.InventoryCharacters(),
-			w)
+			w, nil)
 	case CR8_SELLITM_TRDREQ_ENT_PYLVAL:
 		desc = loud.Localize("Please enter pylon amount to use (should be integer value)")
 	case CR8_SELLCHR_TRDREQ_ENT_PYLVAL:
@@ -129,13 +129,13 @@ func (screen *GameScreen) renderUserSituation() {
 			"Select item to buy",
 			"Item",
 			loud.WorldItemSpecs,
-			w)
+			w, nil)
 	case CR8_BUYCHR_TRDREQ_SEL_CHR:
 		infoLines, tableLines = screen.renderITTable(
 			"Select character specs to get",
 			"Character",
 			loud.WorldCharacterSpecs,
-			w)
+			w, nil)
 	case CR8_BUYITM_TRDREQ_ENT_PYLVAL:
 		desc = loud.Localize("Please enter pylon amount to use (should be integer value)")
 	case CR8_BUYCHR_TRDREQ_ENT_PYLVAL:
@@ -145,34 +145,40 @@ func (screen *GameScreen) renderUserSituation() {
 			"Please select active character",
 			"Character",
 			screen.user.InventoryCharacters(),
-			w)
+			w, nil)
 	case SEL_RENAME_CHAR:
 		infoLines, tableLines = screen.renderITTable(
 			"Please select character to rename",
 			"Character",
 			screen.user.InventoryCharacters(),
-			w)
+			w, nil)
 	case SEL_BUYITM:
 		infoLines, tableLines = screen.renderITTable(
 			"select buy item desc",
-			"Item",
+			"Shop items",
 			loud.ShopItems,
-			w)
+			w,
+			func(idx int, item interface{}) FontType {
+				return screen.getFontOfShopItem(idx, item.(loud.Item))
+			})
 	case SEL_SELLITM:
 		infoLines, tableLines = screen.renderITTable(
 			"select sell item desc",
 			"Item",
-			screen.user.InventorySellableItems(), w)
+			screen.user.InventorySellableItems(),
+			w, nil)
 	case SEL_UPGITM:
 		infoLines, tableLines = screen.renderITTable(
 			"select upgrade item desc",
 			"Item",
-			screen.user.InventoryUpgradableItems(), w)
+			screen.user.InventoryUpgradableItems(),
+			w, nil)
 	case SEL_BUYCHR:
 		infoLines, tableLines = screen.renderITTable(
 			"select buy character desc",
 			"Character",
-			loud.ShopCharacters, w)
+			loud.ShopCharacters,
+			w, nil)
 	case CONFIRM_HUNT_RABBITS:
 		desc = loud.Localize("rabbits without sword outcome")
 	case CONFIRM_FIGHT_GOBLIN:

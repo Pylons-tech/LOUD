@@ -290,44 +290,27 @@ func InterfaceSlice(slice interface{}) []interface{} {
 	return ret
 }
 
-func (screen *GameScreen) renderTRLine(text1 string, text2 string, text3 string, isActiveLine bool, isDisabledLine bool, width int) string {
+func (screen *GameScreen) renderTRLine(text1 string, text2 string, text3 string, font FontType, width int) string {
 	text1 = loud.Localize(text1)
 	text2 = loud.Localize(text2)
 	text3 = loud.Localize(text3)
 
 	calcText := "│" + centerText(text1, " ", 20) + "│" + centerText(text2, " ", 15) + "│" + centerText(text3, " ", 15) + "│"
-	onColor := screen.regularFont()
-	if isActiveLine && isDisabledLine {
-		onColor = screen.brownBoldFont()
-	} else if isActiveLine {
-		onColor = screen.blueBoldFont()
-	} else if isDisabledLine {
-		onColor = screen.brownFont()
-	}
+	onColor := screen.getFont(font)
 	return onColor(fillSpace(calcText, width))
 }
 
-func (screen *GameScreen) renderItemTableLine(text1 string, isActiveLine bool, width int) string {
+func (screen *GameScreen) renderItemTableLine(text1 string, font FontType, width int) string {
 	calcText := "│" + centerText(loud.Localize(text1), " ", 52) + "│"
-	onColor := screen.regularFont()
-	if isActiveLine {
-		onColor = screen.blueBoldFont()
-	}
+	onColor := screen.getFont(font)
 	return onColor(fillSpace(calcText, width))
 }
 
-func (screen *GameScreen) renderItemTrdReqTableLine(text1 string, text2 string, isActiveLine bool, isDisabledLine bool, width int) string {
+func (screen *GameScreen) renderItemTrdReqTableLine(text1 string, text2 string, font FontType, width int) string {
 	text1 = loud.Localize(text1)
 	text2 = loud.Localize(text2)
 	calcText := "│" + centerText(text1, " ", 36) + "│" + centerText(text2, " ", 15) + "│"
-	onColor := screen.regularFont()
-	if isActiveLine && isDisabledLine {
-		onColor = screen.brownBoldFont()
-	} else if isActiveLine {
-		onColor = screen.blueBoldFont()
-	} else if isDisabledLine {
-		onColor = screen.brownFont()
-	}
+	onColor := screen.getFont(font)
 	return onColor(fillSpace(calcText, width))
 }
 
