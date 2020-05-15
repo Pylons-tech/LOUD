@@ -24,6 +24,9 @@
             },
             {
                 "Ref": "./recipes/item_output/goblin_ear.json"  
+            },
+            {
+                "Ref": "./recipes/item_output/goblin_boots.json"  
             }
         ]
     },
@@ -38,10 +41,14 @@
         },
         {
             "ResultEntries": ["0", "1", "2"],
-            "Weight": "75"
+            "Weight": "55"
         },
         {
             "ResultEntries": ["0", "1", "2", "3"],
+            "Weight": "20"
+        },
+        {
+            "ResultEntries": ["0", "1", "2", "4"],
             "Weight": "20"
         }
     ],

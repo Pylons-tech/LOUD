@@ -24,6 +24,9 @@
             },
             {
                 "Ref": "./recipes/item_output/troll_toes.json"  
+            },
+            {
+                "Ref": "./recipes/item_output/troll_smelly_bones.json"  
             }
         ]
     },
@@ -38,11 +41,15 @@
         },
         {
             "ResultEntries": ["0", "1", "2"],
-            "Weight": "83"
+            "Weight": "53"
         },
         {
             "ResultEntries": ["0", "1", "2", "3"],
             "Weight": "10"
+        },
+        {
+            "ResultEntries": ["0", "1", "2", "3"],
+            "Weight": "30"
         }
     ],
     "ExtraInfo":"",

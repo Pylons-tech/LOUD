@@ -180,6 +180,16 @@ func (user *dbUser) SetFightMonster(monster string) {
 	user.targetMonster = monster
 }
 
+func (user *dbUser) GetItemByID(ID string) *Item {
+	iis := user.InventoryItems()
+	for _, ii := range iis {
+		if ii.ID == ID {
+			return &ii
+		}
+	}
+	return nil
+}
+
 func (user *dbUser) GetFightWeapon() *Item {
 	switch user.targetMonster {
 	case RABBIT: // no weapon is needed

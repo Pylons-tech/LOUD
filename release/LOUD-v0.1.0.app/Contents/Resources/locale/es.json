@@ -667,5 +667,17 @@
   },
   "Once you have drops from 3 special dragons, you can create angel sword at the shop!": {
     "one": "Once you have drops from 3 special dragons, you can create angel sword at the shop!"
+  },
+  "Something went wrong!\nReturned ItemID is not available on user's inventory.": {
+    "one": "Something went wrong!\nReturned ItemID is not available on user's inventory."
+  },
+  "You can sell goblin boots to earn gold or trade in pylons central!": {
+    "one": "You can sell goblin boots to earn gold or trade in pylons central!"
+  },
+  "You can sell troll's smelly boots at to earn gold or trade in pylons central!": {
+    "one": "You can sell troll's smelly boots at to earn gold or trade in pylons central!"
+  },
+  "You can sell wolf fur at to earn gold or trade in pylons central!": {
+    "one": "You can sell wolf fur at to earn gold or trade in pylons central!"
   }
 }

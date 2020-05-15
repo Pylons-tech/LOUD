@@ -337,10 +337,20 @@ func (screen *GameScreen) TxResultSituationDesc() (string, FontType) {
 					desc += loud.Sprintf("You have lost your weapon accidently")
 					font = YELLOW
 				case 4:
-					desc += loud.Sprintf("You got bonus item called %s", loud.GOBLIN_EAR)
-					desc += "\n"
-					desc += loud.Sprintf("You can make silver sword with Goblin ear at the shop!")
-					font = GREEN
+					bonusItem := screen.user.GetItemByID(respOutput[3].ItemID)
+					if bonusItem == nil {
+						font = RED_BOLD
+						desc = loud.Localize("Something went wrong!\nReturned ItemID is not available on user's inventory.")
+					} else {
+						font = GREEN
+						desc += loud.Sprintf("You got bonus item called %s", bonusItem.Name)
+						desc += "\n"
+						if bonusItem.Name == loud.GOBLIN_BOOTS { // GOBLIN_BOOTS
+							desc += loud.Sprintf("You can sell goblin boots to earn gold or trade in pylons central!")
+						} else { // GOBLIN_EAR
+							desc += loud.Sprintf("You can make silver sword with Goblin ear at the shop!")
+						}
+					}
 				}
 			}
 		case RSLT_FIGHT_TROLL:
@@ -358,10 +368,20 @@ func (screen *GameScreen) TxResultSituationDesc() (string, FontType) {
 					desc += loud.Sprintf("You have lost your weapon accidently")
 					font = YELLOW
 				case 4:
-					desc += loud.Sprintf("You got bonus item called %s", loud.TROLL_TOES)
-					desc += "\n"
-					desc += loud.Sprintf("You can make iron sword with Troll toes at the shop!")
-					font = GREEN
+					bonusItem := screen.user.GetItemByID(respOutput[3].ItemID)
+					if bonusItem == nil {
+						font = RED_BOLD
+						desc = loud.Localize("Something went wrong!\nReturned ItemID is not available on user's inventory.")
+					} else {
+						font = GREEN
+						desc += loud.Sprintf("You got bonus item called %s", bonusItem.Name)
+						desc += "\n"
+						if bonusItem.Name == loud.TROLL_SMELLY_BONES { // TROLL_SMELLY_BONES
+							desc += loud.Sprintf("You can sell troll's smelly boots at to earn gold or trade in pylons central!")
+						} else { // TROLL_TOES
+							desc += loud.Sprintf("You can make iron sword with Troll toes at the shop!")
+						}
+					}
 				}
 			}
 		case RSLT_FIGHT_WOLF:
@@ -379,10 +399,20 @@ func (screen *GameScreen) TxResultSituationDesc() (string, FontType) {
 					desc += loud.Sprintf("You have lost your weapon accidently")
 					font = YELLOW
 				case 4:
-					desc += loud.Sprintf("You got bonus item called %s", loud.WOLF_TAIL)
-					desc += "\n"
-					desc += loud.Sprintf("You can make bronze sword with Wolf tail at the shop!")
-					font = GREEN
+					bonusItem := screen.user.GetItemByID(respOutput[3].ItemID)
+					if bonusItem == nil {
+						font = RED_BOLD
+						desc = loud.Localize("Something went wrong!\nReturned ItemID is not available on user's inventory.")
+					} else {
+						font = GREEN
+						desc += loud.Sprintf("You got bonus item called %s", bonusItem.Name)
+						desc += "\n"
+						if bonusItem.Name == loud.WOLF_FUR { // WOLF_FUR
+							desc += loud.Sprintf("You can sell wolf fur at to earn gold or trade in pylons central!")
+						} else { // WOLF_TAIL
+							desc += loud.Sprintf("You can make bronze sword with Wolf tail at the shop!")
+						}
+					}
 				}
 			}
 		case RSLT_FIGHT_GIANT:

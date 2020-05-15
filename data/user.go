@@ -38,6 +38,7 @@ type User interface {
 	GetActiveCharacterIndex() int
 	GetActiveCharacter() *Character
 	GetFightWeapon() *Item
+	GetItemByID(string) *Item
 	GetAddress() string
 	GetGold() int
 	GetPylonAmount() int

@@ -124,6 +124,7 @@ Reward: 50 💰
 2% chance of character dying
 3% chance of sword lose
 20% chance of "Goblin ear"
+20% chance of "Goblin boots"
 ```
 
 Character should carry sword to fight goblin.
@@ -138,6 +139,7 @@ Reward: 1 💰
 3% chance of character dying
 3% chance of sword lose
 40% chance of “Wolf tail”
+30% chance of “Wolf fur”
 ```
 Character should carry sword to fight wolf.
 When character die, no gold is returned.
@@ -151,6 +153,7 @@ Reward: 300 💰
 4% chance of character dying
 3% chance of sword lose
 10% chance of “Troll toes”
+30% chance of “Troll smelly bones”
 ```
 
 Character should carry sword to fight troll.

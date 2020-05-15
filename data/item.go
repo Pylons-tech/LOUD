@@ -67,12 +67,15 @@ const (
 	IRON_SWORD   = "Iron sword"
 	ANGEL_SWORD  = "Angel sword"
 
-	GOBLIN_EAR      = "Goblin ear"
-	WOLF_TAIL       = "Wolf tail"
-	TROLL_TOES      = "Troll toes"
-	DROP_DRAGONICE  = "Icy shards"
-	DROP_DRAGONFIRE = "Fire scale"
-	DROP_DRAGONACID = "Poison claws"
+	GOBLIN_EAR         = "Goblin ear"
+	GOBLIN_BOOTS       = "Goblin boots"
+	WOLF_FUR           = "Wolf fur"
+	TROLL_SMELLY_BONES = "Troll smelly bones"
+	WOLF_TAIL          = "Wolf tail"
+	TROLL_TOES         = "Troll toes"
+	DROP_DRAGONICE     = "Icy shards"
+	DROP_DRAGONFIRE    = "Fire scale"
+	DROP_DRAGONACID    = "Poison claws"
 )
 
 func (item Item) IsSword() bool {
