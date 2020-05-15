@@ -73,15 +73,35 @@ func SyncFromNode(user User) {
 			})
 		}
 	}
-	// Sort characters by level
+	// Sort characters by dragon kills, giant kill, special, level and name
 	sort.SliceStable(myCharacters, func(i, j int) bool {
-		return myCharacters[i].Level > myCharacters[j].Level
+		chi := myCharacters[i]
+		chj := myCharacters[j]
+		if chi.UndeadDragonKill != chj.UndeadDragonKill {
+			return chi.UndeadDragonKill > chj.UndeadDragonKill
+		} else if chi.SpecialDragonKill != chj.SpecialDragonKill {
+			return chi.SpecialDragonKill > chj.SpecialDragonKill
+		} else if chi.GiantKill != chj.GiantKill {
+			return chi.GiantKill > chj.GiantKill
+		} else if chi.Special != chj.Special {
+			return chi.Special > chj.Special
+		} else if chi.Level != chj.Level {
+			return chi.Level > chj.Level
+		} else {
+			return chi.Name > chj.Name
+		}
 	})
 	user.SetCharacters(myCharacters)
 
-	// Sort items by attack
+	// Sort items by attack and name
 	sort.SliceStable(myItems, func(i, j int) bool {
-		return myItems[i].Attack > myItems[j].Attack
+		iti := myItems[i]
+		itj := myItems[j]
+		if iti.Attack != itj.Attack {
+			return iti.Attack > itj.Attack
+		} else {
+			return iti.Name > itj.Name
+		}
 	})
 	user.SetItems(myItems)
 
