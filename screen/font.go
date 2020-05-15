@@ -134,13 +134,11 @@ func (screen *GameScreen) getFontOfTR(idx int, isMyTR bool) FontType {
 }
 
 func (screen *GameScreen) getFontOfShopItem(idx int, item loud.Item) FontType {
-	preitemOk := screen.user.HasPreItemForAnItem(item)
-	goldEnough := item.Price <= screen.user.GetGold()
 	font := REGULAR
-	if !preitemOk {
+	switch {
+	case !screen.user.HasPreItemForAnItem(item): // ! preitem ok
 		font = GREY
-	}
-	if !goldEnough {
+	case !(item.Price <= screen.user.GetGold()): // ! gold enough
 		font = GREY
 	}
 	if idx == screen.activeLine {

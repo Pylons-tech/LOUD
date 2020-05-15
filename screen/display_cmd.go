@@ -35,42 +35,55 @@ func (tl TextLines) appendGoOnBackCmds() TextLines {
 		GO_BACK_CMD)
 }
 
-var MAX_SHORTCUT_ITEM_CMDSEL = 5
+var MAX_SHORTCUT_ITEM_CMDSEL = 3
 
-func (tl TextLines) appendSelectCmds(itemsSlice interface{}, fn func(interface{}) string) TextLines {
-	items := InterfaceSlice(itemsSlice)
-	for idx, item := range items {
-		if idx >= MAX_SHORTCUT_ITEM_CMDSEL {
-			tl = tl.append("...")
-			break
-		}
-		tl = tl.append(fmt.Sprintf("%d) %s  ", idx+1, fn(item)))
+func getWindowFromActiveLine(activeLine, window_size, max_window int) (int, int) {
+	if window_size > max_window {
+		window_size = max_window
 	}
-	return tl
+	if activeLine >= max_window {
+		activeLine = max_window - 1
+	}
+	startLine := activeLine - window_size/2
+	if startLine < 0 {
+		startLine = 0
+	}
+	endLine := startLine + window_size
+	if endLine >= max_window {
+		startLine -= endLine - max_window
+		endLine = max_window
+	}
+	return startLine, endLine
 }
 
-func (tl TextLines) appendCustomFontSelectCmds(itemsSlice interface{}, fn func(int, interface{}) TextLine) TextLines {
+func (tl TextLines) appendCustomFontSelectCmds(itemsSlice interface{}, activeLine int, fn func(int, interface{}) TextLine) TextLines {
 	items := InterfaceSlice(itemsSlice)
-	for idx, item := range items {
-		if idx >= MAX_SHORTCUT_ITEM_CMDSEL {
-			tl = append(tl, TextLine{
-				content: fmt.Sprintf("..."),
-				font:    REGULAR,
-			})
-			break
-		}
+
+	startLine, endLine := getWindowFromActiveLine(activeLine, MAX_SHORTCUT_ITEM_CMDSEL, len(items))
+	if startLine != 0 {
+		tl = tl.append("...")
+	} else {
+		tl = tl.append("")
+	}
+	for li, item := range items[startLine:endLine] {
+		idx := li + startLine
 		fni := fn(idx, item)
 		tl = append(tl, TextLine{
 			content: fmt.Sprintf("%d) %s  ", idx+1, fni.content),
 			font:    fni.font,
 		})
 	}
+	if endLine < len(items) {
+		tl = tl.append("...")
+	} else {
+		tl = tl.append("")
+	}
 	return tl
 }
 
 func (tl TextLines) appendCustomFontSelectCmdsScreenCharacters(screen *GameScreen) TextLines {
 	return tl.appendCustomFontSelectCmds(
-		screen.user.InventoryCharacters(),
+		screen.user.InventoryCharacters(), screen.activeLine,
 		func(idx int, it interface{}) TextLine {
 			return TextLine{
 				content: formatCharacter(it.(loud.Character)),
@@ -194,18 +207,16 @@ func (screen *GameScreen) renderUserCommands() {
 	case SEL_BUYITM:
 		infoLines = infoLines.
 			appendCustomFontSelectCmds(
-				loud.ShopItems,
+				loud.ShopItems, screen.activeLine,
 				func(idx int, it interface{}) TextLine {
 					item := it.(loud.Item)
-					preitemOk := screen.user.HasPreItemForAnItem(item)
-					goldEnough := item.Price <= screen.user.GetGold()
 					font := screen.getFontOfShopItem(idx, it.(loud.Item))
 					bonusText := ""
 					contentStr := ""
-					if !preitemOk {
+					switch {
+					case !screen.user.HasPreItemForAnItem(item): // ! preitem ok
 						bonusText = fmt.Sprintf(": %s", loud.Localize("no material"))
-					}
-					if !goldEnough {
+					case !(item.Price <= screen.user.GetGold()): // ! gold enough
 						bonusText = fmt.Sprintf(": %s", loud.Localize("not enough gold"))
 					}
 					if len(item.PreItems) > 0 {
@@ -222,7 +233,7 @@ func (screen *GameScreen) renderUserCommands() {
 	case SEL_BUYCHR:
 		infoLines = infoLines.
 			appendCustomFontSelectCmds(
-				loud.ShopCharacters,
+				loud.ShopCharacters, screen.activeLine,
 				func(idx int, it interface{}) TextLine {
 					char := it.(loud.Character)
 					return TextLine{
@@ -234,7 +245,7 @@ func (screen *GameScreen) renderUserCommands() {
 	case SEL_SELLITM:
 		infoLines = infoLines.
 			appendCustomFontSelectCmds(
-				screen.user.InventorySellableItems(),
+				screen.user.InventorySellableItems(), screen.activeLine,
 				func(idx int, it interface{}) TextLine {
 					item := it.(loud.Item)
 					return TextLine{
@@ -246,7 +257,7 @@ func (screen *GameScreen) renderUserCommands() {
 	case SEL_UPGITM:
 		infoLines = infoLines.
 			appendCustomFontSelectCmds(
-				screen.user.InventoryUpgradableItems(),
+				screen.user.InventoryUpgradableItems(), screen.activeLine,
 				func(idx int, it interface{}) TextLine {
 					item := it.(loud.Item)
 					return TextLine{

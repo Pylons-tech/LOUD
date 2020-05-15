@@ -12,19 +12,10 @@ func (screen *GameScreen) renderTRTable(requests []loud.TrdReq, width int) ([]st
 	tableLines = append(tableLines, screen.regularFont()(fillSpace("╭────────────────────┬───────────────┬───────────────╮", width)))
 	tableLines = append(tableLines, screen.renderTRLine("GOLD price (pylon)", "Amount (gold)", "Total (pylon)", REGULAR, width))
 	tableLines = append(tableLines, screen.regularFont()(fillSpace("├────────────────────┼───────────────┼───────────────┤", width)))
-	numLines := screen.GetSituationBox().H - 5
 	if screen.activeLine >= len(requests) {
 		screen.activeLine = len(requests) - 1
 	}
-	activeLine := screen.activeLine
-	startLine := activeLine - numLines + 1
-	if startLine < 0 {
-		startLine = 0
-	}
-	endLine := startLine + numLines
-	if endLine > len(requests) {
-		endLine = len(requests)
-	}
+	startLine, endLine := getWindowFromActiveLine(screen.activeLine, screen.GetSituationBox().H-5, len(requests))
 	for li, request := range requests[startLine:endLine] {
 		tableLines = append(
 			tableLines,
@@ -50,19 +41,13 @@ func (screen *GameScreen) renderITRTable(title string, theads [2]string, request
 	tableLines = append(tableLines, screen.regularFont()(fillSpace("╭────────────────────────────────────┬───────────────╮", width)))
 	tableLines = append(tableLines, screen.renderItemTrdReqTableLine(theads[0], theads[1], REGULAR, width))
 	tableLines = append(tableLines, screen.regularFont()(fillSpace("├────────────────────────────────────┼───────────────┤", width)))
-	numLines := screen.GetSituationBox().H - 5 - numHeaderLines
 	if screen.activeLine >= len(requests) {
 		screen.activeLine = len(requests) - 1
 	}
-	activeLine := screen.activeLine
-	startLine := activeLine - numLines + 1
-	if startLine < 0 {
-		startLine = 0
-	}
-	endLine := startLine + numLines
-	if endLine > len(requests) {
-		endLine = len(requests)
-	}
+	startLine, endLine := getWindowFromActiveLine(
+		screen.activeLine,
+		screen.GetSituationBox().H-5-numHeaderLines,
+		len(requests))
 	for li, request := range requests[startLine:endLine] {
 		line := ""
 		switch request.(type) {
@@ -109,7 +94,6 @@ func (screen *GameScreen) renderITTable(header string, th string, itemSlice inte
 	items := InterfaceSlice(itemSlice)
 	infoLines := strings.Split(loud.Localize(header), "\n")
 	numHeaderLines := len(infoLines)
-	numLines := screen.GetSituationBox().H - 5 - numHeaderLines
 	fmtFunc := screen.regularFont()
 
 	tableLines := []string{}
@@ -119,15 +103,10 @@ func (screen *GameScreen) renderITTable(header string, th string, itemSlice inte
 	if screen.activeLine >= len(items) {
 		screen.activeLine = len(items) - 1
 	}
-	activeLine := screen.activeLine
-	startLine := activeLine - numLines + 1
-	if startLine < 0 {
-		startLine = 0
-	}
-	endLine := startLine + numLines
-	if endLine > len(items) {
-		endLine = len(items)
-	}
+	startLine, endLine := getWindowFromActiveLine(
+		screen.activeLine,
+		screen.GetSituationBox().H-5-numHeaderLines,
+		len(items))
 	for li, item := range items[startLine:endLine] {
 		line := ""
 		switch item.(type) {
