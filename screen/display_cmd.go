@@ -19,10 +19,6 @@ const (
 	EXIT_GAME_ESC_CMD = "Exit Game ( Esc )"
 )
 
-func (tl TextLines) appendDeselectCmd() TextLines {
-	return tl.append(fmt.Sprintf("0) %s", loud.Localize("Deselect")))
-}
-
 func (tl TextLines) appendSelectGoBackCmds() TextLines {
 	return tl.appendT(
 		SEL_CMD,
@@ -201,7 +197,7 @@ func (screen *GameScreen) renderUserCommands() {
 			appendSelectGoBackCmds()
 	case SEL_ACTIVE_CHAR:
 		infoLines = infoLines.
-			appendDeselectCmd().
+			append(fmt.Sprintf("0) %s", loud.Localize("No character selection"))).
 			appendCustomFontSelectCmdsScreenCharacters(screen).
 			appendSelectGoBackCmds()
 	case SEL_BUYITM:

@@ -30,7 +30,7 @@
     "one": "You don't have enough gold to upgrade this item"
   },
   "home": {
-    "one": "1) Select active character\n2) Update character name\n"
+    "one": "1) Select your active character\n2) Change your character’s name\n"
   },
   "forest": {
     "one": "1) Rabbit(💰 1+)\n2) Goblin 👺 (💰 50)\n3) Wolf 🐺 (💰 1)\n4) Troll 👻 (💰 300)\n5) Giant 🗿 (💰 3000)\n6) Fire Dragon 🦐 (💰 20000)\n7) Ice Dragon 🦈 (💰 20000)\n8) Acid Dragon 🐊 (💰 20000)\n9) Undead Dragon 🐉 (💰 50000)\n"
@@ -84,7 +84,7 @@
     "one": "You have reached the woods. Now you must kill things for unclear reasons.\nOr go back home to your puzzle."
   },
   "shop desc": {
-    "one": "You are now at the blacksmith.\nIf you want you can buy or sell items here."
+    "one": "It’s a blacksmith’s store.\nThe blacksmith sells things, buys things, and mends things.\nSometimes he regrets his choices in life."
   },
   "pylons central desc": {
     "one": "Got pylons? Get power.\nYou can trade for gold and items."
@@ -102,10 +102,10 @@
     "one": "Summon a weakling with huge potential from the ether? Hell yeah.\n"
   },
   "select buy item desc": {
-    "one": "Buy a sword.\nJust do it.\nDon't be scared."
+    "one": "Swords are big and clever. Big. And. Clever."
   },
   "select sell item desc": {
-    "one": "Sell a sword.\nNo we don't have plowshares."
+    "one": "Sell some stuff. Make money, get britches. We’re pretty sure that’s how it works."
   },
   "rabbits without sword outcome": {
     "one": "Hunt Rabbits\n\nReward 💰 1 - 2\n5% chance of character dying\n"
@@ -135,7 +135,7 @@
     "one": "Fight undead dragon 🐉\n\nReward 💰 50000\nEnemy info (HP: 300, Attack: 30)\n2% chance for character dying\n3% chance of sword lose\nUndeadDragonKiller badget on character\n"
   },
   "select upgrade item desc": {
-    "one": "Upgrading. Upgrading sounds good."
+    "one": "Two words. Up. Grade. Make your stuff more awesomer."
   },
   "Making gold from pylons": {
     "one": "Making gold from pylons..."
@@ -147,7 +147,7 @@
     "one": "Please wait for a moment to finish the process."
   },
   "You are now buying %s at the shop": {
-    "one": "You are now buying \"%s\" at the shop"
+    "one": "You are buying \"%s\". Give us a minute while we finish the paperwork"
   },
   "You are now hunting rabbits with %s": {
     "one": "You are now hunting rabbits with \"%s\"."
@@ -179,14 +179,14 @@
   "You are now fighting with undead dragon with %s": {
     "one": "You are now fighting with 🐉 (undead dragon) with \"%s\"\n"
   },
-  "You are now selling %s for gold": {
-    "one": "You are now selling \"%s\" for gold."
+  "You are now selling %s for %s gold": {
+    "one": "You are selling the \"%s\" for %s gold, the blacksmith is checking his pockets for change."
   },
   "You are now upgrading %s": {
-    "one": "You are now upgrading %s."
+    "one": "The blacksmith is working on your \"%s\", give him space, he’s a professional"
   },
-  "You have bought %s from the shop": {
-    "one": "You have bought \"%s\" from the shop"
+  "You have bought a weapon from the shop": {
+    "one": "Thank you for supporting your local blacksmith. Use your new weapon only for good. We believe in you."
   },
   "You have bought %s from Pylons Central": {
     "one": "You have bought \"%s\" from Pylons Central"
@@ -243,7 +243,7 @@
     "one": "Bought gold with pylons. Hell yeah 💰 %d."
   },
   "You have upgraded %s to get better hunt result": {
-    "one": "You have upgraded \"%s\" from Lv1 to Lv2. Number goes up!"
+    "one": "The \"%s\" has been upgraded to level 2. Shiny!"
   },
   "inventory": {
     "one": " Inventory "
@@ -308,8 +308,8 @@
   "no angel sword!": {
     "one": "no angel sword!"
   },
-  "Deselect": {
-    "one": "Deselect"
+  "No character selection": {
+    "one": "No character selection"
   },
   "Select ( ↵ )": {
     "one": "Select ( ↵ )"
@@ -501,10 +501,10 @@
     "one": "Select character specs to get"
   },
   "Please select active character": {
-    "one": "Please select active character"
+    "one": "Select which character to make active.\nYou can have no character selected but the game isn’t much fun if you do that.\nPick your favourite, maybe they won’t die!"
   },
   "Please select character to rename": {
-    "one": "Please select character to rename"
+    "one": "Select the character to rename, then show us how clever you are with the new name\nOn Selection\nWrite the new name below. We won’t judge you. It’s probably fine."
   },
   "You have successfully unset the active character!": {
     "one": "You have successfully unset the active character!"
@@ -564,7 +564,7 @@
     "one": "You created a new cookbook for a new game build"
   },
   "You sold %s for %d gold.": {
-    "one": "You sold \"%s\" for %d gold."
+    "one": "You sold the \"%s\" for %d gold. A wise financial decision."
   },
   "item sell request was successfully created": {
     "one": "item sell request was successfully created"

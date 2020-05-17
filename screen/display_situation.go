@@ -303,9 +303,8 @@ func (screen *GameScreen) TxResultSituationDesc() (string, FontType) {
 		case RSLT_RENAME_CHAR:
 			desc = loud.Sprintf("You have successfully updated character's name to %s!", screen.inputText)
 		case RSLT_BUYITM:
-			desc = loud.Sprintf("You have bought %s from the shop", formatItem(screen.activeItem))
+			desc = loud.Sprintf("You have bought a weapon from the shop", formatItem(screen.activeItem))
 			desc += "\n"
-			desc += loud.Localize("Please use it for hunting")
 		case RSLT_BUYCHR:
 			desc = loud.Sprintf("You have bought %s from Pylons Central", formatCharacter(screen.activeCharacter))
 			desc += "\n"
@@ -603,7 +602,6 @@ func (screen *GameScreen) TxWaitSituationDesc(width int) ([]string, []string) {
 		desc += screen.sellLoudDesc(screen.loudEnterValue, screen.pylonEnterValue)
 	case W8_BUYITM:
 		desc = loud.Sprintf("You are now buying %s at the shop", formatItem(screen.activeItem))
-		desc += W8_TO_END
 	case W8_BUYCHR:
 		desc = loud.Sprintf("You are now buying %s at the shop", formatCharacter(screen.activeCharacter))
 		desc += W8_TO_END
@@ -643,11 +641,10 @@ func (screen *GameScreen) TxWaitSituationDesc(width int) ([]string, []string) {
 	case W8_CREATE_COOKBOOK:
 		desc = loud.Localize("You are waiting for creating cookbook")
 	case W8_SELLITM:
-		desc = loud.Sprintf("You are now selling %s for gold", formatItem(screen.activeItem))
-		desc += W8_TO_END
+		item := screen.activeItem
+		desc = loud.Sprintf("You are now selling %s for %s gold", formatItem(item), item.GetSellPriceRange())
 	case W8_UPGITM:
 		desc = loud.Sprintf("You are now upgrading %s", loud.Localize(screen.activeItem.Name))
-		desc += W8_TO_END
 	case W8_SELLITM_TRDREQ_CREATION:
 		desc = loud.Localize("You are now waiting for item sell request creation")
 		desc += screen.sellItemDesc(screen.activeItem, screen.pylonEnterValue)
