@@ -75,8 +75,10 @@ type UserData struct {
 	Items                []Item
 	Characters           []Character
 	ActiveCharacterIndex int
+	ActiveCharacter      Character
 	PrivKey              string
 	targetMonster        string
+	usingWeapon          *Item
 	lastTransaction      string
 	lastTxMetaData       string
 	lastUpdate           int64
@@ -176,8 +178,32 @@ func (user *dbUser) SetItems(items []Item) {
 	user.UserData.Items = items
 }
 
+func (user *dbUser) SelectFightWeapon() {
+	switch user.targetMonster {
+	case RABBIT: // no weapon is needed
+		user.usingWeapon = nil
+	case GOBLIN, WOLF, TROLL: // any sword is ok
+		weapons := user.InventorySwords()
+		if len := len(weapons); len > 0 {
+			user.usingWeapon = &weapons[len-1]
+		}
+	case GIANT, DRAGON_FIRE, DRAGON_ICE, DRAGON_ACID: // iron sword is needed
+		weapons := user.InventoryIronSwords()
+		if len := len(weapons); len > 0 {
+			user.usingWeapon = &weapons[len-1]
+		}
+	case DRAGON_UNDEAD: // angel sword is needed
+		weapons := user.InventoryAngelSwords()
+		if len := len(weapons); len > 0 {
+			user.usingWeapon = &weapons[len-1]
+		}
+	}
+	user.usingWeapon = nil
+}
+
 func (user *dbUser) SetFightMonster(monster string) {
 	user.targetMonster = monster
+	user.SelectFightWeapon()
 }
 
 func (user *dbUser) GetItemByID(ID string) *Item {
@@ -191,26 +217,7 @@ func (user *dbUser) GetItemByID(ID string) *Item {
 }
 
 func (user *dbUser) GetFightWeapon() *Item {
-	switch user.targetMonster {
-	case RABBIT: // no weapon is needed
-		return nil
-	case GOBLIN, WOLF, TROLL: // any sword is ok
-		weapons := user.InventorySwords()
-		if len := len(weapons); len > 0 {
-			return &weapons[len-1]
-		}
-	case GIANT, DRAGON_FIRE, DRAGON_ICE, DRAGON_ACID: // iron sword is needed
-		weapons := user.InventoryIronSwords()
-		if len := len(weapons); len > 0 {
-			return &weapons[len-1]
-		}
-	case DRAGON_UNDEAD: // angel sword is needed
-		weapons := user.InventoryAngelSwords()
-		if len := len(weapons); len > 0 {
-			return &weapons[len-1]
-		}
-	}
-	return nil
+	return user.usingWeapon
 }
 func (user *dbUser) SetCharacters(items []Character) {
 	user.UserData.Characters = items
@@ -218,6 +225,7 @@ func (user *dbUser) SetCharacters(items []Character) {
 
 func (user *dbUser) SetActiveCharacterIndex(idx int) {
 	user.UserData.ActiveCharacterIndex = idx
+	user.UserData.ActiveCharacter = user.UserData.Characters[idx]
 }
 
 func (user *dbUser) GetActiveCharacterIndex() int {
@@ -225,12 +233,7 @@ func (user *dbUser) GetActiveCharacterIndex() int {
 }
 
 func (user *dbUser) GetActiveCharacter() *Character {
-	i := user.UserData.ActiveCharacterIndex
-	chars := user.UserData.Characters
-	if i < 0 || i >= len(chars) {
-		return nil
-	}
-	return &chars[i]
+	return &user.UserData.ActiveCharacter
 }
 
 func (user *dbUser) InventoryItems() []Item {

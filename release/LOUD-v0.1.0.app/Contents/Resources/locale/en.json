@@ -81,7 +81,7 @@
     "one": "Welcome to Legend of the Undead Dragon! 🐉 \n \nTo play LOUD, you need at least one character.\nYou can manifest a fresh soul at Pylons Central\nor you can head to the market where other players may have one on offer."
   },
   "forest desc": {
-    "one": "You have reached the woods. Now you must kill things for unclear reasons.\nOr go back home to your puzzle."
+    "one": "Oh! Here are the dark and spooky woods.\nSomehow everything lives here at the same time. Don’t think about it. Just choose something to pick a fight with."
   },
   "shop desc": {
     "one": "It’s a blacksmith’s store.\nThe blacksmith sells things, buys things, and mends things.\nSometimes he regrets his choices in life."
@@ -107,7 +107,7 @@
   "select sell item desc": {
     "one": "Sell some stuff. Make money, get britches. We’re pretty sure that’s how it works."
   },
-  "rabbits without sword outcome": {
+  "rabbits outcome": {
     "one": "Hunt Rabbits\n\nReward 💰 1 - 2\n5% chance of character dying\n"
   },
   "goblin outcome": {
@@ -156,28 +156,28 @@
     "one": "You are now hunting rabbits."
   },
   "You are now fighting with goblin with %s": {
-    "one": "You are now fighting with 👺 (goblin) with \"%s\"\n"
+    "one": "You are bravely laying into the 👺 (goblin) with your \"%s\". Exciting!\n"
   },
   "You are now fighting with troll with %s": {
-    "one": "You are now fighting with 👻 (troll) with \"%s\"\n"
+    "one": "You are bravely laying into the 👻 (troll) with your \"%s\". Exciting!\n"
   },
   "You are now fighting with wolf with %s": {
-    "one": "You are now fighting with 🐺 (wolf) with \"%s\"\n"
+    "one": "You are bravely laying into the 🐺 (wolf) with your \"%s\". Exciting!\n"
   },
   "You are now fighting with giant with %s": {
-    "one": "You are now fighting with 🗿 (giant) with \"%s\"\n"
+    "one": "You are bravely laying into the 🗿 (giant) with your \"%s\". Exciting!\n"
   },
   "You are now fighting with fire dragon with %s": {
-    "one": "You are now fighting with 🦐 (fire dragon) with \"%s\"\n"
+    "one": "You are bravely laying into the 🦐 (fire dragon) with your \"%s\". Exciting!\n"
   },
   "You are now fighting with ice dragon with %s": {
-    "one": "You are now fighting with 🦈 (ice dragon) with \"%s\"\n"
+    "one": "You are bravely laying into the 🦈 (ice dragon) with your \"%s\". Exciting!\n"
   },
   "You are now fighting with acid dragon with %s": {
-    "one": "You are now fighting with 🐊 (acid dragon) with \"%s\"\n"
+    "one": "You are bravely laying into the 🐊 (acid dragon) with your \"%s\". Exciting!\n"
   },
   "You are now fighting with undead dragon with %s": {
-    "one": "You are now fighting with 🐉 (undead dragon) with \"%s\"\n"
+    "one": "You are bravely laying into the 🐉 (undead dragon) with your \"%s\". Exciting!\n"
   },
   "You are now selling %s for %s gold": {
     "one": "You are selling the \"%s\" for %s gold, the blacksmith is checking his pockets for change."
@@ -216,28 +216,28 @@
     "one": "You caught the rabbit. Chaching! 💰 %d."
   },
   "You did fight with goblin and earned %d.": {
-    "one": "You killed a goblin! 👺  💰 %d."
+    "one": "You brave hero you! You defeated the 👺 (goblin). You got 💰 %d."
   },
   "You did fight with troll and earned %d.": {
-    "one": "You beat the 👻 (troll) and earned 💰 %d."
+    "one": "You brave hero you! You defeated the 👻 (troll). Earned 💰 %d."
   },
   "You did fight with wolf and earned %d.": {
-    "one": "You killed a 🐺 (wolf)! Have 💰 %d."
+    "one": "You brave hero you! You defeated the 🐺 (wolf)! Have 💰 %d."
   },
   "You did fight with giant and earned %d.": {
-    "one": "Giantslayer! 🗿  Also you get 💰 %d."
+    "one": "You brave hero you! Giantslayer! 🗿  Also you get 💰 %d."
   },
   "You did fight with fire dragon and earned %d.": {
-    "one": "Fire dragon killer! 🦐  Also you get 💰 %d."
+    "one": "You brave hero you! You defeated the 🦐 (fire dragon)! You got 💰 %d."
   },
   "You did fight with ice dragon and earned %d.": {
-    "one": "Ice dragon killer! 🦈  Also you get 💰 %d."
+    "one": "You brave hero you! You defeated the 🦈 (ice dragon)! Earned 💰 %d."
   },
   "You did fight with acid dragon and earned %d.": {
-    "one": "Acid dragon killer! 🐊  Also you get 💰 %d."
+    "one": "You brave hero you! You defeated the 🐊 (acid dragon)! Have 💰 %d."
   },
   "You did fight with undead dragon and earned %d.": {
-    "one": "Undead dragon killer! 🐉  Also you get 💰 %d."
+    "one": "You brave hero you! You defeated the 🐉 (undead dragon)! You got 💰 %d."
   },
   "Bought gold with pylons. Amount is %d.": {
     "one": "Bought gold with pylons. Hell yeah 💰 %d."
@@ -518,35 +518,14 @@
   "Your character is dead while following rabbits accidently": {
     "one": "Your character is dead while following rabbits accidently"
   },
-  "You have lost your weapon accidently": {
-    "one": "You have lost your weapon accidently"
-  },
-  "You were killed by goblin accidently": {
-    "one": "You were killed by 👺 (goblin) accidently"
+  "You have lost your %s weapon while fighting %s accidently": {
+    "one": "You have lost your %s weapon while fighting %s accidently"
   },
   "You got bonus item called %s": {
     "one": "You got bonus item called %s"
   },
-  "You were killed by troll accidently": {
-    "one": "You were killed by 👻 (troll) accidently"
-  },
-  "You were killed by wolf accidently": {
-    "one": "You were killed by 🐺 (wolf) accidently"
-  },
-  "You were killed by giant accidently": {
-    "one": "You were killed by 🗿 (giant) accidently"
-  },
-  "You were killed by fire dragon accidently": {
-    "one": "You were killed by 🦐 (fire dragon) accidently"
-  },
-  "You were killed by ice dragon accidently": {
-    "one": "You were killed by 🦈 (ice dragon) accidently"
-  },
-  "You were killed by acid dragon accidently": {
-    "one": "You were killed by 🐊 (acid dragon) accidently"
-  },
-  "You were killed by undead dragon accidently": {
-    "one": "You were killed by 🐉 (undead dragon) accidently"
+  "Your %s character was killed by %s accidently": {
+    "one": "Well that could have gone better. \"%s\" is dead. Killed by the %s. Go back home and pick a new character unless you’re a huge baby."
   },
   "Finished getting developer test items.": {
     "one": "Finished getting developer test items."

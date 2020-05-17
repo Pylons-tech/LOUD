@@ -37,6 +37,7 @@ func NumberOfSpaces(message string) int {
 		"🦐":  "xx", // Fire dragon
 		"🐊":  "xx", // Acid dragon 🐊
 		"🗿":  "xx", // Giant
+		"🐇":  "xx", // Rabbit
 		"👺":  "xx", // Goblin
 		"🐺":  "xx", // Wolf
 		"👻":  "xx", // Troll
