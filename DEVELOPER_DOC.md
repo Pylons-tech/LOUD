@@ -108,7 +108,7 @@ Output: `attack * (randi(2)+20)` 💰
 Input: Any item which has `attack` and `level` attributes
 ```
 
-### Hunt rabbits recipe without sword
+### Hunt rabbits
 ```
 Reward: 1 or 2
 1% chance of character dying

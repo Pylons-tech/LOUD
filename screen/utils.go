@@ -100,7 +100,7 @@ func fillSpace(message string, width int) string {
 	msgLen := NumberOfSpaces(message)
 	// msgLen := len(message)
 	if msgLen > width {
-		return truncateRight(message, width)
+		return truncateRight(message, width-3)
 	}
 	leftover := width - msgLen
 

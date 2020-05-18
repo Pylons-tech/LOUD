@@ -108,7 +108,7 @@
     "one": "Sell some stuff. Make money, get britches. We’re pretty sure that’s how it works."
   },
   "rabbits outcome": {
-    "one": "Hunt Rabbits\n\nReward 💰 1 - 2\n5% chance of character dying\n"
+    "one": "🐇\nNot known for putting up much of a fight.\nAlso typically not very rich. Fuzziness factor, off the charts!\nBut you can meet the largest rabbit while following small rabbits and can be beaten.\n\nReward 💰 1 - 2\n1% chance of character dying\n"
   },
   "goblin outcome": {
     "one": "Fight Goblin 👺\n\nGoblins don't have much money but they have a high chance to drop their ear.\n\nReward 💰 50\nEnemy info (HP: 10, Attack: 1)\n2% chance of character dying\n3% chance of sword lose\n20% chance of getting \"Goblin ear\"\n"
@@ -149,10 +149,10 @@
   "You are now buying %s at the shop": {
     "one": "You are buying \"%s\". Give us a minute while we finish the paperwork"
   },
-  "You are now hunting rabbits with %s": {
-    "one": "You are now hunting rabbits with \"%s\"."
+  "You are now buying %s at the pylons central": {
+    "one": "You are now buying %s at the pylons central"
   },
-  "You are now hunting rabbits without weapon": {
+  "You are now hunting rabbits": {
     "one": "You are now hunting rabbits."
   },
   "You are now fighting with goblin with %s": {
@@ -515,8 +515,8 @@
   "You have successfully updated character's name to %s!": {
     "one": "You have successfully updated character's name to %s!"
   },
-  "Your character is dead while following rabbits accidently": {
-    "one": "Your character is dead while following rabbits accidently"
+  "Your %s character is dead while following rabbits accidently": {
+    "one": "Your character accidently met the king of rabbits 100 times bigger than you and beaten. Your %s character is dead. What a shame!!! Go back home and pick a new character unless you’re a huge baby."
   },
   "You have lost your %s weapon while fighting %s accidently": {
     "one": "You have lost your %s weapon while fighting %s accidently"
@@ -575,7 +575,7 @@
   "You are now waiting to rename character from %s to %s.": {
     "one": "You are now waiting to rename character from %s to %s."
   },
-  "Buying %d gold with %d pylon": {
+  "spending %d pylon for %d gold": {
     "one": "You are spending %d pylons to receive %d gold. We’re just bringing it up from the vaults for you."
   },
   "Getting dev test items from pylon": {

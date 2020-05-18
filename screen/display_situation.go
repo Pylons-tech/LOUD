@@ -231,19 +231,16 @@ func (screen *GameScreen) renderUserSituation() {
 		infoLines, tableLines = screen.TxWaitSituationDesc(w)
 	}
 
-	basicLines := strings.Split(desc, "\n")
+	basicLines := loud.ChunkText(desc, w)
 
-	for _, line := range basicLines {
-		chunkedlines := loud.ChunkString(line, screen.leftInnerWidth()-2)
-		if descfont == REGULAR {
-			infoLines = append(infoLines, chunkedlines...)
-		} else {
-			chunkedColorfulLines := []string{}
-			for _, chli := range chunkedlines {
-				chunkedColorfulLines = append(chunkedColorfulLines, screen.getFont(descfont)(fillSpace(chli, w)))
-			}
-			tableLines = append(chunkedColorfulLines, tableLines...)
+	if descfont == REGULAR {
+		infoLines = append(infoLines, basicLines...)
+	} else {
+		colorfulLines := []string{}
+		for _, chli := range basicLines {
+			colorfulLines = append(colorfulLines, screen.getFont(descfont)(fillSpace(chli, w)))
 		}
+		tableLines = append(colorfulLines, tableLines...)
 	}
 
 	fmtFunc := screen.regularFont()
@@ -352,7 +349,7 @@ func (screen *GameScreen) TxResultSituationDesc() (string, FontType) {
 		case RSLT_RENAME_CHAR:
 			desc = loud.Sprintf("You have successfully updated character's name to %s!", screen.inputText)
 		case RSLT_BUYITM:
-			desc = loud.Sprintf("You have bought a weapon from the shop", formatItem(screen.activeItem))
+			desc = loud.Sprintf("You have bought a weapon from the shop")
 			desc += "\n"
 		case RSLT_BUYCHR:
 			desc = loud.Sprintf("You have bought %s from Pylons Central", formatCharacter(screen.activeCharacter))
@@ -362,7 +359,7 @@ func (screen *GameScreen) TxResultSituationDesc() (string, FontType) {
 			earnedAmount, respOutput := screen.GetTxResponseOutput()
 			resLen := len(respOutput)
 			if resLen == 0 {
-				desc = loud.Sprintf("Your character is dead while following rabbits accidently")
+				desc = loud.Sprintf("Your %s character is dead while following rabbits accidently", formatCharacter(*screen.user.GetActiveCharacter()))
 				font = RED
 			} else {
 				desc = loud.Sprintf("You did hunt rabbits and earned %d.", earnedAmount)
@@ -649,14 +646,11 @@ func (screen *GameScreen) TxWaitSituationDesc(width int) ([]string, []string) {
 	case W8_BUYITM:
 		desc = loud.Sprintf("You are now buying %s at the shop", formatItem(screen.activeItem))
 	case W8_BUYCHR:
-		desc = loud.Sprintf("You are now buying %s at the shop", formatCharacter(screen.activeCharacter))
+		// TODO should change text for this action
+		desc = loud.Sprintf("You are now buying %s at the pylons central", formatCharacter(screen.activeCharacter))
 		desc += W8_TO_END
 	case W8_HUNT_RABBITS:
-		if activeWeapon != nil {
-			desc = loud.Sprintf("You are now hunting rabbits with %s", formatItemP(activeWeapon))
-		} else {
-			desc = loud.Sprintf("You are now hunting rabbits without weapon")
-		}
+		desc = loud.Sprintf("You are now hunting rabbits")
 		desc += W8_TO_END
 	case W8_FIGHT_GIANT:
 		desc = loud.Sprintf("You are now fighting with giant with %s", formatItemP(activeWeapon))
@@ -675,7 +669,7 @@ func (screen *GameScreen) TxWaitSituationDesc(width int) ([]string, []string) {
 	case W8_FIGHT_WOLF:
 		desc = loud.Sprintf("You are now fighting with wolf with %s", formatItemP(activeWeapon))
 	case W8_BUY_GOLD_WITH_PYLONS:
-		desc = loud.Sprintf("Buying %d gold with %d pylon", 5000, 100)
+		desc = loud.Sprintf("spending %d pylon for %d gold", 100, 5000)
 	case W8_DEV_GET_TEST_ITEMS:
 		desc = loud.Sprintf("Getting dev test items from pylon")
 		desc += W8_TO_END
@@ -731,7 +725,7 @@ func (screen *GameScreen) TxWaitSituationDesc(width int) ([]string, []string) {
 		desc += screen.buyLoudDesc(request.Amount, request.Total)
 	}
 	desc += "\n"
-	return strings.Split(desc, "\n"), []string{
+	return loud.ChunkText(desc, width), []string{
 		screen.blinkBlueBoldFont()(fillSpace("......", width)),
 	}
 }

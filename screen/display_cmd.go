@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"io"
 	"os"
-	"strings"
 
 	loud "github.com/Pylons-tech/LOUD/data"
 	"github.com/ahmetb/go-cursor"
@@ -116,7 +115,7 @@ func (screen *GameScreen) renderUserCommands() {
 		}
 		cmdString := loud.Localize(cmdMap[screen.user.GetLocation()])
 		infoLines = infoLines.
-			append(strings.Split(cmdString, "\n")...)
+			append(loud.ChunkText(cmdString, w)...)
 
 		if screen.user.GetLocation() == loud.FOREST {
 			forestStusMap := map[int]ScreenStatus{
