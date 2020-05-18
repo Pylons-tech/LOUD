@@ -192,6 +192,23 @@ func (screen *GameScreen) GetScreenStatus() ScreenStatus {
 
 func (screen *GameScreen) SetScreenStatus(newStatus ScreenStatus) {
 	screen.scrStatus = newStatus
+
+	switch newStatus {
+	case RSLT_HUNT_RABBITS,
+		RSLT_FIGHT_GOBLIN,
+		RSLT_FIGHT_TROLL,
+		RSLT_FIGHT_WOLF,
+		RSLT_FIGHT_GIANT,
+		RSLT_FIGHT_DRAGONFIRE,
+		RSLT_FIGHT_DRAGONICE,
+		RSLT_FIGHT_DRAGONACID,
+		RSLT_FIGHT_DRAGONUNDEAD:
+		_, respOutput := screen.GetTxResponseOutput()
+		resLen := len(respOutput)
+		if resLen == 0 { // it means character is dead
+			screen.user.SetActiveCharacterIndex(-1)
+		}
+	}
 }
 
 func (screen *GameScreen) Reset() {
