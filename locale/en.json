@@ -87,7 +87,7 @@
     "one": "It’s a blacksmith’s store.\nThe blacksmith sells things, buys things, and mends things.\nSometimes he regrets his choices in life."
   },
   "pylons central desc": {
-    "one": "Got pylons? Get power.\nYou can trade for gold and items."
+    "one": "Turn Pylons into useful things. Like pretend gold. Yes! This is a good use of your valuable Pylons."
   },
   "settings desc": {
     "one": "Settings"
@@ -99,7 +99,7 @@
     "one": "This is help page for LOUD game."
   },
   "select buy character desc": {
-    "one": "Summon a weakling with huge potential from the ether? Hell yeah.\n"
+    "one": "Summon a hero. We got a whole lot of chosen ones back here.\n"
   },
   "select buy item desc": {
     "one": "Swords are big and clever. Big. And. Clever."
@@ -239,8 +239,8 @@
   "You did fight with undead dragon and earned %d.": {
     "one": "You brave hero you! You defeated the 🐉 (undead dragon)! You got 💰 %d."
   },
-  "Bought gold with pylons. Amount is %d.": {
-    "one": "Bought gold with pylons. Hell yeah 💰 %d."
+  "Bought %d gold with %d pylons.": {
+    "one": "Here’s your 💰 %d, thanks for the %d pylons. Come again, we’re always open!"
   },
   "You have upgraded %s to get better hunt result": {
     "one": "The \"%s\" has been upgraded to level 2. Shiny!"
@@ -575,8 +575,8 @@
   "You are now waiting to rename character from %s to %s.": {
     "one": "You are now waiting to rename character from %s to %s."
   },
-  "Buying gold with pylon": {
-    "one": "Buying gold with pylon"
+  "Buying %d gold with %d pylon": {
+    "one": "You are spending %d pylons to receive %d gold. We’re just bringing it up from the vaults for you."
   },
   "Getting dev test items from pylon": {
     "one": "Getting dev test items from pylon"

@@ -547,7 +547,7 @@ func (screen *GameScreen) TxResultSituationDesc() (string, FontType) {
 			}
 		case RSLT_BUY_GOLD_WITH_PYLONS:
 			earnedAmount, _ := screen.GetTxResponseOutput()
-			desc = loud.Sprintf("Bought gold with pylons. Amount is %d.", earnedAmount)
+			desc = loud.Sprintf("Bought %d gold with %d pylons.", earnedAmount, 100)
 		case RSLT_DEV_GET_TEST_ITEMS:
 			_, respOutput := screen.GetTxResponseOutput()
 			resultTexts := []string{
@@ -659,17 +659,16 @@ func (screen *GameScreen) TxWaitSituationDesc(width int) ([]string, []string) {
 	case W8_FIGHT_WOLF:
 		desc = loud.Sprintf("You are now fighting with wolf with %s", formatItemP(activeWeapon))
 	case W8_BUY_GOLD_WITH_PYLONS:
-		desc = loud.Localize("Buying gold with pylon")
-		desc += W8_TO_END
+		desc = loud.Sprintf("Buying %d gold with %d pylon", 5000, 100)
 	case W8_DEV_GET_TEST_ITEMS:
-		desc = loud.Localize("Getting dev test items from pylon")
+		desc = loud.Sprintf("Getting dev test items from pylon")
 		desc += W8_TO_END
 	case W8_GET_PYLONS:
-		desc = loud.Localize("You are waiting for getting pylons process")
+		desc = loud.Sprintf("You are waiting for getting pylons process")
 	case W8_SWITCH_USER:
-		desc = loud.Localize("You are waiting for switching to new user")
+		desc = loud.Sprintf("You are waiting for switching to new user")
 	case W8_CREATE_COOKBOOK:
-		desc = loud.Localize("You are waiting for creating cookbook")
+		desc = loud.Sprintf("You are waiting for creating cookbook")
 	case W8_SELLITM:
 		item := screen.activeItem
 		desc = loud.Sprintf("You are now selling %s for %s gold", formatItem(item), item.GetSellPriceRange())
