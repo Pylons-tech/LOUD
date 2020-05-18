@@ -2,7 +2,6 @@ package screen
 
 import (
 	"fmt"
-	"strings"
 
 	loud "github.com/Pylons-tech/LOUD/data"
 )
@@ -40,9 +39,10 @@ func (screen *GameScreen) renderTRTable(requests []loud.TrdReq, width int) ([]st
 	return []string{}, tableLines
 }
 
-func (screen *GameScreen) renderITRTable(title string, theads [2]string, requestsSlice interface{}, width int) ([]string, []string) {
+func (screen *GameScreen) renderITRTable(header string, theads [2]string, requestsSlice interface{}, width int) ([]string, []string) {
 	requests := InterfaceSlice(requestsSlice)
-	infoLines := strings.Split(loud.Localize(title), "\n")
+
+	infoLines := loud.ChunkText(loud.Localize(header), width)
 	numHeaderLines := len(infoLines)
 
 	if screen.activeLine >= len(requests) {
@@ -108,7 +108,8 @@ func (screen *GameScreen) renderITRTable(title string, theads [2]string, request
 
 func (screen *GameScreen) renderITTable(header string, th string, itemSlice interface{}, width int, fontFunc func(int, interface{}) FontType) ([]string, []string) {
 	items := InterfaceSlice(itemSlice)
-	infoLines := strings.Split(loud.Localize(header), "\n")
+
+	infoLines := loud.ChunkText(loud.Localize(header), width)
 	numHeaderLines := len(infoLines)
 	fmtFunc := screen.regularFont()
 
