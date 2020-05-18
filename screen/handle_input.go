@@ -246,6 +246,30 @@ func (screen *GameScreen) HandleInputKeyShopEntryPoint(input termbox.Event) bool
 	}
 }
 
+func (screen *GameScreen) HandleInputKeyHelpEntryPoint(input termbox.Event) bool {
+	Key := strings.ToUpper(string(input.Ch))
+
+	tarStusMap := map[string]ScreenStatus{
+		"1": HELP_ABOUT,
+		"2": HELP_WHAT_YOU_CAN_DO,
+		"3": HELP_NAVIGATION,
+		"4": HELP_PAGE_LAYOUT,
+		"5": HELP_GAME_RULES,
+		"6": HELP_TO_CONSIDER,
+		"7": HELP_HOW_IT_WORKS,
+		"8": HELP_UPCOMING_RELEASES,
+		"9": HELP_SUPPORTS,
+	}
+
+	if newStus, ok := tarStusMap[Key]; ok {
+		screen.scrStatus = newStus
+		screen.Render()
+		return true
+	} else {
+		return false
+	}
+}
+
 func (screen *GameScreen) MoveToNextStep() {
 	activeCharacter := screen.user.GetActiveCharacter()
 
@@ -372,6 +396,16 @@ func (screen *GameScreen) MoveToPrevStep() {
 		RSLT_BUYCHR:                     SEL_BUYCHR,
 		RSLT_SELLITM:                    SEL_SELLITM,
 		RSLT_UPGITM:                     SEL_UPGITM,
+
+		HELP_ABOUT:             SHW_LOCATION,
+		HELP_WHAT_YOU_CAN_DO:   SHW_LOCATION,
+		HELP_NAVIGATION:        SHW_LOCATION,
+		HELP_PAGE_LAYOUT:       SHW_LOCATION,
+		HELP_GAME_RULES:        SHW_LOCATION,
+		HELP_TO_CONSIDER:       SHW_LOCATION,
+		HELP_HOW_IT_WORKS:      SHW_LOCATION,
+		HELP_UPCOMING_RELEASES: SHW_LOCATION,
+		HELP_SUPPORTS:          SHW_LOCATION,
 	}
 
 	nxtStatus := SHW_LOCATION
@@ -486,6 +520,11 @@ func (screen *GameScreen) HandleSecondClassInputKeys(input termbox.Event) bool {
 		switch screen.scrStatus {
 		case SHW_LOCATION:
 			return screen.HandleInputKeyShopEntryPoint(input)
+		}
+	} else if screen.user.GetLocation() == loud.HELP {
+		switch screen.scrStatus {
+		case SHW_LOCATION:
+			return screen.HandleInputKeyHelpEntryPoint(input)
 		}
 	}
 	return false

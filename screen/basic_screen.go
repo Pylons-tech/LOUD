@@ -136,6 +136,10 @@ func (screen *GameScreen) IsResultScreen() bool {
 	return screen.scrStatus.IsResultScreen()
 }
 
+func (screen *GameScreen) IsHelpScreen() bool {
+	return screen.scrStatus.IsHelpScreen()
+}
+
 func (screen *GameScreen) IsWaitScreen() bool {
 	return screen.scrStatus.IsWaitScreen()
 }

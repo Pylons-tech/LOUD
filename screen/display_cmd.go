@@ -274,7 +274,10 @@ func (screen *GameScreen) renderUserCommands() {
 		infoLines = infoLines.
 			appendGoOnBackCmds()
 	default:
-		if screen.IsResultScreen() { // eg. RSLT_BUY_LOUD_TRDREQ_CREATION
+		if screen.IsHelpScreen() {
+			infoLines = infoLines.
+				appendT(GO_BACK_CMD)
+		} else if screen.IsResultScreen() { // eg. RSLT_BUY_LOUD_TRDREQ_CREATION
 			infoLines = infoLines.appendT(GO_ON_ENTER_CMD)
 		} else if screen.InputActive() { // eg. CR8_BUYITM_TRDREQ_ENT_PYLVAL
 			infoLines = infoLines.

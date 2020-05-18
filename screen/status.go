@@ -136,6 +136,16 @@ const (
 
 	W8_CANCEL_TRDREQ   = "W8_CANCEL_TRDREQ"
 	RSLT_CANCEL_TRDREQ = "RSLT_CANCEL_TRDREQ"
+
+	HELP_ABOUT             = "HELP_ABOUT"
+	HELP_WHAT_YOU_CAN_DO   = "HELP_WHAT_YOU_CAN_DO"
+	HELP_NAVIGATION        = "HELP_NAVIGATION"
+	HELP_PAGE_LAYOUT       = "HELP_PAGE_LAYOUT"
+	HELP_GAME_RULES        = "HELP_GAME_RULES"
+	HELP_TO_CONSIDER       = "HELP_TO_CONSIDER"
+	HELP_HOW_IT_WORKS      = "HELP_HOW_IT_WORKS"
+	HELP_UPCOMING_RELEASES = "HELP_UPCOMING_RELEASES"
+	HELP_SUPPORTS          = "HELP_SUPPORTS"
 )
 
 func (status ScreenStatus) IsWaitScreen() bool {
@@ -144,4 +154,8 @@ func (status ScreenStatus) IsWaitScreen() bool {
 
 func (status ScreenStatus) IsResultScreen() bool {
 	return strings.Contains(string(status), "RSLT_")
+}
+
+func (status ScreenStatus) IsHelpScreen() bool {
+	return strings.Contains(string(status), "HELP_")
 }

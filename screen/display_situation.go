@@ -205,6 +205,24 @@ func (screen *GameScreen) renderUserSituation() {
 	case CONFIRM_FIGHT_DRAGONUNDEAD:
 		desc = loud.Localize("undead dragon outcome")
 		desc += carryItemDesc(activeWeapon)
+	case HELP_ABOUT:
+		desc = loud.Localize("help about")
+	case HELP_WHAT_YOU_CAN_DO:
+		desc = loud.Localize("help what you can do")
+	case HELP_NAVIGATION:
+		desc = loud.Localize("help navigation")
+	case HELP_PAGE_LAYOUT:
+		desc = loud.Localize("help page layout")
+	case HELP_GAME_RULES:
+		desc = loud.Localize("help game rules")
+	case HELP_TO_CONSIDER:
+		desc = loud.Localize("help to consider")
+	case HELP_HOW_IT_WORKS:
+		desc = loud.Localize("help how it works")
+	case HELP_UPCOMING_RELEASES:
+		desc = loud.Localize("help upcoming releases")
+	case HELP_SUPPORTS:
+		desc = loud.Localize("help supports")
 	}
 
 	if screen.IsResultScreen() {
