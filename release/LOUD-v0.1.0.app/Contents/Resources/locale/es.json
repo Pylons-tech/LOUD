@@ -48,7 +48,7 @@
     "one": "Create cookbook(j)\nSwitch user(z)\nGet initial py)lons\nDevMode Test Items(b)\n"
   },
   "help": {
-    "one": "1) About\n2) What you can do with the game\n3) Navigation\n4) Pages layout\n5) Game rules\n6) What to consider during playing game\n7) How it works in background\n8) Upcoming releases\n9) Supports\n"
+    "one": "1) About\n2) Game Objective\n3) Navigation\n4) Pages layout\n5) Game rules\n6) How it works\n\n7) Upcoming releases\n8) Support\n"
   },
   "go to home": {
     "one": "Inicio(H)"
@@ -72,7 +72,7 @@
     "one": "Help)"
   },
   "home desc": {
-    "one": "Estás en inicio.\nSi quieres cazar, dirígete al bosque.\nY si quieres comprar/vender algo, dirígete a la tienda."
+    "one": "You are at home. It’s safe here. No monsters. Warm blankets.\nThere are other places if you want to do something more exciting.\nRuin something’s day by going to the forest to hunt it - press F\nGo to the shop to buy, sell or upgrade items - press S\n"
   },
   "home desc without pylon": {
     "one": "You don't have pylon within account.\nTo buy characters, you need to purchase pylons or sell existing characters/items on market to get pylons."
@@ -482,8 +482,8 @@
   "Please enter gold amount to buy (should be integer value)": {
     "one": "Please enter gold amount to buy (should be integer value)"
   },
-  "Please enter new character's name - it's costing pylons per letter.": {
-    "one": "Please enter new character's name - it's costing pylons per letter."
+  "Please enter new character's name": {
+    "one": "Write the new name below. We won’t judge you. It’s probably fine. Mention. You spend pylons when rename character."
   },
   "Please enter gold amount to sell (should be integer value)": {
     "one": "Please enter gold amount to sell (should be integer value)"
@@ -504,7 +504,7 @@
     "one": "Select which character to make active.\nYou can have no character selected but the game isn’t much fun if you do that.\nPick your favourite, maybe they won’t die!"
   },
   "Please select character to rename": {
-    "one": "Select the character to rename, then show us how clever you are with the new name\nOn Selection\nWrite the new name below. We won’t judge you. It’s probably fine."
+    "one": "Select the character to rename, then show us how clever you are with the new name\n"
   },
   "You have successfully unset the active character!": {
     "one": "You have successfully unset the active character!"
@@ -660,30 +660,27 @@
     "one": "You can sell wolf fur at to earn gold or trade in pylons central!"
   },
   "help about": {
-    "one": "Legend of Undead Dragon v0.1.0\nThis is old-school prototype game built to run on pylons ecosystem."
+    "one": "Legend of Undead Dragon v0.1.0\nThis is an old-school prototype game built to run on the pylons ecosystem."
   },
   "help what you can do": {
-    "one": "The purpose of this game is to win Undead dragon.\nAs part of game process, you can fight small monsters, rabbits, buy swords from blacksmith, trade swords that you got from forest.\nYou need to have character to play game and also need gold to buy swords.\nYou need swords to fight some monsters, during the game you will experience chilly dying and hot winner emotion."
+    "one": "The purpose of this game is to defeat the Undead Dragon.\nAs you progress, you will fight enemies, buy swords from the blacksmith, and trade swords that you found in your adventures.\nYou need to have at least one character to play the game and you will also need gold to buy swords. Swords are good. You need swords to fight most monsters. You can get better swords too. Those are pretty awesome. Sometimes you will taste the bitter ashes of defeat, other times you will feel the euphoria of victory. This game is a real emotional rollercoaster.\nYou need swords to fight some monsters, during the game you will experience chilly dying and hot winner emotion."
   },
   "help navigation": {
-    "one": "There are 8 menus and they are main tool to navigate around the game.\nYou can go to home, forest, shop, pylons central, settings, help page or escape from the game using navigation menu."
+    "one": "There are 8 menus that you will use to navigate around the game.\nYou can go to Home, Forest, Shop, Pylons Central, Settings, Help page or Escape from the game using the navigation menu."
   },
   "help page layout": {
-    "one": "Page has 5 sections.\n- Navigation menu at the top\n- Inventory on right\n- Commands you can run under menu on left side.\n- Situation box at the center of left side.\n- Input box on bottom left of the page\n- You can see what you can do with on the page at the top of the page.\n- It provides all the actions list you can do to make changes to your character and your inventory.\n"
+    "one": "Each page has 5 sections.\n- Navigation menu at the top\n- Inventory on right\n- Commands you can run under menu on left side.\n- Situation box at the center left side.\n- Input box at the bottom left of the page\n- You can see all of your options for any menu at the top of the page.\n- It provides an action list showing you what choices are available and what the hotkeys to select them are.\n"
   },
   "help game rules": {
-    "one": "It’s not allowed to put offensive or sexually explicit nicknames.\nYou shouldn’t attack game world by running bot to make useless trading orders."
-  },
-  "help to consider": {
-    "one": "You should be patient while playing game, your character can die accidentally while fighting monsters.\nBuying a new monster, fighting till kill the undead dragon can only accomplished by patient and enthusiastic players.\nWe love to see the undead dragon killer badget character to be produced more and more."
+    "one": "Don't use offensive or sexually explicit nicknames.\nDon't automate trading orders with a bot."
   },
   "help how it works": {
-    "one": "This game is working on blockchain statemachine.\nGame state changes when the transaction that contains your command, is confirmed and that command run on all nodes that is running all over the world.\nThis game engine is white box and you can feel the true blockchain game world while playing LOUD.\n"
+    "one": "This game works on a blockchain statemachine.\nThe game state changes when the transaction that contains your command, is confirmed and that command is run on all nodes that are running all over the world.\nThis game engine is a white box and you can experience a real blockchain game world while playing LOUD.\n"
   },
   "help upcoming releases": {
-    "one": "We are attending to hear something from v0.1.0 release and make decision to how to go forward.\nWe already have tons of features implemented in core daemon, so if you ask something, we can make changes according to that.\nYou will be able to build your own game by forking our game, as this is a prototype game.\n"
+    "one": "We are excited to hear your feedback on the v0.1.0 release and we will use your suggestions to make decisions on how to go forward.\nWe already have tons of features implemented in the core daemon, so if you ask for something, we can make changes according to that.\nYou will be able to build your own game by forking our project, as this is a prototype game.\n"
   },
-  "help supports": {
-    "one": "Contact Michael (xxx@xxx.yyy) for anything about LOUD game.\nContact Iain (xxx@xxx.yyy) for design modification proposal.\nContact Eugen (xxx@xxx.yyy) for unexpected issues while you play.\n"
+  "help Support": {
+    "one": "Contact loud@pylons.tech for anything about LOUD game."
   }
 }

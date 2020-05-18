@@ -251,14 +251,13 @@ func (screen *GameScreen) HandleInputKeyHelpEntryPoint(input termbox.Event) bool
 
 	tarStusMap := map[string]ScreenStatus{
 		"1": HELP_ABOUT,
-		"2": HELP_WHAT_YOU_CAN_DO,
+		"2": HELP_GAME_OBJECTIVE,
 		"3": HELP_NAVIGATION,
 		"4": HELP_PAGE_LAYOUT,
 		"5": HELP_GAME_RULES,
-		"6": HELP_TO_CONSIDER,
-		"7": HELP_HOW_IT_WORKS,
-		"8": HELP_UPCOMING_RELEASES,
-		"9": HELP_SUPPORTS,
+		"6": HELP_HOW_IT_WORKS,
+		"7": HELP_UPCOMING_RELEASES,
+		"8": HELP_SUPPORT,
 	}
 
 	if newStus, ok := tarStusMap[Key]; ok {
@@ -398,14 +397,13 @@ func (screen *GameScreen) MoveToPrevStep() {
 		RSLT_UPGITM:                     SEL_UPGITM,
 
 		HELP_ABOUT:             SHW_LOCATION,
-		HELP_WHAT_YOU_CAN_DO:   SHW_LOCATION,
+		HELP_GAME_OBJECTIVE:    SHW_LOCATION,
 		HELP_NAVIGATION:        SHW_LOCATION,
 		HELP_PAGE_LAYOUT:       SHW_LOCATION,
 		HELP_GAME_RULES:        SHW_LOCATION,
-		HELP_TO_CONSIDER:       SHW_LOCATION,
 		HELP_HOW_IT_WORKS:      SHW_LOCATION,
 		HELP_UPCOMING_RELEASES: SHW_LOCATION,
-		HELP_SUPPORTS:          SHW_LOCATION,
+		HELP_SUPPORT:           SHW_LOCATION,
 	}
 
 	nxtStatus := SHW_LOCATION

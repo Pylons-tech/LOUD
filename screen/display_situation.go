@@ -104,7 +104,7 @@ func (screen *GameScreen) renderUserSituation() {
 	case CR8_BUY_LOUD_TRDREQ_ENT_LUDVAL:
 		desc = loud.Localize("Please enter gold amount to buy (should be integer value)")
 	case RENAME_CHAR_ENT_NEWNAME:
-		desc = loud.Localize("Please enter new character's name - it's costing pylons per letter.")
+		desc = loud.Localize("Please enter new character's name")
 	case CR8_SELL_LOUD_TRDREQ_ENT_LUDVAL:
 		desc = loud.Localize("Please enter gold amount to sell (should be integer value)")
 
@@ -207,7 +207,7 @@ func (screen *GameScreen) renderUserSituation() {
 		desc += carryItemDesc(activeWeapon)
 	case HELP_ABOUT:
 		desc = loud.Localize("help about")
-	case HELP_WHAT_YOU_CAN_DO:
+	case HELP_GAME_OBJECTIVE:
 		desc = loud.Localize("help what you can do")
 	case HELP_NAVIGATION:
 		desc = loud.Localize("help navigation")
@@ -215,14 +215,12 @@ func (screen *GameScreen) renderUserSituation() {
 		desc = loud.Localize("help page layout")
 	case HELP_GAME_RULES:
 		desc = loud.Localize("help game rules")
-	case HELP_TO_CONSIDER:
-		desc = loud.Localize("help to consider")
 	case HELP_HOW_IT_WORKS:
 		desc = loud.Localize("help how it works")
 	case HELP_UPCOMING_RELEASES:
 		desc = loud.Localize("help upcoming releases")
-	case HELP_SUPPORTS:
-		desc = loud.Localize("help supports")
+	case HELP_SUPPORT:
+		desc = loud.Localize("help Support")
 	}
 
 	if screen.IsResultScreen() {
