@@ -27,7 +27,7 @@
     "Outputs": [
         {
             "ResultEntries": [],
-            "Weight": "2"
+            "Weight": "7"
         },
         {
             "ResultEntries": ["0", "1"],
@@ -35,7 +35,7 @@
         },
         {
             "ResultEntries": ["0", "1", "2"],
-            "Weight": "85"
+            "Weight": "90"
         }
     ],
     "ExtraInfo":"",

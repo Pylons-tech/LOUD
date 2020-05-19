@@ -184,7 +184,7 @@ When character die, no gold is returned.
 Fire Dragon HP: 300
 Fire Dragon attack: 30
 Reward: 10000 💰
-2% chance for character dying
+4% chance for character dying
 3% chance of sword lose
 10% chance of “Fire scale” - drop from fire dragon
 FireDragonKiller badget on character
@@ -199,7 +199,7 @@ When character die, no gold is returned.
 Ice Dragon HP: 300
 Ice Dragon attack: 30
 Reward: 10000 💰
-2% chance for character dying
+4% chance for character dying
 3% chance of sword lose
 10% chance of “Icy shards” - drop from ice dragon
 IceDragonKiller badget on character
@@ -214,7 +214,7 @@ When character die, no gold is returned.
 Acid Dragon HP: 300
 Acid Dragon attack: 30
 Reward: 10000 💰
-2% chance for character dying
+4% chance for character dying
 3% chance of sword lose
 10% chance of “poison claws” - drop from acid dragon
 AcidDragonKiller badget on character
@@ -229,7 +229,7 @@ When character die, no gold is returned.
 Undead Dragon HP: 1000
 Undead Dragon attack: 100
 Reward: 50000 💰
-2% chance of character dying
+7% chance of character dying
 3% chance of sword lose
 UndeadDragonKiller badget on character
 ```

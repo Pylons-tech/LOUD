@@ -123,16 +123,16 @@
     "one": "🗿\nBigger than the troll, smellier than the troll. Less of a sense of humour than the troll.\n\nReward 💰 3000\nEnemy info (HP: 100, Attack: 10)\n5% chance of character dying\n3% chance of sword lose\n10% chance of bonus skill\nHmm.. 4%, 3%, 3% for fire, ice, acid\n🗿 (GiantKiller) badget on character\n"
   },
   "fire dragon outcome": {
-    "one": "🦐\nThe classic fire-breathing dragon. You know the drill. Get at it!\n\nReward 💰 10000\nEnemy info (HP: 300, Attack: 30)\n2% chance for character dying\n3% chance of sword lose\n10% chance of getting \"Fire scale\"\nFireDragonKiller badget on character\n"
+    "one": "🦐\nThe classic fire-breathing dragon. You know the drill. Get at it!\n\nReward 💰 10000\nEnemy info (HP: 300, Attack: 30)\n4% chance for character dying\n3% chance of sword lose\n10% chance of getting \"Fire scale\"\nFireDragonKiller badget on character\n"
   },
   "ice dragon outcome": {    
-    "one": "🦈\nIt’s blue, it’s cold, and it’s not your friend.\n\nReward 💰 10000\nEnemy info (HP: 300, Attack: 30)\n2% chance for character dying\n3% chance of sword lose\n10% chance of getting \"Icy shards\"\nIceDragonKiller badget on character\n"
+    "one": "🦈\nIt’s blue, it’s cold, and it’s not your friend.\n\nReward 💰 10000\nEnemy info (HP: 300, Attack: 30)\n4% chance for character dying\n3% chance of sword lose\n10% chance of getting \"Icy shards\"\nIceDragonKiller badget on character\n"
   },
   "acid dragon outcome": {    
-    "one": "🐊\nLost its way at a music festival. Colours confuse it. Will melt you and everything you hold dear in a heartbeat.\n\nReward 💰 10000\nEnemy info (HP: 300, Attack: 30)\n2% chance for character dying\n3% chance of sword lose\n10% chance of getting \"Poison claws\"\nAcidDragonKiller badget on character\n"
+    "one": "🐊\nLost its way at a music festival. Colours confuse it. Will melt you and everything you hold dear in a heartbeat.\n\nReward 💰 10000\nEnemy info (HP: 300, Attack: 30)\n4% chance for character dying\n3% chance of sword lose\n10% chance of getting \"Poison claws\"\nAcidDragonKiller badget on character\n"
   },
   "undead dragon outcome": {
-    "one": "🐉\nIt looks grumpy but that’s just resting lich face.\n\nReward 💰 50000\nEnemy info (HP: 300, Attack: 30)\n2% chance for character dying\n3% chance of sword lose\nUndeadDragonKiller badget on character\n"
+    "one": "🐉\nIt looks grumpy but that’s just resting lich face.\n\nReward 💰 50000\nEnemy info (HP: 300, Attack: 30)\n7% chance for character dying\n3% chance of sword lose\nUndeadDragonKiller badget on character\n"
   },
   "select upgrade item desc": {
     "one": "Two words. Up. Grade. Make your stuff more awesomer."

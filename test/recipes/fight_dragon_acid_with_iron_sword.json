@@ -30,7 +30,7 @@
     "Outputs": [
         {
             "ResultEntries": [],
-            "Weight": "2"
+            "Weight": "4"
         },
         {
             "ResultEntries": ["0", "1"],
@@ -38,7 +38,7 @@
         },
         {
             "ResultEntries": ["0", "1", "2"],
-            "Weight": "80"
+            "Weight": "83"
         },
         {
             "ResultEntries": ["0", "1", "2", "3"],

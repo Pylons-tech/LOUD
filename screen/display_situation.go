@@ -288,7 +288,7 @@ func monsterTextWithUnicode(monster string) string {
 func (screen *GameScreen) GetKilledByDesc(monsterDesc string) string {
 	return loud.Sprintf(
 		"Your %s character was killed by %s accidently",
-		formatCharacter(*screen.user.GetActiveCharacter()),
+		formatCharacterP(screen.user.GetActiveCharacter()),
 		monsterDesc,
 	)
 }

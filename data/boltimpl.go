@@ -229,7 +229,12 @@ func (user *dbUser) SetCharacters(items []Character) {
 
 func (user *dbUser) SetActiveCharacterIndex(idx int) {
 	user.UserData.ActiveCharacterIndex = idx
-	user.UserData.ActiveCharacter = user.UserData.Characters[idx]
+	len := len(user.UserData.Characters)
+	if idx >= 0 && idx < len {
+		user.UserData.ActiveCharacter = user.UserData.Characters[idx]
+	} else {
+		user.UserData.ActiveCharacter = Character{}
+	}
 }
 
 func (user *dbUser) GetActiveCharacterIndex() int {
@@ -237,6 +242,9 @@ func (user *dbUser) GetActiveCharacterIndex() int {
 }
 
 func (user *dbUser) GetActiveCharacter() *Character {
+	if user.UserData.ActiveCharacter.Name == "" {
+		return nil
+	}
 	return &user.UserData.ActiveCharacter
 }
 
