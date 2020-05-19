@@ -9,6 +9,11 @@ LOUD v0.1.0 app is tested on Mojave (10.14.5), High Sierra(10.13.6), and Sierra(
 - Updated level upgrade mechanism
 - Giant gives bonus skill by chance
 - Bonus character can't fight giant
+- Remove rabbit hunt with sword recipe
+- Update Goblin, Troll, Wolf fight recipe to be more interesting
+- Create junk loots for Goblin, Troll and Wolf
+- Make users to be able to sell any items and junk loots
+- Increase dying percent for dragons
 
 2. UI modifications
 - Tab UI navigation
@@ -16,6 +21,12 @@ LOUD v0.1.0 app is tested on Mojave (10.14.5), High Sierra(10.13.6), and Sierra(
 - Better game text
 - Add more visualizations using unicodes and colorful messages like green, red, orange
 - Inventory overflow issue fix
+- Sort inventory items by importance
+- Automatically select weapons
+- Table style, navigation, default selection and cmd navigation modification
+- Highlight selected language on settings
+- Create user friendly Help page
+- Fix UI issue found during development
 
 3. Fix unexpected issues
 - Fixed issue reported by @Gopher JK, non-rabbit sword lose & no active weapon case result description issue
