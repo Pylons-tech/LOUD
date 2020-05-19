@@ -22,18 +22,22 @@ func NumberOfSpaces(message string) int {
 		"🔶":  "xx", //
 		"🔷":  "xx", // pylon
 		"👀":  "xx", // leave emoji 👀
-		"🗡️": "x", // sword
+		"🗡️": "x",  // sword
 		"🐧":  "xx", // character emoji 🐧
-		"⟳":  "x", // refresh emoji
+		"⟳":  "x",  // refresh emoji
 		"📋":  "xx", // copy emoji
 		"🥇":  "xx", // metal emoji
-		"❦":  "x", // 
-		"↓":  "x", // arrow emoji
+		"❦":  "x",  //
+		"←":  "x",  // arrow left
+		"↑":  "x",  // arrow up
+		"↓":  "x",  // arrow down emoji
+		"➝":  "x",  // arrow right emoji
 		"🐉":  "xx", // Undead dragon
-		"🦈":  "xx", // Ice dragon 🦈 
+		"🦈":  "xx", // Ice dragon 🦈
 		"🦐":  "xx", // Fire dragon
-		"🐊":  "xx", // Acid dragon 🐊 
+		"🐊":  "xx", // Acid dragon 🐊
 		"🗿":  "xx", // Giant
+		"🐇":  "xx", // Rabbit
 		"👺":  "xx", // Goblin
 		"🐺":  "xx", // Wolf
 		"👻":  "xx", // Troll

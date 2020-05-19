@@ -9,6 +9,7 @@ const (
 	PYLCNTRL
 	SETTINGS
 	DEVELOP
+	HELP
 )
 
 // User represents an active user in the system.
@@ -18,14 +19,16 @@ type User interface {
 	SetPylonAmount(int)
 	SetItems([]Item)
 	SetCharacters([]Character)
-	SetActiveWeaponIndex(idx int)
 	SetActiveCharacterIndex(idx int)
+	SetFightMonster(string)
 	SetLocation(UserLocation)
 	SetLastTransaction(string, string)
 	SetLatestBlockHeight(int64)
+	FixLoadedData()
 	InventoryItems() []Item
 	HasPreItemForAnItem(Item) bool
 	InventoryItemIDByName(string) string
+	InventoryAngelSwords() []Item
 	InventoryIronSwords() []Item
 	InventorySwords() []Item
 	InventoryCharacters() []Character
@@ -33,10 +36,12 @@ type User interface {
 	InventorySellableItems() []Item
 	GetLocation() UserLocation
 	GetPrivKey() string
-	GetActiveWeaponIndex() int
 	GetActiveCharacterIndex() int
 	GetActiveCharacter() *Character
-	GetActiveWeapon() *Item
+	GetDeadCharacter() *Character
+	GetTargetMonster() string
+	GetFightWeapon() *Item
+	GetItemByID(string) *Item
 	GetAddress() string
 	GetGold() int
 	GetPylonAmount() int

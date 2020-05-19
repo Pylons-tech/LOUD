@@ -30,7 +30,6 @@ func (screen *GameScreen) renderCharacterSheet() {
 	if activeCharacter != nil {
 		activeCharacterRestBlocks = screen.BlockSince(activeCharacter.LastUpdate)
 	}
-	activeWeapon := screen.user.GetActiveWeapon()
 
 	charBkColor := uint64(bgcolor)
 	warning := ""
@@ -49,7 +48,7 @@ func (screen *GameScreen) renderCharacterSheet() {
 
 	for idx, character := range characters {
 		if len(infoLines) > MAX_INVENTORY_LEN {
-			infoLines = append(infoLines, "...")
+			infoLines = append(infoLines, fmtFunc(fillSpace("...", w)))
 			break
 		}
 		characterInfo := fillSpace(formatCharacter(character), w)
@@ -64,16 +63,11 @@ func (screen *GameScreen) renderCharacterSheet() {
 	items := screen.user.InventoryItems()
 	for _, item := range items {
 		if len(infoLines) > MAX_INVENTORY_LEN {
-			infoLines = append(infoLines, "...")
+			infoLines = append(infoLines, fmtFunc(fillSpace("...", w)))
 			break
 		}
 		itemInfo := fillSpace(formatItem(item), w)
-		if activeWeapon != nil && item.ID == activeWeapon.ID {
-			itemInfo = screen.blueBoldFont()(itemInfo)
-		} else {
-			itemInfo = fmtFunc(itemInfo)
-		}
-		infoLines = append(infoLines, itemInfo)
+		infoLines = append(infoLines, fmtFunc(itemInfo))
 	}
 
 	// HP := uint64(100)
@@ -90,12 +84,6 @@ func (screen *GameScreen) renderCharacterSheet() {
 		infoLines = append(infoLines,
 			charFunc(fillSpace(formatCharacterP(activeCharacter), w)),
 			charFunc(fillSpace(fmt.Sprintf("%s: %d", loud.Localize("rest blocks"), activeCharacterRestBlocks), w)),
-		)
-	}
-	if activeWeapon != nil {
-		infoLines = append(infoLines,
-			fmtFunc(centerText(fmt.Sprintf(" %s ", loud.Localize("Active Weapon")), "─", w)),
-			fmtFunc(fillSpace(formatItemP(activeWeapon), w)),
 		)
 	}
 
@@ -132,6 +120,6 @@ func (screen *GameScreen) renderCharacterSheet() {
 			line))
 	}
 
-	lastLine := lenInfoLines + len(nodeLines) + 1
-	screen.drawFill(x, lastLine+1, w, h-lastLine)
+	lastLine := y + lenInfoLines + len(nodeLines)
+	screen.drawFill(x, lastLine, w, h-lastLine)
 }

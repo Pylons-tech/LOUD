@@ -4,7 +4,7 @@
     ],
     "Longs":[
         { "Rate":"1.0", "Key":"level", "Program": "1" },
-        { "Rate":"1.0", "Key":"value", "Program": "50" }
+        { "Rate":"1.0", "Key":"value", "Program": "1" }
     ],
-    "Strings":[{ "Key":"Name", "Value":"Goblin ear", "Rate":"1.0" }]
+    "Strings":[{ "Key":"Name", "Value":"Troll smelly bones", "Rate":"1.0" }]
 }

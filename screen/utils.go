@@ -48,7 +48,12 @@ func truncateRight(message string, width int) string {
 
 		return fmt.Sprintf(fmtString, message)
 	}
-	return string([]rune(message)[0:width-1]) + ellipsis
+	runeMsg := []rune(message)
+	runeMsgLen := len(runeMsg)
+	if runeMsgLen > width {
+		runeMsgLen = width
+	}
+	return string(runeMsg[0:runeMsgLen-1]) + ellipsis
 }
 
 func truncateLeft(message string, width int) string {
@@ -95,18 +100,18 @@ func fillSpace(message string, width int) string {
 	msgLen := NumberOfSpaces(message)
 	// msgLen := len(message)
 	if msgLen > width {
-		return truncateRight(message, width)
+		return truncateRight(message, width-3)
 	}
 	leftover := width - msgLen
 
-	rightString := ""
-	rightLen := 0
-	for rightLen < leftover {
-		rightString += " "
-		rightLen = NumberOfSpaces(rightString)
-		// rightLen = len(rightString)
+	fillString := ""
+	fillLen := 0
+	for fillLen < leftover {
+		fillString += " "
+		fillLen = NumberOfSpaces(fillString)
+		// fillLen = len(rightString)
 	}
-	return message + rightString
+	return message + fillString
 }
 
 func drawVerticalLine(x, y, height int) {
@@ -200,8 +205,31 @@ func formatSpecial(special int) string {
 	return ""
 }
 
+func formatSpecialDragon(special int) string {
+	switch special {
+	case loud.FIRE_SPECIAL:
+		return "Fire dragon"
+	case loud.ICE_SPECIAL:
+		return "Ice dragon"
+	case loud.ACID_SPECIAL:
+		return "Acid dragon"
+	}
+	return ""
+}
+
+func formatBigNumber(number int) string {
+	if number > 1000000 {
+		return fmt.Sprintf("%dM", number/1000000)
+	}
+	if number > 1000 {
+		return fmt.Sprintf("%dk", number/1000)
+	}
+	return fmt.Sprintf("%d", number)
+}
+
 func formatCharacter(ch loud.Character) string {
 	chStr := loud.Localize(ch.Name)
+	chStr = formatSpecial(ch.Special) + chStr
 	if ch.GiantKill > 0 {
 		chStr = fmt.Sprintf("🗿 x%d %s", ch.GiantKill, chStr)
 	}
@@ -218,12 +246,11 @@ func formatCharacter(ch loud.Character) string {
 	if ch.UndeadDragonKill > 0 {
 		chStr = fmt.Sprintf("🐉 x%d %s", ch.UndeadDragonKill, chStr)
 	}
-	chStr += formatSpecial(ch.Special)
 	if ch.Level > 0 {
 		chStr += fmt.Sprintf(" Lv%d", ch.Level)
 	}
 	if ch.XP > 0 {
-		chStr += fmt.Sprintf(" XP=%.0f", ch.XP)
+		chStr += fmt.Sprintf(" XP=%s", formatBigNumber(int(ch.XP)))
 	}
 	return chStr
 }
@@ -263,44 +290,27 @@ func InterfaceSlice(slice interface{}) []interface{} {
 	return ret
 }
 
-func (screen *GameScreen) renderTRLine(text1 string, text2 string, text3 string, isActiveLine bool, isDisabledLine bool, width int) string {
+func (screen *GameScreen) renderTRLine(text1 string, text2 string, text3 string, font FontType, width int) string {
 	text1 = loud.Localize(text1)
 	text2 = loud.Localize(text2)
 	text3 = loud.Localize(text3)
 
 	calcText := "│" + centerText(text1, " ", 20) + "│" + centerText(text2, " ", 15) + "│" + centerText(text3, " ", 15) + "│"
-	onColor := screen.regularFont()
-	if isActiveLine && isDisabledLine {
-		onColor = screen.brownBoldFont()
-	} else if isActiveLine {
-		onColor = screen.blueBoldFont()
-	} else if isDisabledLine {
-		onColor = screen.brownFont()
-	}
+	onColor := screen.getFont(font)
 	return onColor(fillSpace(calcText, width))
 }
 
-func (screen *GameScreen) renderItemTableLine(text1 string, isActiveLine bool, width int) string {
+func (screen *GameScreen) renderItemTableLine(text1 string, font FontType, width int) string {
 	calcText := "│" + centerText(loud.Localize(text1), " ", 52) + "│"
-	onColor := screen.regularFont()
-	if isActiveLine {
-		onColor = screen.blueBoldFont()
-	}
+	onColor := screen.getFont(font)
 	return onColor(fillSpace(calcText, width))
 }
 
-func (screen *GameScreen) renderItemTrdReqTableLine(text1 string, text2 string, isActiveLine bool, isDisabledLine bool, width int) string {
+func (screen *GameScreen) renderItemTrdReqTableLine(text1 string, text2 string, font FontType, width int) string {
 	text1 = loud.Localize(text1)
 	text2 = loud.Localize(text2)
 	calcText := "│" + centerText(text1, " ", 36) + "│" + centerText(text2, " ", 15) + "│"
-	onColor := screen.regularFont()
-	if isActiveLine && isDisabledLine {
-		onColor = screen.brownBoldFont()
-	} else if isActiveLine {
-		onColor = screen.blueBoldFont()
-	} else if isDisabledLine {
-		onColor = screen.brownFont()
-	}
+	onColor := screen.getFont(font)
 	return onColor(fillSpace(calcText, width))
 }
 

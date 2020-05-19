@@ -14,7 +14,7 @@
             "property": [
                 {
                     "owner": "eugen",
-                    "cookbooks": ["Legend of Undead Dragon v0.1.0"]
+                    "cookbooks": ["Legend of Undead Dragon v0.1.0-1589853709"]
                 }
             ]
         }
@@ -258,26 +258,6 @@
         }
     },
     {
-        "ID": "CREATE_HUNT_RABBITS_WITH_A_SWORD_RECIPE",
-        "runAfter": {
-            "precondition": ["CREATE_LOUD_COOKBOOK"],
-            "blockWait": 0
-        },
-        "action": "create_recipe",
-        "paramsRef": "./recipes/hunt_rabbits_with_a_sword.json",
-        "output": {
-            "txResult": {
-                "status": "Success"
-            },
-            "property": [
-                {
-                    "owner": "eugen",
-                    "recipes": ["LOUD's hunt rabbits with a sword recipe"]
-                }
-            ]
-        }
-    },
-    {
         "ID": "CREATE_HUNT_RABBITS_WITH_NO_WEAPON_RECIPE",
         "runAfter": {
             "precondition": ["CREATE_LOUD_COOKBOOK"],
@@ -458,13 +438,13 @@
         }
     },
     {
-        "ID": "CREATE_SELL_A_SWORD_RECIPE",
+        "ID": "CREATE_SELL_AN_ITEM_RECIPE",
         "runAfter": {
             "precondition": ["CREATE_LOUD_COOKBOOK"],
             "blockWait": 0
         },
         "action": "create_recipe",
-        "paramsRef": "./recipes/sell_a_sword.json",
+        "paramsRef": "./recipes/sell_an_item.json",
         "output": {
             "txResult": {
                 "status": "Success"
@@ -472,7 +452,7 @@
             "property": [
                 {
                     "owner": "eugen",
-                    "recipes": ["LOUD's sword sell recipe"]
+                    "recipes": ["LOUD's item sell recipe"]
                 }
             ]
         }

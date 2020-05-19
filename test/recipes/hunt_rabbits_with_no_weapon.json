@@ -1,5 +1,5 @@
 {
-    "ID": "LOUD-hunt-rabbits-with-no-weapon-recipe-v0.1.0-1589223853",
+    "ID": "LOUD-hunt-rabbits-with-no-weapon-recipe-v0.1.0-1589853709",
     "CoinInputs":[],    
     "ItemInputRefs":[
         "./recipes/item_input/character.json"
@@ -21,17 +21,17 @@
     "Outputs": [
         {
             "ResultEntries": ["0", "1"],
-            "Weight": "95"
+            "Weight": "99"
         },
         {
             "ResultEntries": [],
-            "Weight": "5"
+            "Weight": "1"
         }
     ],
     "ExtraInfo":"",
     "Sender":"eugen",
     "Name": "LOUD's hunt rabbits without sword recipe",
-    "CookbookName": "Legend of Undead Dragon v0.1.0",
+    "CookbookName": "Legend of Undead Dragon v0.1.0-1589853709",
     "Description": "this recipe is used to hunt rabbits without sword.",
     "BlockInterval":"0"
 }

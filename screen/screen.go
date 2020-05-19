@@ -94,7 +94,7 @@ func (screen *GameScreen) Render() {
 		return
 	}
 	if screen.scrStatus == "" {
-		screen.scrStatus = SHW_LOCATION
+		screen.SetScreenStatus(SHW_LOCATION)
 	}
 
 	if screen.Height() < 38 || screen.Width() < 120 {

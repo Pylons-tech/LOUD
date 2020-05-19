@@ -12,9 +12,6 @@ const (
 	SEL_ACTIVE_CHAR   = "SEL_ACTIVE_CHAR"
 	RSLT_SEL_ACT_CHAR = "RSLT_SEL_ACT_CHAR"
 
-	SEL_ACTIVE_WEAPON   = "SEL_ACTIVE_WEAPON"
-	RSLT_SEL_ACT_WEAPON = "RSLT_SEL_ACT_WEAPON"
-
 	SEL_RENAME_CHAR         = "SEL_RENAME_CHAR"
 	RENAME_CHAR_ENT_NEWNAME = "RENAME_CHAR_ENT_NEWNAME"
 	W8_RENAME_CHAR          = "W8_RENAME_CHAR"
@@ -139,6 +136,16 @@ const (
 
 	W8_CANCEL_TRDREQ   = "W8_CANCEL_TRDREQ"
 	RSLT_CANCEL_TRDREQ = "RSLT_CANCEL_TRDREQ"
+
+	HELP_ABOUT             = "HELP_ABOUT"
+	HELP_GAME_OBJECTIVE    = "HELP_GAME_OBJECTIVE"
+	HELP_NAVIGATION        = "HELP_NAVIGATION"
+	HELP_PAGE_LAYOUT       = "HELP_PAGE_LAYOUT"
+	HELP_GAME_RULES        = "HELP_GAME_RULES"
+	HELP_HOW_IT_WORKS      = "HELP_HOW_IT_WORKS"
+	HELP_PYLONS_CENTRAL    = "HELP_PYLONS_CENTRAL"
+	HELP_UPCOMING_RELEASES = "HELP_UPCOMING_RELEASES"
+	HELP_SUPPORT           = "HELP_SUPPORT"
 )
 
 func (status ScreenStatus) IsWaitScreen() bool {
@@ -147,4 +154,8 @@ func (status ScreenStatus) IsWaitScreen() bool {
 
 func (status ScreenStatus) IsResultScreen() bool {
 	return strings.Contains(string(status), "RSLT_")
+}
+
+func (status ScreenStatus) IsHelpScreen() bool {
+	return strings.Contains(string(status), "HELP_")
 }

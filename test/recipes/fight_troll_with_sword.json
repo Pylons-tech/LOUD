@@ -1,5 +1,5 @@
 {
-    "ID": "LOUD-fight-troll-with-a-sword-recipe-v0.1.0-1589223853",
+    "ID": "LOUD-fight-troll-with-a-sword-recipe-v0.1.0-1589853709",
     "CoinInputs":[],
     "ItemInputRefs":[
         "./recipes/item_input/character.json",
@@ -24,6 +24,9 @@
             },
             {
                 "Ref": "./recipes/item_output/troll_toes.json"  
+            },
+            {
+                "Ref": "./recipes/item_output/troll_smelly_bones.json"  
             }
         ]
     },
@@ -38,17 +41,21 @@
         },
         {
             "ResultEntries": ["0", "1", "2"],
-            "Weight": "83"
+            "Weight": "53"
         },
         {
             "ResultEntries": ["0", "1", "2", "3"],
             "Weight": "10"
+        },
+        {
+            "ResultEntries": ["0", "1", "2", "3"],
+            "Weight": "30"
         }
     ],
     "ExtraInfo":"",
     "Sender":"eugen",
     "Name": "LOUD's fight with troll with a sword recipe",
-    "CookbookName": "Legend of Undead Dragon v0.1.0",
+    "CookbookName": "Legend of Undead Dragon v0.1.0-1589853709",
     "Description": "this recipe is used to fight with troll with a sword.",
     "BlockInterval":"0"
 }

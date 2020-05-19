@@ -73,10 +73,13 @@ type UserData struct {
 	Address              string
 	Location             UserLocation
 	Items                []Item
-	ActiveWeaponIndex    int
 	Characters           []Character
 	ActiveCharacterIndex int
+	ActiveCharacter      Character
+	DeadCharacter        Character
 	PrivKey              string
+	targetMonster        string
+	usingWeapon          Item
 	lastTransaction      string
 	lastTxMetaData       string
 	lastUpdate           int64
@@ -117,6 +120,7 @@ func (user *dbUser) Reload() {
 	} else {
 		MSGUnpack(record, &(user.UserData))
 		log.Printf("Loaded user %v", user.UserData)
+		user.FixLoadedData()
 	}
 	log.Println("start InitPylonAccount")
 	user.UserData.PrivKey = InitPylonAccount(user.UserData.Username)
@@ -176,21 +180,54 @@ func (user *dbUser) SetItems(items []Item) {
 	user.UserData.Items = items
 }
 
-func (user *dbUser) SetActiveWeaponIndex(idx int) {
-	user.UserData.ActiveWeaponIndex = idx
+func (user *dbUser) SelectFightWeapon() {
+	switch user.targetMonster {
+	case RABBIT: // no weapon is needed
+		user.usingWeapon = Item{}
+	case GOBLIN, WOLF, TROLL: // any sword is ok
+		weapons := user.InventorySwords()
+		if len := len(weapons); len > 0 {
+			user.usingWeapon = weapons[len-1]
+		}
+	case GIANT, DRAGON_FIRE, DRAGON_ICE, DRAGON_ACID: // iron sword is needed
+		weapons := user.InventoryIronSwords()
+		if len := len(weapons); len > 0 {
+			user.usingWeapon = weapons[len-1]
+		}
+	case DRAGON_UNDEAD: // angel sword is needed
+		weapons := user.InventoryAngelSwords()
+		if len := len(weapons); len > 0 {
+			user.usingWeapon = weapons[len-1]
+		}
+	default:
+		user.usingWeapon = Item{}
+	}
 }
 
-func (user *dbUser) GetActiveWeapon() *Item {
-	i := user.UserData.ActiveWeaponIndex
-	swords := user.InventorySwords()
-	if i < 0 || i >= len(swords) {
+func (user *dbUser) SetFightMonster(monster string) {
+	user.targetMonster = monster
+	user.SelectFightWeapon()
+}
+
+func (user *dbUser) GetTargetMonster() string {
+	return user.targetMonster
+}
+
+func (user *dbUser) GetItemByID(ID string) *Item {
+	iis := user.InventoryItems()
+	for _, ii := range iis {
+		if ii.ID == ID {
+			return &ii
+		}
+	}
+	return nil
+}
+
+func (user *dbUser) GetFightWeapon() *Item {
+	if user.usingWeapon.Name == "" {
 		return nil
 	}
-	return &swords[i]
-}
-
-func (user *dbUser) GetActiveWeaponIndex() int {
-	return user.UserData.ActiveWeaponIndex
+	return &user.usingWeapon
 }
 
 func (user *dbUser) SetCharacters(items []Character) {
@@ -199,6 +236,26 @@ func (user *dbUser) SetCharacters(items []Character) {
 
 func (user *dbUser) SetActiveCharacterIndex(idx int) {
 	user.UserData.ActiveCharacterIndex = idx
+	len := len(user.UserData.Characters)
+	if idx >= 0 && idx < len {
+		user.UserData.ActiveCharacter = user.UserData.Characters[idx]
+	} else {
+		user.UserData.DeadCharacter = user.UserData.ActiveCharacter
+		user.UserData.ActiveCharacter = Character{}
+	}
+}
+
+func (user *dbUser) FixLoadedData() {
+	len := len(user.UserData.Characters)
+	idx := user.UserData.ActiveCharacterIndex
+	if idx >= 0 && idx < len {
+		ac := user.UserData.Characters[idx]
+		if user.UserData.ActiveCharacter.ID != ac.ID {
+			user.UserData.ActiveCharacter = Character{}
+		}
+	} else {
+		user.UserData.ActiveCharacter = Character{}
+	}
 }
 
 func (user *dbUser) GetActiveCharacterIndex() int {
@@ -206,12 +263,17 @@ func (user *dbUser) GetActiveCharacterIndex() int {
 }
 
 func (user *dbUser) GetActiveCharacter() *Character {
-	i := user.UserData.ActiveCharacterIndex
-	chars := user.UserData.Characters
-	if i < 0 || i >= len(chars) {
+	if user.UserData.ActiveCharacter.Name == "" {
 		return nil
 	}
-	return &chars[i]
+	return &user.UserData.ActiveCharacter
+}
+
+func (user *dbUser) GetDeadCharacter() *Character {
+	if user.UserData.DeadCharacter.Name == "" {
+		return nil
+	}
+	return &user.UserData.DeadCharacter
 }
 
 func (user *dbUser) InventoryItems() []Item {
@@ -238,6 +300,17 @@ func (user *dbUser) InventoryItemIDByName(name string) string {
 		}
 	}
 	return ""
+}
+
+func (user *dbUser) InventoryAngelSwords() []Item {
+	iis := user.InventoryItems()
+	uis := []Item{}
+	for _, ii := range iis {
+		if ii.Name == ANGEL_SWORD {
+			uis = append(uis, ii)
+		}
+	}
+	return uis
 }
 
 func (user *dbUser) InventoryIronSwords() []Item {
@@ -281,9 +354,7 @@ func (user *dbUser) InventorySellableItems() []Item {
 	iis := user.InventoryItems()
 	uis := []Item{}
 	for _, ii := range iis {
-		if ii.Name == COPPER_SWORD || ii.Name == WOODEN_SWORD {
-			uis = append(uis, ii)
-		}
+		uis = append(uis, ii)
 	}
 	return uis
 }

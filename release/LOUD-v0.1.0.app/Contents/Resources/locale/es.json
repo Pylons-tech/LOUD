@@ -30,10 +30,10 @@
     "one": "No tienes suficiente oro para actualizar este artículo"
   },
   "home": {
-    "one": "1) Select active character\n2) Select active weapon\n3) Update character name\n"
+    "one": "1) Select your active character\n2) Change your character’s name\n"
   },
   "forest": {
-    "one": "1) Rabbit(💰 1+)\n2) Goblin 👺 (💰 50)\n3) Wolf 🐺 (💰 150)\n4) Troll 👻 (💰 300)\n5) Giant 🗿 (💰 3000)\n6) Fire Dragon 🦐 (💰 20000)\n7) Ice Dragon 🦈 (💰 20000)\n8) Acid Dragon 🐊 (💰 20000)\n9) Undead Dragon 🐉 (💰 50000)\n"
+    "one": "1) Rabbit(💰 1+)\n2) Goblin 👺 (💰 50)\n3) Wolf 🐺 (💰 1)\n4) Troll 👻 (💰 300)\n5) Giant 🗿 (💰 3000)\n6) Fire Dragon 🦐 (💰 20000)\n7) Ice Dragon 🦈 (💰 20000)\n8) Acid Dragon 🐊 (💰 20000)\n9) Undead Dragon 🐉 (💰 50000)\n"
   },
   "shop": {
     "one": "1) Comprar Artículos\n2) Vender Artículos\n3) Mejorar Artículos\n"
@@ -46,6 +46,9 @@
   },
   "develop": {
     "one": "Create cookbook(j)\nSwitch user(z)\nGet initial py)lons\nDevMode Test Items(b)\n"
+  },
+  "help": {
+    "one": "1) About\n2) Game Objective\n3) Navigation\n4) Pages layout\n5) Game rules\n6) How it works\n7) Pylons central\n8) Upcoming releases\n9) Support\n"
   },
   "go to home": {
     "one": "Inicio(H)"
@@ -65,8 +68,11 @@
   "go to develop": {
     "one": "D)evelop"
   },
+  "go to help": {
+    "one": "Help)"
+  },
   "home desc": {
-    "one": "Estás en inicio.\nSi quieres cazar, dirígete al bosque.\nY si quieres comprar/vender algo, dirígete a la tienda."
+    "one": "You are at home. It’s safe here. No monsters. Warm blankets.\nThere are other places if you want to do something more exciting.\nRuin something’s day by going to the forest to hunt it - press F\nGo to the shop to buy, sell or upgrade items - press S\n"
   },
   "home desc without pylon": {
     "one": "You don't have pylon within account.\nTo buy characters, you need to purchase pylons or sell existing characters/items on market to get pylons."
@@ -75,61 +81,61 @@
     "one": "You don't have any character yet.\nYou can buy one from market or at the shop"
   },
   "forest desc": {
-    "one": "Estás en el bosque.\nPuedes cazar aquí o regresar a inicio."
+    "one": "Oh! Here are the dark and spooky woods.\nSomehow everything lives here at the same time. Don’t think about it. Just choose something to pick a fight with."
   },
   "shop desc": {
-    "one": "Estás en una tienda.\nSi quieres, puedes comprar o vender artículos aquí."
+    "one": "It’s a blacksmith’s store.\nThe blacksmith sells things, buys things, and mends things.\nSometimes he regrets his choices in life."
   },
   "pylons central desc": {
-    "one": "Ahora estás en un mercado.\nPuedes comerciar aquí por monedas y artículos."
+    "one": "Turn Pylons into useful things. Like pretend gold. Yes! This is a good use of your valuable Pylons."
   },
   "settings desc": {
     "one": "Ajustes"
   },
   "develop desc": {
-    "one": "You are now testing things for development. Please enter commands you want to try"
+    "one": "You are testing things for development. Please enter commands you want to try"
+  },
+  "help desc": {
+    "one": "This is help page for LOUD game. Look around 1-9 sub pages to get overview."
   },
   "select buy character desc": {
-    "one": "You are gonna buy a character.\nPlease select a character to buy."
+    "one": "Summon a hero. We got a whole lot of chosen ones back here.\n"
   },
   "select buy item desc": {
-    "one": "Vas a comprar un artículo.\nPor favor selecciona un artículo a comprar."
+    "one": "Swords are big and clever. Big. And. Clever."
   },
   "select sell item desc": {
-    "one": "Vas a vender un artículo.\nPor favor selecciona un artículo a vender."
+    "one": "Sell some stuff. Make money, get britches. We’re pretty sure that’s how it works."
   },
-  "rabbits without sword outcome": {
-    "one": "Hunt Rabbits\n\nReward 💰 1 - 2\n5% chance of character dying\n"
-  },
-  "rabbits with a sword outcome": {
-    "one": "Hunt Rabbits\n\nReward 💰 sword.attack/2 + 1\n2% chance of character dying\n3% chance of sword lose\n"
+  "rabbits outcome": {
+    "one": "🐇\nNot known for putting up much of a fight.\nAlso typically not very rich. Fuzziness factor, off the charts!\nBut you can meet the largest rabbit while following small rabbits and can be beaten.\n\nReward 💰 1 - 2\n1% chance of character dying\n"
   },
   "goblin outcome": {
-    "one": "Fight Goblin 👺\n\nReward 💰 50\nEnemy info (HP: 10, Attack: 1)\n2% chance of character dying\n3% chance of sword lose\n10% chance of getting \"Goblin ear\"\n"
+    "one": "👺\nSneaky but weak. You can take him.\nGoblins don't have much money but they have a high chance to drop their ear.\n\nReward 💰 50\nEnemy info (HP: 10, Attack: 1)\n2% chance of character dying\n3% chance of sword lose\n20% chance of getting \"Goblin ear\"\n20% chance of \"Goblin boots\"\n"
   },
   "wolf outcome": {
-    "one": "Fight Wolf 🐺\n\nReward 💰 150\nEnemy info (HP: 15, Attack: 3)\n3% chance of character dying\n3% chance of sword lose\n10% chance of getting \"Wolf tail\"\n"
+    "one": "🐺\nAroooo! Not as fuzzy as the rabbit, better at biting things too.\nWolves don't have any money so they don't drop gold.\nBut they drop wolf tail instead, which can be sold for gold, or it might be an ingredient of bronze sword recipe\n\nReward 💰 1\nEnemy info (HP: 15, Attack: 3)\n3% chance of character dying\n3% chance of sword lose\n40% chance of getting \"Wolf tail\"\n30% chance of \"Wolf fur\"\n"
   },
   "troll outcome": {
-    "one": "Fight Troll 👻\n\nReward 💰 300\nEnemy info (HP: 20, Attack: 5)\n4% chance of character dying\n3% chance of sword lose\n10% chance of getting \"Troll toes\"\n"
+    "one": "👻\nBig, smelly, and fond of ‘yo mama’ jokes. Don’t say we didn’t warn you.\nTrolls don't really drop their toes but they might have a lot of gold because they eat unlucky travellers\n\nReward 💰 300\nEnemy info (HP: 20, Attack: 5)\n4% chance of character dying\n3% chance of sword lose\n10% chance of getting \"Troll toes\"\n30% chance of \"Troll smelly bones\"\n"
   },
   "giant outcome": {
-    "one": "Fight Giant 🗿 \n\nReward 💰 3000\nEnemy info (HP: 100, Attack: 10)\n5% chance of character dying\n3% chance of sword lose\n10% chance of bonus skill\nHmm.. 4%, 3%, 3% for fire, ice, acid\n🗿 (GiantKiller) badget on character\n"
+    "one": "🗿\nBigger than the troll, smellier than the troll. Less of a sense of humour than the troll.\n\nReward 💰 3000\nEnemy info (HP: 100, Attack: 10)\n5% chance of character dying\n3% chance of sword lose\n10% chance of bonus skill\nHmm.. 4%, 3%, 3% for fire, ice, acid\n🗿 (GiantKiller) badget on character\n"
   },
   "fire dragon outcome": {
-    "one": "Fight Fire Dragon 🦐\n\nReward 💰 10000\nEnemy info (HP: 300, Attack: 30)\n2% chance for character dying\n3% chance of sword lose\n10% chance of getting \"Fire scale\"\nFireDragonKiller badget on character\n"
+    "one": "🦐\nThe classic fire-breathing dragon. You know the drill. Get at it!\n\nReward 💰 10000\nEnemy info (HP: 300, Attack: 30)\n4% chance for character dying\n3% chance of sword lose\n10% chance of getting \"Fire scale\"\nFireDragonKiller badget on character\n"
   },
   "ice dragon outcome": {    
-    "one": "Fight Ice Dragon 🦈\n\nReward 💰 10000\nEnemy info (HP: 300, Attack: 30)\n2% chance for character dying\n3% chance of sword lose\n10% chance of getting \"Icy shards\"\nIceDragonKiller badget on character\n"
+    "one": "🦈\nIt’s blue, it’s cold, and it’s not your friend.\n\nReward 💰 10000\nEnemy info (HP: 300, Attack: 30)\n4% chance for character dying\n3% chance of sword lose\n10% chance of getting \"Icy shards\"\nIceDragonKiller badget on character\n"
   },
   "acid dragon outcome": {    
-    "one": "Fight acid dragon 🐊\n\nReward 💰 10000\nEnemy info (HP: 300, Attack: 30)\n2% chance for character dying\n3% chance of sword lose\n10% chance of getting \"Poison claws\"\nAcidDragonKiller badget on character\n"
+    "one": "🐊\nLost its way at a music festival. Colours confuse it. Will melt you and everything you hold dear in a heartbeat.\n\nReward 💰 10000\nEnemy info (HP: 300, Attack: 30)\n4% chance for character dying\n3% chance of sword lose\n10% chance of getting \"Poison claws\"\nAcidDragonKiller badget on character\n"
   },
   "undead dragon outcome": {
-    "one": "Fight undead dragon 🐉\n\nReward 💰 50000\nEnemy info (HP: 300, Attack: 30)\n2% chance for character dying\n3% chance of sword lose\nUndeadDragonKiller badget on character\n"
+    "one": "🐉\nIt looks grumpy but that’s just resting lich face.\n\nReward 💰 50000\nEnemy info (HP: 300, Attack: 30)\n7% chance for character dying\n3% chance of sword lose\nUndeadDragonKiller badget on character\n"
   },
   "select upgrade item desc": {
-    "one": "Vas a mejorar un artículo.\nPor favor selecciona un artículo para mejorar."
+    "one": "Two words. Up. Grade. Make your stuff more awesomer."
   },
   "Making gold from pylons": {
     "one": "Ahora estás comprando monedas fuertes de pylon"
@@ -140,50 +146,29 @@
   "Please wait for a moment to finish the process": {
     "one": "Por favor espere un momento a finalizar el proceso."
   },
-  "You are now buying %s at the shop": {
-    "one": "Ahora estás comprando \"%s\" en la tienda"
+  "You are buying %s at the shop": {
+    "one": "You are buying %s. Give us a minute while we finish the paperwork"
   },
-  "You are now hunting rabbits with %s": {
-    "one": "Estás cazando con \"%s\"."
+  "You are buying %s at the pylons central": {
+    "one": "You are buying %s at the pylons central"
   },
-  "You are now hunting rabbits without weapon": {
+  "You are hunting rabbits": {
     "one": "Estás cazando sin arma."
   },
-  "You are now fighting with goblin with %s": {
-    "one": "You are now fighting with 👺 (goblin) with \"%s\"\n"
+  "You are fighting %s monster with weapon %s level %d": {
+    "one": "You are bravely laying into the %s with your %s level %d. Exciting!\n"
   },
-  "You are now fighting with troll with %s": {
-    "one": "You are now fighting with 👻 (troll) with \"%s\"\n"
+  "You are selling %s for %s gold": {
+    "one": "You are selling the %s for %s gold, the blacksmith is checking his pockets for change."
   },
-  "You are now fighting with wolf with %s": {
-    "one": "You are now fighting with 🐺 (wolf) with \"%s\"\n"
+  "You are upgrading %s": {
+    "one": "The blacksmith is working on your %s, give him space, he’s a professional"
   },
-  "You are now fighting with giant with %s": {
-    "one": "You are now fighting with 🗿 (giant) with \"%s\"\n"
-  },
-  "You are now fighting with fire dragon with %s": {
-    "one": "You are now fighting with 🦐 (fire dragon) with \"%s\"\n"
-  },
-  "You are now fighting with ice dragon with %s": {
-    "one": "You are now fighting with 🦈 (ice dragon) with \"%s\"\n"
-  },
-  "You are now fighting with acid dragon with %s": {
-    "one": "You are now fighting with 🐊 (acid dragon) with \"%s\"\n"
-  },
-  "You are now fighting with undead dragon with %s": {
-    "one": "You are now fighting with 🐉 (undead dragon) with \"%s\"\n"
-  },
-  "You are now selling %s for gold": {
-    "one": "Estás vendiendo \"%s\" por oro."
-  },
-  "You are now upgrading %s": {
-    "one": "Estás mejorando %s."
-  },
-  "You have bought %s from the shop": {
-    "one": "Has comprado %s de la tienda"
+  "You have bought a weapon from the shop": {
+    "one": "Thank you for supporting your local blacksmith. Use your new weapon only for good. We believe in you."
   },
   "You have bought %s from Pylons Central": {
-    "one": "You have bought \"%s\" from Pylons Central"
+    "one": "You have bought %s character from Pylons Central"
   },
   "you have bought gold successfully from coin market at %.4f": {
     "one": "you have bought gold successfully from coin market at %.4f.\n"
@@ -191,10 +176,10 @@
   "you have sold gold successfully from coin market at %.4f": {
     "one": "you have sold gold successfully from coin market at %.4f.\n"
   },
-  "You are now waiting for gold buy request creation": {
+  "You are waiting for gold buy request creation": {
     "one": "Ahora está esperando la creación de la orden de compra Gold"
   },
-  "You are now waiting for gold sell request creation": {
+  "You are waiting for gold sell request creation": {
     "one": "Ahora está esperando la creación de órdenes de venta Gold"
   },
   "gold buy request was successfully created": {
@@ -210,34 +195,34 @@
     "one": "You caught the rabbit. Chaching! 💰 %d."
   },
   "You did fight with goblin and earned %d.": {
-    "one": "You killed a goblin! 👺  💰 %d."
+    "one": "You brave hero you! You defeated the 👺 (goblin). You got 💰 %d."
   },
   "You did fight with troll and earned %d.": {
-    "one": "You beat the 👻 (troll) and earned 💰 %d."
+    "one": "You brave hero you! You defeated the 👻 (troll). Earned 💰 %d."
   },
   "You did fight with wolf and earned %d.": {
-    "one": "You killed a 🐺 (wolf)! Have 💰 %d."
+    "one": "You brave hero you! You defeated the 🐺 (wolf)! Have 💰 %d."
   },
   "You did fight with giant and earned %d.": {
-    "one": "Giantslayer! 🗿  Also you get 💰 %d."
+    "one": "You brave hero you! Giantslayer! 🗿  Also you get 💰 %d."
   },
   "You did fight with fire dragon and earned %d.": {
-    "one": "Fire dragon killer! 🦐  Also you get 💰 %d."
+    "one": "You brave hero you! You defeated the 🦐 (fire dragon)! You got 💰 %d."
   },
   "You did fight with ice dragon and earned %d.": {
-    "one": "Ice dragon killer! 🦈  Also you get 💰 %d."
+    "one": "You brave hero you! You defeated the 🦈 (ice dragon)! Earned 💰 %d."
   },
   "You did fight with acid dragon and earned %d.": {
-    "one": "Acid dragon killer! 🐊  Also you get 💰 %d."
+    "one": "You brave hero you! You defeated the 🐊 (acid dragon)! Have 💰 %d."
   },
   "You did fight with undead dragon and earned %d.": {
-    "one": "Undead dragon killer! 🐉  Also you get 💰 %d."
+    "one": "You brave hero you! You defeated the 🐉 (undead dragon)! You got 💰 %d."
   },
-  "Bought gold with pylons. Amount is %d.": {
-    "one": "Bought gold with pylons. Amount is 💰 %d."
+  "Bought %d gold with %d pylons.": {
+    "one": "Here’s your 💰 %d, thanks for the %d pylons. Come again, we’re always open!"
   },
   "You have upgraded %s to get better hunt result": {
-    "one": "You have upgraded \"%s\" from Lv1 to Lv2 to get better hunt result"
+    "one": "The %s has been upgraded to level 2. Shiny!"
   },
   "inventory": {
     "one": " Inventario "
@@ -302,8 +287,8 @@
   "no angel sword!": {
     "one": "no angel sword!"
   },
-  "Deselect": {
-    "one": "Deselect"
+  "No character selection": {
+    "one": "No character selection"
   },
   "Select ( ↵ )": {
     "one": "Select ( ↵ )"
@@ -359,6 +344,9 @@
   "Place order to sell character(R)": {
     "one": "Place order to sell character(R)"
   },
+  "trade request tables colors meaning": {
+    "one": "Trade request table's colors and bold/highlighted text have below meanings."
+  },
   "white trade line desc": {
     "one": "white     ➝ other's request"
   },
@@ -382,9 +370,6 @@
   },
   "Active Character": {
     "one": "Active Character"
-  },
-  "Active Weapon": {
-    "one": "Active Weapon"
   },
   "rest blocks": {
     "one": "rest blocks"
@@ -476,8 +461,8 @@
   "Please enter gold amount to buy (should be integer value)": {
     "one": "Please enter gold amount to buy (should be integer value)"
   },
-  "Please enter new character's name - it's costing pylons per letter.": {
-    "one": "Please enter new character's name - it's costing pylons per letter."
+  "Please enter new character's name": {
+    "one": "Write the new name below. We won’t judge you. It’s probably fine. Mention. You spend pylons when rename character."
   },
   "Please enter gold amount to sell (should be integer value)": {
     "one": "Please enter gold amount to sell (should be integer value)"
@@ -495,13 +480,10 @@
     "one": "Select character specs to get"
   },
   "Please select active character": {
-    "one": "Please select active character"
+    "one": "Select which character to make active.\nYou can have no character selected but the game isn’t much fun if you do that.\nPick your favourite, maybe they won’t die!"
   },
   "Please select character to rename": {
-    "one": "Please select character to rename"
-  },
-  "Please select active weapon": {
-    "one": "Please select active weapon"
+    "one": "Select the character to rename, then show us how clever you are with the new name\n"
   },
   "You have successfully unset the active character!": {
     "one": "You have successfully unset the active character!"
@@ -509,23 +491,14 @@
   "You have successfully set the active character!": {
     "one": "You have successfully set the active character!"
   },
-  "You have successfully unset the active weapon!": {
-    "one": "You have successfully unset the active weapon!"
-  },
-  "You have successfully set the active weapon!": {
-    "one": "You have successfully set the active weapon!"
-  },
   "You have successfully updated character's name to %s!": {
     "one": "You have successfully updated character's name to %s!"
   },
-  "Your character is dead while following rabbits accidently": {
-    "one": "Your character is dead while following rabbits accidently"
+  "Your %s character is dead while following rabbits accidently": {
+    "one": "Your character accidently met the king of rabbits 100 times bigger than you and beaten. Your %s character is dead. What a shame!!! Go back home and pick a new character unless you’re a huge baby."
   },
-  "You have lost your weapon accidently": {
-    "one": "You have lost your weapon accidently"
-  },
-  "You were killed by goblin accidently": {
-    "one": "You were killed by 👺 (goblin) accidently"
+  "You have lost your %s %d weapon while fighting %s accidently": {
+    "one": "The good news is that you didn’t die.\nThe bad news is that your %s level %d got broken fighting the %s. You can use other existing weapon, or buy a new one at the shop."
   },
   "You got bonus item called %s": {
     "one": "You got bonus item called %s"
@@ -533,26 +506,8 @@
   "You got %s (special) from the giant!!": {
     "one": "You got %s (special) from the giant!!"
   },
-  "You were killed by troll accidently": {
-    "one": "You were killed by 👻 (troll) accidently"
-  },
-  "You were killed by wolf accidently": {
-    "one": "You were killed by 🐺 (wolf) accidently"
-  },
-  "You were killed by giant accidently": {
-    "one": "You were killed by 🗿 (giant) accidently"
-  },
-  "You were killed by fire dragon accidently": {
-    "one": "You were killed by 🦐 (fire dragon) accidently"
-  },
-  "You were killed by ice dragon accidently": {
-    "one": "You were killed by 🦈 (ice dragon) accidently"
-  },
-  "You were killed by acid dragon accidently": {
-    "one": "You were killed by 🐊 (acid dragon) accidently"
-  },
-  "You were killed by undead dragon accidently": {
-    "one": "You were killed by 🐉 (undead dragon) accidently"
+  "Your %s character was killed by %s accidently": {
+    "one": "Well that could have gone better. %s is dead. Killed by the %s. Go back home and pick a new character unless you’re a huge baby."
   },
   "Finished getting developer test items.": {
     "one": "Finished getting developer test items."
@@ -567,7 +522,7 @@
     "one": "You created a new cookbook for a new game build"
   },
   "You sold %s for %d gold.": {
-    "one": "You sold \"%s\" for %d gold."
+    "one": "You sold the %s for %d gold. A wise financial decision."
   },
   "item sell request was successfully created": {
     "one": "item sell request was successfully created"
@@ -596,11 +551,11 @@
   "you have sold character successfully from character/pylon market": {
     "one": "you have sold character successfully from character/pylon market"
   },
-  "You are now waiting to rename character from %s to %s.": {
-    "one": "You are now waiting to rename character from %s to %s."
+  "You are waiting to rename character from %s to %s.": {
+    "one": "You are waiting to rename character from %s to %s."
   },
-  "Buying gold with pylon": {
-    "one": "Buying gold with pylon"
+  "spending %d pylon for %d gold": {
+    "one": "You are spending %d pylons to receive %d gold. We’re just bringing it up from the vaults for you."
   },
   "Getting dev test items from pylon": {
     "one": "Getting dev test items from pylon"
@@ -614,32 +569,32 @@
   "You are waiting for creating cookbook": {
     "one": "You are waiting for creating cookbook"
   },
-  "You are now waiting for item sell request creation": {
-    "one": "You are now waiting for item sell request creation"
+  "You are waiting for item sell request creation": {
+    "one": "You are waiting for item sell request creation"
   },
-  "You are now waiting for character sell request creation": {
-    "one": "You are now waiting for character sell request creation"
+  "You are waiting for character sell request creation": {
+    "one": "You are waiting for character sell request creation"
   },
-  "You are now waiting for item buy request creation": {
-    "one": "You are now waiting for item buy request creation"
+  "You are waiting for item buy request creation": {
+    "one": "You are waiting for item buy request creation"
   },
-  "You are now waiting for character buy request creation": {
-    "one": "You are now waiting for character buy request creation"
+  "You are waiting for character buy request creation": {
+    "one": "You are waiting for character buy request creation"
   },
-  "You are now waiting for cancelling one of your trades": {
-    "one": "You are now waiting for cancelling one of your trades"
+  "You are waiting for cancelling one of your trades": {
+    "one": "You are waiting for cancelling one of your trades"
   },
-  "You are now buying item at %d": {
-    "one": "You are now buying item at %d"
+  "You are buying item at %d": {
+    "one": "You are buying item at %d"
   },
-  "you are now buying character at %d.": {
-    "one": "you are now buying character at %d."
+  "You are buying character at %d.": {
+    "one": "You are buying character at %d."
   },
-  "you are now selling item at %d.": {
-    "one": "you are now selling item at %d."
+  "You are selling item at %d.": {
+    "one": "You are selling item at %d."
   },
-  "you are now selling character at %d.": {
-    "one": "you are now selling character at %d."
+  "You are selling character at %d.": {
+    "one": "You are selling character at %d."
   },
   "gold": {
     "one": "Gold"
@@ -655,5 +610,56 @@
   },
   "not enough gold": {
     "one": "gold lack"
+  },
+  "You can make silver sword with Goblin ear at the shop!": {
+    "one": "You can make silver sword with Goblin ear at the shop!"
+  },
+  "You can make iron sword with Troll toes at the shop!": {
+    "one": "You can make iron sword with Troll toes at the shop!"
+  },
+  "You can make bronze sword with Wolf tail at the shop!": {
+    "one": "You can make bronze sword with Wolf tail at the shop!"
+  },
+  "You can now fight with %s with this character!": {
+    "one": "You can now fight with %s with this character!"
+  },
+  "Once you have drops from 3 special dragons, you can create angel sword at the shop!": {
+    "one": "Once you have drops from 3 special dragons, you can create angel sword at the shop!"
+  },
+  "Something went wrong!\nReturned ItemID is not available on user's inventory.": {
+    "one": "Something went wrong!\nReturned ItemID is not available on user's inventory."
+  },
+  "You can sell goblin boots to earn gold or trade in pylons central!": {
+    "one": "You can sell goblin boots to earn gold or trade in pylons central!"
+  },
+  "You can sell troll's smelly boots at to earn gold or trade in pylons central!": {
+    "one": "You can sell troll's smelly boots at to earn gold or trade in pylons central!"
+  },
+  "You can sell wolf fur at to earn gold or trade in pylons central!": {
+    "one": "You can sell wolf fur at to earn gold or trade in pylons central!"
+  },
+  "help about": {
+    "one": "Legend of Undead Dragon v0.1.0\nThis is an old-school prototype game built to run on the pylons ecosystem."
+  },
+  "help what you can do": {
+    "one": "The purpose of this game is to defeat the Undead Dragon.\nAs you progress, you will fight enemies, buy swords from the blacksmith, and trade swords that you found in your adventures.\nYou need to have at least one character to play the game and you will also need gold to buy swords. Swords are good. You need swords to fight most monsters. You can get better swords too. Those are pretty awesome. Sometimes you will taste the bitter ashes of defeat, other times you will feel the euphoria of victory. This game is a real emotional rollercoaster.\nYou need swords to fight some monsters, during the game you will experience chilly dying and hot winner emotion."
+  },
+  "help navigation": {
+    "one": "There are 8 menus that you will use to navigate around the game.\nYou can go to Home, Forest, Shop, Pylons Central, Settings, Help page or Escape from the game using the navigation menu."
+  },
+  "help page layout": {
+    "one": "Each page has 5 sections.\n- Navigation menu at the top\n- Inventory on right\n- Commands you can run under menu on left side.\n- Situation box at the center left side.\n- Input box at the bottom left of the page\n- You can see all of your options for any menu at the top of the page.\n- It provides an action list showing you what choices are available and what the hotkeys to select them are.\n"
+  },
+  "help game rules": {
+    "one": "Don't use offensive or sexually explicit nicknames.\nDon't automate trading orders with a bot."
+  },
+  "help how it works": {
+    "one": "This game works on a blockchain statemachine.\nThe game state changes when the transaction that contains your command, is confirmed and that command is run on all nodes that are running all over the world.\nThis game engine is a white box and you can experience a real blockchain game world while playing LOUD.\n"
+  },
+  "help upcoming releases": {
+    "one": "We are excited to hear your feedback on the v0.1.0 release and we will use your suggestions to make decisions on how to go forward.\nWe already have tons of features implemented in the core daemon, so if you ask for something, we can make changes according to that.\nYou will be able to build your own game by forking our project, as this is a prototype game.\n"
+  },
+  "help Support": {
+    "one": "Contact loud@pylons.tech for anything about LOUD game."
   }
 }

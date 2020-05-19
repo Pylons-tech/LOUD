@@ -61,7 +61,7 @@ func DevGetTestItems(user User) (string, error) {
 	return ExecuteRecipe(user, RCP_GET_TEST_ITEMS, []string{})
 }
 
-func RunHuntRecipe(rcpName string, user User) (string, error) {
+func RunHuntRecipe(monsterName, rcpName string, user User) (string, error) {
 	activeCharacter := user.GetActiveCharacter()
 	activeCharacterID := ""
 	if activeCharacter != nil {
@@ -70,7 +70,8 @@ func RunHuntRecipe(rcpName string, user User) (string, error) {
 		return "", errors.New("character is required to hunt rabbits!")
 	}
 
-	activeWeapon := user.GetActiveWeapon()
+	user.SetFightMonster(monsterName)
+	activeWeapon := user.GetFightWeapon()
 	itemIDs := []string{activeCharacterID}
 	if activeWeapon != nil {
 		itemIDs = []string{activeCharacterID, activeWeapon.ID}
@@ -80,44 +81,39 @@ func RunHuntRecipe(rcpName string, user User) (string, error) {
 }
 
 func HuntRabbits(user User) (string, error) {
-	activeWeapon := user.GetActiveWeapon()
-	if activeWeapon == nil {
-		return RunHuntRecipe(RCP_HUNT_RABBITS_NOSWORD, user)
-	} else {
-		return RunHuntRecipe(RCP_HUNT_RABBITS_YESWORD, user)
-	}
+	return RunHuntRecipe(RABBIT, RCP_HUNT_RABBITS, user)
 }
 
 func FightTroll(user User) (string, error) {
-	return RunHuntRecipe(RCP_FIGHT_TROLL, user)
+	return RunHuntRecipe(TROLL, RCP_FIGHT_TROLL, user)
 }
 
 func FightWolf(user User) (string, error) { // 🐺
-	return RunHuntRecipe(RCP_FIGHT_WOLF, user)
+	return RunHuntRecipe(WOLF, RCP_FIGHT_WOLF, user)
 }
 
 func FightGoblin(user User) (string, error) { // 👺
-	return RunHuntRecipe(RCP_FIGHT_GOBLIN, user)
+	return RunHuntRecipe(GOBLIN, RCP_FIGHT_GOBLIN, user)
 }
 
 func FightGiant(user User) (string, error) { // 🗿
-	return RunHuntRecipe(RCP_FIGHT_GIANT, user)
+	return RunHuntRecipe(GIANT, RCP_FIGHT_GIANT, user)
 }
 
 func FightDragonFire(user User) (string, error) { // 🦐
-	return RunHuntRecipe(RCP_FIGHT_DRAGONFIRE, user)
+	return RunHuntRecipe(DRAGON_FIRE, RCP_FIGHT_DRAGONFIRE, user)
 }
 
 func FightDragonIce(user User) (string, error) { // 🦈
-	return RunHuntRecipe(RCP_FIGHT_DRAGONICE, user)
+	return RunHuntRecipe(DRAGON_ICE, RCP_FIGHT_DRAGONICE, user)
 }
 
 func FightDragonAcid(user User) (string, error) { // 🐊
-	return RunHuntRecipe(RCP_FIGHT_DRAGONACID, user)
+	return RunHuntRecipe(DRAGON_ACID, RCP_FIGHT_DRAGONACID, user)
 }
 
 func FightDragonUndead(user User) (string, error) { // 🐉
-	return RunHuntRecipe(RCP_FIGHT_DRAGONUNDEAD, user)
+	return RunHuntRecipe(DRAGON_UNDEAD, RCP_FIGHT_DRAGONUNDEAD, user)
 }
 
 func BuyCharacter(user User, ch Character) (string, error) {
@@ -195,8 +191,7 @@ func Sell(user User, item Item) (string, error) {
 	itemIDs := []string{item.ID}
 
 	rcpName := ""
-	switch item.Name {
-	case WOODEN_SWORD, COPPER_SWORD:
+	if item.Value > 0 {
 		rcpName = RCP_SELL_SWORD
 	}
 	return ExecuteRecipe(user, rcpName, itemIDs)

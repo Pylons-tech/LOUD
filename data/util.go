@@ -2,6 +2,7 @@ package loud
 
 import (
 	"bytes"
+	"strings"
 
 	"github.com/vmihailenco/msgpack"
 )
@@ -44,4 +45,13 @@ func ChunkString(s string, chunkSize int) []string {
 		chunks = append(chunks, string(runes[i:nn]))
 	}
 	return chunks
+}
+
+func ChunkText(bigtext string, width int) []string {
+	basicLines := strings.Split(bigtext, "\n")
+	infoLines := []string{}
+	for _, text := range basicLines {
+		infoLines = append(infoLines, ChunkString(text, width)...)
+	}
+	return infoLines
 }

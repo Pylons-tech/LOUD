@@ -11,6 +11,7 @@ type Item struct {
 	Level      int
 	Attack     int
 	Price      int
+	Value      int
 	PreItems   []string
 	LastUpdate int64
 }
@@ -49,19 +50,32 @@ const (
 )
 
 const (
-	WOODEN_SWORD string = "Wooden sword"
-	COPPER_SWORD        = "Copper sword"
-	SILVER_SWORD        = "Silver sword"
-	BRONZE_SWORD        = "Bronze sword"
-	IRON_SWORD          = "Iron sword"
-	ANGEL_SWORD         = "Angel sword"
+	RABBIT        string = "Rabbit"
+	GOBLIN               = "Goblin"
+	WOLF                 = "Wolf"
+	TROLL                = "Troll"
+	GIANT                = "Giant"
+	DRAGON_FIRE          = "Fire dragon"
+	DRAGON_ICE           = "Ice dragon"
+	DRAGON_ACID          = "Acid dragon"
+	DRAGON_UNDEAD        = "Undead dragon"
 
-	GOBLIN_EAR      = "Goblin ear"
-	WOLF_TAIL       = "Wolf tail"
-	TROLL_TOES      = "Troll toes"
-	DROP_DRAGONICE  = "Icy shards"
-	DROP_DRAGONFIRE = "Fire scale"
-	DROP_DRAGONACID = "Poison claws"
+	WOODEN_SWORD = "Wooden sword"
+	COPPER_SWORD = "Copper sword"
+	SILVER_SWORD = "Silver sword"
+	BRONZE_SWORD = "Bronze sword"
+	IRON_SWORD   = "Iron sword"
+	ANGEL_SWORD  = "Angel sword"
+
+	GOBLIN_EAR         = "Goblin ear"
+	GOBLIN_BOOTS       = "Goblin boots"
+	WOLF_FUR           = "Wolf fur"
+	TROLL_SMELLY_BONES = "Troll smelly bones"
+	WOLF_TAIL          = "Wolf tail"
+	TROLL_TOES         = "Troll toes"
+	DROP_DRAGONICE     = "Icy shards"
+	DROP_DRAGONFIRE    = "Fire scale"
+	DROP_DRAGONACID    = "Poison claws"
 )
 
 func (item Item) IsSword() bool {
@@ -85,14 +99,14 @@ var ShopItems = []Item{
 		ID:       "003",
 		Name:     SILVER_SWORD,
 		Level:    1,
-		Price:    250,
+		Price:    50,
 		PreItems: []string{GOBLIN_EAR},
 	},
 	Item{
 		ID:       "004",
 		Name:     BRONZE_SWORD,
 		Level:    1,
-		Price:    250,
+		Price:    10,
 		PreItems: []string{WOLF_TAIL},
 	},
 	Item{
@@ -203,21 +217,9 @@ var WorldCharacterSpecs = []CharacterSpec{
 }
 
 func (item *Item) GetSellPriceRange() string {
-	switch item.Name {
-	case WOODEN_SWORD:
-		if item.Level == 1 { // attack 3
-			return "60-63"
-		} else if item.Level == 2 { // attack 6
-			return "120-126"
-		}
-	case COPPER_SWORD:
-		if item.Level == 1 { // attack 10
-			return "200-210"
-		} else if item.Level == 2 { // attack 20
-			return "400-440"
-		}
-	}
-	return "-1"
+	minPrice := item.Value * 8 / 10
+	maxPrice := minPrice + 20
+	return fmt.Sprintf("%d-%d", minPrice, maxPrice)
 }
 
 func (item *Item) GetUpgradePrice() int {
