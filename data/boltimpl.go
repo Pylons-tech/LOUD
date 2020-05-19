@@ -76,6 +76,7 @@ type UserData struct {
 	Characters           []Character
 	ActiveCharacterIndex int
 	ActiveCharacter      Character
+	DeadCharacter        Character
 	PrivKey              string
 	targetMonster        string
 	usingWeapon          Item
@@ -233,6 +234,7 @@ func (user *dbUser) SetActiveCharacterIndex(idx int) {
 	if idx >= 0 && idx < len {
 		user.UserData.ActiveCharacter = user.UserData.Characters[idx]
 	} else {
+		user.UserData.DeadCharacter = user.UserData.ActiveCharacter
 		user.UserData.ActiveCharacter = Character{}
 	}
 }
@@ -246,6 +248,13 @@ func (user *dbUser) GetActiveCharacter() *Character {
 		return nil
 	}
 	return &user.UserData.ActiveCharacter
+}
+
+func (user *dbUser) GetDeadCharacter() *Character {
+	if user.UserData.DeadCharacter.Name == "" {
+		return nil
+	}
+	return &user.UserData.DeadCharacter
 }
 
 func (user *dbUser) InventoryItems() []Item {

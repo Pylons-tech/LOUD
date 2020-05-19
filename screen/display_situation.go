@@ -231,7 +231,7 @@ func (screen *GameScreen) renderUserSituation() {
 		infoLines, tableLines = screen.TxWaitSituationDesc(w)
 	}
 
-	basicLines := loud.ChunkText(desc, w)
+	basicLines := loud.ChunkText(desc, w-2)
 
 	if descfont == REGULAR {
 		infoLines = append(infoLines, basicLines...)
@@ -288,7 +288,7 @@ func monsterTextWithUnicode(monster string) string {
 func (screen *GameScreen) GetKilledByDesc(monsterDesc string) string {
 	return loud.Sprintf(
 		"Your %s character was killed by %s accidently",
-		formatCharacterP(screen.user.GetActiveCharacter()),
+		formatCharacterP(screen.user.GetDeadCharacter()),
 		monsterDesc,
 	)
 }
@@ -725,7 +725,7 @@ func (screen *GameScreen) TxWaitSituationDesc(width int) ([]string, []string) {
 		desc += screen.buyLoudDesc(request.Amount, request.Total)
 	}
 	desc += "\n"
-	return loud.ChunkText(desc, width), []string{
+	return loud.ChunkText(desc, width-2), []string{
 		screen.blinkBlueBoldFont()(fillSpace("......", width)),
 	}
 }

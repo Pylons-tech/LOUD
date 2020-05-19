@@ -37,6 +37,7 @@ type User interface {
 	GetPrivKey() string
 	GetActiveCharacterIndex() int
 	GetActiveCharacter() *Character
+	GetDeadCharacter() *Character
 	GetFightWeapon() *Item
 	GetItemByID(string) *Item
 	GetAddress() string
