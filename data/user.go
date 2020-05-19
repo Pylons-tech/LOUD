@@ -38,6 +38,7 @@ type User interface {
 	GetActiveCharacterIndex() int
 	GetActiveCharacter() *Character
 	GetDeadCharacter() *Character
+	GetTargetMonster() string
 	GetFightWeapon() *Item
 	GetItemByID(string) *Item
 	GetAddress() string

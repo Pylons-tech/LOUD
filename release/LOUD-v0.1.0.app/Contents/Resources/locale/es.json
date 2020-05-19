@@ -93,7 +93,7 @@
     "one": "Ajustes"
   },
   "develop desc": {
-    "one": "You are now testing things for development. Please enter commands you want to try"
+    "one": "You are testing things for development. Please enter commands you want to try"
   },
   "help desc": {
     "one": "This is help page for LOUD game."
@@ -146,50 +146,29 @@
   "Please wait for a moment to finish the process": {
     "one": "Por favor espere un momento a finalizar el proceso."
   },
-  "You are now buying %s at the shop": {
-    "one": "You are buying \"%s\". Give us a minute while we finish the paperwork"
+  "You are buying %s at the shop": {
+    "one": "You are buying %s. Give us a minute while we finish the paperwork"
   },
-  "You are now buying %s at the pylons central": {
-    "one": "You are now buying %s at the pylons central"
+  "You are buying %s at the pylons central": {
+    "one": "You are buying %s at the pylons central"
   },
-  "You are now hunting rabbits": {
+  "You are hunting rabbits": {
     "one": "Estás cazando sin arma."
   },
-  "You are now fighting with goblin with %s": {
-    "one": "You are bravely laying into the 👺 (goblin) with your \"%s\". Exciting!\n"
+  "You are fighting %s monster with weapon %s level %d": {
+    "one": "You are bravely laying into the %s with your %s level %d. Exciting!\n"
   },
-  "You are now fighting with troll with %s": {
-    "one": "You are bravely laying into the 👻 (troll) with your \"%s\". Exciting!\n"
+  "You are selling %s for %s gold": {
+    "one": "You are selling the %s for %s gold, the blacksmith is checking his pockets for change."
   },
-  "You are now fighting with wolf with %s": {
-    "one": "You are bravely laying into the 🐺 (wolf) with your \"%s\". Exciting!\n"
-  },
-  "You are now fighting with giant with %s": {
-    "one": "You are bravely laying into the 🗿 (giant) with your \"%s\". Exciting!\n"
-  },
-  "You are now fighting with fire dragon with %s": {
-    "one": "You are bravely laying into the 🦐 (fire dragon) with your \"%s\". Exciting!\n"
-  },
-  "You are now fighting with ice dragon with %s": {
-    "one": "You are bravely laying into the 🦈 (ice dragon) with your \"%s\". Exciting!\n"
-  },
-  "You are now fighting with acid dragon with %s": {
-    "one": "You are bravely laying into the 🐊 (acid dragon) with your \"%s\". Exciting!\n"
-  },
-  "You are now fighting with undead dragon with %s": {
-    "one": "You are bravely laying into the 🐉 (undead dragon) with your \"%s\". Exciting!\n"
-  },
-  "You are now selling %s for %s gold": {
-    "one": "You are selling the \"%s\" for %s gold, the blacksmith is checking his pockets for change."
-  },
-  "You are now upgrading %s": {
-    "one": "The blacksmith is working on your \"%s\", give him space, he’s a professional"
+  "You are upgrading %s": {
+    "one": "The blacksmith is working on your %s, give him space, he’s a professional"
   },
   "You have bought a weapon from the shop": {
     "one": "Thank you for supporting your local blacksmith. Use your new weapon only for good. We believe in you."
   },
   "You have bought %s from Pylons Central": {
-    "one": "You have bought \"%s\" from Pylons Central"
+    "one": "You have bought %s from Pylons Central"
   },
   "you have bought gold successfully from coin market at %.4f": {
     "one": "you have bought gold successfully from coin market at %.4f.\n"
@@ -197,10 +176,10 @@
   "you have sold gold successfully from coin market at %.4f": {
     "one": "you have sold gold successfully from coin market at %.4f.\n"
   },
-  "You are now waiting for gold buy request creation": {
+  "You are waiting for gold buy request creation": {
     "one": "Ahora está esperando la creación de la orden de compra Gold"
   },
-  "You are now waiting for gold sell request creation": {
+  "You are waiting for gold sell request creation": {
     "one": "Ahora está esperando la creación de órdenes de venta Gold"
   },
   "gold buy request was successfully created": {
@@ -243,7 +222,7 @@
     "one": "Here’s your 💰 %d, thanks for the %d pylons. Come again, we’re always open!"
   },
   "You have upgraded %s to get better hunt result": {
-    "one": "The \"%s\" has been upgraded to level 2. Shiny!"
+    "one": "The %s has been upgraded to level 2. Shiny!"
   },
   "inventory": {
     "one": " Inventario "
@@ -518,8 +497,8 @@
   "Your %s character is dead while following rabbits accidently": {
     "one": "Your character accidently met the king of rabbits 100 times bigger than you and beaten. Your %s character is dead. What a shame!!! Go back home and pick a new character unless you’re a huge baby."
   },
-  "You have lost your %s weapon while fighting %s accidently": {
-    "one": "You have lost your %s weapon while fighting %s accidently"
+  "You have lost your %s %d weapon while fighting %s accidently": {
+    "one": "You have lost your %s %d weapon while fighting %s accidently"
   },
   "You got bonus item called %s": {
     "one": "You got bonus item called %s"
@@ -528,7 +507,7 @@
     "one": "You got %s (special) from the giant!!"
   },
   "Your %s character was killed by %s accidently": {
-    "one": "Well that could have gone better. \"%s\" is dead. Killed by the %s. Go back home and pick a new character unless you’re a huge baby."
+    "one": "Well that could have gone better. %s is dead. Killed by the %s. Go back home and pick a new character unless you’re a huge baby."
   },
   "Finished getting developer test items.": {
     "one": "Finished getting developer test items."
@@ -543,7 +522,7 @@
     "one": "You created a new cookbook for a new game build"
   },
   "You sold %s for %d gold.": {
-    "one": "You sold the \"%s\" for %d gold. A wise financial decision."  
+    "one": "You sold the %s for %d gold. A wise financial decision."  
   },
   "item sell request was successfully created": {
     "one": "item sell request was successfully created"
@@ -572,8 +551,8 @@
   "you have sold character successfully from character/pylon market": {
     "one": "you have sold character successfully from character/pylon market"
   },
-  "You are now waiting to rename character from %s to %s.": {
-    "one": "You are now waiting to rename character from %s to %s."
+  "You are waiting to rename character from %s to %s.": {
+    "one": "You are waiting to rename character from %s to %s."
   },
   "spending %d pylon for %d gold": {
     "one": "You are spending %d pylons to receive %d gold. We’re just bringing it up from the vaults for you."
@@ -590,32 +569,32 @@
   "You are waiting for creating cookbook": {
     "one": "You are waiting for creating cookbook"
   },
-  "You are now waiting for item sell request creation": {
-    "one": "You are now waiting for item sell request creation"
+  "You are waiting for item sell request creation": {
+    "one": "You are waiting for item sell request creation"
   },
-  "You are now waiting for character sell request creation": {
-    "one": "You are now waiting for character sell request creation"
+  "You are waiting for character sell request creation": {
+    "one": "You are waiting for character sell request creation"
   },
-  "You are now waiting for item buy request creation": {
-    "one": "You are now waiting for item buy request creation"
+  "You are waiting for item buy request creation": {
+    "one": "You are waiting for item buy request creation"
   },
-  "You are now waiting for character buy request creation": {
-    "one": "You are now waiting for character buy request creation"
+  "You are waiting for character buy request creation": {
+    "one": "You are waiting for character buy request creation"
   },
-  "You are now waiting for cancelling one of your trades": {
-    "one": "You are now waiting for cancelling one of your trades"
+  "You are waiting for cancelling one of your trades": {
+    "one": "You are waiting for cancelling one of your trades"
   },
-  "You are now buying item at %d": {
-    "one": "You are now buying item at %d"
+  "You are buying item at %d": {
+    "one": "You are buying item at %d"
   },
-  "you are now buying character at %d.": {
-    "one": "you are now buying character at %d."
+  "You are buying character at %d.": {
+    "one": "You are buying character at %d."
   },
-  "you are now selling item at %d.": {
-    "one": "you are now selling item at %d."
+  "You are selling item at %d.": {
+    "one": "You are selling item at %d."
   },
-  "you are now selling character at %d.": {
-    "one": "you are now selling character at %d."
+  "You are selling character at %d.": {
+    "one": "You are selling character at %d."
   },
   "gold": {
     "one": "Gold"

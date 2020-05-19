@@ -208,6 +208,10 @@ func (user *dbUser) SetFightMonster(monster string) {
 	user.SelectFightWeapon()
 }
 
+func (user *dbUser) GetTargetMonster() string {
+	return user.targetMonster
+}
+
 func (user *dbUser) GetItemByID(ID string) *Item {
 	iis := user.InventoryItems()
 	for _, ii := range iis {

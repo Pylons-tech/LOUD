@@ -285,7 +285,8 @@ func monsterTextWithUnicode(monster string) string {
 	return ""
 }
 
-func (screen *GameScreen) GetKilledByDesc(monsterDesc string) string {
+func (screen *GameScreen) GetKilledByDesc() string {
+	monsterDesc := monsterTextWithUnicode(screen.user.GetTargetMonster())
 	return loud.Sprintf(
 		"Your %s character was killed by %s accidently",
 		formatCharacterP(screen.user.GetDeadCharacter()),
@@ -293,10 +294,19 @@ func (screen *GameScreen) GetKilledByDesc(monsterDesc string) string {
 	)
 }
 
-func (screen *GameScreen) GetLostWeaponDesc(monsterDesc string) string {
+func (screen *GameScreen) GetLostWeaponDesc() string {
+	monsterDesc := monsterTextWithUnicode(screen.user.GetTargetMonster())
+	activeWeapon := screen.user.GetFightWeapon()
+	activeWeaponName := ""
+	activeWeaponLevel := 1
+
+	if activeWeapon != nil {
+		activeWeaponName = activeWeapon.Name
+		activeWeaponLevel = activeWeapon.Level
+	}
 	return loud.Sprintf(
-		"You have lost your %s weapon while fighting %s accidently",
-		formatItemP(screen.user.GetFightWeapon()),
+		"You have lost your %s %d weapon while fighting %s accidently",
+		activeWeaponName, activeWeaponLevel,
 		monsterDesc)
 }
 
@@ -352,7 +362,7 @@ func (screen *GameScreen) TxResultSituationDesc() (string, FontType) {
 			desc = loud.Sprintf("You have bought a weapon from the shop")
 			desc += "\n"
 		case RSLT_BUYCHR:
-			desc = loud.Sprintf("You have bought %s from Pylons Central", formatCharacter(screen.activeCharacter))
+			desc = loud.Sprintf("You have bought %s from Pylons Central", screen.activeCharacter.Name)
 			desc += "\n"
 			desc += loud.Localize("Please use it for hunting")
 		case RSLT_HUNT_RABBITS:
@@ -365,18 +375,17 @@ func (screen *GameScreen) TxResultSituationDesc() (string, FontType) {
 				desc = loud.Sprintf("You did hunt rabbits and earned %d.", earnedAmount)
 			}
 		case RSLT_FIGHT_GOBLIN:
-			targetMonster := monsterTextWithUnicode(loud.GOBLIN)
 			earnedAmount, respOutput := screen.GetTxResponseOutput()
 			resLen := len(respOutput)
 			if resLen == 0 {
-				desc = screen.GetKilledByDesc(targetMonster)
+				desc = screen.GetKilledByDesc()
 				font = RED
 			} else {
 				desc = loud.Sprintf("You did fight with goblin and earned %d.", earnedAmount)
 
 				switch resLen {
 				case 2:
-					desc += screen.GetLostWeaponDesc(targetMonster)
+					desc += screen.GetLostWeaponDesc()
 					font = YELLOW
 				case 4:
 					bonusItem := screen.user.GetItemByID(respOutput[3].ItemID)
@@ -396,18 +405,17 @@ func (screen *GameScreen) TxResultSituationDesc() (string, FontType) {
 				}
 			}
 		case RSLT_FIGHT_TROLL:
-			targetMonster := monsterTextWithUnicode(loud.TROLL)
 			earnedAmount, respOutput := screen.GetTxResponseOutput()
 			resLen := len(respOutput)
 			if resLen == 0 {
-				desc = screen.GetKilledByDesc(targetMonster)
+				desc = screen.GetKilledByDesc()
 				font = RED
 			} else {
 				desc = loud.Sprintf("You did fight with troll and earned %d.", earnedAmount)
 
 				switch resLen {
 				case 2:
-					desc += screen.GetLostWeaponDesc(targetMonster)
+					desc += screen.GetLostWeaponDesc()
 					font = YELLOW
 				case 4:
 					bonusItem := screen.user.GetItemByID(respOutput[3].ItemID)
@@ -427,18 +435,17 @@ func (screen *GameScreen) TxResultSituationDesc() (string, FontType) {
 				}
 			}
 		case RSLT_FIGHT_WOLF:
-			targetMonster := monsterTextWithUnicode(loud.WOLF)
 			earnedAmount, respOutput := screen.GetTxResponseOutput()
 			resLen := len(respOutput)
 			if resLen == 0 {
-				desc = screen.GetKilledByDesc(targetMonster)
+				desc = screen.GetKilledByDesc()
 				font = RED
 			} else {
 				desc = loud.Sprintf("You did fight with wolf and earned %d.", earnedAmount)
 
 				switch resLen {
 				case 2:
-					desc += screen.GetLostWeaponDesc(targetMonster)
+					desc += screen.GetLostWeaponDesc()
 					font = YELLOW
 				case 4:
 					bonusItem := screen.user.GetItemByID(respOutput[3].ItemID)
@@ -458,17 +465,16 @@ func (screen *GameScreen) TxResultSituationDesc() (string, FontType) {
 				}
 			}
 		case RSLT_FIGHT_GIANT:
-			targetMonster := monsterTextWithUnicode(loud.GIANT)
 			earnedAmount, respOutput := screen.GetTxResponseOutput()
 			resLen := len(respOutput)
 			if resLen == 0 {
-				desc = screen.GetKilledByDesc(targetMonster)
+				desc = screen.GetKilledByDesc()
 				font = RED
 			} else {
 				desc = loud.Sprintf("You did fight with giant and earned %d.", earnedAmount)
 				switch resLen {
 				case 2:
-					desc += screen.GetLostWeaponDesc(targetMonster)
+					desc += screen.GetLostWeaponDesc()
 					font = YELLOW
 				case 3:
 					activeCharacter := screen.user.GetActiveCharacter()
@@ -481,18 +487,17 @@ func (screen *GameScreen) TxResultSituationDesc() (string, FontType) {
 				}
 			}
 		case RSLT_FIGHT_DRAGONFIRE:
-			targetMonster := monsterTextWithUnicode(loud.DRAGON_FIRE)
 			earnedAmount, respOutput := screen.GetTxResponseOutput()
 			resLen := len(respOutput)
 			if resLen == 0 {
-				desc = screen.GetKilledByDesc(targetMonster)
+				desc = screen.GetKilledByDesc()
 				font = RED
 			} else {
 				desc = loud.Sprintf("You did fight with fire dragon and earned %d.", earnedAmount)
 
 				switch resLen {
 				case 2:
-					desc += screen.GetLostWeaponDesc(targetMonster)
+					desc += screen.GetLostWeaponDesc()
 					font = YELLOW
 				case 4:
 					desc += loud.Sprintf("You got bonus item called %s", loud.DROP_DRAGONFIRE)
@@ -502,18 +507,17 @@ func (screen *GameScreen) TxResultSituationDesc() (string, FontType) {
 				}
 			}
 		case RSLT_FIGHT_DRAGONICE:
-			targetMonster := monsterTextWithUnicode(loud.DRAGON_ICE)
 			earnedAmount, respOutput := screen.GetTxResponseOutput()
 			resLen := len(respOutput)
 			if resLen == 0 {
-				desc = screen.GetKilledByDesc(targetMonster)
+				desc = screen.GetKilledByDesc()
 				font = RED
 			} else {
 				desc = loud.Sprintf("You did fight with ice dragon and earned %d.", earnedAmount)
 
 				switch resLen {
 				case 2:
-					desc += screen.GetLostWeaponDesc(targetMonster)
+					desc += screen.GetLostWeaponDesc()
 					font = YELLOW
 				case 4:
 					desc += loud.Sprintf("You got bonus item called %s", loud.DROP_DRAGONICE)
@@ -523,18 +527,17 @@ func (screen *GameScreen) TxResultSituationDesc() (string, FontType) {
 				}
 			}
 		case RSLT_FIGHT_DRAGONACID:
-			targetMonster := monsterTextWithUnicode(loud.DRAGON_ACID)
 			earnedAmount, respOutput := screen.GetTxResponseOutput()
 			resLen := len(respOutput)
 			if resLen == 0 {
-				desc = screen.GetKilledByDesc(targetMonster)
+				desc = screen.GetKilledByDesc()
 				font = RED
 			} else {
 				desc = loud.Sprintf("You did fight with acid dragon and earned %d.", earnedAmount)
 
 				switch resLen {
 				case 2:
-					desc += screen.GetLostWeaponDesc(targetMonster)
+					desc += screen.GetLostWeaponDesc()
 					font = YELLOW
 				case 4:
 					desc += loud.Sprintf("You got bonus item called %s", loud.DROP_DRAGONACID)
@@ -544,17 +547,16 @@ func (screen *GameScreen) TxResultSituationDesc() (string, FontType) {
 				}
 			}
 		case RSLT_FIGHT_DRAGONUNDEAD:
-			targetMonster := monsterTextWithUnicode(loud.DRAGON_UNDEAD)
 			earnedAmount, respOutput := screen.GetTxResponseOutput()
 			resLen := len(respOutput)
 			if resLen == 0 {
-				desc = screen.GetKilledByDesc(targetMonster)
+				desc = screen.GetKilledByDesc()
 				font = RED
 			} else {
 				desc = loud.Sprintf("You did fight with undead dragon and earned %d.", earnedAmount)
 				switch resLen {
 				case 2:
-					desc += screen.GetLostWeaponDesc(targetMonster)
+					desc += screen.GetLostWeaponDesc()
 					font = YELLOW
 				}
 			}
@@ -584,7 +586,7 @@ func (screen *GameScreen) TxResultSituationDesc() (string, FontType) {
 			desc = loud.Localize("You created a new cookbook for a new game build")
 		case RSLT_SELLITM:
 			earnedAmount, _ := screen.GetTxResponseOutput()
-			desc = loud.Sprintf("You sold %s for %d gold.", formatItem(screen.activeItem), earnedAmount)
+			desc = loud.Sprintf("You sold %s for %d gold.", screen.activeItem.Name, earnedAmount)
 		case RSLT_UPGITM:
 			desc = loud.Sprintf("You have upgraded %s to get better hunt result", screen.activeItem.Name)
 		case RSLT_SELLITM_TRDREQ_CREATION:
@@ -632,42 +634,43 @@ func (screen *GameScreen) TxResultSituationDesc() (string, FontType) {
 
 func (screen *GameScreen) TxWaitSituationDesc(width int) ([]string, []string) {
 	desc := ""
+	monsterName := monsterTextWithUnicode(screen.user.GetTargetMonster())
 	activeWeapon := screen.user.GetFightWeapon()
+	activeWeaponName := ""
+	activeWeaponLevel := 1
+
+	if activeWeapon != nil {
+		activeWeaponLevel = activeWeapon.Level
+		activeWeaponName = activeWeapon.Name
+	}
 	W8_TO_END := "\n" + loud.Localize("Please wait for a moment to finish the process")
 	switch screen.scrStatus {
 	case W8_RENAME_CHAR:
-		desc = loud.Sprintf("You are now waiting to rename character from %s to %s.", screen.activeCharacter.Name, screen.inputText)
+		desc = loud.Sprintf("You are waiting to rename character from %s to %s.", screen.activeCharacter.Name, screen.inputText)
 	case W8_BUY_LOUD_TRDREQ_CREATION:
-		desc = loud.Localize("You are now waiting for gold buy request creation")
+		desc = loud.Localize("You are waiting for gold buy request creation")
 		desc += screen.buyLoudDesc(screen.loudEnterValue, screen.pylonEnterValue)
 	case W8_SELL_LOUD_TRDREQ_CREATION:
-		desc = loud.Localize("You are now waiting for gold sell request creation")
+		desc = loud.Localize("You are waiting for gold sell request creation")
 		desc += screen.sellLoudDesc(screen.loudEnterValue, screen.pylonEnterValue)
 	case W8_BUYITM:
-		desc = loud.Sprintf("You are now buying %s at the shop", formatItem(screen.activeItem))
+		desc = loud.Sprintf("You are buying %s at the shop", screen.activeItem.Name)
 	case W8_BUYCHR:
 		// TODO should change text for this action
-		desc = loud.Sprintf("You are now buying %s at the pylons central", formatCharacter(screen.activeCharacter))
+		desc = loud.Sprintf("You are buying %s at the pylons central", formatCharacter(screen.activeCharacter))
 		desc += W8_TO_END
 	case W8_HUNT_RABBITS:
-		desc = loud.Sprintf("You are now hunting rabbits")
+		desc = loud.Sprintf("You are hunting rabbits")
 		desc += W8_TO_END
-	case W8_FIGHT_GIANT:
-		desc = loud.Sprintf("You are now fighting with giant with %s", formatItemP(activeWeapon))
-	case W8_FIGHT_DRAGONFIRE:
-		desc = loud.Sprintf("You are now fighting with fire dragon with %s", formatItemP(activeWeapon))
-	case W8_FIGHT_DRAGONICE:
-		desc = loud.Sprintf("You are now fighting with ice dragon with %s", formatItemP(activeWeapon))
-	case W8_FIGHT_DRAGONACID:
-		desc = loud.Sprintf("You are now fighting with acid dragon with %s", formatItemP(activeWeapon))
-	case W8_FIGHT_DRAGONUNDEAD:
-		desc = loud.Sprintf("You are now fighting with undead dragon with %s", formatItemP(activeWeapon))
-	case W8_FIGHT_GOBLIN:
-		desc = loud.Sprintf("You are now fighting with goblin with %s", formatItemP(activeWeapon))
-	case W8_FIGHT_TROLL:
-		desc = loud.Sprintf("You are now fighting with troll with %s", formatItemP(activeWeapon))
-	case W8_FIGHT_WOLF:
-		desc = loud.Sprintf("You are now fighting with wolf with %s", formatItemP(activeWeapon))
+	case W8_FIGHT_TROLL,
+		W8_FIGHT_WOLF,
+		W8_FIGHT_GOBLIN,
+		W8_FIGHT_GIANT,
+		W8_FIGHT_DRAGONFIRE,
+		W8_FIGHT_DRAGONICE,
+		W8_FIGHT_DRAGONACID,
+		W8_FIGHT_DRAGONUNDEAD:
+		desc = loud.Sprintf("You are fighting %s monster with weapon %s level %d", monsterName, activeWeaponName, activeWeaponLevel)
 	case W8_BUY_GOLD_WITH_PYLONS:
 		desc = loud.Sprintf("spending %d pylon for %d gold", 100, 5000)
 	case W8_DEV_GET_TEST_ITEMS:
@@ -681,39 +684,39 @@ func (screen *GameScreen) TxWaitSituationDesc(width int) ([]string, []string) {
 		desc = loud.Sprintf("You are waiting for creating cookbook")
 	case W8_SELLITM:
 		item := screen.activeItem
-		desc = loud.Sprintf("You are now selling %s for %s gold", formatItem(item), item.GetSellPriceRange())
+		desc = loud.Sprintf("You are selling %s for %s gold", item.Name, item.GetSellPriceRange())
 	case W8_UPGITM:
-		desc = loud.Sprintf("You are now upgrading %s", loud.Localize(screen.activeItem.Name))
+		desc = loud.Sprintf("You are upgrading %s", screen.activeItem.Name)
 	case W8_SELLITM_TRDREQ_CREATION:
-		desc = loud.Localize("You are now waiting for item sell request creation")
+		desc = loud.Localize("You are waiting for item sell request creation")
 		desc += screen.sellItemDesc(screen.activeItem, screen.pylonEnterValue)
 	case W8_SELLCHR_TRDREQ_CREATION:
-		desc = loud.Localize("You are now waiting for character sell request creation")
+		desc = loud.Localize("You are waiting for character sell request creation")
 		desc += screen.sellCharacterDesc(screen.activeCharacter, screen.pylonEnterValue)
 	case W8_BUYITM_TRDREQ_CREATION:
-		desc = loud.Localize("You are now waiting for item buy request creation")
+		desc = loud.Localize("You are waiting for item buy request creation")
 		desc += screen.buyItemSpecDesc(screen.activeItSpec, screen.pylonEnterValue)
 	case W8_BUYCHR_TRDREQ_CREATION:
-		desc = loud.Localize("You are now waiting for character buy request creation")
+		desc = loud.Localize("You are waiting for character buy request creation")
 		desc += screen.buyCharacterSpecDesc(screen.activeChSpec, screen.pylonEnterValue)
 	case W8_CANCEL_TRDREQ:
-		desc = loud.Localize("You are now waiting for cancelling one of your trades")
+		desc = loud.Localize("You are waiting for cancelling one of your trades")
 	// For FULFILL trades, msg should be reversed, since user is opposite
 	case W8_FULFILL_SELLITM_TRDREQ:
 		request := screen.activeItemTrdReq.(loud.ItemSellTrdReq)
-		desc = loud.Sprintf("You are now buying item at %d", request.Price)
+		desc = loud.Sprintf("You are buying item at %d", request.Price)
 		desc += screen.buyItemDesc(request.TItem, fmt.Sprintf("%d", request.Price))
 	case W8_FULFILL_SELLCHR_TRDREQ:
 		request := screen.activeItemTrdReq.(loud.CharacterSellTrdReq)
-		desc = loud.Sprintf("you are now buying character at %d.", request.Price)
+		desc = loud.Sprintf("You are buying character at %d.", request.Price)
 		desc += screen.buyCharacterDesc(request.TCharacter, fmt.Sprintf("%d", request.Price))
 	case W8_FULFILL_BUYITM_TRDREQ:
 		request := screen.activeItemTrdReq.(loud.ItemBuyTrdReq)
-		desc = loud.Sprintf("you are now selling item at %d.", request.Price)
+		desc = loud.Sprintf("You are selling item at %d.", request.Price)
 		desc += screen.sellItemSpecDesc(request.TItem, fmt.Sprintf("%d", request.Price))
 	case W8_FULFILL_BUYCHR_TRDREQ:
 		request := screen.activeItemTrdReq.(loud.CharacterBuyTrdReq)
-		desc = loud.Sprintf("you are now selling character at %d.", request.Price)
+		desc = loud.Sprintf("You are selling character at %d.", request.Price)
 		desc += screen.sellCharacterSpecDesc(request.TCharacter, fmt.Sprintf("%d", request.Price))
 	case W8_FULFILL_BUY_LOUD_TRDREQ:
 		request := screen.activeTrdReq
