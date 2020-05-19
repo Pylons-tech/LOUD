@@ -120,6 +120,7 @@ func (user *dbUser) Reload() {
 	} else {
 		MSGUnpack(record, &(user.UserData))
 		log.Printf("Loaded user %v", user.UserData)
+		user.FixLoadedData()
 	}
 	log.Println("start InitPylonAccount")
 	user.UserData.PrivKey = InitPylonAccount(user.UserData.Username)
@@ -228,6 +229,7 @@ func (user *dbUser) GetFightWeapon() *Item {
 	}
 	return &user.usingWeapon
 }
+
 func (user *dbUser) SetCharacters(items []Character) {
 	user.UserData.Characters = items
 }
@@ -239,6 +241,19 @@ func (user *dbUser) SetActiveCharacterIndex(idx int) {
 		user.UserData.ActiveCharacter = user.UserData.Characters[idx]
 	} else {
 		user.UserData.DeadCharacter = user.UserData.ActiveCharacter
+		user.UserData.ActiveCharacter = Character{}
+	}
+}
+
+func (user *dbUser) FixLoadedData() {
+	len := len(user.UserData.Characters)
+	idx := user.UserData.ActiveCharacterIndex
+	if idx >= 0 && idx < len {
+		ac := user.UserData.Characters[idx]
+		if user.UserData.ActiveCharacter.ID != ac.ID {
+			user.UserData.ActiveCharacter = Character{}
+		}
+	} else {
 		user.UserData.ActiveCharacter = Character{}
 	}
 }

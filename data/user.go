@@ -24,6 +24,7 @@ type User interface {
 	SetLocation(UserLocation)
 	SetLastTransaction(string, string)
 	SetLatestBlockHeight(int64)
+	FixLoadedData()
 	InventoryItems() []Item
 	HasPreItemForAnItem(Item) bool
 	InventoryItemIDByName(string) string
