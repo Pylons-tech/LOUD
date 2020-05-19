@@ -120,6 +120,6 @@ func (screen *GameScreen) renderCharacterSheet() {
 			line))
 	}
 
-	lastLine := y + lenInfoLines + len(nodeLines) + 1
-	screen.drawFill(x, lastLine+1, w, h-lastLine)
+	lastLine := y + lenInfoLines + len(nodeLines)
+	screen.drawFill(x, lastLine, w, h-lastLine)
 }

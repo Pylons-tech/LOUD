@@ -1,5 +1,5 @@
 {
-    "ID": "LOUD-upgrade-copper-sword-lv1-to-lv2-recipe-v0.1.0-1589223853",
+    "ID": "LOUD-upgrade-copper-sword-lv1-to-lv2-recipe-v0.1.0-1589853709",
     "CoinInputs":[{
         "Coin": "loudcoin",
         "Count": "250"
@@ -27,7 +27,7 @@
     "ExtraInfo":"",
     "Sender":"eugen",
     "Name": "LOUD's Copper sword lv1 to lv2 upgrade recipe",
-    "CookbookName": "Legend of Undead Dragon v0.1.0",
+    "CookbookName": "Legend of Undead Dragon v0.1.0-1589853709",
     "Description": "this recipe is used to upgrade copper sword level.",
     "BlockInterval":"0"
 }

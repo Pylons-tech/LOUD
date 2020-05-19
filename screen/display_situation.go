@@ -66,9 +66,6 @@ func (screen *GameScreen) renderUserSituation() {
 				desc = loud.Localize("home desc without pylon")
 			}
 		}
-		if screen.user.GetLocation() == loud.HELP {
-			tableLines = screen.tradeTableColorDesc(w)
-		}
 	case SHW_LOUD_BUY_TRDREQS:
 		infoLines, tableLines = screen.renderTRTable(loud.BuyTrdReqs, w)
 	case SHW_LOUD_SELL_TRDREQS:
@@ -217,6 +214,8 @@ func (screen *GameScreen) renderUserSituation() {
 		desc = loud.Localize("help game rules")
 	case HELP_HOW_IT_WORKS:
 		desc = loud.Localize("help how it works")
+	case HELP_PYLONS_CENTRAL:
+		tableLines = screen.tradeTableColorDesc(w)
 	case HELP_UPCOMING_RELEASES:
 		desc = loud.Localize("help upcoming releases")
 	case HELP_SUPPORT:

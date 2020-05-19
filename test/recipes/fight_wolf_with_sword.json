@@ -1,5 +1,5 @@
 {
-    "ID": "LOUD-fight-wolf-with-a-sword-recipe-v0.1.0-1589223853",
+    "ID": "LOUD-fight-wolf-with-a-sword-recipe-v0.1.0-1589853709",
     "CoinInputs":[],
     "ItemInputRefs":[
         "./recipes/item_input/character.json",
@@ -55,7 +55,7 @@
     "ExtraInfo":"",
     "Sender":"eugen",
     "Name": "LOUD's fight with wolf with a sword recipe",
-    "CookbookName": "Legend of Undead Dragon v0.1.0",
+    "CookbookName": "Legend of Undead Dragon v0.1.0-1589853709",
     "Description": "this recipe is used to fight with wolf with a sword.",
     "BlockInterval":"0"
 }

@@ -1,5 +1,5 @@
 {
-    "ID": "LOUD-fight-ice-dragon-with-iron-sword-recipe-v0.1.0-1589223853",
+    "ID": "LOUD-fight-ice-dragon-with-iron-sword-recipe-v0.1.0-1589853709",
     "CoinInputs":[],
     "ItemInputRefs":[
         "./recipes/item_input/character_ice.json",
@@ -48,7 +48,7 @@
     "ExtraInfo":"",
     "Sender":"eugen",
     "Name": "LOUD's fight with ice dragon with an iron sword recipe",
-    "CookbookName": "Legend of Undead Dragon v0.1.0",
+    "CookbookName": "Legend of Undead Dragon v0.1.0-1589853709",
     "Description": "this recipe is used to fight with ice dragon with a sword.",
     "BlockInterval":"0"
 }

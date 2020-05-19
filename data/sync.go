@@ -241,6 +241,8 @@ func SyncFromNode(user User) {
 	log.Println("BuyTrdReqs=", BuyTrdReqs)
 	log.Println("SellTrdReqs=", SellTrdReqs)
 
+	user.FixLoadedData()
+
 	ds, err := pylonSDK.GetDaemonStatus()
 	if err == nil {
 		user.SetLatestBlockHeight(ds.SyncInfo.LatestBlockHeight)

@@ -256,8 +256,9 @@ func (screen *GameScreen) HandleInputKeyHelpEntryPoint(input termbox.Event) bool
 		"4": HELP_PAGE_LAYOUT,
 		"5": HELP_GAME_RULES,
 		"6": HELP_HOW_IT_WORKS,
-		"7": HELP_UPCOMING_RELEASES,
-		"8": HELP_SUPPORT,
+		"7": HELP_PYLONS_CENTRAL,
+		"8": HELP_UPCOMING_RELEASES,
+		"9": HELP_SUPPORT,
 	}
 
 	if newStus, ok := tarStusMap[Key]; ok {

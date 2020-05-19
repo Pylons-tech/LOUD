@@ -48,7 +48,7 @@
     "one": "Create cookbook(j)\nSwitch user(z)\nGet initial py)lons\nDevMode Test Items(b)\n"
   },
   "help": {
-    "one": "1) About\n2) Game Objective\n3) Navigation\n4) Pages layout\n5) Game rules\n6) How it works\n\n7) Upcoming releases\n8) Support\n"
+    "one": "1) About\n2) Game Objective\n3) Navigation\n4) Pages layout\n5) Game rules\n6) How it works\n7) Pylons central\n8) Upcoming releases\n9) Support\n"
   },
   "go to home": {
     "one": "H)ome"
@@ -96,7 +96,7 @@
     "one": "You are testing things for development. Please enter commands you want to try"
   },
   "help desc": {
-    "one": "This is help page for LOUD game."
+    "one": "This is help page for LOUD game. Look around 1-9 sub pages to get overview."
   },
   "select buy character desc": {
     "one": "Summon a hero. We got a whole lot of chosen ones back here.\n"
