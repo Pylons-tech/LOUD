@@ -168,7 +168,7 @@
     "one": "Thank you for supporting your local blacksmith. Use your new weapon only for good. We believe in you."
   },
   "You have bought %s from Pylons Central": {
-    "one": "You have bought %s from Pylons Central"
+    "one": "You have bought %s character from Pylons Central"
   },
   "you have bought gold successfully from coin market at %.4f": {
     "one": "you have bought gold successfully from coin market at %.4f.\n"
@@ -498,7 +498,7 @@
     "one": "Your character accidently met the king of rabbits 100 times bigger than you and beaten. Your %s character is dead. What a shame!!! Go back home and pick a new character unless you’re a huge baby."
   },
   "You have lost your %s %d weapon while fighting %s accidently": {
-    "one": "You have lost your %s %d weapon while fighting %s accidently"
+    "one": "The good news is that you didn’t die.\nThe bad news is that your %s level %d got broken fighting the %s. You can use other existing weapon, or buy a new one at the shop."
   },
   "You got bonus item called %s": {
     "one": "You got bonus item called %s"
