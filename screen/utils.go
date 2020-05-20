@@ -229,7 +229,7 @@ func formatBigNumber(number int) string {
 
 func formatCharacter(ch loud.Character) string {
 	chStr := loud.Localize(ch.Name)
-	chStr = formatSpecial(ch.Special) + chStr
+	chStr = formatSpecial(ch.Special) + " " + chStr // adding space for Sierra issue
 	if ch.GiantKill > 0 {
 		chStr = fmt.Sprintf("🗿 x%d %s", ch.GiantKill, chStr)
 	}
