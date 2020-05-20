@@ -477,7 +477,7 @@ func (screen *GameScreen) TxResultSituationDesc() (string, FontType) {
 					font = YELLOW
 				case 3:
 					activeCharacter := screen.user.GetActiveCharacter()
-					if activeCharacter.Special != loud.NO_SPECIAL { // Got special from this fight
+					if activeCharacter != nil && activeCharacter.Special != loud.NO_SPECIAL { // Got special from this fight
 						desc += loud.Sprintf("You got %s (special) from the giant!!", formatSpecial(activeCharacter.Special))
 						desc += "\n"
 						desc += loud.Sprintf("You can now fight with %s with this character!", formatSpecialDragon(activeCharacter.Special))

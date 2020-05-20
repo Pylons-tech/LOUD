@@ -1,6 +1,7 @@
 package loud
 
 import (
+	// "regexp"
 	"bufio"
 	"fmt"
 	"math/rand"
@@ -32,9 +33,20 @@ func SetupScreenAndEvents(world data.World, logFile *os.File) {
 	if len(args) < 2 {
 		log.Println("you didn't configure username when running!")
 		log.Println("Please enter your username!")
+		// for {
 		reader := bufio.NewReader(os.Stdin)
 		username, _ = reader.ReadString('\n')
 		username = strings.TrimSuffix(username, "\n")
+		// For now, not put validation for username
+		// break
+		// var validUsername = regexp.MustCompile(`^[a-z][a-z0-9/]{2,63}$`)
+		// isValid := validUsername.MatchString(username)
+		// if isValid {
+		// 	break
+		// } else {
+		// 	log.Println("username should consist of only a-z and 0-9. And first letter should be a-z.")
+		// }
+		// }
 	} else {
 		username = args[1]
 	}

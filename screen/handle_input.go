@@ -73,7 +73,11 @@ func (screen *GameScreen) HandleInputKeyHomeEntryPoint(input termbox.Event) bool
 		screen.SetScreenStatus(newStus)
 		switch newStus {
 		case SEL_ACTIVE_CHAR, SEL_RENAME_CHAR:
-			screen.activeLine = screen.user.GetActiveCharacterIndex()
+			activeLine := screen.user.GetActiveCharacterIndex()
+			if len(screen.user.InventoryCharacters()) > 0 && activeLine == -1 {
+				activeLine = 0
+			}
+			screen.activeLine = activeLine
 		}
 		screen.Render()
 		return true
