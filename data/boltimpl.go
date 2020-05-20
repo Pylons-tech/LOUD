@@ -67,22 +67,21 @@ func LoadWorldFromDB(filename string) World {
 
 // UserData is a JSON-serializable set of information about a User.
 type UserData struct {
-	Gold                 int
-	PylonAmount          int
-	Username             string `json:""`
-	Address              string
-	Location             UserLocation
-	Items                []Item
-	Characters           []Character
-	ActiveCharacterIndex int
-	ActiveCharacter      Character
-	DeadCharacter        Character
-	PrivKey              string
-	targetMonster        string
-	usingWeapon          Item
-	lastTransaction      string
-	lastTxMetaData       string
-	lastUpdate           int64
+	Gold            int
+	PylonAmount     int
+	Username        string `json:""`
+	Address         string
+	Location        UserLocation
+	Items           []Item
+	Characters      []Character
+	ActiveCharacter Character
+	DeadCharacter   Character
+	PrivKey         string
+	targetMonster   string
+	usingWeapon     Item
+	lastTransaction string
+	lastTxMetaData  string
+	lastUpdate      int64
 }
 
 type dbUser struct {
@@ -235,31 +234,40 @@ func (user *dbUser) SetCharacters(items []Character) {
 }
 
 func (user *dbUser) SetActiveCharacterIndex(idx int) {
-	user.UserData.ActiveCharacterIndex = idx
-	len := len(user.UserData.Characters)
-	if idx >= 0 && idx < len {
+	length := len(user.UserData.Characters)
+	if idx >= 0 && idx < length {
 		user.UserData.ActiveCharacter = user.UserData.Characters[idx]
 	} else {
-		user.UserData.DeadCharacter = user.UserData.ActiveCharacter
+		if len(user.ActiveCharacter.ID) > 0 {
+			user.UserData.DeadCharacter = user.UserData.ActiveCharacter
+		}
 		user.UserData.ActiveCharacter = Character{}
 	}
 }
 
 func (user *dbUser) FixLoadedData() {
-	len := len(user.UserData.Characters)
-	idx := user.UserData.ActiveCharacterIndex
-	if idx >= 0 && idx < len {
-		ac := user.UserData.Characters[idx]
-		if user.UserData.ActiveCharacter.ID != ac.ID {
+	if len(user.ActiveCharacter.ID) > 0 {
+		length := len(user.UserData.Characters)
+		idx := user.GetActiveCharacterIndex()
+		if idx >= 0 && idx < length {
+			// update to latest character status
+			user.UserData.ActiveCharacter = user.UserData.Characters[idx]
+		} else {
+			// it means old active character is dead
+			user.UserData.DeadCharacter = user.UserData.ActiveCharacter
 			user.UserData.ActiveCharacter = Character{}
 		}
-	} else {
-		user.UserData.ActiveCharacter = Character{}
 	}
 }
 
 func (user *dbUser) GetActiveCharacterIndex() int {
-	return user.UserData.ActiveCharacterIndex
+	// order can be changed on every sync so we should take care of the index by finding by id
+	for idx, ic := range user.InventoryCharacters() {
+		if ic.ID == user.ActiveCharacter.ID {
+			return idx
+		}
+	}
+	return -1
 }
 
 func (user *dbUser) GetActiveCharacter() *Character {
