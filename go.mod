@@ -5,7 +5,7 @@ go 1.13
 require (
 	github.com/FactomProject/basen v0.0.0-20150613233007-fe3947df716e // indirect
 	github.com/FactomProject/btcutilecc v0.0.0-20130527213604-d3a63a5752ec // indirect
-	github.com/Pylons-tech/pylons_sdk v0.0.0-20200511170117-d45f1691db20
+	github.com/Pylons-tech/pylons_sdk v0.0.0-20200521031737-fe82d2297a0e
 	github.com/ahmetb/go-cursor v0.0.0-20131010032410-8136607ea412
 	github.com/anmitsu/go-shlex v0.0.0-20161002113705-648efa622239 // indirect
 	github.com/atotto/clipboard v0.1.2
@@ -14,7 +14,7 @@ require (
 	github.com/flynn/go-shlex v0.0.0-20150515145356-3f9db97f8568 // indirect
 	github.com/gliderlabs/ssh v0.2.2
 	github.com/go-kit/kit v0.9.0 // indirect
-	github.com/go-yaml/yaml v2.1.0+incompatible
+	github.com/go-yaml/yaml v2.1.0+incompatible // indirect
 	github.com/gogo/protobuf v1.3.1 // indirect
 	github.com/golang/mock v1.3.1-0.20190508161146-9fa652df1129 // indirect
 	github.com/gorilla/websocket v1.4.1 // indirect

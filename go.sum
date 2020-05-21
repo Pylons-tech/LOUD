@@ -10,6 +10,8 @@ github.com/FactomProject/btcutilecc v0.0.0-20130527213604-d3a63a5752ec/go.mod h1
 github.com/OneOfOne/xxhash v1.2.2/go.mod h1:HSdplMjZKSmBqAxg5vPj2TmRDmfkzw+cTzAElWljhcU=
 github.com/Pylons-tech/pylons_sdk v0.0.0-20200511170117-d45f1691db20 h1:Y2zFcNb8FbDzr4DHL4XSBr/sBd/4ta4ooChLVMCSJ+I=
 github.com/Pylons-tech/pylons_sdk v0.0.0-20200511170117-d45f1691db20/go.mod h1:/N+ceEi9F9vQS6OrU8jXkwes7/gmiINDgOs24C1QXs4=
+github.com/Pylons-tech/pylons_sdk v0.0.0-20200521031737-fe82d2297a0e h1:aBCZRRyqnu6fVWA6T09OoupNmvHwP9r+UupDDs3WjtE=
+github.com/Pylons-tech/pylons_sdk v0.0.0-20200521031737-fe82d2297a0e/go.mod h1:/N+ceEi9F9vQS6OrU8jXkwes7/gmiINDgOs24C1QXs4=
 github.com/VividCortex/gohistogram v1.0.0 h1:6+hBz+qvs0JOrrNhhmR7lFxo5sINxBCGXrdtl/UvroE=
 github.com/VividCortex/gohistogram v1.0.0/go.mod h1:Pf5mBqqDxYaXu3hDrrU+w6nw50o/4+TcAqDqk/vUH7g=
 github.com/Workiva/go-datastructures v1.0.50/go.mod h1:Z+F2Rca0qCsVYDS8z7bAGm8f3UkzuWYS/oBZz5a7VVA=
