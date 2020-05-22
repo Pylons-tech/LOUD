@@ -27,7 +27,6 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/tendermint/tendermint/crypto/secp256k1"
 	"github.com/tyler-smith/go-bip39"
-	"gopkg.in/yaml.v2"
 )
 
 var LOUD_CBNAME = "Legend of Undead Dragon v0.1.0-1589853709"
@@ -96,42 +95,17 @@ var AutomateInput bool = false
 var AutomateRunCnt int = 0
 
 func init() {
-	args := os.Args
+	cfg, cferr := cf.ReadConfig()
+	useLocalDm = cfg.Terminal.UseLocalDm
+	useRestTx = cfg.Terminal.UseRestTx
+	AutomateInput = cfg.Terminal.AutomateInput
 
-	if len(args) > 1 {
-		for _, arg := range args[2:len(args)] {
-			switch arg {
-			case "-locald":
-				useLocalDm = true
-			case "-userest":
-				useRestTx = true
-			case "-automate":
-				AutomateInput = true
-			}
-		}
-	}
-
-	cfgFileName := "config.yml"
-	if useLocalDm {
-		cfgFileName = "config_local.yml"
-	}
-
-	var cfg cf.Config
-	configf, err := os.Open(cfgFileName)
-	if err == nil {
-		defer configf.Close()
-
-		decoder := yaml.NewDecoder(configf)
-		err = decoder.Decode(&cfg)
-		if err == nil {
-			restEndpoint = cfg.SDK.RestEndpoint
-			customNode = cfg.SDK.CliEndpoint
-			maxWaitBlock = cfg.SDK.MaxWaitBlock
-		} else {
-			log.Fatal("Couldn't parse config file cfgFileName=", cfgFileName)
-		}
+	if cferr == nil {
+		restEndpoint = cfg.SDK.RestEndpoint
+		customNode = cfg.SDK.CliEndpoint
+		maxWaitBlock = cfg.SDK.MaxWaitBlock
 	} else {
-		log.Fatal("Couldn't read file cfgFileName=", cfgFileName)
+		log.Fatal("Couldn't load configuration file, log=\"%+v\"", cferr)
 	}
 
 	pylonSDK.CLIOpts.CustomNode = customNode
