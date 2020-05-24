@@ -11,6 +11,7 @@ import (
 
 const (
 	SEL_CMD           = "Select ( ↵ )"
+	UPDOWN_CMD        = "Table navigation (↑↓)"
 	GO_ON_ENTER_CMD   = "Go on ( ↵ )"
 	FINISH_ENTER_CMD  = "Finish Enter ( ↵ )"
 	GO_BACK_CMD       = "Go back ( ⌫ ) - Backspace Key"
@@ -21,6 +22,7 @@ const (
 func (tl TextLines) appendSelectGoBackCmds() TextLines {
 	return tl.appendT(
 		SEL_CMD,
+		UPDOWN_CMD,
 		GO_BACK_CMD)
 }
 
@@ -193,10 +195,7 @@ func (screen *GameScreen) renderUserCommands() {
 		CR8_SELLCHR_TRDREQ_SEL_CHR,
 		CR8_SELLITM_TRDREQ_SEL_ITEM,
 		CR8_BUYITM_TRDREQ_SEL_ITEM:
-		infoLines = infoLines.
-			appendT(
-				SEL_CMD,
-				GO_BACK_CMD)
+		infoLines = infoLines.appendSelectGoBackCmds()
 	case SEL_RENAME_CHAR:
 		infoLines = infoLines.
 			appendCustomFontSelectCmdsScreenCharacters(screen).
