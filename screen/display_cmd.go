@@ -145,6 +145,13 @@ func (screen *GameScreen) renderUserCommands() {
 				infoLines[2].font = BLUE_BOLD
 			}
 		}
+		if screen.user.GetLocation() == loud.HOME {
+			if len(infoLines) > 1 {
+				// make it grey when no character's there
+				infoLines[1].content += ": " + loud.Sprintf("no character!")
+				infoLines[1].font = GREY
+			}
+		}
 	case SHW_LOUD_BUY_TRDREQS:
 		infoLines = infoLines.
 			appendT(
