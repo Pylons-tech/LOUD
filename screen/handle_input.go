@@ -70,6 +70,11 @@ func (screen *GameScreen) HandleInputKeyHomeEntryPoint(input termbox.Event) bool
 	}
 
 	if newStus, ok := tarStusMap[Key]; ok {
+		if newStus == SEL_RENAME_CHAR && len(screen.user.InventoryCharacters()) == 0 {
+			screen.actionText = loud.Sprintf("You need a character for this action!")
+			screen.Render()
+			return true
+		}
 		screen.SetScreenStatus(newStus)
 		switch newStus {
 		case SEL_ACTIVE_CHAR, SEL_RENAME_CHAR:

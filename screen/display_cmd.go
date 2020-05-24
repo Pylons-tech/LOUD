@@ -146,7 +146,7 @@ func (screen *GameScreen) renderUserCommands() {
 			}
 		}
 		if screen.user.GetLocation() == loud.HOME {
-			if len(infoLines) > 1 {
+			if len(infoLines) > 1 && len(screen.user.InventoryCharacters()) == 0 {
 				// make it grey when no character's there
 				infoLines[1].content += ": " + loud.Sprintf("no character!")
 				infoLines[1].font = GREY
