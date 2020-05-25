@@ -664,5 +664,8 @@
   },
   "help Support": {
     "one": "Contact loud@pylons.tech for anything about LOUD game."
+  },
+  "use arrows for more": {
+    "one": "use arrows for more"
   }
 }
