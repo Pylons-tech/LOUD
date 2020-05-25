@@ -19,7 +19,7 @@
     "ExtraInfo":"",
     "Sender":"eugen",
     "Name": "LOUD's item sell recipe",
-    "CookbookName": "Legend of Undead Dragon v0.1.0-1589853709",
+    "CookbookID": "LOUD-v0.1.0-1589853709",
     "Description": "this recipe is used to sell an item.",
     "BlockInterval":"0"
 }

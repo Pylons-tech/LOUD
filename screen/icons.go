@@ -44,6 +44,8 @@ func NumberOfSpaces(message string) int {
 		"🌊":  "xx", // Ice special
 		"🔥":  "xx", // Fire special
 		"🥗":  "xx", // Acid special
+		"↵":  "x",  // Enter key
+		"⌫":  "x",  // backspace key
 	}
 	for k, v := range customUnicodes {
 		message = strings.ReplaceAll(message, k, v)

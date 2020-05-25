@@ -13,6 +13,7 @@ import (
 
 	"github.com/nsf/termbox-go"
 
+	cf "github.com/Pylons-tech/LOUD/config"
 	data "github.com/Pylons-tech/LOUD/data"
 	"github.com/Pylons-tech/LOUD/log"
 	screen "github.com/Pylons-tech/LOUD/screen"
@@ -60,7 +61,11 @@ func SetupScreenAndEvents(world data.World, logFile *os.File) {
 	log.Println("setting up screen and events")
 
 	tick := time.Tick(300 * time.Millisecond)
-	regRefreshTick := time.Tick(5 * time.Second)
+	config, cferr := cf.ReadConfig()
+	if cferr != nil {
+		log.Fatal("Couldn't load configuration file, log=\"%+v\"", cferr)
+	}
+	regRefreshTick := time.Tick(time.Duration(config.App.DaemonTimeoutCommit) * time.Second)
 
 	if data.AutomateInput {
 		screenInstance.SetScreenStatus(screen.RSLT_SWITCH_USER)

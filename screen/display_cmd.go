@@ -11,6 +11,7 @@ import (
 
 const (
 	SEL_CMD           = "Select ( ↵ )"
+	UPDOWN_CMD        = "Table navigation (↑↓)"
 	GO_ON_ENTER_CMD   = "Go on ( ↵ )"
 	FINISH_ENTER_CMD  = "Finish Enter ( ↵ )"
 	GO_BACK_CMD       = "Go back ( ⌫ ) - Backspace Key"
@@ -21,6 +22,7 @@ const (
 func (tl TextLines) appendSelectGoBackCmds() TextLines {
 	return tl.appendT(
 		SEL_CMD,
+		UPDOWN_CMD,
 		GO_BACK_CMD)
 }
 
@@ -145,6 +147,13 @@ func (screen *GameScreen) renderUserCommands() {
 				infoLines[2].font = BLUE_BOLD
 			}
 		}
+		if screen.user.GetLocation() == loud.HOME {
+			if len(infoLines) > 1 && len(screen.user.InventoryCharacters()) == 0 {
+				// make it grey when no character's there
+				infoLines[1].content += ": " + loud.Sprintf("no character!")
+				infoLines[1].font = GREY
+			}
+		}
 	case SHW_LOUD_BUY_TRDREQS:
 		infoLines = infoLines.
 			appendT(
@@ -186,10 +195,7 @@ func (screen *GameScreen) renderUserCommands() {
 		CR8_SELLCHR_TRDREQ_SEL_CHR,
 		CR8_SELLITM_TRDREQ_SEL_ITEM,
 		CR8_BUYITM_TRDREQ_SEL_ITEM:
-		infoLines = infoLines.
-			appendT(
-				SEL_CMD,
-				GO_BACK_CMD)
+		infoLines = infoLines.appendSelectGoBackCmds()
 	case SEL_RENAME_CHAR:
 		infoLines = infoLines.
 			appendCustomFontSelectCmdsScreenCharacters(screen).

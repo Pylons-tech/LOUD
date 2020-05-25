@@ -139,9 +139,9 @@ func formatItem(item loud.Item) string {
 	if item.Level > 0 {
 		itemStr += fmt.Sprintf(" Lv%d", item.Level)
 	}
-	if item.Attack > 0 {
-		itemStr += fmt.Sprintf(" attack=%d", item.Attack)
-	}
+	// if item.Attack > 0 {
+	// 	itemStr += fmt.Sprintf(" attack=%d", item.Attack)
+	// }
 	return itemStr
 }
 
@@ -186,10 +186,10 @@ func formatItemSpec(itemSpec loud.ItemSpec) string {
 	if len(lvlStr) > 0 {
 		itemStr += fmt.Sprintf(" Lv%s", lvlStr)
 	}
-	attackStr := formatIntRange(itemSpec.Attack)
-	if len(attackStr) > 0 {
-		itemStr += fmt.Sprintf(" attack=%s", attackStr)
-	}
+	// attackStr := formatIntRange(itemSpec.Attack)
+	// if len(attackStr) > 0 {
+	// 	itemStr += fmt.Sprintf(" attack=%s", attackStr)
+	// }
 	return itemStr
 }
 
