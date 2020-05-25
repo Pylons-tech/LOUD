@@ -337,7 +337,7 @@ func (screen *GameScreen) MoveToNextStep() {
 		RSLT_RENAME_CHAR:               SEL_RENAME_CHAR,
 		RSLT_SEL_ACT_CHAR:              SEL_ACTIVE_CHAR,
 		RSLT_BUYITM:                    SEL_BUYITM,
-		RSLT_BUYCHR:                    SEL_BUYCHR,
+		RSLT_BUYCHR:                    SEL_ACTIVE_CHAR,
 		RSLT_SELLITM:                   SEL_SELLITM,
 		RSLT_UPGITM:                    SEL_UPGITM,
 	}
@@ -350,6 +350,9 @@ func (screen *GameScreen) MoveToNextStep() {
 		} else if nextStatus == CONFIRM_FIGHT_GIANT && activeCharacter.Special != loud.NO_SPECIAL {
 			// go back to forest entrypoint when Special is not empty
 			screen.SetScreenStatus(SHW_LOCATION)
+		} else if nextStatus == SEL_ACTIVE_CHAR {
+			screen.user.SetLocation(loud.HOME)
+			screen.SetScreenStatus(nextStatus)
 		} else {
 			screen.SetScreenStatus(nextStatus)
 		}
