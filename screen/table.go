@@ -123,7 +123,7 @@ func (screen *GameScreen) renderITTable(header string, th string, itemSlice inte
 
 	tableLines := []string{}
 	tableLines = append(tableLines, fmtFunc(fillSpace("╭────────────────────────────────────────────────────╮", width)))
-	tableLines = append(tableLines, screen.renderItemTableLine(th, REGULAR, width))
+	tableLines = append(tableLines, screen.renderItemTableLine(-1, th, REGULAR, width))
 	if startLine == 0 {
 		tableLines = append(tableLines, fmtFunc(fillSpace("├────────────────────────────────────────────────────┤", width)))
 	} else {
@@ -134,44 +134,52 @@ func (screen *GameScreen) renderITTable(header string, th string, itemSlice inte
 		switch item.(type) {
 		case loud.Item:
 			itemT := item.(loud.Item)
-			font := screen.getFontByActiveIndex(startLine + li)
+			index := startLine + li
+			font := screen.getFontByActiveIndex(index)
 			if fontFunc != nil {
 				font = fontFunc(startLine+li, item)
 			}
 			line = screen.renderItemTableLine(
+				index,
 				fmt.Sprintf("%s  ", formatItem(itemT)),
 				font,
 				width,
 			)
 		case loud.Character:
 			itemT := item.(loud.Character)
-			font := screen.getFontByActiveIndex(startLine + li)
+			index := startLine + li
+			font := screen.getFontByActiveIndex(index)
 			if fontFunc != nil {
 				font = fontFunc(startLine+li, item)
 			}
 			line = screen.renderItemTableLine(
+				index,
 				fmt.Sprintf("%s  ", formatCharacter(itemT)),
 				font,
 				width,
 			)
 		case loud.ItemSpec:
 			itemT := item.(loud.ItemSpec)
-			font := screen.getFontByActiveIndex(startLine + li)
+			index := startLine + li
+			font := screen.getFontByActiveIndex(index)
 			if fontFunc != nil {
 				font = fontFunc(startLine+li, item)
 			}
 			line = screen.renderItemTableLine(
+				index,
 				fmt.Sprintf("%s  ", formatItemSpec(itemT)),
 				font,
 				width,
 			)
 		case loud.CharacterSpec:
 			itemT := item.(loud.CharacterSpec)
-			font := screen.getFontByActiveIndex(startLine + li)
+			index := startLine + li
+			font := screen.getFontByActiveIndex(index)
 			if fontFunc != nil {
 				font = fontFunc(startLine+li, item)
 			}
 			line = screen.renderItemTableLine(
+				index,
 				fmt.Sprintf("%s  ", formatCharacterSpec(itemT)),
 				font,
 				width,

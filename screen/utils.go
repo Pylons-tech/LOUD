@@ -300,8 +300,12 @@ func (screen *GameScreen) renderTRLine(text1 string, text2 string, text3 string,
 	return onColor(fillSpace(calcText, width))
 }
 
-func (screen *GameScreen) renderItemTableLine(text1 string, font FontType, width int) string {
-	calcText := "│" + centerText(loud.Localize(text1), " ", 52) + "│"
+func (screen *GameScreen) renderItemTableLine(index int, text1 string, font FontType, width int) string {
+	text := loud.Localize(text1)
+	if index >= 0 {
+		text = fmt.Sprintf(" %d) %s", index+1, text)
+	}
+	calcText := "│" + fillSpace(text, 52) + "│"
 	onColor := screen.getFont(font)
 	return onColor(fillSpace(calcText, width))
 }
