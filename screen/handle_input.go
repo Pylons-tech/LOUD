@@ -76,14 +76,6 @@ func (screen *GameScreen) HandleInputKeyHomeEntryPoint(input termbox.Event) bool
 			return true
 		}
 		screen.SetScreenStatus(newStus)
-		switch newStus {
-		case SEL_ACTIVE_CHAR, SEL_RENAME_CHAR:
-			activeLine := screen.user.GetActiveCharacterIndex()
-			if len(screen.user.InventoryCharacters()) > 0 && activeLine == -1 {
-				activeLine = 0
-			}
-			screen.activeLine = activeLine
-		}
 		screen.Render()
 		return true
 	} else {
@@ -111,17 +103,6 @@ func (screen *GameScreen) HandleInputKeyPylonsCentralEntryPoint(input termbox.Ev
 			})
 		} else {
 			screen.SetScreenStatus(newStus)
-			switch newStus {
-			case SEL_BUYCHR:
-				screen.activeLine = 0
-			case SHW_LOUD_BUY_TRDREQS,
-				SHW_LOUD_SELL_TRDREQS,
-				SHW_BUYITM_TRDREQS,
-				SHW_SELLITM_TRDREQS,
-				SHW_BUYCHR_TRDREQS,
-				SHW_SELLCHR_TRDREQS:
-				screen.activeLine = 0
-			}
 			screen.Render()
 		}
 		return true

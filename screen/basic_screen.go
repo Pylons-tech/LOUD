@@ -208,6 +208,55 @@ func (screen *GameScreen) SetScreenStatus(newStatus ScreenStatus) {
 		if resLen == 0 { // it means character is dead
 			screen.user.SetActiveCharacterIndex(-1)
 		}
+	case SEL_ACTIVE_CHAR, SEL_RENAME_CHAR:
+		activeLine := screen.user.GetActiveCharacterIndex()
+		if len(screen.user.InventoryCharacters()) > 0 && activeLine == -1 {
+			activeLine = 0
+		}
+		screen.activeLine = activeLine
+	case SEL_BUYCHR:
+		screen.activeLine = 0
+	case SHW_LOUD_BUY_TRDREQS:
+		// TODO should have activeLine modifier by the array and use this across the app
+		if len(loud.BuyTrdReqs) > 0 && screen.activeLine == -1 {
+			screen.activeLine = 0
+		}
+	case SHW_LOUD_SELL_TRDREQS:
+		if len(loud.SellTrdReqs) > 0 && screen.activeLine == -1 {
+			screen.activeLine = 0
+		}
+	case SHW_BUYITM_TRDREQS:
+		if len(loud.ItemBuyTrdReqs) > 0 && screen.activeLine == -1 {
+			screen.activeLine = 0
+		}
+	case SHW_SELLITM_TRDREQS:
+		if len(loud.ItemSellTrdReqs) > 0 && screen.activeLine == -1 {
+			screen.activeLine = 0
+		}
+	case SHW_BUYCHR_TRDREQS:
+		if len(loud.CharacterBuyTrdReqs) > 0 && screen.activeLine == -1 {
+			screen.activeLine = 0
+		}
+	case SHW_SELLCHR_TRDREQS:
+		if len(loud.CharacterSellTrdReqs) > 0 && screen.activeLine == -1 {
+			screen.activeLine = 0
+		}
+	case CR8_BUYCHR_TRDREQ_SEL_CHR:
+		if len(loud.WorldCharacterSpecs) > 0 && screen.activeLine == -1 {
+			screen.activeLine = 0
+		}
+	case CR8_SELLCHR_TRDREQ_SEL_CHR:
+		if len(screen.user.InventoryCharacters()) > 0 && screen.activeLine == -1 {
+			screen.activeLine = 0
+		}
+	case CR8_BUYITM_TRDREQ_SEL_ITEM:
+		if len(loud.WorldItemSpecs) > 0 && screen.activeLine == -1 {
+			screen.activeLine = 0
+		}
+	case CR8_SELLITM_TRDREQ_SEL_ITEM:
+		if len(screen.user.InventoryItems()) > 0 && screen.activeLine == -1 {
+			screen.activeLine = 0
+		}
 	}
 }
 
