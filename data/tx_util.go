@@ -556,6 +556,10 @@ func GetItemOutputFromActiveItem(activeItem Item) (types.ItemList, error) {
 }
 
 func GetItemInputsFromCharacterSpec(chspec CharacterSpec) types.ItemInputList {
+	// TODO should make this to express all the required fields like GiantKill, SpecialDragonKill, UndeadDragonKill
+	// But for now expressing only XP, level, Name and Special as it's the main requirement.
+	// If possible, we can try removing XP, and level too.
+
 	var itemInputs types.ItemInputList
 
 	ii := types.ItemInput{
@@ -568,6 +572,10 @@ func GetItemInputsFromCharacterSpec(chspec CharacterSpec) types.ItemInputList {
 		Strings: types.StringInputParamList{
 			types.StringInputParam{Key: "Name", Value: chspec.Name},
 		},
+	}
+	if chspec.Special != NO_SPECIAL {
+		ii.Longs = append(ii.Longs, types.LongInputParam{
+			Key: "Special", MinValue: chspec.Special, MaxValue: chspec.Special})
 	}
 	itemInputs = append(itemInputs, ii)
 	return itemInputs

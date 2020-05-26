@@ -168,6 +168,10 @@ func SyncFromNode(user User) {
 						IsMyTrdReq: isMyTrdReq,
 					})
 				} else if tradeItem.ExtraInfo == CHAR_BUYREQ_TRDINFO { // character buy request created by loud game
+					Special := NO_SPECIAL
+					if len(firstItemInput.Longs) > 1 {
+						Special = firstItemInput.Longs[1].MinValue
+					}
 					MinXP := 0.0
 					MaxXP := 0.0
 					if len(firstItemInput.Doubles) > 0 {
@@ -175,9 +179,10 @@ func SyncFromNode(user User) {
 						MaxXP = firstItemInput.Doubles[0].MaxValue.Float()
 					}
 					tCharacter := CharacterSpec{
-						Level: [2]int{MinLevel, MaxLevel},
-						Name:  Name,
-						XP:    [2]float64{MinXP, MaxXP},
+						Special: Special,
+						Level:   [2]int{MinLevel, MaxLevel},
+						Name:    Name,
+						XP:      [2]float64{MinXP, MaxXP},
 					}
 					nBuyCharacterTrdReqs = append(nBuyCharacterTrdReqs, CharacterBuyTrdReq{
 						ID:         tradeItem.ID,
@@ -194,6 +199,11 @@ func SyncFromNode(user User) {
 				}
 				level, _ := firstItemOutput.FindLong("level")
 				name, _ := firstItemOutput.FindString("Name")
+				special, _ := firstItemOutput.FindLong("Special")
+				GiantKill, _ := firstItemOutput.FindLong("GiantKill")
+				SpecialDragonKill, _ := firstItemOutput.FindLong("SpecialDragonKill")
+				UndeadDragonKill, _ := firstItemOutput.FindLong("UndeadDragonKill")
+
 				if tradeItem.ExtraInfo == ITEM_SELREQ_TRDINFO {
 					tItem := Item{
 						ID:    firstItemOutput.ID,
@@ -209,10 +219,14 @@ func SyncFromNode(user User) {
 				} else if tradeItem.ExtraInfo == CHAR_SELREQ_TRDINFO { // character sell request created by loud game
 					XP, _ := firstItemOutput.FindDouble("XP")
 					tCharacter := Character{
-						ID:    firstItemOutput.ID,
-						Level: level,
-						Name:  name,
-						XP:    XP,
+						ID:                firstItemOutput.ID,
+						Level:             level,
+						Name:              name,
+						XP:                XP,
+						Special:           special,
+						GiantKill:         GiantKill,
+						SpecialDragonKill: SpecialDragonKill,
+						UndeadDragonKill:  UndeadDragonKill,
 					}
 					nSellCharacterTrdReqs = append(nSellCharacterTrdReqs, CharacterSellTrdReq{
 						ID:         tradeItem.ID,

@@ -36,10 +36,11 @@ type Character struct {
 	LastUpdate        int64
 }
 type CharacterSpec struct {
-	Name  string `json:""`
-	Level [2]int
-	Price int
-	XP    [2]float64
+	Special int
+	Name    string `json:""`
+	Level   [2]int
+	Price   int
+	XP      [2]float64
 }
 
 const (
@@ -205,14 +206,27 @@ var WorldItemSpecs = []ItemSpec{
 
 var WorldCharacterSpecs = []CharacterSpec{
 	CharacterSpec{
-		Name:  "Lion",
+		Name:  "LionBaby",
 		Level: [2]int{1, 2},
-		XP:    [2]float64{1, 1000},
+		XP:    [2]float64{1, 1000000},
 	},
 	CharacterSpec{
-		Name:  "Liger",
-		Level: [2]int{2, 1000},
-		XP:    [2]float64{1, 1000},
+		Special: FIRE_SPECIAL,
+		Name:    "FireBaby",
+		Level:   [2]int{1, 1000},
+		XP:      [2]float64{1, 1000000},
+	},
+	CharacterSpec{
+		Special: ICE_SPECIAL,
+		Name:    "IceBaby",
+		Level:   [2]int{1, 1000},
+		XP:      [2]float64{1, 1000000},
+	},
+	CharacterSpec{
+		Special: ACID_SPECIAL,
+		Name:    "AcidBaby",
+		Level:   [2]int{1, 1000},
+		XP:      [2]float64{1, 1000000},
 	},
 }
 

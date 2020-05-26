@@ -43,6 +43,7 @@ func (tl TextLines) appendT(elems ...string) TextLines {
 }
 
 func truncateRight(message string, width int) string {
+	// TODO this function should be modified so that special character and killer badget truncate to work as expected, it's overflowing the screen now
 	if NumberOfSpaces(message) < width {
 		fmtString := fmt.Sprintf("%%-%vs", width)
 
@@ -57,6 +58,7 @@ func truncateRight(message string, width int) string {
 }
 
 func truncateLeft(message string, width int) string {
+	// TODO this function should be modified so that special character and killer badget truncate to work as expected, it's overflowing the screen now
 	if NumberOfSpaces(message) < width {
 		fmtString := fmt.Sprintf("%%-%vs", width)
 
@@ -67,6 +69,7 @@ func truncateLeft(message string, width int) string {
 }
 
 func justifyRight(message string, width int) string {
+	// TODO this function should be modified so that special character and killer badget truncate to work as expected, it's overflowing the screen now
 	if NumberOfSpaces(message) < width {
 		fmtString := fmt.Sprintf("%%%vs", width)
 
@@ -77,6 +80,7 @@ func justifyRight(message string, width int) string {
 }
 
 func centerText(message, pad string, width int) string {
+	// TODO this function should be modified so that special character and killer badget truncate to work as expected, it's overflowing the screen now
 	if NumberOfSpaces(message) > width {
 		return truncateRight(message, width)
 	}
@@ -100,6 +104,7 @@ func fillSpace(message string, width int) string {
 	msgLen := NumberOfSpaces(message)
 	// msgLen := len(message)
 	if msgLen > width {
+		// TODO this should be not -3?
 		return truncateRight(message, width-3)
 	}
 	leftover := width - msgLen
@@ -229,7 +234,9 @@ func formatBigNumber(number int) string {
 
 func formatCharacter(ch loud.Character) string {
 	chStr := loud.Localize(ch.Name)
-	chStr = formatSpecial(ch.Special) + " " + chStr // adding space for Sierra issue
+	if ch.Special != loud.NO_SPECIAL {
+		chStr = formatSpecial(ch.Special) + " " + chStr // adding space for Sierra issue
+	}
 	if ch.GiantKill > 0 {
 		chStr = fmt.Sprintf("🗿 x%d %s", ch.GiantKill, chStr)
 	}
@@ -264,6 +271,10 @@ func formatCharacterP(ch *loud.Character) string {
 
 func formatCharacterSpec(chs loud.CharacterSpec) string {
 	chStr := loud.Localize(chs.Name)
+	if chs.Special != loud.NO_SPECIAL {
+		chStr = formatSpecial(chs.Special) + " " + chStr // adding space for Sierra issue
+	}
+
 	lvlStr := formatIntRange(chs.Level)
 	if len(lvlStr) > 0 {
 		chStr += fmt.Sprintf(" Lv%s", lvlStr)
