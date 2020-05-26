@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io"
 	"reflect"
+	"strings"
 
 	"os"
 
@@ -42,47 +43,87 @@ func (tl TextLines) appendT(elems ...string) TextLines {
 	return append(tl, elemsT...)
 }
 
+func SliceFromStart(text string, width int) string {
+	sliceLen := 0
+	for {
+		newSliceLen := sliceLen
+		startWithCustomUnicode := false
+		for k, v := range customUnicodes {
+			if strings.HasPrefix(text[sliceLen:len(text)], k) {
+				newSliceLen += len(v)
+				startWithCustomUnicode = true
+				break
+			}
+		}
+		if !startWithCustomUnicode {
+			newSliceLen += 1
+		}
+		if newSliceLen <= width {
+			sliceLen = newSliceLen
+		}
+		if newSliceLen >= width || newSliceLen >= len(text) {
+			break
+		}
+	}
+	return text[:sliceLen]
+}
+
+func SliceFromEnd(text string, width int) string {
+	sliceLen := 0
+	for {
+		newSliceLen := sliceLen
+		endWithCustomUnicode := false
+		for k, v := range customUnicodes {
+			if strings.HasSuffix(text[:len(text)-sliceLen], k) {
+				newSliceLen += len(v)
+				endWithCustomUnicode = true
+				break
+			}
+		}
+		if !endWithCustomUnicode {
+			newSliceLen += 1
+		}
+		if newSliceLen <= width {
+			sliceLen = newSliceLen
+		}
+		if newSliceLen >= width || newSliceLen >= len(text) {
+			break
+		}
+	}
+	return text[len(text)-sliceLen : len(text)]
+}
+
 func truncateRight(message string, width int) string {
-	// TODO this function should be modified so that special character and killer badget truncate to work as expected, it's overflowing the screen now
 	if NumberOfSpaces(message) < width {
 		fmtString := fmt.Sprintf("%%-%vs", width)
 
 		return fmt.Sprintf(fmtString, message)
 	}
-	runeMsg := []rune(message)
-	runeMsgLen := len(runeMsg)
-	if runeMsgLen > width {
-		runeMsgLen = width
-	}
-	return string(runeMsg[0:runeMsgLen-1]) + ellipsis
+	return fillSpace(SliceFromStart(message, width-1)+ellipsis, width)
 }
 
 func truncateLeft(message string, width int) string {
-	// TODO this function should be modified so that special character and killer badget truncate to work as expected, it's overflowing the screen now
 	if NumberOfSpaces(message) < width {
 		fmtString := fmt.Sprintf("%%-%vs", width)
 
 		return fmt.Sprintf(fmtString, message)
 	}
-	strLen := NumberOfSpaces(message)
-	return ellipsis + string([]rune(message)[strLen-width:strLen-1])
+	return fillSpaceLeft(ellipsis+SliceFromEnd(message, width-1), width)
 }
 
 func justifyRight(message string, width int) string {
-	// TODO this function should be modified so that special character and killer badget truncate to work as expected, it's overflowing the screen now
 	if NumberOfSpaces(message) < width {
 		fmtString := fmt.Sprintf("%%%vs", width)
 
 		return fmt.Sprintf(fmtString, message)
 	}
-	strLen := NumberOfSpaces(message)
-	return ellipsis + string([]rune(message)[strLen-width:strLen-1])
+	return fillSpaceLeft(ellipsis+SliceFromEnd(message, width-1), width)
 }
 
 func centerText(message, pad string, width int) string {
 	// TODO this function should be modified so that special character and killer badget truncate to work as expected, it's overflowing the screen now
 	if NumberOfSpaces(message) > width {
-		return truncateRight(message, width)
+		return fillSpace(SliceFromStart(message, width-1)+ellipsis, width)
 	}
 	leftover := width - NumberOfSpaces(message)
 	left := leftover / 2
@@ -100,12 +141,10 @@ func centerText(message, pad string, width int) string {
 	return fmt.Sprintf("%s%s%s", string([]rune(leftString)[0:left]), message, string([]rune(leftString)[0:right]))
 }
 
-func fillSpace(message string, width int) string {
+func fillSpaceLeft(message string, width int) string {
 	msgLen := NumberOfSpaces(message)
-	// msgLen := len(message)
 	if msgLen > width {
-		// TODO this should be not -3?
-		return truncateRight(message, width-3)
+		return fillSpace(SliceFromStart(message, width-1)+ellipsis, width)
 	}
 	leftover := width - msgLen
 
@@ -114,7 +153,22 @@ func fillSpace(message string, width int) string {
 	for fillLen < leftover {
 		fillString += " "
 		fillLen = NumberOfSpaces(fillString)
-		// fillLen = len(rightString)
+	}
+	return fillString + message
+}
+
+func fillSpace(message string, width int) string {
+	msgLen := NumberOfSpaces(message)
+	if msgLen > width {
+		return fillSpace(SliceFromStart(message, width-1)+ellipsis, width)
+	}
+	leftover := width - msgLen
+
+	fillString := ""
+	fillLen := 0
+	for fillLen < leftover {
+		fillString += " "
+		fillLen = NumberOfSpaces(fillString)
 	}
 	return message + fillString
 }

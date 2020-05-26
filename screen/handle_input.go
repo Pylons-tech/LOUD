@@ -2,6 +2,7 @@ package screen
 
 import (
 	"fmt"
+	"regexp"
 	"strconv"
 	"strings"
 	"time"
@@ -738,6 +739,13 @@ func (screen *GameScreen) HandleTypingModeInputKeys(input termbox.Event) bool {
 		}
 		screen.SetInputTextAndRender(screen.inputText[:lastIdx])
 		return true
+	case termbox.KeySpace:
+		log.Println("Pressed Space")
+		if screen.scrStatus == RENAME_CHAR_ENT_NEWNAME {
+			screen.SetInputTextAndRender(screen.inputText + " ")
+			return true
+		}
+		return false
 	case termbox.KeyEnter:
 		switch screen.scrStatus {
 		case RENAME_CHAR_ENT_NEWNAME:
@@ -853,10 +861,16 @@ func (screen *GameScreen) HandleTypingModeInputKeys(input termbox.Event) bool {
 		iChar := string(input.Ch)
 		Key := strings.ToUpper(iChar)
 		if screen.scrStatus == RENAME_CHAR_ENT_NEWNAME {
-			screen.SetInputTextAndRender(screen.inputText + iChar)
+			// TODO should accept space
+			validNameStr := regexp.MustCompile(`^[a-zA-Z0-9\s$#@!%^&*()]$`)
+			if validNameStr.MatchString(iChar) {
+				screen.SetInputTextAndRender(screen.inputText + iChar)
+				return true
+			}
 		} else if _, err := strconv.Atoi(Key); err == nil {
 			// If user entered number, just use it
 			screen.SetInputTextAndRender(screen.inputText + Key)
+			return true
 		}
 		return false
 	}
