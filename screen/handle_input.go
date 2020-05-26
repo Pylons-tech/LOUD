@@ -861,7 +861,6 @@ func (screen *GameScreen) HandleTypingModeInputKeys(input termbox.Event) bool {
 		iChar := string(input.Ch)
 		Key := strings.ToUpper(iChar)
 		if screen.scrStatus == RENAME_CHAR_ENT_NEWNAME {
-			// TODO should accept space
 			validNameStr := regexp.MustCompile(`^[a-zA-Z0-9\s$#@!%^&*()]$`)
 			if validNameStr.MatchString(iChar) {
 				screen.SetInputTextAndRender(screen.inputText + iChar)

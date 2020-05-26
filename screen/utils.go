@@ -121,7 +121,6 @@ func justifyRight(message string, width int) string {
 }
 
 func centerText(message, pad string, width int) string {
-	// TODO this function should be modified so that special character and killer badget truncate to work as expected, it's overflowing the screen now
 	if NumberOfSpaces(message) > width {
 		return fillSpace(SliceFromStart(message, width-1)+ellipsis, width)
 	}
