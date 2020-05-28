@@ -97,7 +97,17 @@ func (screen *GameScreen) renderUserSituation() {
 			"Buy item requests",
 			[2]string{"Item", "Price (pylon)"},
 			loud.ItemBuyTrdReqs,
-			w, nil)
+			w,
+			func(idx int, request interface{}) FontType {
+				itr := request.(loud.ItemBuyTrdReq)
+				if len(screen.user.GetMatchedItems(itr.TItem)) == 0 {
+					if screen.activeLine == idx {
+						return GREY_BOLD
+					}
+					return GREY
+				}
+				return screen.getFontOfTR(idx, itr.IsMyTrdReq)
+			})
 	case SHW_SELLITM_TRDREQS:
 		infoLines, tableLines = screen.renderITRTable(
 			"Sell item requests",
@@ -135,7 +145,17 @@ func (screen *GameScreen) renderUserSituation() {
 			"Buy character requests",
 			[2]string{"Character", "Price (pylon)"},
 			loud.CharacterBuyTrdReqs,
-			w, nil)
+			w,
+			func(idx int, request interface{}) FontType {
+				itr := request.(loud.CharacterBuyTrdReq)
+				if len(screen.user.GetMatchedCharacters(itr.TCharacter)) == 0 {
+					if screen.activeLine == idx {
+						return GREY_BOLD
+					}
+					return GREY
+				}
+				return screen.getFontOfTR(idx, itr.IsMyTrdReq)
+			})
 	case CR8_BUY_LOUD_TRDREQ_ENT_PYLVAL:
 		desc = loud.Localize("Please enter pylon amount to use (should be integer value)")
 	case CR8_SELL_LOUD_TRDREQ_ENT_PYLVAL:

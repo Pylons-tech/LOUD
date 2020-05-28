@@ -667,5 +667,17 @@
   },
   "use arrows for more": {
     "one": "use arrows for more"
+  },
+  "You don't have enough gold to fulfill this trade.": {
+    "one": "You don't have enough gold to fulfill this trade."
+  },
+  "You don't have enough pylons to fulfill this trade.": {
+    "one": "You don't have enough pylons to fulfill this trade."
+  },
+  "You don't have matched items to fulfill this trade.": {
+    "one": "You don't have matched items to fulfill this trade."
+  },
+  "You don't have matched characters to fulfill this trade.": {
+    "one": "You don't have matched characters to fulfill this trade."
   }
 }

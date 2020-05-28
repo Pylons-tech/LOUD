@@ -152,7 +152,10 @@ func (screen *GameScreen) RunSelectedLoudBuyTrdReq() {
 		screen.SetScreenStatusAndRefresh(RSLT_FULFILL_BUY_LOUD_TRDREQ)
 	} else {
 		screen.activeTrdReq = loud.BuyTrdReqs[screen.activeLine]
-		if screen.activeTrdReq.IsMyTrdReq {
+		if screen.user.GetGold() < screen.activeTrdReq.Amount {
+			screen.actionText = loud.Sprintf("You don't have enough gold to fulfill this trade.")
+			screen.Render()
+		} else if screen.activeTrdReq.IsMyTrdReq {
 			screen.RunTxProcess(W8_CANCEL_TRDREQ, RSLT_CANCEL_TRDREQ, func() (string, error) {
 				return loud.CancelTrade(screen.user, screen.activeTrdReq.ID)
 			})
@@ -170,7 +173,10 @@ func (screen *GameScreen) RunSelectedLoudSellTrdReq() {
 		screen.SetScreenStatusAndRefresh(RSLT_FULFILL_SELL_LOUD_TRDREQ)
 	} else {
 		screen.activeTrdReq = loud.SellTrdReqs[screen.activeLine]
-		if screen.activeTrdReq.IsMyTrdReq {
+		if screen.user.GetPylonAmount() < screen.activeTrdReq.Total {
+			screen.actionText = loud.Sprintf("You don't have enough pylons to fulfill this trade.")
+			screen.Render()
+		} else if screen.activeTrdReq.IsMyTrdReq {
 			screen.RunTxProcess(W8_CANCEL_TRDREQ, RSLT_CANCEL_TRDREQ, func() (string, error) {
 				return loud.CancelTrade(screen.user, screen.activeTrdReq.ID)
 			})
@@ -189,7 +195,10 @@ func (screen *GameScreen) RunSelectedItemBuyTrdReq() {
 	} else {
 		atir := loud.ItemBuyTrdReqs[screen.activeLine]
 		screen.activeItemTrdReq = atir
-		if atir.IsMyTrdReq {
+		if len(screen.user.GetMatchedItems(atir.TItem)) == 0 {
+			screen.actionText = loud.Sprintf("You don't have matched items to fulfill this trade.")
+			screen.Render()
+		} else if atir.IsMyTrdReq {
 			screen.RunTxProcess(W8_CANCEL_TRDREQ, RSLT_CANCEL_TRDREQ, func() (string, error) {
 				return loud.CancelTrade(screen.user, atir.ID)
 			})
@@ -208,7 +217,10 @@ func (screen *GameScreen) RunSelectedItemSellTrdReq() {
 	} else {
 		sstr := loud.ItemSellTrdReqs[screen.activeLine]
 		screen.activeItemTrdReq = sstr
-		if sstr.IsMyTrdReq {
+		if screen.user.GetPylonAmount() < sstr.Price {
+			screen.actionText = loud.Sprintf("You don't have enough pylons to fulfill this trade.")
+			screen.Render()
+		} else if sstr.IsMyTrdReq {
 			screen.RunTxProcess(W8_CANCEL_TRDREQ, RSLT_CANCEL_TRDREQ, func() (string, error) {
 				return loud.CancelTrade(screen.user, sstr.ID)
 			})
@@ -227,7 +239,10 @@ func (screen *GameScreen) RunSelectedCharacterBuyTrdReq() {
 	} else {
 		cbtr := loud.CharacterBuyTrdReqs[screen.activeLine]
 		screen.activeItemTrdReq = cbtr
-		if cbtr.IsMyTrdReq {
+		if len(screen.user.GetMatchedCharacters(cbtr.TCharacter)) == 0 {
+			screen.actionText = loud.Sprintf("You don't have matched characters to fulfill this trade.")
+			screen.Render()
+		} else if cbtr.IsMyTrdReq {
 			screen.RunTxProcess(W8_CANCEL_TRDREQ, RSLT_CANCEL_TRDREQ, func() (string, error) {
 				return loud.CancelTrade(screen.user, cbtr.ID)
 			})
@@ -246,7 +261,10 @@ func (screen *GameScreen) RunSelectedCharacterSellTrdReq() {
 	} else {
 		cstr := loud.CharacterSellTrdReqs[screen.activeLine]
 		screen.activeItemTrdReq = cstr
-		if cstr.IsMyTrdReq {
+		if screen.user.GetPylonAmount() < cstr.Price {
+			screen.actionText = loud.Sprintf("You don't have enough pylons to fulfill this trade.")
+			screen.Render()
+		} else if cstr.IsMyTrdReq {
 			screen.RunTxProcess(W8_CANCEL_TRDREQ, RSLT_CANCEL_TRDREQ, func() (string, error) {
 				return loud.CancelTrade(screen.user, cstr.ID)
 			})

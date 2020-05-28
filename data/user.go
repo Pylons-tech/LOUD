@@ -34,6 +34,8 @@ type User interface {
 	InventoryCharacters() []Character
 	InventoryUpgradableItems() []Item
 	InventorySellableItems() []Item
+	GetMatchedItems(ItemSpec) []Item
+	GetMatchedCharacters(CharacterSpec) []Character
 	GetLocation() UserLocation
 	GetPrivKey() string
 	GetActiveCharacterIndex() int
