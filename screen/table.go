@@ -6,7 +6,7 @@ import (
 	loud "github.com/Pylons-tech/LOUD/data"
 )
 
-func (screen *GameScreen) renderTRTable(requests []loud.TrdReq, width int) ([]string, []string) {
+func (screen *GameScreen) renderTRTable(requests []loud.TrdReq, width int, fontFunc func(int, loud.TrdReq) FontType) ([]string, []string) {
 	if screen.activeLine >= len(requests) {
 		screen.activeLine = len(requests) - 1
 	}
@@ -20,15 +20,17 @@ func (screen *GameScreen) renderTRTable(requests []loud.TrdReq, width int) ([]st
 		tableLines = append(tableLines, screen.regularFont()(fillSpace("├─────↓↓↓↓↓↓↓↓↓──────┼───↓↓↓↓↓↓↓↓↓───┼───↓↓↓↓↓↓↓↓↓───┤", width)))
 	}
 	for li, request := range requests[startLine:endLine] {
+		font := screen.getFontOfTR(startLine+li, request.IsMyTrdReq)
+		if fontFunc != nil {
+			font = fontFunc(startLine+li, request)
+		}
 		tableLines = append(
 			tableLines,
 			screen.renderTRLine(
 				fmt.Sprintf("%.4f", request.Price),
 				fmt.Sprintf("%d", request.Amount),
 				fmt.Sprintf("%d", request.Total),
-				screen.getFontOfTR(startLine+li, request.IsMyTrdReq),
-				width,
-			),
+				font, width),
 		)
 	}
 	if endLine == len(requests) {
@@ -39,7 +41,7 @@ func (screen *GameScreen) renderTRTable(requests []loud.TrdReq, width int) ([]st
 	return []string{}, tableLines
 }
 
-func (screen *GameScreen) renderITRTable(header string, theads [2]string, requestsSlice interface{}, width int) ([]string, []string) {
+func (screen *GameScreen) renderITRTable(header string, theads [2]string, requestsSlice interface{}, width int, fontFunc func(int, interface{}) FontType) ([]string, []string) {
 	requests := InterfaceSlice(requestsSlice)
 
 	infoLines := loud.ChunkText(loud.Localize(header), width)
@@ -64,37 +66,46 @@ func (screen *GameScreen) renderITRTable(header string, theads [2]string, reques
 		line := ""
 		switch request.(type) {
 		case loud.ItemBuyTrdReq:
+			// TODO should automatic formatter by type and reduce duplicate code
 			itr := request.(loud.ItemBuyTrdReq)
+			font := screen.getFontOfTR(startLine+li, itr.IsMyTrdReq)
+			if fontFunc != nil {
+				font = fontFunc(startLine+li, itr)
+			}
 			line = screen.renderItemTrdReqTableLine(
 				fmt.Sprintf("%s  ", formatItemSpec(itr.TItem)),
 				fmt.Sprintf("%d", itr.Price),
-				screen.getFontOfTR(startLine+li, itr.IsMyTrdReq),
-				width,
-			)
+				font, width)
 		case loud.ItemSellTrdReq:
 			itr := request.(loud.ItemSellTrdReq)
+			font := screen.getFontOfTR(startLine+li, itr.IsMyTrdReq)
+			if fontFunc != nil {
+				font = fontFunc(startLine+li, itr)
+			}
 			line = screen.renderItemTrdReqTableLine(
 				fmt.Sprintf("%s  ", formatItem(itr.TItem)),
 				fmt.Sprintf("%d", itr.Price),
-				screen.getFontOfTR(startLine+li, itr.IsMyTrdReq),
-				width,
-			)
+				font, width)
 		case loud.CharacterBuyTrdReq:
 			itr := request.(loud.CharacterBuyTrdReq)
+			font := screen.getFontOfTR(startLine+li, itr.IsMyTrdReq)
+			if fontFunc != nil {
+				font = fontFunc(startLine+li, itr)
+			}
 			line = screen.renderItemTrdReqTableLine(
 				fmt.Sprintf("%s  ", formatCharacterSpec(itr.TCharacter)),
 				fmt.Sprintf("%d", itr.Price),
-				screen.getFontOfTR(startLine+li, itr.IsMyTrdReq),
-				width,
-			)
+				font, width)
 		case loud.CharacterSellTrdReq:
 			itr := request.(loud.CharacterSellTrdReq)
+			font := screen.getFontOfTR(startLine+li, itr.IsMyTrdReq)
+			if fontFunc != nil {
+				font = fontFunc(startLine+li, itr)
+			}
 			line = screen.renderItemTrdReqTableLine(
 				fmt.Sprintf("%s  ", formatCharacter(itr.TCharacter)),
 				fmt.Sprintf("%d", itr.Price),
-				screen.getFontOfTR(startLine+li, itr.IsMyTrdReq),
-				width,
-			)
+				font, width)
 		}
 		tableLines = append(tableLines, line)
 	}

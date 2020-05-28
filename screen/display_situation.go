@@ -67,33 +67,75 @@ func (screen *GameScreen) renderUserSituation() {
 			}
 		}
 	case SHW_LOUD_BUY_TRDREQS:
-		infoLines, tableLines = screen.renderTRTable(loud.BuyTrdReqs, w)
+		infoLines, tableLines = screen.renderTRTable(
+			loud.BuyTrdReqs,
+			w,
+			func(idx int, request loud.TrdReq) FontType {
+				if screen.user.GetGold() < request.Amount {
+					if screen.activeLine == idx {
+						return GREY_BOLD
+					}
+					return GREY
+				}
+				return screen.getFontOfTR(idx, request.IsMyTrdReq)
+			})
 	case SHW_LOUD_SELL_TRDREQS:
-		infoLines, tableLines = screen.renderTRTable(loud.SellTrdReqs, w)
+		infoLines, tableLines = screen.renderTRTable(
+			loud.SellTrdReqs,
+			w,
+			func(idx int, request loud.TrdReq) FontType {
+				if screen.user.GetPylonAmount() < request.Total {
+					if screen.activeLine == idx {
+						return GREY_BOLD
+					}
+					return GREY
+				}
+				return screen.getFontOfTR(idx, request.IsMyTrdReq)
+			})
 	case SHW_BUYITM_TRDREQS:
 		infoLines, tableLines = screen.renderITRTable(
 			"Buy item requests",
 			[2]string{"Item", "Price (pylon)"},
 			loud.ItemBuyTrdReqs,
-			w)
+			w, nil)
 	case SHW_SELLITM_TRDREQS:
 		infoLines, tableLines = screen.renderITRTable(
 			"Sell item requests",
 			[2]string{"Item", "Price (pylon)"},
 			loud.ItemSellTrdReqs,
-			w)
+			w,
+			func(idx int, request interface{}) FontType {
+				itr := request.(loud.ItemSellTrdReq)
+				if screen.user.GetPylonAmount() < itr.Price {
+					if screen.activeLine == idx {
+						return GREY_BOLD
+					}
+					return GREY
+				}
+				return screen.getFontOfTR(idx, itr.IsMyTrdReq)
+			})
 	case SHW_SELLCHR_TRDREQS:
 		infoLines, tableLines = screen.renderITRTable(
 			"Sell character requests",
 			[2]string{"Character", "Price (pylon)"},
 			loud.CharacterSellTrdReqs,
-			w)
+			w,
+			func(idx int, request interface{}) FontType {
+				itr := request.(loud.CharacterSellTrdReq)
+				if screen.user.GetPylonAmount() < itr.Price {
+					if screen.activeLine == idx {
+						return GREY_BOLD
+					}
+					return GREY
+				}
+				return screen.getFontOfTR(idx, itr.IsMyTrdReq)
+			})
 	case SHW_BUYCHR_TRDREQS:
 		infoLines, tableLines = screen.renderITRTable(
 			"Buy character requests",
 			[2]string{"Character", "Price (pylon)"},
 			loud.CharacterBuyTrdReqs,
-			w)
+			w, nil)
 	case CR8_BUY_LOUD_TRDREQ_ENT_PYLVAL:
 		desc = loud.Localize("Please enter pylon amount to use (should be integer value)")
 	case CR8_SELL_LOUD_TRDREQ_ENT_PYLVAL:
