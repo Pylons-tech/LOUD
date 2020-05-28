@@ -221,9 +221,15 @@ func CreateBuyLoudTrdReq(user User, loudEnterValue string, pylonEnterValue strin
 	if err != nil {
 		return "", err
 	}
+	if loudValue == 0 {
+		return "", errors.New("gold amount shouldn't be zero to be a valid trading")
+	}
 	pylonValue, err := strconv.Atoi(pylonEnterValue)
 	if err != nil {
 		return "", err
+	}
+	if pylonValue == 0 {
+		return "", errors.New("pylon amount shouldn't be zero to be a valid trading")
 	}
 
 	sdkAddr := GetSDKAddrFromUserName(user.GetUserName())
@@ -248,9 +254,15 @@ func CreateSellLoudTrdReq(user User, loudEnterValue string, pylonEnterValue stri
 	if err != nil {
 		return "", err
 	}
+	if loudValue == 0 {
+		return "", errors.New("pylon amount shouldn't be zero to be a valid trading")
+	}
 	pylonValue, err := strconv.Atoi(pylonEnterValue)
 	if err != nil {
 		return "", err
+	}
+	if pylonValue == 0 {
+		return "", errors.New("pylon amount shouldn't be zero to be a valid trading")
 	}
 
 	sdkAddr := GetSDKAddrFromUserName(user.GetUserName())
@@ -279,6 +291,9 @@ func CreateBuyItemTrdReq(user User, itspec ItemSpec, pylonEnterValue string) (st
 	if err != nil {
 		return "", err
 	}
+	if pylonValue == 0 {
+		return "", errors.New("pylon amount shouldn't be zero to be a valid trading")
+	}
 
 	sdkAddr := GetSDKAddrFromUserName(user.GetUserName())
 
@@ -301,6 +316,9 @@ func CreateSellItemTrdReq(user User, activeItem Item, pylonEnterValue string) (s
 	pylonValue, err := strconv.Atoi(pylonEnterValue)
 	if err != nil {
 		return "", err
+	}
+	if pylonValue == 0 {
+		return "", errors.New("pylon amount shouldn't be zero to be a valid trading")
 	}
 
 	sdkAddr := GetSDKAddrFromUserName(user.GetUserName())
@@ -332,6 +350,9 @@ func CreateBuyCharacterTrdReq(user User, chspec CharacterSpec, pylonEnterValue s
 	if err != nil {
 		return "", err
 	}
+	if pylonValue == 0 {
+		return "", errors.New("pylon amount shouldn't be zero to be a valid trading")
+	}
 
 	sdkAddr := GetSDKAddrFromUserName(user.GetUserName())
 
@@ -354,6 +375,9 @@ func CreateSellCharacterTrdReq(user User, activeCharacter Character, pylonEnterV
 	pylonValue, err := strconv.Atoi(pylonEnterValue)
 	if err != nil {
 		return "", err
+	}
+	if pylonValue == 0 {
+		return "", errors.New("pylon amount shouldn't be zero to be a valid trading")
 	}
 
 	sdkAddr := GetSDKAddrFromUserName(user.GetUserName())

@@ -375,8 +375,8 @@ func (screen *GameScreen) TxResultSituationDesc() (string, FontType) {
 	desc := ""
 	font := REGULAR
 	resDescMap := map[ScreenStatus]string{
-		RSLT_BUY_LOUD_TRDREQ_CREATION:  "loud buy request creation",
-		RSLT_SELL_LOUD_TRDREQ_CREATION: "loud sell request creation",
+		RSLT_BUY_LOUD_TRDREQ_CREATION:  "gold buy request creation",
+		RSLT_SELL_LOUD_TRDREQ_CREATION: "gold sell request creation",
 		RSLT_SEL_ACT_CHAR:              "selecting active character",
 		RSLT_RENAME_CHAR:               "renaming character",
 		RSLT_BUYITM:                    "buy item",
