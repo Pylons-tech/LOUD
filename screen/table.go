@@ -64,49 +64,31 @@ func (screen *GameScreen) renderITRTable(header string, theads [2]string, reques
 	}
 	for li, request := range requests[startLine:endLine] {
 		line := ""
+		var requestItem interface{}
+		var requestPrice int
+		var isMyTrdReq bool
 		switch request.(type) {
 		case loud.ItemBuyTrdReq:
-			// TODO should automatic formatter by type and reduce duplicate code
 			itr := request.(loud.ItemBuyTrdReq)
-			font := screen.getFontOfTR(startLine+li, itr.IsMyTrdReq)
-			if fontFunc != nil {
-				font = fontFunc(startLine+li, itr)
-			}
-			line = screen.renderItemTrdReqTableLine(
-				fmt.Sprintf("%s  ", formatItemSpec(itr.TItem)),
-				fmt.Sprintf("%d", itr.Price),
-				font, width)
+			isMyTrdReq, requestItem, requestPrice = itr.IsMyTrdReq, itr.TItem, itr.Price
 		case loud.ItemSellTrdReq:
 			itr := request.(loud.ItemSellTrdReq)
-			font := screen.getFontOfTR(startLine+li, itr.IsMyTrdReq)
-			if fontFunc != nil {
-				font = fontFunc(startLine+li, itr)
-			}
-			line = screen.renderItemTrdReqTableLine(
-				fmt.Sprintf("%s  ", formatItem(itr.TItem)),
-				fmt.Sprintf("%d", itr.Price),
-				font, width)
+			isMyTrdReq, requestItem, requestPrice = itr.IsMyTrdReq, itr.TItem, itr.Price
 		case loud.CharacterBuyTrdReq:
 			itr := request.(loud.CharacterBuyTrdReq)
-			font := screen.getFontOfTR(startLine+li, itr.IsMyTrdReq)
-			if fontFunc != nil {
-				font = fontFunc(startLine+li, itr)
-			}
-			line = screen.renderItemTrdReqTableLine(
-				fmt.Sprintf("%s  ", formatCharacterSpec(itr.TCharacter)),
-				fmt.Sprintf("%d", itr.Price),
-				font, width)
+			isMyTrdReq, requestItem, requestPrice = itr.IsMyTrdReq, itr.TCharacter, itr.Price
 		case loud.CharacterSellTrdReq:
 			itr := request.(loud.CharacterSellTrdReq)
-			font := screen.getFontOfTR(startLine+li, itr.IsMyTrdReq)
-			if fontFunc != nil {
-				font = fontFunc(startLine+li, itr)
-			}
-			line = screen.renderItemTrdReqTableLine(
-				fmt.Sprintf("%s  ", formatCharacter(itr.TCharacter)),
-				fmt.Sprintf("%d", itr.Price),
-				font, width)
+			isMyTrdReq, requestItem, requestPrice = itr.IsMyTrdReq, itr.TCharacter, itr.Price
 		}
+		font := screen.getFontOfTR(startLine+li, isMyTrdReq)
+		if fontFunc != nil {
+			font = fontFunc(startLine+li, request)
+		}
+		line = screen.renderItemTrdReqTableLine(
+			fmt.Sprintf("%s  ", formatByStructType(requestItem)),
+			fmt.Sprintf("%d", requestPrice),
+			font, width)
 		tableLines = append(tableLines, line)
 	}
 	if endLine == len(requests) {

@@ -354,6 +354,21 @@ func InterfaceSlice(slice interface{}) []interface{} {
 	return ret
 }
 
+func formatByStructType(item interface{}) string {
+	switch item.(type) {
+	case loud.Item:
+		return formatItem(item.(loud.Item))
+	case loud.Character:
+		return formatCharacter(item.(loud.Character))
+	case loud.ItemSpec:
+		return formatItemSpec(item.(loud.ItemSpec))
+	case loud.CharacterSpec:
+		return formatCharacterSpec(item.(loud.CharacterSpec))
+	default:
+		return "unrecognized struct type"
+	}
+}
+
 func (screen *GameScreen) renderTRLine(text1 string, text2 string, text3 string, font FontType, width int) string {
 	text1 = loud.Localize(text1)
 	text2 = loud.Localize(text2)

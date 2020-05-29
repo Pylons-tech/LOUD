@@ -717,7 +717,6 @@ func (screen *GameScreen) TxWaitSituationDesc(width int) ([]string, []string) {
 	case W8_BUYITM:
 		desc = loud.Sprintf("You are buying %s at the shop", screen.activeItem.Name)
 	case W8_BUYCHR:
-		// TODO should change text for this action
 		desc = loud.Sprintf("You are buying %s at the pylons central", formatCharacter(screen.activeCharacter))
 		desc += W8_TO_END
 	case W8_HUNT_RABBITS:
