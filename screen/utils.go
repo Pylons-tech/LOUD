@@ -32,6 +32,13 @@ func (tl TextLines) append(elems ...string) TextLines {
 	return append(tl, elemsT...)
 }
 
+func (tl TextLines) appendF(elem string, font FontType) TextLines {
+	return append(tl, TextLine{
+		content: elem,
+		font:    font,
+	})
+}
+
 func (tl TextLines) appendT(elems ...string) TextLines {
 	elemsT := []TextLine{}
 	for _, el := range elems {
@@ -369,32 +376,29 @@ func formatByStructType(item interface{}) string {
 	}
 }
 
-func (screen *GameScreen) renderTRLine(text1 string, text2 string, text3 string, font FontType, width int) string {
+func (screen *GameScreen) renderTRLine(text1 string, text2 string, text3 string) string {
 	text1 = loud.Localize(text1)
 	text2 = loud.Localize(text2)
 	text3 = loud.Localize(text3)
 
 	calcText := "│" + centerText(text1, " ", 20) + "│" + centerText(text2, " ", 15) + "│" + centerText(text3, " ", 15) + "│"
-	onColor := screen.getFont(font)
-	return onColor(fillSpace(calcText, width))
+	return calcText
 }
 
-func (screen *GameScreen) renderItemTableLine(index int, text1 string, font FontType, width int) string {
+func (screen *GameScreen) renderItemTableLine(index int, text1 string) string {
 	text := loud.Localize(text1)
 	if index >= 0 {
 		text = fmt.Sprintf(" %d) %s", index+1, text)
 	}
 	calcText := "│" + fillSpace(text, 52) + "│"
-	onColor := screen.getFont(font)
-	return onColor(fillSpace(calcText, width))
+	return calcText
 }
 
-func (screen *GameScreen) renderItemTrdReqTableLine(text1 string, text2 string, font FontType, width int) string {
+func (screen *GameScreen) renderItemTrdReqTableLine(text1 string, text2 string) string {
 	text1 = loud.Localize(text1)
 	text2 = loud.Localize(text2)
 	calcText := "│" + centerText(text1, " ", 36) + "│" + centerText(text2, " ", 15) + "│"
-	onColor := screen.getFont(font)
-	return onColor(fillSpace(calcText, width))
+	return calcText
 }
 
 func min(a, b uint64) uint64 {
