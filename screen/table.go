@@ -41,6 +41,24 @@ func (screen *GameScreen) renderTRTable(requests []loud.TrdReq, width int, fontF
 	return []string{}, tableLines
 }
 
+func RequestInfo(request interface{}) (bool, interface{}, int) {
+	switch request.(type) {
+	case loud.ItemBuyTrdReq:
+		itr := request.(loud.ItemBuyTrdReq)
+		return itr.IsMyTrdReq, itr.TItem, itr.Price
+	case loud.ItemSellTrdReq:
+		itr := request.(loud.ItemSellTrdReq)
+		return itr.IsMyTrdReq, itr.TItem, itr.Price
+	case loud.CharacterBuyTrdReq:
+		itr := request.(loud.CharacterBuyTrdReq)
+		return itr.IsMyTrdReq, itr.TCharacter, itr.Price
+	case loud.CharacterSellTrdReq:
+		itr := request.(loud.CharacterSellTrdReq)
+		return itr.IsMyTrdReq, itr.TCharacter, itr.Price
+	}
+	return false, loud.ItemBuyTrdReq{}, 0
+}
+
 func (screen *GameScreen) renderITRTable(header string, theads [2]string, requestsSlice interface{}, width int, fontFunc func(int, interface{}) FontType) ([]string, []string) {
 	requests := InterfaceSlice(requestsSlice)
 
@@ -64,23 +82,7 @@ func (screen *GameScreen) renderITRTable(header string, theads [2]string, reques
 	}
 	for li, request := range requests[startLine:endLine] {
 		line := ""
-		var requestItem interface{}
-		var requestPrice int
-		var isMyTrdReq bool
-		switch request.(type) {
-		case loud.ItemBuyTrdReq:
-			itr := request.(loud.ItemBuyTrdReq)
-			isMyTrdReq, requestItem, requestPrice = itr.IsMyTrdReq, itr.TItem, itr.Price
-		case loud.ItemSellTrdReq:
-			itr := request.(loud.ItemSellTrdReq)
-			isMyTrdReq, requestItem, requestPrice = itr.IsMyTrdReq, itr.TItem, itr.Price
-		case loud.CharacterBuyTrdReq:
-			itr := request.(loud.CharacterBuyTrdReq)
-			isMyTrdReq, requestItem, requestPrice = itr.IsMyTrdReq, itr.TCharacter, itr.Price
-		case loud.CharacterSellTrdReq:
-			itr := request.(loud.CharacterSellTrdReq)
-			isMyTrdReq, requestItem, requestPrice = itr.IsMyTrdReq, itr.TCharacter, itr.Price
-		}
+		isMyTrdReq, requestItem, requestPrice := RequestInfo(request)
 		font := screen.getFontOfTR(startLine+li, isMyTrdReq)
 		if fontFunc != nil {
 			font = fontFunc(startLine+li, request)
@@ -123,61 +125,15 @@ func (screen *GameScreen) renderITTable(header string, th string, itemSlice inte
 		tableLines = append(tableLines, fmtFunc(fillSpace("├──────────────────↓↓↓↓↓↓↓↓↓↓↓↓↓↓────────────────────┤", width)))
 	}
 	for li, item := range items[startLine:endLine] {
-		line := ""
-		switch item.(type) {
-		case loud.Item:
-			itemT := item.(loud.Item)
-			index := startLine + li
-			font := screen.getFontByActiveIndex(index)
-			if fontFunc != nil {
-				font = fontFunc(startLine+li, item)
-			}
-			line = screen.renderItemTableLine(
-				index,
-				fmt.Sprintf("%s  ", formatItem(itemT)),
-				font,
-				width,
-			)
-		case loud.Character:
-			itemT := item.(loud.Character)
-			index := startLine + li
-			font := screen.getFontByActiveIndex(index)
-			if fontFunc != nil {
-				font = fontFunc(startLine+li, item)
-			}
-			line = screen.renderItemTableLine(
-				index,
-				fmt.Sprintf("%s  ", formatCharacter(itemT)),
-				font,
-				width,
-			)
-		case loud.ItemSpec:
-			itemT := item.(loud.ItemSpec)
-			index := startLine + li
-			font := screen.getFontByActiveIndex(index)
-			if fontFunc != nil {
-				font = fontFunc(startLine+li, item)
-			}
-			line = screen.renderItemTableLine(
-				index,
-				fmt.Sprintf("%s  ", formatItemSpec(itemT)),
-				font,
-				width,
-			)
-		case loud.CharacterSpec:
-			itemT := item.(loud.CharacterSpec)
-			index := startLine + li
-			font := screen.getFontByActiveIndex(index)
-			if fontFunc != nil {
-				font = fontFunc(startLine+li, item)
-			}
-			line = screen.renderItemTableLine(
-				index,
-				fmt.Sprintf("%s  ", formatCharacterSpec(itemT)),
-				font,
-				width,
-			)
+		index := startLine + li
+		font := screen.getFontByActiveIndex(index)
+		if fontFunc != nil {
+			font = fontFunc(startLine+li, item)
 		}
+		line := screen.renderItemTableLine(
+			index,
+			fmt.Sprintf("%s  ", formatByStructType(item)),
+			font, width)
 		tableLines = append(tableLines, line)
 	}
 	if endLine == len(items) {
