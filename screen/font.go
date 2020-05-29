@@ -119,15 +119,14 @@ func (screen *GameScreen) getFontByActiveIndex(idx int) FontType {
 	return font
 }
 
-func (screen *GameScreen) getFontOfTR(idx int, isMyTR bool) FontType {
+func (screen *GameScreen) getFontOfTableLine(idx int, disabled bool) FontType {
 	font := REGULAR
 	isActiveLine := screen.activeLine == idx
-	isDisabledLine := isMyTR
-	if isActiveLine && isDisabledLine {
+	if isActiveLine && disabled {
 		font = BROWN_BOLD
 	} else if isActiveLine {
 		font = BLUE_BOLD
-	} else if isDisabledLine {
+	} else if disabled {
 		font = BROWN
 	}
 	return font

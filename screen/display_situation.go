@@ -76,20 +76,22 @@ func (screen *GameScreen) renderUserSituation() {
 	case SHW_LOUD_BUY_TRDREQS:
 		tableLines = screen.renderTRTable(
 			loud.BuyTrdReqs,
-			func(idx int, request loud.TrdReq) FontType {
-				if screen.user.GetGold() < request.Amount {
+			func(idx int, request interface{}) FontType {
+				tr := request.(loud.TrdReq)
+				if screen.user.GetGold() < tr.Amount {
 					return screen.GetDisabledFontByActiveLine(idx)
 				}
-				return screen.getFontOfTR(idx, request.IsMyTrdReq)
+				return screen.getFontOfTableLine(idx, tr.IsMyTrdReq)
 			})
 	case SHW_LOUD_SELL_TRDREQS:
 		tableLines = screen.renderTRTable(
 			loud.SellTrdReqs,
-			func(idx int, request loud.TrdReq) FontType {
-				if screen.user.GetPylonAmount() < request.Total {
+			func(idx int, request interface{}) FontType {
+				tr := request.(loud.TrdReq)
+				if screen.user.GetPylonAmount() < tr.Total {
 					return screen.GetDisabledFontByActiveLine(idx)
 				}
-				return screen.getFontOfTR(idx, request.IsMyTrdReq)
+				return screen.getFontOfTableLine(idx, tr.IsMyTrdReq)
 			})
 	case SHW_BUYITM_TRDREQS:
 		tableLines = screen.renderITRTable(
@@ -102,7 +104,7 @@ func (screen *GameScreen) renderUserSituation() {
 				if len(screen.user.GetMatchedItems(itr.TItem)) == 0 {
 					return screen.GetDisabledFontByActiveLine(idx)
 				}
-				return screen.getFontOfTR(idx, itr.IsMyTrdReq)
+				return screen.getFontOfTableLine(idx, itr.IsMyTrdReq)
 			})
 	case SHW_SELLITM_TRDREQS:
 		tableLines = screen.renderITRTable(
@@ -115,7 +117,7 @@ func (screen *GameScreen) renderUserSituation() {
 				if screen.user.GetPylonAmount() < requestPrice {
 					return screen.GetDisabledFontByActiveLine(idx)
 				}
-				return screen.getFontOfTR(idx, isMyTrdReq)
+				return screen.getFontOfTableLine(idx, isMyTrdReq)
 			})
 	case SHW_SELLCHR_TRDREQS:
 		tableLines = screen.renderITRTable(
@@ -128,7 +130,7 @@ func (screen *GameScreen) renderUserSituation() {
 				if screen.user.GetPylonAmount() < requestPrice {
 					return screen.GetDisabledFontByActiveLine(idx)
 				}
-				return screen.getFontOfTR(idx, isMyTrdReq)
+				return screen.getFontOfTableLine(idx, isMyTrdReq)
 			})
 	case SHW_BUYCHR_TRDREQS:
 		tableLines = screen.renderITRTable(
@@ -141,7 +143,7 @@ func (screen *GameScreen) renderUserSituation() {
 				if len(screen.user.GetMatchedCharacters(itr.TCharacter)) == 0 {
 					return screen.GetDisabledFontByActiveLine(idx)
 				}
-				return screen.getFontOfTR(idx, itr.IsMyTrdReq)
+				return screen.getFontOfTableLine(idx, itr.IsMyTrdReq)
 			})
 	case CR8_BUY_LOUD_TRDREQ_ENT_PYLVAL:
 		desc = loud.Localize("Please enter pylon amount to use (should be integer value)")

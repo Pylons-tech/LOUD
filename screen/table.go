@@ -6,6 +6,8 @@ import (
 	loud "github.com/Pylons-tech/LOUD/data"
 )
 
+type FontFuncType func(int, interface{}) FontType
+
 func tableHeaderBodySeparator(TABLE_SEPARATORS []string, showFull bool) string {
 	if showFull {
 		return TABLE_SEPARATORS[1]
@@ -20,7 +22,14 @@ func tableBodyFooterSeparator(TABLE_SEPARATORS []string, showFull bool) string {
 	return TABLE_SEPARATORS[4]
 }
 
-func (screen *GameScreen) renderTRTable(requests []loud.TrdReq, fontFunc func(int, loud.TrdReq) FontType) TextLines {
+func (screen *GameScreen) calcTLFont(fontFunc FontFuncType, idx int, isMyTrdReq bool, request interface{}) FontType {
+	if fontFunc != nil {
+		return fontFunc(idx, request)
+	}
+	return screen.getFontOfTableLine(idx, isMyTrdReq)
+}
+
+func (screen *GameScreen) renderTRTable(requests []loud.TrdReq, fontFunc FontFuncType) TextLines {
 	TABLE_SEPARATORS := []string{
 		"╭────────────────────┬───────────────┬───────────────╮",
 		"├────────────────────┼───────────────┼───────────────┤",
@@ -39,14 +48,11 @@ func (screen *GameScreen) renderTRTable(requests []loud.TrdReq, fontFunc func(in
 		append(tableHeaderBodySeparator(TABLE_SEPARATORS, startLine == 0))
 
 	for li, request := range requests[startLine:endLine] {
-		font := screen.getFontOfTR(startLine+li, request.IsMyTrdReq)
-		if fontFunc != nil {
-			font = fontFunc(startLine+li, request)
-		}
 		line := screen.renderTRLine(
 			fmt.Sprintf("%.4f", request.Price),
 			fmt.Sprintf("%d", request.Amount),
 			fmt.Sprintf("%d", request.Total))
+		font := screen.calcTLFont(fontFunc, startLine+li, request.IsMyTrdReq, request)
 		tableLines = tableLines.appendF(line, font)
 	}
 	tableLines = tableLines.
@@ -72,7 +78,7 @@ func RequestInfo(request interface{}) (bool, interface{}, int) {
 	return false, loud.ItemBuyTrdReq{}, 0
 }
 
-func (screen *GameScreen) renderITRTable(header string, theads [2]string, requestsSlice interface{}, width int, fontFunc func(int, interface{}) FontType) TextLines {
+func (screen *GameScreen) renderITRTable(header string, theads [2]string, requestsSlice interface{}, width int, fontFunc FontFuncType) TextLines {
 	requests := InterfaceSlice(requestsSlice)
 	TABLE_SEPARATORS := []string{
 		"╭────────────────────────────────────┬───────────────╮",
@@ -99,15 +105,11 @@ func (screen *GameScreen) renderITRTable(header string, theads [2]string, reques
 		append(screen.renderItemTrdReqTableLine(theads[0], theads[1])).
 		append(tableHeaderBodySeparator(TABLE_SEPARATORS, startLine == 0))
 	for li, request := range requests[startLine:endLine] {
-		line := ""
 		isMyTrdReq, requestItem, requestPrice := RequestInfo(request)
-		font := screen.getFontOfTR(startLine+li, isMyTrdReq)
-		if fontFunc != nil {
-			font = fontFunc(startLine+li, request)
-		}
-		line = screen.renderItemTrdReqTableLine(
+		line := screen.renderItemTrdReqTableLine(
 			fmt.Sprintf("%s  ", formatByStructType(requestItem)),
 			fmt.Sprintf("%d", requestPrice))
+		font := screen.calcTLFont(fontFunc, startLine+li, isMyTrdReq, request)
 		tableLines = tableLines.appendF(line, font)
 	}
 	tableLines = tableLines.
@@ -115,7 +117,7 @@ func (screen *GameScreen) renderITRTable(header string, theads [2]string, reques
 	return tableLines
 }
 
-func (screen *GameScreen) renderITTable(header string, th string, itemSlice interface{}, width int, fontFunc func(int, interface{}) FontType) TextLines {
+func (screen *GameScreen) renderITTable(header string, th string, itemSlice interface{}, width int, fontFunc FontFuncType) TextLines {
 	items := InterfaceSlice(itemSlice)
 	TABLE_SEPARATORS := []string{
 		"╭────────────────────────────────────────────────────╮",
@@ -143,14 +145,10 @@ func (screen *GameScreen) renderITTable(header string, th string, itemSlice inte
 		append(tableHeaderBodySeparator(TABLE_SEPARATORS, startLine == 0))
 
 	for li, item := range items[startLine:endLine] {
-		index := startLine + li
-		font := screen.getFontByActiveIndex(index)
-		if fontFunc != nil {
-			font = fontFunc(startLine+li, item)
-		}
 		line := screen.renderItemTableLine(
-			index,
+			startLine+li,
 			fmt.Sprintf("%s  ", formatByStructType(item)))
+		font := screen.calcTLFont(fontFunc, startLine+li, false, item)
 		tableLines = tableLines.appendF(line, font)
 	}
 	tableLines = tableLines.
