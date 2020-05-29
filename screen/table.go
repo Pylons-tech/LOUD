@@ -7,17 +7,24 @@ import (
 )
 
 func (screen *GameScreen) renderTRTable(requests []loud.TrdReq, width int, fontFunc func(int, loud.TrdReq) FontType) ([]string, []string) {
+	TABLE_SEPARATORS := []string{
+		"╭────────────────────┬───────────────┬───────────────╮",
+		"├────────────────────┼───────────────┼───────────────┤",
+		"├─────↓↓↓↓↓↓↓↓↓──────┼───↓↓↓↓↓↓↓↓↓───┼───↓↓↓↓↓↓↓↓↓───┤",
+		"╰────────────────────┴───────────────┴───────────────╯",
+		"╰──────↑↑↑↑↑↑↑↑↑─────┴───↑↑↑↑↑↑↑↑↑───┴───↑↑↑↑↑↑↑↑↑───╯",
+	}
 	if screen.activeLine >= len(requests) {
 		screen.activeLine = len(requests) - 1
 	}
 	startLine, endLine := getWindowFromActiveLine(screen.activeLine, screen.GetSituationBox().H-5, len(requests))
 	tableLines := []string{}
-	tableLines = append(tableLines, screen.regularFont()(fillSpace("╭────────────────────┬───────────────┬───────────────╮", width)))
+	tableLines = append(tableLines, screen.regularFont()(fillSpace(TABLE_SEPARATORS[0], width)))
 	tableLines = append(tableLines, screen.renderTRLine("GOLD price (pylon)", "Amount (gold)", "Total (pylon)", REGULAR, width))
 	if startLine == 0 {
-		tableLines = append(tableLines, screen.regularFont()(fillSpace("├────────────────────┼───────────────┼───────────────┤", width)))
+		tableLines = append(tableLines, screen.regularFont()(fillSpace(TABLE_SEPARATORS[1], width)))
 	} else {
-		tableLines = append(tableLines, screen.regularFont()(fillSpace("├─────↓↓↓↓↓↓↓↓↓──────┼───↓↓↓↓↓↓↓↓↓───┼───↓↓↓↓↓↓↓↓↓───┤", width)))
+		tableLines = append(tableLines, screen.regularFont()(fillSpace(TABLE_SEPARATORS[2], width)))
 	}
 	for li, request := range requests[startLine:endLine] {
 		font := screen.getFontOfTR(startLine+li, request.IsMyTrdReq)
@@ -34,9 +41,9 @@ func (screen *GameScreen) renderTRTable(requests []loud.TrdReq, width int, fontF
 		)
 	}
 	if endLine == len(requests) {
-		tableLines = append(tableLines, screen.regularFont()(fillSpace("╰────────────────────┴───────────────┴───────────────╯", width)))
+		tableLines = append(tableLines, screen.regularFont()(fillSpace(TABLE_SEPARATORS[3], width)))
 	} else {
-		tableLines = append(tableLines, screen.regularFont()(fillSpace("╰──────↑↑↑↑↑↑↑↑↑─────┴───↑↑↑↑↑↑↑↑↑───┴───↑↑↑↑↑↑↑↑↑───╯", width)))
+		tableLines = append(tableLines, screen.regularFont()(fillSpace(TABLE_SEPARATORS[4], width)))
 	}
 	return []string{}, tableLines
 }
@@ -61,6 +68,13 @@ func RequestInfo(request interface{}) (bool, interface{}, int) {
 
 func (screen *GameScreen) renderITRTable(header string, theads [2]string, requestsSlice interface{}, width int, fontFunc func(int, interface{}) FontType) ([]string, []string) {
 	requests := InterfaceSlice(requestsSlice)
+	TABLE_SEPARATORS := []string{
+		"╭────────────────────────────────────┬───────────────╮",
+		"├────────────────────────────────────┼───────────────┤",
+		"├──────────↓↓↓↓↓↓↓↓↓↓↓↓↓↓────────────┼─────↓↓↓↓↓↓────┤",
+		"╰────────────────────────────────────┴───────────────╯",
+		"╰──────────↑↑↑↑↑↑↑↑↑↑↑↑↑↑────────────┴─────↑↑↑↑↑↑────╯",
+	}
 
 	infoLines := loud.ChunkText(loud.Localize(header), width)
 	numHeaderLines := len(infoLines)
@@ -73,12 +87,12 @@ func (screen *GameScreen) renderITRTable(header string, theads [2]string, reques
 		screen.GetSituationBox().H-5-numHeaderLines,
 		len(requests))
 	tableLines := []string{}
-	tableLines = append(tableLines, screen.regularFont()(fillSpace("╭────────────────────────────────────┬───────────────╮", width)))
+	tableLines = append(tableLines, screen.regularFont()(fillSpace(TABLE_SEPARATORS[0], width)))
 	tableLines = append(tableLines, screen.renderItemTrdReqTableLine(theads[0], theads[1], REGULAR, width))
 	if startLine == 0 {
-		tableLines = append(tableLines, screen.regularFont()(fillSpace("├────────────────────────────────────┼───────────────┤", width)))
+		tableLines = append(tableLines, screen.regularFont()(fillSpace(TABLE_SEPARATORS[1], width)))
 	} else {
-		tableLines = append(tableLines, screen.regularFont()(fillSpace("├──────────↓↓↓↓↓↓↓↓↓↓↓↓↓↓────────────┼─────↓↓↓↓↓↓────┤", width)))
+		tableLines = append(tableLines, screen.regularFont()(fillSpace(TABLE_SEPARATORS[2], width)))
 	}
 	for li, request := range requests[startLine:endLine] {
 		line := ""
@@ -94,16 +108,22 @@ func (screen *GameScreen) renderITRTable(header string, theads [2]string, reques
 		tableLines = append(tableLines, line)
 	}
 	if endLine == len(requests) {
-		tableLines = append(tableLines, screen.regularFont()(fillSpace("╰────────────────────────────────────┴───────────────╯", width)))
+		tableLines = append(tableLines, screen.regularFont()(fillSpace(TABLE_SEPARATORS[3], width)))
 	} else {
-		tableLines = append(tableLines, screen.regularFont()(fillSpace("╰──────────↑↑↑↑↑↑↑↑↑↑↑↑↑↑────────────┴─────↑↑↑↑↑↑────╯", width)))
+		tableLines = append(tableLines, screen.regularFont()(fillSpace(TABLE_SEPARATORS[4], width)))
 	}
 	return infoLines, tableLines
 }
 
 func (screen *GameScreen) renderITTable(header string, th string, itemSlice interface{}, width int, fontFunc func(int, interface{}) FontType) ([]string, []string) {
 	items := InterfaceSlice(itemSlice)
-
+	TABLE_SEPARATORS := []string{
+		"╭────────────────────────────────────────────────────╮",
+		"├────────────────────────────────────────────────────┤",
+		"├──────────────────↓↓↓↓↓↓↓↓↓↓↓↓↓↓────────────────────┤",
+		"╰────────────────────────────────────────────────────╯",
+		"╰───────────────────↑↑↑↑↑↑↑↑↑↑↑↑↑↑───────────────────╯",
+	}
 	infoLines := loud.ChunkText(loud.Localize(header), width)
 	numHeaderLines := len(infoLines)
 	fmtFunc := screen.regularFont()
@@ -117,12 +137,12 @@ func (screen *GameScreen) renderITTable(header string, th string, itemSlice inte
 		len(items))
 
 	tableLines := []string{}
-	tableLines = append(tableLines, fmtFunc(fillSpace("╭────────────────────────────────────────────────────╮", width)))
+	tableLines = append(tableLines, fmtFunc(fillSpace(TABLE_SEPARATORS[0], width)))
 	tableLines = append(tableLines, screen.renderItemTableLine(-1, th, REGULAR, width))
 	if startLine == 0 {
-		tableLines = append(tableLines, fmtFunc(fillSpace("├────────────────────────────────────────────────────┤", width)))
+		tableLines = append(tableLines, fmtFunc(fillSpace(TABLE_SEPARATORS[1], width)))
 	} else {
-		tableLines = append(tableLines, fmtFunc(fillSpace("├──────────────────↓↓↓↓↓↓↓↓↓↓↓↓↓↓────────────────────┤", width)))
+		tableLines = append(tableLines, fmtFunc(fillSpace(TABLE_SEPARATORS[2], width)))
 	}
 	for li, item := range items[startLine:endLine] {
 		index := startLine + li
@@ -137,9 +157,9 @@ func (screen *GameScreen) renderITTable(header string, th string, itemSlice inte
 		tableLines = append(tableLines, line)
 	}
 	if endLine == len(items) {
-		tableLines = append(tableLines, fmtFunc(fillSpace("╰────────────────────────────────────────────────────╯", width)))
+		tableLines = append(tableLines, fmtFunc(fillSpace(TABLE_SEPARATORS[3], width)))
 	} else {
-		tableLines = append(tableLines, fmtFunc(fillSpace("╰───────────────────↑↑↑↑↑↑↑↑↑↑↑↑↑↑───────────────────╯", width)))
+		tableLines = append(tableLines, fmtFunc(fillSpace(TABLE_SEPARATORS[4], width)))
 	}
 	return infoLines, tableLines
 }
