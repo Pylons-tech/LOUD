@@ -22,11 +22,11 @@ func tableBodyFooterSeparator(TABLE_SEPARATORS []string, showFull bool) string {
 	return TABLE_SEPARATORS[4]
 }
 
-func (screen *GameScreen) calcTLFont(fontFunc FontFuncType, idx int, isMyTrdReq bool, request interface{}) FontType {
+func (screen *GameScreen) calcTLFont(fontFunc FontFuncType, idx int, disabled bool, request interface{}) FontType {
 	if fontFunc != nil {
 		return fontFunc(idx, request)
 	}
-	return screen.getFontOfTableLine(idx, isMyTrdReq)
+	return screen.getFontOfTableLine(idx, disabled)
 }
 
 func (screen *GameScreen) renderTRTable(requests []loud.TrdReq, fontFunc FontFuncType) TextLines {
