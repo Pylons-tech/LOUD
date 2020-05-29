@@ -407,3 +407,21 @@ func min(a, b uint64) uint64 {
 	}
 	return b
 }
+
+func RequestInfo(request interface{}) (bool, interface{}, int) {
+	switch request.(type) {
+	case loud.ItemBuyTrdReq:
+		itr := request.(loud.ItemBuyTrdReq)
+		return itr.IsMyTrdReq, itr.TItem, itr.Price
+	case loud.ItemSellTrdReq:
+		itr := request.(loud.ItemSellTrdReq)
+		return itr.IsMyTrdReq, itr.TItem, itr.Price
+	case loud.CharacterBuyTrdReq:
+		itr := request.(loud.CharacterBuyTrdReq)
+		return itr.IsMyTrdReq, itr.TCharacter, itr.Price
+	case loud.CharacterSellTrdReq:
+		itr := request.(loud.CharacterSellTrdReq)
+		return itr.IsMyTrdReq, itr.TCharacter, itr.Price
+	}
+	return false, loud.ItemBuyTrdReq{}, 0
+}

@@ -75,7 +75,7 @@ func (screen *GameScreen) renderUserSituation() {
 		}
 	case SHW_LOUD_BUY_TRDREQS:
 		tableLines = screen.renderTRTable(
-			loud.BuyTrdReqs,
+			loud.BuyTrdReqs, w,
 			func(idx int, request interface{}) FontType {
 				tr := request.(loud.TrdReq)
 				if screen.user.GetGold() < tr.Amount {
@@ -85,7 +85,7 @@ func (screen *GameScreen) renderUserSituation() {
 			})
 	case SHW_LOUD_SELL_TRDREQS:
 		tableLines = screen.renderTRTable(
-			loud.SellTrdReqs,
+			loud.SellTrdReqs, w,
 			func(idx int, request interface{}) FontType {
 				tr := request.(loud.TrdReq)
 				if screen.user.GetPylonAmount() < tr.Total {
