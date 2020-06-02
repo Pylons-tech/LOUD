@@ -54,11 +54,12 @@ func getWindowFromActiveLine(activeLine, window_size, max_window int) (int, int)
 }
 
 func (tl TextLines) appendCustomFontSelectCmds(itemsSlice interface{}, activeLine int, fn func(int, interface{}) TextLine) TextLines {
+	moreText := loud.Sprintf("use arrows for more")
 	items := InterfaceSlice(itemsSlice)
 
 	startLine, endLine := getWindowFromActiveLine(activeLine, MAX_SHORTCUT_ITEM_CMDSEL, len(items))
 	if startLine != 0 {
-		tl = tl.append("...")
+		tl = tl.append("..." + " " + moreText)
 	} else {
 		tl = tl.append("")
 	}
@@ -71,7 +72,7 @@ func (tl TextLines) appendCustomFontSelectCmds(itemsSlice interface{}, activeLin
 		})
 	}
 	if endLine < len(items) {
-		tl = tl.append("...")
+		tl = tl.append("..." + " " + moreText)
 	} else {
 		tl = tl.append("")
 	}

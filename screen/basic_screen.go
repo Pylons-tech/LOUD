@@ -190,6 +190,13 @@ func (screen *GameScreen) GetScreenStatus() ScreenStatus {
 	return screen.scrStatus
 }
 
+func (screen *GameScreen) SelectDefaultActiveLine(arrayInterface interface{}) {
+	array := InterfaceSlice(arrayInterface)
+	if len(array) > 0 && screen.activeLine == -1 {
+		screen.activeLine = 0
+	}
+}
+
 func (screen *GameScreen) SetScreenStatus(newStatus ScreenStatus) {
 	screen.scrStatus = newStatus
 
@@ -208,6 +215,31 @@ func (screen *GameScreen) SetScreenStatus(newStatus ScreenStatus) {
 		if resLen == 0 { // it means character is dead
 			screen.user.SetActiveCharacterIndex(-1)
 		}
+	case SEL_ACTIVE_CHAR, SEL_RENAME_CHAR:
+		screen.activeLine = screen.user.GetActiveCharacterIndex()
+		screen.SelectDefaultActiveLine(screen.user.InventoryCharacters())
+	case SEL_BUYCHR:
+		screen.activeLine = 0
+	case SHW_LOUD_BUY_TRDREQS:
+		screen.SelectDefaultActiveLine(loud.BuyTrdReqs)
+	case SHW_LOUD_SELL_TRDREQS:
+		screen.SelectDefaultActiveLine(loud.SellTrdReqs)
+	case SHW_BUYITM_TRDREQS:
+		screen.SelectDefaultActiveLine(loud.ItemBuyTrdReqs)
+	case SHW_SELLITM_TRDREQS:
+		screen.SelectDefaultActiveLine(loud.ItemSellTrdReqs)
+	case SHW_BUYCHR_TRDREQS:
+		screen.SelectDefaultActiveLine(loud.CharacterBuyTrdReqs)
+	case SHW_SELLCHR_TRDREQS:
+		screen.SelectDefaultActiveLine(loud.CharacterSellTrdReqs)
+	case CR8_BUYCHR_TRDREQ_SEL_CHR:
+		screen.SelectDefaultActiveLine(loud.WorldCharacterSpecs)
+	case CR8_SELLCHR_TRDREQ_SEL_CHR:
+		screen.SelectDefaultActiveLine(screen.user.InventoryCharacters())
+	case CR8_BUYITM_TRDREQ_SEL_ITEM:
+		screen.SelectDefaultActiveLine(loud.WorldItemSpecs)
+	case CR8_SELLITM_TRDREQ_SEL_ITEM:
+		screen.SelectDefaultActiveLine(screen.user.InventoryItems())
 	}
 }
 

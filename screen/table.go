@@ -6,183 +6,144 @@ import (
 	loud "github.com/Pylons-tech/LOUD/data"
 )
 
-func (screen *GameScreen) renderTRTable(requests []loud.TrdReq, width int) ([]string, []string) {
-	if screen.activeLine >= len(requests) {
-		screen.activeLine = len(requests) - 1
+type FontFuncType func(int, interface{}) FontType
+
+func tableHeaderBodySeparator(TABLE_SEPARATORS []string, showFull bool) string {
+	if showFull {
+		return TABLE_SEPARATORS[1]
 	}
-	startLine, endLine := getWindowFromActiveLine(screen.activeLine, screen.GetSituationBox().H-5, len(requests))
-	tableLines := []string{}
-	tableLines = append(tableLines, screen.regularFont()(fillSpace("╭────────────────────┬───────────────┬───────────────╮", width)))
-	tableLines = append(tableLines, screen.renderTRLine("GOLD price (pylon)", "Amount (gold)", "Total (pylon)", REGULAR, width))
-	if startLine == 0 {
-		tableLines = append(tableLines, screen.regularFont()(fillSpace("├────────────────────┼───────────────┼───────────────┤", width)))
-	} else {
-		tableLines = append(tableLines, screen.regularFont()(fillSpace("├─────↓↓↓↓↓↓↓↓↓──────┼───↓↓↓↓↓↓↓↓↓───┼───↓↓↓↓↓↓↓↓↓───┤", width)))
-	}
-	for li, request := range requests[startLine:endLine] {
-		tableLines = append(
-			tableLines,
-			screen.renderTRLine(
-				fmt.Sprintf("%.4f", request.Price),
-				fmt.Sprintf("%d", request.Amount),
-				fmt.Sprintf("%d", request.Total),
-				screen.getFontOfTR(startLine+li, request.IsMyTrdReq),
-				width,
-			),
-		)
-	}
-	if endLine == len(requests) {
-		tableLines = append(tableLines, screen.regularFont()(fillSpace("╰────────────────────┴───────────────┴───────────────╯", width)))
-	} else {
-		tableLines = append(tableLines, screen.regularFont()(fillSpace("╰──────↑↑↑↑↑↑↑↑↑─────┴───↑↑↑↑↑↑↑↑↑───┴───↑↑↑↑↑↑↑↑↑───╯", width)))
-	}
-	return []string{}, tableLines
+	return TABLE_SEPARATORS[2]
 }
 
-func (screen *GameScreen) renderITRTable(header string, theads [2]string, requestsSlice interface{}, width int) ([]string, []string) {
-	requests := InterfaceSlice(requestsSlice)
+func tableBodyFooterSeparator(TABLE_SEPARATORS []string, showFull bool) string {
+	if showFull {
+		return TABLE_SEPARATORS[3]
+	}
+	return TABLE_SEPARATORS[4]
+}
 
+func (screen *GameScreen) calcTLFont(fontFunc FontFuncType, idx int, disabled bool, request interface{}) FontType {
+	if fontFunc != nil {
+		return fontFunc(idx, request)
+	}
+	return screen.getFontOfTableLine(idx, disabled)
+}
+
+func (screen *GameScreen) TableHeightWindow(header string, rawArrayInterFace interface{}, width int) ([]string, int, int) {
+	rawArray := InterfaceSlice(rawArrayInterFace)
 	infoLines := loud.ChunkText(loud.Localize(header), width)
 	numHeaderLines := len(infoLines)
 
-	if screen.activeLine >= len(requests) {
-		screen.activeLine = len(requests) - 1
+	if screen.activeLine >= len(rawArray) {
+		screen.activeLine = len(rawArray) - 1
 	}
 	startLine, endLine := getWindowFromActiveLine(
 		screen.activeLine,
 		screen.GetSituationBox().H-5-numHeaderLines,
-		len(requests))
-	tableLines := []string{}
-	tableLines = append(tableLines, screen.regularFont()(fillSpace("╭────────────────────────────────────┬───────────────╮", width)))
-	tableLines = append(tableLines, screen.renderItemTrdReqTableLine(theads[0], theads[1], REGULAR, width))
-	if startLine == 0 {
-		tableLines = append(tableLines, screen.regularFont()(fillSpace("├────────────────────────────────────┼───────────────┤", width)))
-	} else {
-		tableLines = append(tableLines, screen.regularFont()(fillSpace("├──────────↓↓↓↓↓↓↓↓↓↓↓↓↓↓────────────┼─────↓↓↓↓↓↓────┤", width)))
-	}
-	for li, request := range requests[startLine:endLine] {
-		line := ""
-		switch request.(type) {
-		case loud.ItemBuyTrdReq:
-			itr := request.(loud.ItemBuyTrdReq)
-			line = screen.renderItemTrdReqTableLine(
-				fmt.Sprintf("%s  ", formatItemSpec(itr.TItem)),
-				fmt.Sprintf("%d", itr.Price),
-				screen.getFontOfTR(startLine+li, itr.IsMyTrdReq),
-				width,
-			)
-		case loud.ItemSellTrdReq:
-			itr := request.(loud.ItemSellTrdReq)
-			line = screen.renderItemTrdReqTableLine(
-				fmt.Sprintf("%s  ", formatItem(itr.TItem)),
-				fmt.Sprintf("%d", itr.Price),
-				screen.getFontOfTR(startLine+li, itr.IsMyTrdReq),
-				width,
-			)
-		case loud.CharacterBuyTrdReq:
-			itr := request.(loud.CharacterBuyTrdReq)
-			line = screen.renderItemTrdReqTableLine(
-				fmt.Sprintf("%s  ", formatCharacterSpec(itr.TCharacter)),
-				fmt.Sprintf("%d", itr.Price),
-				screen.getFontOfTR(startLine+li, itr.IsMyTrdReq),
-				width,
-			)
-		case loud.CharacterSellTrdReq:
-			itr := request.(loud.CharacterSellTrdReq)
-			line = screen.renderItemTrdReqTableLine(
-				fmt.Sprintf("%s  ", formatCharacter(itr.TCharacter)),
-				fmt.Sprintf("%d", itr.Price),
-				screen.getFontOfTR(startLine+li, itr.IsMyTrdReq),
-				width,
-			)
-		}
-		tableLines = append(tableLines, line)
-	}
-	if endLine == len(requests) {
-		tableLines = append(tableLines, screen.regularFont()(fillSpace("╰────────────────────────────────────┴───────────────╯", width)))
-	} else {
-		tableLines = append(tableLines, screen.regularFont()(fillSpace("╰──────────↑↑↑↑↑↑↑↑↑↑↑↑↑↑────────────┴─────↑↑↑↑↑↑────╯", width)))
-	}
-	return infoLines, tableLines
+		len(rawArray))
+	return infoLines, startLine, endLine
 }
 
-func (screen *GameScreen) renderITTable(header string, th string, itemSlice interface{}, width int, fontFunc func(int, interface{}) FontType) ([]string, []string) {
-	items := InterfaceSlice(itemSlice)
+func (screen *GameScreen) TableHeader(titleLines []string, TABLE_SEPARATORS []string, headerVisual string, startLine int) TextLines {
+	return TextLines{}.
+		append(titleLines...).
+		append(TABLE_SEPARATORS[0]).
+		append(headerVisual).
+		append(tableHeaderBodySeparator(TABLE_SEPARATORS, startLine == 0))
+}
 
-	infoLines := loud.ChunkText(loud.Localize(header), width)
-	numHeaderLines := len(infoLines)
-	fmtFunc := screen.regularFont()
+func (screen *GameScreen) TableFooter(TABLE_SEPARATORS []string, endLine int, rawArrayInterFace interface{}) string {
+	rawArray := InterfaceSlice(rawArrayInterFace)
+	return tableBodyFooterSeparator(TABLE_SEPARATORS, endLine == len(rawArray))
+}
 
-	if screen.activeLine >= len(items) {
-		screen.activeLine = len(items) - 1
+func (screen *GameScreen) renderTRTable(rawArray []loud.TrdReq, width int, fontFunc FontFuncType) TextLines {
+	TABLE_SEPARATORS := []string{
+		"╭────────────────────┬───────────────┬───────────────╮",
+		"├────────────────────┼───────────────┼───────────────┤",
+		"├─────↓↓↓↓↓↓↓↓↓──────┼───↓↓↓↓↓↓↓↓↓───┼───↓↓↓↓↓↓↓↓↓───┤",
+		"╰────────────────────┴───────────────┴───────────────╯",
+		"╰──────↑↑↑↑↑↑↑↑↑─────┴───↑↑↑↑↑↑↑↑↑───┴───↑↑↑↑↑↑↑↑↑───╯",
 	}
-	startLine, endLine := getWindowFromActiveLine(
-		screen.activeLine,
-		screen.GetSituationBox().H-5-numHeaderLines,
-		len(items))
 
-	tableLines := []string{}
-	tableLines = append(tableLines, fmtFunc(fillSpace("╭────────────────────────────────────────────────────╮", width)))
-	tableLines = append(tableLines, screen.renderItemTableLine(th, REGULAR, width))
-	if startLine == 0 {
-		tableLines = append(tableLines, fmtFunc(fillSpace("├────────────────────────────────────────────────────┤", width)))
-	} else {
-		tableLines = append(tableLines, fmtFunc(fillSpace("├──────────────────↓↓↓↓↓↓↓↓↓↓↓↓↓↓────────────────────┤", width)))
+	_, startLine, endLine := screen.TableHeightWindow("", rawArray, width)
+
+	tableLines := screen.TableHeader(
+		[]string{},
+		TABLE_SEPARATORS,
+		screen.renderTRLine("GOLD price (pylon)", "Amount (gold)", "Total (pylon)"),
+		startLine,
+	)
+
+	for li, request := range rawArray[startLine:endLine] {
+		line := screen.renderTRLine(
+			fmt.Sprintf("%.4f", request.Price),
+			fmt.Sprintf("%d", request.Amount),
+			fmt.Sprintf("%d", request.Total))
+		font := screen.calcTLFont(fontFunc, startLine+li, request.IsMyTrdReq, request)
+		tableLines = tableLines.appendF(line, font)
 	}
-	for li, item := range items[startLine:endLine] {
-		line := ""
-		switch item.(type) {
-		case loud.Item:
-			itemT := item.(loud.Item)
-			font := screen.getFontByActiveIndex(startLine + li)
-			if fontFunc != nil {
-				font = fontFunc(startLine+li, item)
-			}
-			line = screen.renderItemTableLine(
-				fmt.Sprintf("%s  ", formatItem(itemT)),
-				font,
-				width,
-			)
-		case loud.Character:
-			itemT := item.(loud.Character)
-			font := screen.getFontByActiveIndex(startLine + li)
-			if fontFunc != nil {
-				font = fontFunc(startLine+li, item)
-			}
-			line = screen.renderItemTableLine(
-				fmt.Sprintf("%s  ", formatCharacter(itemT)),
-				font,
-				width,
-			)
-		case loud.ItemSpec:
-			itemT := item.(loud.ItemSpec)
-			font := screen.getFontByActiveIndex(startLine + li)
-			if fontFunc != nil {
-				font = fontFunc(startLine+li, item)
-			}
-			line = screen.renderItemTableLine(
-				fmt.Sprintf("%s  ", formatItemSpec(itemT)),
-				font,
-				width,
-			)
-		case loud.CharacterSpec:
-			itemT := item.(loud.CharacterSpec)
-			font := screen.getFontByActiveIndex(startLine + li)
-			if fontFunc != nil {
-				font = fontFunc(startLine+li, item)
-			}
-			line = screen.renderItemTableLine(
-				fmt.Sprintf("%s  ", formatCharacterSpec(itemT)),
-				font,
-				width,
-			)
-		}
-		tableLines = append(tableLines, line)
+	tableLines = tableLines.
+		append(screen.TableFooter(TABLE_SEPARATORS, endLine, rawArray))
+	return tableLines
+}
+
+func (screen *GameScreen) renderITRTable(header string, theads [2]string, rawArrayInterFace interface{}, width int, fontFunc FontFuncType) TextLines {
+	rawArray := InterfaceSlice(rawArrayInterFace)
+	TABLE_SEPARATORS := []string{
+		"╭────────────────────────────────────┬───────────────╮",
+		"├────────────────────────────────────┼───────────────┤",
+		"├──────────↓↓↓↓↓↓↓↓↓↓↓↓↓↓────────────┼─────↓↓↓↓↓↓────┤",
+		"╰────────────────────────────────────┴───────────────╯",
+		"╰──────────↑↑↑↑↑↑↑↑↑↑↑↑↑↑────────────┴─────↑↑↑↑↑↑────╯",
 	}
-	if endLine == len(items) {
-		tableLines = append(tableLines, fmtFunc(fillSpace("╰────────────────────────────────────────────────────╯", width)))
-	} else {
-		tableLines = append(tableLines, fmtFunc(fillSpace("╰───────────────────↑↑↑↑↑↑↑↑↑↑↑↑↑↑───────────────────╯", width)))
+
+	infoLines, startLine, endLine := screen.TableHeightWindow(header, rawArrayInterFace, width)
+	tableLines := screen.TableHeader(
+		infoLines,
+		TABLE_SEPARATORS,
+		screen.renderItemTrdReqTableLine(theads[0], theads[1]),
+		startLine,
+	)
+
+	for li, request := range rawArray[startLine:endLine] {
+		isMyTrdReq, requestItem, requestPrice := RequestInfo(request)
+		line := screen.renderItemTrdReqTableLine(
+			fmt.Sprintf("%s  ", formatByStructType(requestItem)),
+			fmt.Sprintf("%d", requestPrice))
+		font := screen.calcTLFont(fontFunc, startLine+li, isMyTrdReq, request)
+		tableLines = tableLines.appendF(line, font)
 	}
-	return infoLines, tableLines
+	tableLines = tableLines.
+		append(screen.TableFooter(TABLE_SEPARATORS, endLine, rawArray))
+	return tableLines
+}
+
+func (screen *GameScreen) renderITTable(header string, th string, rawArrayInterFace interface{}, width int, fontFunc FontFuncType) TextLines {
+	rawArray := InterfaceSlice(rawArrayInterFace)
+	TABLE_SEPARATORS := []string{
+		"╭────────────────────────────────────────────────────╮",
+		"├────────────────────────────────────────────────────┤",
+		"├──────────────────↓↓↓↓↓↓↓↓↓↓↓↓↓↓────────────────────┤",
+		"╰────────────────────────────────────────────────────╯",
+		"╰───────────────────↑↑↑↑↑↑↑↑↑↑↑↑↑↑───────────────────╯",
+	}
+	infoLines, startLine, endLine := screen.TableHeightWindow(header, rawArrayInterFace, width)
+	tableLines := screen.TableHeader(
+		infoLines,
+		TABLE_SEPARATORS,
+		screen.renderItemTableLine(-1, th),
+		startLine,
+	)
+
+	for li, item := range rawArray[startLine:endLine] {
+		line := screen.renderItemTableLine(
+			startLine+li,
+			fmt.Sprintf("%s  ", formatByStructType(item)))
+		font := screen.calcTLFont(fontFunc, startLine+li, false, item)
+		tableLines = tableLines.appendF(line, font)
+	}
+	tableLines = tableLines.
+		append(screen.TableFooter(TABLE_SEPARATORS, endLine, rawArray))
+	return tableLines
 }

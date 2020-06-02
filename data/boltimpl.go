@@ -388,6 +388,43 @@ func (user dbUser) GetLatestBlockHeight() int64 {
 	return user.UserData.lastUpdate
 }
 
+func (user dbUser) GetMatchedItems(itspec ItemSpec) []Item {
+	mitems := []Item{}
+	for _, item := range user.InventoryItems() {
+		if len(itspec.Name) != 0 && item.Name != itspec.Name {
+			continue
+		}
+		if itspec.Attack[1] > 0 && (item.Attack < itspec.Attack[0] || item.Attack > itspec.Attack[1]) {
+			continue
+		}
+		if itspec.Level[1] > 0 && (item.Level < itspec.Level[0] || item.Level > itspec.Level[1]) {
+			continue
+		}
+		mitems = append(mitems, item)
+	}
+	return mitems
+}
+
+func (user dbUser) GetMatchedCharacters(chspec CharacterSpec) []Character {
+	mchars := []Character{}
+	for _, char := range user.InventoryCharacters() {
+		if chspec.Special > 0 && char.Special != char.Special {
+			continue
+		}
+		if len(chspec.Name) != 0 && char.Name != chspec.Name {
+			continue
+		}
+		if chspec.XP[1] > 0 && (char.XP < chspec.XP[0] || char.XP > chspec.XP[1]) {
+			continue
+		}
+		if chspec.Level[1] > 0 && (char.Level < chspec.Level[0] || char.Level > chspec.Level[1]) {
+			continue
+		}
+		mchars = append(mchars, char)
+	}
+	return mchars
+}
+
 func getUserFromDB(world *dbWorld, username string) User {
 	user := dbUser{
 		UserData: UserData{

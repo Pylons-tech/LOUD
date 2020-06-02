@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io"
 	"reflect"
+	"strings"
 
 	"os"
 
@@ -31,6 +32,13 @@ func (tl TextLines) append(elems ...string) TextLines {
 	return append(tl, elemsT...)
 }
 
+func (tl TextLines) appendF(elem string, font FontType) TextLines {
+	return append(tl, TextLine{
+		content: elem,
+		font:    font,
+	})
+}
+
 func (tl TextLines) appendT(elems ...string) TextLines {
 	elemsT := []TextLine{}
 	for _, el := range elems {
@@ -42,18 +50,63 @@ func (tl TextLines) appendT(elems ...string) TextLines {
 	return append(tl, elemsT...)
 }
 
+func SliceFromStart(text string, width int) string {
+	sliceLen := 0
+	for {
+		newSliceLen := sliceLen
+		startWithCustomUnicode := false
+		for k, v := range customUnicodes {
+			if strings.HasPrefix(text[sliceLen:len(text)], k) {
+				newSliceLen += len(v)
+				startWithCustomUnicode = true
+				break
+			}
+		}
+		if !startWithCustomUnicode {
+			newSliceLen += 1
+		}
+		if newSliceLen <= width {
+			sliceLen = newSliceLen
+		}
+		if newSliceLen >= width || newSliceLen >= len(text) {
+			break
+		}
+	}
+	return text[:sliceLen]
+}
+
+func SliceFromEnd(text string, width int) string {
+	sliceLen := 0
+	for {
+		newSliceLen := sliceLen
+		endWithCustomUnicode := false
+		for k, v := range customUnicodes {
+			if strings.HasSuffix(text[:len(text)-sliceLen], k) {
+				newSliceLen += len(v)
+				endWithCustomUnicode = true
+				break
+			}
+		}
+		if !endWithCustomUnicode {
+			newSliceLen += 1
+		}
+		if newSliceLen <= width {
+			sliceLen = newSliceLen
+		}
+		if newSliceLen >= width || newSliceLen >= len(text) {
+			break
+		}
+	}
+	return text[len(text)-sliceLen : len(text)]
+}
+
 func truncateRight(message string, width int) string {
 	if NumberOfSpaces(message) < width {
 		fmtString := fmt.Sprintf("%%-%vs", width)
 
 		return fmt.Sprintf(fmtString, message)
 	}
-	runeMsg := []rune(message)
-	runeMsgLen := len(runeMsg)
-	if runeMsgLen > width {
-		runeMsgLen = width
-	}
-	return string(runeMsg[0:runeMsgLen-1]) + ellipsis
+	return fillSpace(SliceFromStart(message, width-1)+ellipsis, width)
 }
 
 func truncateLeft(message string, width int) string {
@@ -62,8 +115,7 @@ func truncateLeft(message string, width int) string {
 
 		return fmt.Sprintf(fmtString, message)
 	}
-	strLen := NumberOfSpaces(message)
-	return ellipsis + string([]rune(message)[strLen-width:strLen-1])
+	return fillSpaceLeft(ellipsis+SliceFromEnd(message, width-1), width)
 }
 
 func justifyRight(message string, width int) string {
@@ -72,13 +124,12 @@ func justifyRight(message string, width int) string {
 
 		return fmt.Sprintf(fmtString, message)
 	}
-	strLen := NumberOfSpaces(message)
-	return ellipsis + string([]rune(message)[strLen-width:strLen-1])
+	return fillSpaceLeft(ellipsis+SliceFromEnd(message, width-1), width)
 }
 
 func centerText(message, pad string, width int) string {
 	if NumberOfSpaces(message) > width {
-		return truncateRight(message, width)
+		return fillSpace(SliceFromStart(message, width-1)+ellipsis, width)
 	}
 	leftover := width - NumberOfSpaces(message)
 	left := leftover / 2
@@ -96,11 +147,10 @@ func centerText(message, pad string, width int) string {
 	return fmt.Sprintf("%s%s%s", string([]rune(leftString)[0:left]), message, string([]rune(leftString)[0:right]))
 }
 
-func fillSpace(message string, width int) string {
+func fillSpaceLeft(message string, width int) string {
 	msgLen := NumberOfSpaces(message)
-	// msgLen := len(message)
 	if msgLen > width {
-		return truncateRight(message, width-3)
+		return fillSpace(SliceFromStart(message, width-1)+ellipsis, width)
 	}
 	leftover := width - msgLen
 
@@ -109,7 +159,22 @@ func fillSpace(message string, width int) string {
 	for fillLen < leftover {
 		fillString += " "
 		fillLen = NumberOfSpaces(fillString)
-		// fillLen = len(rightString)
+	}
+	return fillString + message
+}
+
+func fillSpace(message string, width int) string {
+	msgLen := NumberOfSpaces(message)
+	if msgLen > width {
+		return fillSpace(SliceFromStart(message, width-1)+ellipsis, width)
+	}
+	leftover := width - msgLen
+
+	fillString := ""
+	fillLen := 0
+	for fillLen < leftover {
+		fillString += " "
+		fillLen = NumberOfSpaces(fillString)
 	}
 	return message + fillString
 }
@@ -229,7 +294,9 @@ func formatBigNumber(number int) string {
 
 func formatCharacter(ch loud.Character) string {
 	chStr := loud.Localize(ch.Name)
-	chStr = formatSpecial(ch.Special) + " " + chStr // adding space for Sierra issue
+	if ch.Special != loud.NO_SPECIAL {
+		chStr = formatSpecial(ch.Special) + " " + chStr // adding space for Sierra issue
+	}
 	if ch.GiantKill > 0 {
 		chStr = fmt.Sprintf("🗿 x%d %s", ch.GiantKill, chStr)
 	}
@@ -264,6 +331,10 @@ func formatCharacterP(ch *loud.Character) string {
 
 func formatCharacterSpec(chs loud.CharacterSpec) string {
 	chStr := loud.Localize(chs.Name)
+	if chs.Special != loud.NO_SPECIAL {
+		chStr = formatSpecial(chs.Special) + " " + chStr // adding space for Sierra issue
+	}
+
 	lvlStr := formatIntRange(chs.Level)
 	if len(lvlStr) > 0 {
 		chStr += fmt.Sprintf(" Lv%s", lvlStr)
@@ -290,28 +361,44 @@ func InterfaceSlice(slice interface{}) []interface{} {
 	return ret
 }
 
-func (screen *GameScreen) renderTRLine(text1 string, text2 string, text3 string, font FontType, width int) string {
+func formatByStructType(item interface{}) string {
+	switch item.(type) {
+	case loud.Item:
+		return formatItem(item.(loud.Item))
+	case loud.Character:
+		return formatCharacter(item.(loud.Character))
+	case loud.ItemSpec:
+		return formatItemSpec(item.(loud.ItemSpec))
+	case loud.CharacterSpec:
+		return formatCharacterSpec(item.(loud.CharacterSpec))
+	default:
+		return "unrecognized struct type"
+	}
+}
+
+func (screen *GameScreen) renderTRLine(text1 string, text2 string, text3 string) string {
 	text1 = loud.Localize(text1)
 	text2 = loud.Localize(text2)
 	text3 = loud.Localize(text3)
 
 	calcText := "│" + centerText(text1, " ", 20) + "│" + centerText(text2, " ", 15) + "│" + centerText(text3, " ", 15) + "│"
-	onColor := screen.getFont(font)
-	return onColor(fillSpace(calcText, width))
+	return calcText
 }
 
-func (screen *GameScreen) renderItemTableLine(text1 string, font FontType, width int) string {
-	calcText := "│" + centerText(loud.Localize(text1), " ", 52) + "│"
-	onColor := screen.getFont(font)
-	return onColor(fillSpace(calcText, width))
+func (screen *GameScreen) renderItemTableLine(index int, text1 string) string {
+	text := loud.Localize(text1)
+	if index >= 0 {
+		text = fmt.Sprintf(" %d) %s", index+1, text)
+	}
+	calcText := "│" + fillSpace(text, 52) + "│"
+	return calcText
 }
 
-func (screen *GameScreen) renderItemTrdReqTableLine(text1 string, text2 string, font FontType, width int) string {
+func (screen *GameScreen) renderItemTrdReqTableLine(text1 string, text2 string) string {
 	text1 = loud.Localize(text1)
 	text2 = loud.Localize(text2)
 	calcText := "│" + centerText(text1, " ", 36) + "│" + centerText(text2, " ", 15) + "│"
-	onColor := screen.getFont(font)
-	return onColor(fillSpace(calcText, width))
+	return calcText
 }
 
 func min(a, b uint64) uint64 {
@@ -319,4 +406,22 @@ func min(a, b uint64) uint64 {
 		return a
 	}
 	return b
+}
+
+func RequestInfo(request interface{}) (bool, interface{}, int) {
+	switch request.(type) {
+	case loud.ItemBuyTrdReq:
+		itr := request.(loud.ItemBuyTrdReq)
+		return itr.IsMyTrdReq, itr.TItem, itr.Price
+	case loud.ItemSellTrdReq:
+		itr := request.(loud.ItemSellTrdReq)
+		return itr.IsMyTrdReq, itr.TItem, itr.Price
+	case loud.CharacterBuyTrdReq:
+		itr := request.(loud.CharacterBuyTrdReq)
+		return itr.IsMyTrdReq, itr.TCharacter, itr.Price
+	case loud.CharacterSellTrdReq:
+		itr := request.(loud.CharacterSellTrdReq)
+		return itr.IsMyTrdReq, itr.TCharacter, itr.Price
+	}
+	return false, loud.ItemBuyTrdReq{}, 0
 }

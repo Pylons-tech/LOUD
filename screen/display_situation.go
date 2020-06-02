@@ -30,6 +30,13 @@ func (screen *GameScreen) GetTxResponseOutput() (int64, []handlers.ExecuteRecipe
 	return earnedAmount, respOutput
 }
 
+func (screen *GameScreen) GetDisabledFontByActiveLine(idx int) FontType {
+	if screen.activeLine == idx {
+		return GREY_BOLD
+	}
+	return GREY
+}
+
 func (screen *GameScreen) renderUserSituation() {
 
 	// situation box start point (x, y)
@@ -40,7 +47,7 @@ func (screen *GameScreen) renderUserSituation() {
 	h := scrBox.H
 
 	infoLines := []string{}
-	tableLines := []string{}
+	tableLines := TextLines{}
 	desc := ""
 	descfont := REGULAR
 	activeWeapon := screen.user.GetFightWeapon()
@@ -67,33 +74,77 @@ func (screen *GameScreen) renderUserSituation() {
 			}
 		}
 	case SHW_LOUD_BUY_TRDREQS:
-		infoLines, tableLines = screen.renderTRTable(loud.BuyTrdReqs, w)
+		tableLines = screen.renderTRTable(
+			loud.BuyTrdReqs, w,
+			func(idx int, request interface{}) FontType {
+				tr := request.(loud.TrdReq)
+				if screen.user.GetGold() < tr.Amount {
+					return screen.GetDisabledFontByActiveLine(idx)
+				}
+				return screen.getFontOfTableLine(idx, tr.IsMyTrdReq)
+			})
 	case SHW_LOUD_SELL_TRDREQS:
-		infoLines, tableLines = screen.renderTRTable(loud.SellTrdReqs, w)
+		tableLines = screen.renderTRTable(
+			loud.SellTrdReqs, w,
+			func(idx int, request interface{}) FontType {
+				tr := request.(loud.TrdReq)
+				if screen.user.GetPylonAmount() < tr.Total {
+					return screen.GetDisabledFontByActiveLine(idx)
+				}
+				return screen.getFontOfTableLine(idx, tr.IsMyTrdReq)
+			})
 	case SHW_BUYITM_TRDREQS:
-		infoLines, tableLines = screen.renderITRTable(
+		tableLines = screen.renderITRTable(
 			"Buy item requests",
 			[2]string{"Item", "Price (pylon)"},
 			loud.ItemBuyTrdReqs,
-			w)
+			w,
+			func(idx int, request interface{}) FontType {
+				itr := request.(loud.ItemBuyTrdReq)
+				if len(screen.user.GetMatchedItems(itr.TItem)) == 0 {
+					return screen.GetDisabledFontByActiveLine(idx)
+				}
+				return screen.getFontOfTableLine(idx, itr.IsMyTrdReq)
+			})
 	case SHW_SELLITM_TRDREQS:
-		infoLines, tableLines = screen.renderITRTable(
+		tableLines = screen.renderITRTable(
 			"Sell item requests",
 			[2]string{"Item", "Price (pylon)"},
 			loud.ItemSellTrdReqs,
-			w)
+			w,
+			func(idx int, request interface{}) FontType {
+				isMyTrdReq, _, requestPrice := RequestInfo(request)
+				if screen.user.GetPylonAmount() < requestPrice {
+					return screen.GetDisabledFontByActiveLine(idx)
+				}
+				return screen.getFontOfTableLine(idx, isMyTrdReq)
+			})
 	case SHW_SELLCHR_TRDREQS:
-		infoLines, tableLines = screen.renderITRTable(
+		tableLines = screen.renderITRTable(
 			"Sell character requests",
 			[2]string{"Character", "Price (pylon)"},
 			loud.CharacterSellTrdReqs,
-			w)
+			w,
+			func(idx int, request interface{}) FontType {
+				isMyTrdReq, _, requestPrice := RequestInfo(request)
+				if screen.user.GetPylonAmount() < requestPrice {
+					return screen.GetDisabledFontByActiveLine(idx)
+				}
+				return screen.getFontOfTableLine(idx, isMyTrdReq)
+			})
 	case SHW_BUYCHR_TRDREQS:
-		infoLines, tableLines = screen.renderITRTable(
+		tableLines = screen.renderITRTable(
 			"Buy character requests",
 			[2]string{"Character", "Price (pylon)"},
 			loud.CharacterBuyTrdReqs,
-			w)
+			w,
+			func(idx int, request interface{}) FontType {
+				itr := request.(loud.CharacterBuyTrdReq)
+				if len(screen.user.GetMatchedCharacters(itr.TCharacter)) == 0 {
+					return screen.GetDisabledFontByActiveLine(idx)
+				}
+				return screen.getFontOfTableLine(idx, itr.IsMyTrdReq)
+			})
 	case CR8_BUY_LOUD_TRDREQ_ENT_PYLVAL:
 		desc = loud.Localize("Please enter pylon amount to use (should be integer value)")
 	case CR8_SELL_LOUD_TRDREQ_ENT_PYLVAL:
@@ -106,13 +157,13 @@ func (screen *GameScreen) renderUserSituation() {
 		desc = loud.Localize("Please enter gold amount to sell (should be integer value)")
 
 	case CR8_SELLITM_TRDREQ_SEL_ITEM:
-		infoLines, tableLines = screen.renderITTable(
+		tableLines = screen.renderITTable(
 			"Select item to sell",
 			"Item",
 			screen.user.InventoryItems(),
 			w, nil)
 	case CR8_SELLCHR_TRDREQ_SEL_CHR:
-		infoLines, tableLines = screen.renderITTable(
+		tableLines = screen.renderITTable(
 			"Select character to sell",
 			"Character",
 			screen.user.InventoryCharacters(),
@@ -122,13 +173,13 @@ func (screen *GameScreen) renderUserSituation() {
 	case CR8_SELLCHR_TRDREQ_ENT_PYLVAL:
 		desc = loud.Localize("Please enter pylon amount to use (should be integer value)")
 	case CR8_BUYITM_TRDREQ_SEL_ITEM:
-		infoLines, tableLines = screen.renderITTable(
+		tableLines = screen.renderITTable(
 			"Select item to buy",
 			"Item",
 			loud.WorldItemSpecs,
 			w, nil)
 	case CR8_BUYCHR_TRDREQ_SEL_CHR:
-		infoLines, tableLines = screen.renderITTable(
+		tableLines = screen.renderITTable(
 			"Select character specs to get",
 			"Character",
 			loud.WorldCharacterSpecs,
@@ -138,19 +189,19 @@ func (screen *GameScreen) renderUserSituation() {
 	case CR8_BUYCHR_TRDREQ_ENT_PYLVAL:
 		desc = loud.Localize("Please enter pylon amount to use (should be integer value)")
 	case SEL_ACTIVE_CHAR:
-		infoLines, tableLines = screen.renderITTable(
+		tableLines = screen.renderITTable(
 			"Please select active character",
 			"Character",
 			screen.user.InventoryCharacters(),
 			w, nil)
 	case SEL_RENAME_CHAR:
-		infoLines, tableLines = screen.renderITTable(
+		tableLines = screen.renderITTable(
 			"Please select character to rename",
 			"Character",
 			screen.user.InventoryCharacters(),
 			w, nil)
 	case SEL_BUYITM:
-		infoLines, tableLines = screen.renderITTable(
+		tableLines = screen.renderITTable(
 			"select buy item desc",
 			"Shop items",
 			loud.ShopItems,
@@ -159,19 +210,19 @@ func (screen *GameScreen) renderUserSituation() {
 				return screen.getFontOfShopItem(idx, item.(loud.Item))
 			})
 	case SEL_SELLITM:
-		infoLines, tableLines = screen.renderITTable(
+		tableLines = screen.renderITTable(
 			"select sell item desc",
 			"Item",
 			screen.user.InventorySellableItems(),
 			w, nil)
 	case SEL_UPGITM:
-		infoLines, tableLines = screen.renderITTable(
+		tableLines = screen.renderITTable(
 			"select upgrade item desc",
 			"Item",
 			screen.user.InventoryUpgradableItems(),
 			w, nil)
 	case SEL_BUYCHR:
-		infoLines, tableLines = screen.renderITTable(
+		tableLines = screen.renderITTable(
 			"select buy character desc",
 			"Character",
 			loud.ShopCharacters,
@@ -232,15 +283,11 @@ func (screen *GameScreen) renderUserSituation() {
 
 	basicLines := loud.ChunkText(desc, w-2)
 
-	if descfont == REGULAR {
-		infoLines = append(infoLines, basicLines...)
-	} else {
-		colorfulLines := []string{}
-		for _, chli := range basicLines {
-			colorfulLines = append(colorfulLines, screen.getFont(descfont)(fillSpace(chli, w)))
-		}
-		tableLines = append(colorfulLines, tableLines...)
+	colorfulLines := TextLines{}
+	for _, chli := range basicLines {
+		colorfulLines = colorfulLines.appendF(fillSpace(chli, w), descfont)
 	}
+	tableLines = append(colorfulLines, tableLines...)
 
 	fmtFunc := screen.regularFont()
 	for index, line := range infoLines {
@@ -256,7 +303,7 @@ func (screen *GameScreen) renderUserSituation() {
 	for index, line := range tableLines {
 		io.WriteString(os.Stdout, fmt.Sprintf("%s%s",
 			cursor.MoveTo(y+infoLen+index, x),
-			line))
+			screen.getFont(line.font)(fillSpace(line.content, w))))
 		if index+2 > int(screen.Height()) {
 			break
 		}
@@ -313,8 +360,8 @@ func (screen *GameScreen) TxResultSituationDesc() (string, FontType) {
 	desc := ""
 	font := REGULAR
 	resDescMap := map[ScreenStatus]string{
-		RSLT_BUY_LOUD_TRDREQ_CREATION:  "loud buy request creation",
-		RSLT_SELL_LOUD_TRDREQ_CREATION: "loud sell request creation",
+		RSLT_BUY_LOUD_TRDREQ_CREATION:  "gold buy request creation",
+		RSLT_SELL_LOUD_TRDREQ_CREATION: "gold sell request creation",
 		RSLT_SEL_ACT_CHAR:              "selecting active character",
 		RSLT_RENAME_CHAR:               "renaming character",
 		RSLT_BUYITM:                    "buy item",
@@ -631,7 +678,7 @@ func (screen *GameScreen) TxResultSituationDesc() (string, FontType) {
 	return desc, font
 }
 
-func (screen *GameScreen) TxWaitSituationDesc(width int) ([]string, []string) {
+func (screen *GameScreen) TxWaitSituationDesc(width int) ([]string, TextLines) {
 	desc := ""
 	monsterName := monsterTextWithUnicode(screen.user.GetTargetMonster())
 	activeWeapon := screen.user.GetFightWeapon()
@@ -655,7 +702,6 @@ func (screen *GameScreen) TxWaitSituationDesc(width int) ([]string, []string) {
 	case W8_BUYITM:
 		desc = loud.Sprintf("You are buying %s at the shop", screen.activeItem.Name)
 	case W8_BUYCHR:
-		// TODO should change text for this action
 		desc = loud.Sprintf("You are buying %s at the pylons central", formatCharacter(screen.activeCharacter))
 		desc += W8_TO_END
 	case W8_HUNT_RABBITS:
@@ -727,7 +773,5 @@ func (screen *GameScreen) TxWaitSituationDesc(width int) ([]string, []string) {
 		desc += screen.buyLoudDesc(request.Amount, request.Total)
 	}
 	desc += "\n"
-	return loud.ChunkText(desc, width-2), []string{
-		screen.blinkBlueBoldFont()(fillSpace("......", width)),
-	}
+	return loud.ChunkText(desc, width-2), TextLines{}.appendF(fillSpace("......", width), BLINK_BLUE_BOLD)
 }

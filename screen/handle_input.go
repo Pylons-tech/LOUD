@@ -2,6 +2,7 @@ package screen
 
 import (
 	"fmt"
+	"regexp"
 	"strconv"
 	"strings"
 	"time"
@@ -76,14 +77,6 @@ func (screen *GameScreen) HandleInputKeyHomeEntryPoint(input termbox.Event) bool
 			return true
 		}
 		screen.SetScreenStatus(newStus)
-		switch newStus {
-		case SEL_ACTIVE_CHAR, SEL_RENAME_CHAR:
-			activeLine := screen.user.GetActiveCharacterIndex()
-			if len(screen.user.InventoryCharacters()) > 0 && activeLine == -1 {
-				activeLine = 0
-			}
-			screen.activeLine = activeLine
-		}
 		screen.Render()
 		return true
 	} else {
@@ -111,17 +104,6 @@ func (screen *GameScreen) HandleInputKeyPylonsCentralEntryPoint(input termbox.Ev
 			})
 		} else {
 			screen.SetScreenStatus(newStus)
-			switch newStus {
-			case SEL_BUYCHR:
-				screen.activeLine = 0
-			case SHW_LOUD_BUY_TRDREQS,
-				SHW_LOUD_SELL_TRDREQS,
-				SHW_BUYITM_TRDREQS,
-				SHW_SELLITM_TRDREQS,
-				SHW_BUYCHR_TRDREQS,
-				SHW_SELLCHR_TRDREQS:
-				screen.activeLine = 0
-			}
 			screen.Render()
 		}
 		return true
@@ -337,7 +319,7 @@ func (screen *GameScreen) MoveToNextStep() {
 		RSLT_RENAME_CHAR:               SEL_RENAME_CHAR,
 		RSLT_SEL_ACT_CHAR:              SEL_ACTIVE_CHAR,
 		RSLT_BUYITM:                    SEL_BUYITM,
-		RSLT_BUYCHR:                    SEL_BUYCHR,
+		RSLT_BUYCHR:                    SEL_ACTIVE_CHAR,
 		RSLT_SELLITM:                   SEL_SELLITM,
 		RSLT_UPGITM:                    SEL_UPGITM,
 	}
@@ -350,6 +332,9 @@ func (screen *GameScreen) MoveToNextStep() {
 		} else if nextStatus == CONFIRM_FIGHT_GIANT && activeCharacter.Special != loud.NO_SPECIAL {
 			// go back to forest entrypoint when Special is not empty
 			screen.SetScreenStatus(SHW_LOCATION)
+		} else if nextStatus == SEL_ACTIVE_CHAR {
+			screen.user.SetLocation(loud.HOME)
+			screen.SetScreenStatus(nextStatus)
 		} else {
 			screen.SetScreenStatus(nextStatus)
 		}
@@ -754,6 +739,13 @@ func (screen *GameScreen) HandleTypingModeInputKeys(input termbox.Event) bool {
 		}
 		screen.SetInputTextAndRender(screen.inputText[:lastIdx])
 		return true
+	case termbox.KeySpace:
+		log.Println("Pressed Space")
+		if screen.scrStatus == RENAME_CHAR_ENT_NEWNAME {
+			screen.SetInputTextAndRender(screen.inputText + " ")
+			return true
+		}
+		return false
 	case termbox.KeyEnter:
 		switch screen.scrStatus {
 		case RENAME_CHAR_ENT_NEWNAME:
@@ -869,10 +861,15 @@ func (screen *GameScreen) HandleTypingModeInputKeys(input termbox.Event) bool {
 		iChar := string(input.Ch)
 		Key := strings.ToUpper(iChar)
 		if screen.scrStatus == RENAME_CHAR_ENT_NEWNAME {
-			screen.SetInputTextAndRender(screen.inputText + iChar)
+			validNameStr := regexp.MustCompile(`^[a-zA-Z0-9\s$#@!%^&*()]$`)
+			if validNameStr.MatchString(iChar) {
+				screen.SetInputTextAndRender(screen.inputText + iChar)
+				return true
+			}
 		} else if _, err := strconv.Atoi(Key); err == nil {
 			// If user entered number, just use it
 			screen.SetInputTextAndRender(screen.inputText + Key)
+			return true
 		}
 		return false
 	}

@@ -119,13 +119,14 @@ func (screen *GameScreen) sellCharacterSpecDesc(activeCharacter loud.CharacterSp
 	return desc
 }
 
-func (screen *GameScreen) tradeTableColorDesc(width int) []string {
-	var infoLines = []string{}
-	infoLines = append(infoLines, screen.regularFont()(fillSpace(loud.Localize("trade request tables colors meaning"), width)))
-	infoLines = append(infoLines, screen.regularFont()(fillSpace("", width)))
-	infoLines = append(infoLines, screen.regularFont()(fillSpace(loud.Localize("white trade line desc"), width)))
-	infoLines = append(infoLines, screen.blueBoldFont()(fillSpace(loud.Localize("bluebold trade line desc"), width)))
-	infoLines = append(infoLines, screen.brownBoldFont()(fillSpace(loud.Localize("brownbold trade line desc"), width)))
-	infoLines = append(infoLines, screen.brownFont()(fillSpace(loud.Localize("brown trade line desc"), width)))
+func (screen *GameScreen) tradeTableColorDesc(width int) TextLines {
+	var infoLines = TextLines{}
+	infoLines = infoLines.
+		append(loud.Localize("trade request tables colors meaning")).
+		append("").
+		append(loud.Localize("white trade line desc")).
+		appendF(loud.Localize("bluebold trade line desc"), BLUE_BOLD).
+		appendF(loud.Localize("brownbold trade line desc"), BROWN_BOLD).
+		appendF(loud.Localize("brown trade line desc"), BROWN)
 	return infoLines
 }

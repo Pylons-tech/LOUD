@@ -21,9 +21,9 @@ func init() {
 func TestFixturesViaCLI(t *testing.T) {
 	flag.Parse()
 	if connectLocalDaemon {
-		pylonSDK.CLIOpts.CustomNode = "localhost:26657"
+		pylonSDK.CLIOpts.CustomNode = "tcp://localhost:26657"
 	} else {
-		pylonSDK.CLIOpts.CustomNode = "35.223.7.2:26657"
+		pylonSDK.CLIOpts.CustomNode = "tcp://35.223.7.2:26657"
 	}
 	pylonsFixture.FixtureTestOpts.CreateNewCookbook = !useKnownCookbook
 	pylonsFixture.FixtureTestOpts.IsParallel = !runSerialMode
