@@ -187,7 +187,7 @@ func CheckSignatureMatchWithAftiCli(t *testing.T, txhash string, privKey string,
 	}
 
 	log.Println("RunSHCmd output, err=", string(aftiOutput), err)
-	cliTxOutput, err := pylonSDK.RunPylonsCli([]string{"query", "tx", txhash}, "")
+	cliTxOutput, err, _ := pylonSDK.RunPylonsCli([]string{"query", "tx", txhash}, "")
 	if err != nil {
 		log.Println("txhash=", txhash, "txoutput=", string(cliTxOutput), "queryerr=", err)
 	}
@@ -247,7 +247,7 @@ func GetInitialPylons(username string) (string, error) {
 		"--sequence", "0",
 		"--account-number", "0",
 	}
-	signedTx, err := pylonSDK.RunPylonsCli(txSignArgs, "11111111\n")
+	signedTx, err, _ := pylonSDK.RunPylonsCli(txSignArgs, "11111111\n")
 	if err != nil {
 		return "", err
 	}
@@ -286,8 +286,8 @@ func ComputePrivKeyFromMnemonic(mnemonic string) (string, string) {
 
 	// This priv get code came from dbKeybase.CreateMnemonic function of cosmos-sdk
 	masterPriv, ch := hd.ComputeMastersFromSeed(seed)
-	hdPath := hd.NewFundraiserParams(0, 0).String()
-	derivedPriv, err := hd.DerivePrivateKeyForPath(masterPriv, ch, hdPath)
+	// hdPath := hd.NewFundraiserParams(0, 0).String()
+	derivedPriv, err := hd.DerivePrivateKeyForPath(masterPriv, ch, "44'/118'/0'/0/0")
 	if err != nil {
 		os.Exit(1)
 	}
@@ -301,7 +301,7 @@ func ComputePrivKeyFromMnemonic(mnemonic string) (string, string) {
 func InitPylonAccount(username string) string {
 	var privKey string
 	// "pylonscli keys add ${username}"
-	addResult, err := pylonSDK.RunPylonsCli([]string{
+	addResult, err, _ := pylonSDK.RunPylonsCli([]string{
 		"keys", "add", username,
 	}, "11111111\n11111111\n")
 
@@ -349,7 +349,7 @@ func InitPylonAccount(username string) string {
 		log.Println("created new account for", username, "and saved to ~/.pylons/"+username+".json")
 	}
 	addr := pylonSDK.GetAccountAddr(username, GetTestingT())
-	accBytes, err := pylonSDK.RunPylonsCli([]string{"query", "account", addr}, "")
+	accBytes, err, _ := pylonSDK.RunPylonsCli([]string{"query", "account", addr}, "")
 	log.Println("query account for", addr, "result", string(accBytes), err)
 	if err != nil {
 		log.Println("err.Error()", err.Error())
@@ -378,7 +378,7 @@ func InitPylonAccount(username string) string {
 }
 
 func LogFullTxResultByHash(txhash string) {
-	output, err := pylonSDK.RunPylonsCli([]string{"query", "tx", txhash}, "")
+	output, err, _ := pylonSDK.RunPylonsCli([]string{"query", "tx", txhash}, "")
 
 	log.Println("txhash=", txhash, "txoutput=", string(output), "queryerr=", err)
 }
@@ -396,7 +396,7 @@ func ProcessTxResult(user User, txhash string) ([]byte, string) {
 		return []byte{}, errString
 	}
 	LogFullTxResultByHash(txhash)
-	hmrErrMsg, _ := pylonSDK.GetHumanReadableErrorFromTxHash(txhash, t)
+	hmrErrMsg := pylonSDK.GetHumanReadableErrorFromTxHash(txhash, t)
 	if len(hmrErrMsg) > 0 {
 		errString := fmt.Sprintf("txhash=%s hmrErrMsg=%s", txhash, hmrErrMsg)
 		log.Println(errString)
