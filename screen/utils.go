@@ -432,44 +432,44 @@ func RequestInfo(request interface{}) (bool, interface{}, int) {
 }
 
 // ForestStatusCheck checks if a player can fight target monster
-func (screen *GameScreen) ForestStatusCheck(newStus ScreenStatus) (string, string) {
+func (screen *GameScreen) ForestStatusCheck(newStus PageStatus) (string, string) {
 	activeCharacter := screen.user.GetActiveCharacter()
 	if activeCharacter == nil {
 		return loud.Sprintf("You need a character for this action!"), loud.Sprintf("no character!")
 	}
 	switch newStus {
-	case CONFIRM_FIGHT_GIANT:
+	case ConfirmFightGiant:
 		if activeCharacter == nil || activeCharacter.Special != loud.NoSpecial {
 			return loud.Sprintf("You need no special character for this action!"), loud.Sprintf("no non-special character!")
 		}
-	case CONFIRM_FIGHT_DRAGONFIRE:
+	case ConfirmFightDragonFire:
 		if activeCharacter == nil || activeCharacter.Special != loud.FireSpecial {
 			return loud.Sprintf("You need a fire character for this action!"), loud.Sprintf("no fire character!")
 		}
-	case CONFIRM_FIGHT_DRAGONICE:
+	case ConfirmFightDragonIce:
 		if activeCharacter == nil || activeCharacter.Special != loud.IceSpecial {
 			return loud.Sprintf("You need a ice character for this action!"), loud.Sprintf("no ice character!")
 		}
-	case CONFIRM_FIGHT_DRAGONACID:
+	case ConfirmFightDragonAcid:
 		if activeCharacter == nil || activeCharacter.Special != loud.AcidSpecial {
 			return loud.Sprintf("You need a acid character for this action!"), loud.Sprintf("no acid character!")
 		}
 	}
 	switch newStus {
-	case CONFIRM_FIGHT_GOBLIN,
-		CONFIRM_FIGHT_WOLF,
-		CONFIRM_FIGHT_TROLL:
+	case ConfirmFightGoblin,
+		ConfirmFightWolf,
+		ConfirmFightTroll:
 		if len(screen.user.InventorySwords()) == 0 {
 			return loud.Sprintf("You need a sword for this action!"), loud.Sprintf("no sword!")
 		}
-	case CONFIRM_FIGHT_GIANT,
-		CONFIRM_FIGHT_DRAGONFIRE,
-		CONFIRM_FIGHT_DRAGONICE,
-		CONFIRM_FIGHT_DRAGONACID:
+	case ConfirmFightGiant,
+		ConfirmFightDragonFire,
+		ConfirmFightDragonIce,
+		ConfirmFightDragonAcid:
 		if len(screen.user.InventoryIronSwords()) == 0 {
 			return loud.Sprintf("You need an iron sword for this action!"), loud.Sprintf("no iron sword!")
 		}
-	case CONFIRM_FIGHT_DRAGONUNDEAD:
+	case ConfirmFightDragonUndead:
 		if len(screen.user.InventoryAngelSwords()) == 0 {
 			return loud.Sprintf("You need an angel sword for this action!"), loud.Sprintf("no angel sword!")
 		}

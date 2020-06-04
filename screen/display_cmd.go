@@ -108,12 +108,12 @@ func (screen *GameScreen) renderUserCommands() {
 	infoLines := TextLines{}
 	tableLines := []string{}
 	switch screen.scrStatus {
-	case CONFIRM_ENDGAME:
+	case ConfirmEndGame:
 		infoLines = infoLines.
 			appendT(
 				GobackEscCommand,
 				GoonEnterCommand)
-	case SHW_LOCATION:
+	case ShowLocation:
 		cmdMap := map[loud.UserLocation]string{
 			loud.HOME:     "home",
 			loud.FOREST:   "forest",
@@ -128,16 +128,16 @@ func (screen *GameScreen) renderUserCommands() {
 			append(loud.ChunkText(cmdString, w)...)
 
 		if screen.user.GetLocation() == loud.FOREST {
-			forestStusMap := map[int]ScreenStatus{
-				0: CONFIRM_HUNT_RABBITS,
-				1: CONFIRM_FIGHT_GOBLIN,
-				2: CONFIRM_FIGHT_WOLF,
-				3: CONFIRM_FIGHT_TROLL,
-				4: CONFIRM_FIGHT_GIANT,
-				5: CONFIRM_FIGHT_DRAGONFIRE,
-				6: CONFIRM_FIGHT_DRAGONICE,
-				7: CONFIRM_FIGHT_DRAGONACID,
-				8: CONFIRM_FIGHT_DRAGONUNDEAD,
+			forestStusMap := map[int]PageStatus{
+				0: ConfirmHuntRabbits,
+				1: ConfirmFightGoblin,
+				2: ConfirmFightWolf,
+				3: ConfirmFightTroll,
+				4: ConfirmFightGiant,
+				5: ConfirmFightDragonFire,
+				6: ConfirmFightDragonIce,
+				7: ConfirmFightDragonAcid,
+				8: ConfirmFightDragonUndead,
 			}
 
 			for k, v := range forestStusMap {
@@ -162,58 +162,58 @@ func (screen *GameScreen) renderUserCommands() {
 				infoLines[1].font = GreyFont
 			}
 		}
-	case SHW_LOUD_BUY_TRDREQS:
+	case ShowGoldBuyTrdReqs:
 		infoLines = infoLines.
 			appendT(
 				"Sell gold to fulfill selected request( ↵ )",
 				"Place order to buy gold(R)",
 				GobackCommand)
-	case SHW_LOUD_SELL_TRDREQS:
+	case ShowGoldSellTrdReqs:
 		infoLines = infoLines.
 			appendT(
 				"Buy gold to fulfill selected request( ↵ )",
 				"place order to sell gold(R)",
 				GobackCommand)
-	case SHW_BUYITM_TRDREQS:
+	case ShowBuyItemTrdReqs:
 		infoLines = infoLines.
 			appendT(
 				"Sell item to fulfill selected request( ↵ )",
 				"Place order to buy item(R)",
 				GobackCommand)
-	case SHW_SELLITM_TRDREQS:
+	case ShowSellItemTrdReqs:
 		infoLines = infoLines.
 			appendT(
 				"Buy item to fulfill selected request( ↵ )",
 				"Place order to sell item(R)",
 				GobackCommand)
-	case SHW_BUYCHR_TRDREQS:
+	case ShowBuyChrTrdReqs:
 		infoLines = infoLines.
 			appendT(
 				"Sell character to fulfill selected request( ↵ )",
 				"Place order to buy character(R)",
 				GobackCommand)
-	case SHW_SELLCHR_TRDREQS:
+	case ShowSellChrTrdReqs:
 		infoLines = infoLines.
 			appendT(
 				"Buy character to fulfill selected request( ↵ )",
 				"Place order to sell character(R)",
 				GobackCommand)
 
-	case CR8_BUYCHR_TRDREQ_SEL_CHR,
-		CR8_SELLCHR_TRDREQ_SEL_CHR,
-		CR8_SELLITM_TRDREQ_SEL_ITEM,
-		CR8_BUYITM_TRDREQ_SEL_ITEM:
+	case CreateBuyChrTrdReqSelectChr,
+		CreateSellChrTrdReqSelChr,
+		CreateSellItemTrdReqSelectItem,
+		CreateBuyItemTrdReqSelectItem:
 		infoLines = infoLines.appendSelectGoBackCmds()
-	case SEL_RENAME_CHAR:
+	case SelectRenameChr:
 		infoLines = infoLines.
 			appendCustomFontSelectCmdsScreenCharacters(screen).
 			appendSelectGoBackCmds()
-	case SEL_ACTIVE_CHAR:
+	case SelectActiveChr:
 		infoLines = infoLines.
 			append(fmt.Sprintf("0) %s", loud.Localize("No character selection"))).
 			appendCustomFontSelectCmdsScreenCharacters(screen).
 			appendSelectGoBackCmds()
-	case SEL_BUYITM:
+	case SelectBuyItem:
 		infoLines = infoLines.
 			appendCustomFontSelectCmds(
 				loud.ShopItems, screen.activeLine,
@@ -239,7 +239,7 @@ func (screen *GameScreen) renderUserCommands() {
 					}
 				}).
 			appendSelectGoBackCmds()
-	case SEL_BUYCHR:
+	case SelectBuyChr:
 		infoLines = infoLines.
 			appendCustomFontSelectCmds(
 				loud.ShopCharacters, screen.activeLine,
@@ -251,7 +251,7 @@ func (screen *GameScreen) renderUserCommands() {
 					}
 				}).
 			appendSelectGoBackCmds()
-	case SEL_SELLITM:
+	case SelectSellItem:
 		infoLines = infoLines.
 			appendCustomFontSelectCmds(
 				screen.user.InventorySellableItems(), screen.activeLine,
@@ -263,7 +263,7 @@ func (screen *GameScreen) renderUserCommands() {
 					}
 				}).
 			appendSelectGoBackCmds()
-	case SEL_UPGITM:
+	case SelectUpgradeItem:
 		infoLines = infoLines.
 			appendCustomFontSelectCmds(
 				screen.user.InventoryUpgradableItems(), screen.activeLine,
@@ -275,24 +275,24 @@ func (screen *GameScreen) renderUserCommands() {
 					}
 				}).
 			appendSelectGoBackCmds()
-	case CONFIRM_HUNT_RABBITS,
-		CONFIRM_FIGHT_GOBLIN,
-		CONFIRM_FIGHT_TROLL,
-		CONFIRM_FIGHT_WOLF,
-		CONFIRM_FIGHT_GIANT,
-		CONFIRM_FIGHT_DRAGONFIRE,
-		CONFIRM_FIGHT_DRAGONICE,
-		CONFIRM_FIGHT_DRAGONACID,
-		CONFIRM_FIGHT_DRAGONUNDEAD:
+	case ConfirmHuntRabbits,
+		ConfirmFightGoblin,
+		ConfirmFightTroll,
+		ConfirmFightWolf,
+		ConfirmFightGiant,
+		ConfirmFightDragonFire,
+		ConfirmFightDragonIce,
+		ConfirmFightDragonAcid,
+		ConfirmFightDragonUndead:
 		infoLines = infoLines.
 			appendGoOnBackCmds()
 	default:
 		if screen.IsHelpScreen() {
 			infoLines = infoLines.
 				appendT(GobackCommand)
-		} else if screen.IsResultScreen() { // eg. RSLT_BUY_LOUD_TRDREQ_CREATION
+		} else if screen.IsResultScreen() { // eg. RsltBuyGoldTrdReqCreation
 			infoLines = infoLines.appendT(GoonEnterCommand)
-		} else if screen.InputActive() { // eg. CR8_BUYITM_TRDREQ_ENT_PYLVAL
+		} else if screen.InputActive() { // eg. CreateBuyItmTrdReqEnterPylonValue
 			infoLines = infoLines.
 				appendT(
 					FinishEnterCommand,

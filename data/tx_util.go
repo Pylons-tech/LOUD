@@ -103,7 +103,7 @@ func init() {
 		customNode = cfg.SDK.CliEndpoint
 		maxWaitBlock = cfg.SDK.MaxWaitBlock
 	} else {
-		log.Fatal("Couldn't load configuration file, log=\"%+v\"", cferr)
+		log.Fatal("Couldn't load configuration file, log=\"", cferr, "\"")
 	}
 
 	pylonSDK.CLIOpts.CustomNode = customNode
@@ -337,7 +337,9 @@ func InitPylonAccount(username string) string {
 		privKey, _ = ComputePrivKeyFromMnemonic(mnemonic) // get privKey and cosmosAddr
 
 		addResult, err = json.Marshal(addedKeyResInterface)
-		log.Fatal("Couldn't marshal added Keys result")
+		if err != nil {
+			log.Fatal("Couldn't marshal added Keys result")
+		}
 
 		usr, _ := user.Current()
 		pylonsDir := filepath.Join(usr.HomeDir, ".pylons")

@@ -314,7 +314,7 @@ func (user *dbUser) InventoryAngelSwords() []Item {
 	iis := user.InventoryItems()
 	uis := []Item{}
 	for _, ii := range iis {
-		if ii.Name == ANGEL_SWORD {
+		if ii.Name == AngelSword {
 			uis = append(uis, ii)
 		}
 	}
@@ -325,7 +325,7 @@ func (user *dbUser) InventoryIronSwords() []Item {
 	iis := user.InventoryItems()
 	uis := []Item{}
 	for _, ii := range iis {
-		if ii.Name == IRON_SWORD {
+		if ii.Name == IronSword {
 			uis = append(uis, ii)
 		}
 	}
@@ -351,7 +351,7 @@ func (user *dbUser) InventoryUpgradableItems() []Item {
 	iis := user.InventoryItems()
 	uis := []Item{}
 	for _, ii := range iis {
-		if ii.Level == 1 && (ii.Name == COPPER_SWORD || ii.Name == WOODEN_SWORD) {
+		if ii.Level == 1 && (ii.Name == CopperSword || ii.Name == WoodenSword) {
 			uis = append(uis, ii)
 		}
 	}
@@ -408,7 +408,7 @@ func (user dbUser) GetMatchedItems(itspec ItemSpec) []Item {
 func (user dbUser) GetMatchedCharacters(chspec CharacterSpec) []Character {
 	mchars := []Character{}
 	for _, char := range user.InventoryCharacters() {
-		if chspec.Special > 0 && char.Special != char.Special {
+		if chspec.Special > 0 && char.Special != chspec.Special {
 			continue
 		}
 		if len(chspec.Name) != 0 && char.Name != chspec.Name {

@@ -65,7 +65,7 @@ func (screen *GameScreen) renderMenu() {
 
 	md := MenuDisplay{
 		text:     loud.Localize(ExitGameEscCommand),
-		isActive: screen.scrStatus == CONFIRM_ENDGAME,
+		isActive: screen.scrStatus == ConfirmEndGame,
 	}
 	md.width = len(md.text) + 4
 	md.start = w - md.width

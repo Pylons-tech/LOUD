@@ -63,19 +63,19 @@ func SetupScreenAndEvents(world data.World, logFile *os.File) {
 	tick := time.Tick(300 * time.Millisecond)
 	config, cferr := cf.ReadConfig()
 	if cferr != nil {
-		log.Fatal("Couldn't load configuration file, log=\"%+v\"", cferr)
+		log.Fatal("Couldn't load configuration file, log=\"", cferr, "\"")
 	}
 	regRefreshTick := time.Tick(time.Duration(config.App.DaemonTimeoutCommit) * time.Second)
 
 	if data.AutomateInput {
-		screenInstance.SetScreenStatus(screen.RSLT_SWITCH_USER)
+		screenInstance.SetScreenStatus(screen.RsltSwitchUser)
 		time.AfterFunc(2*time.Second, func() {
 
 		automateloop:
 			for {
 				log.Println("<-automateTick")
 				switch screenInstance.GetScreenStatus() {
-				case screen.RSLT_CREATE_COOKBOOK:
+				case screen.RsltCreateCookbook:
 					if screenInstance.GetTxFailReason() != "" {
 						data.SomethingWentWrongMsg = "create cookbook failed, " + screenInstance.GetTxFailReason()
 						break automateloop
@@ -83,11 +83,11 @@ func SetupScreenAndEvents(world data.World, logFile *os.File) {
 					screenInstance.HandleInputKey(termbox.Event{
 						Ch: 122, // "z" 122 Switch user
 					})
-				case screen.RSLT_GET_PYLONS:
+				case screen.RsltGetPylons:
 					screenInstance.HandleInputKey(termbox.Event{
 						Ch: 106, // "j" 106 Create cookbook
 					})
-				case screen.RSLT_SWITCH_USER:
+				case screen.RsltSwitchUser:
 					screenInstance.HandleInputKey(termbox.Event{
 						Ch: 121, // "y" 121 get initial pylons
 					})

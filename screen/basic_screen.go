@@ -166,28 +166,28 @@ func (screen *GameScreen) IsWaitScreenCmd(input termbox.Event) bool {
 
 // IsEndGameConfirmScreen returns if user is seeing end game confirmation page
 func (screen *GameScreen) IsEndGameConfirmScreen() bool {
-	return screen.scrStatus == CONFIRM_ENDGAME
+	return screen.scrStatus == ConfirmEndGame
 }
 
 // InputActive returns if screen's input area is active
 func (screen *GameScreen) InputActive() bool {
 	switch screen.scrStatus {
-	case CR8_BUY_LOUD_TRDREQ_ENT_LUDVAL,
-		CR8_BUY_LOUD_TRDREQ_ENT_PYLVAL,
-		CR8_SELL_LOUD_TRDREQ_ENT_LUDVAL,
-		CR8_SELL_LOUD_TRDREQ_ENT_PYLVAL,
-		CR8_SELLITM_TRDREQ_ENT_PYLVAL,
-		CR8_BUYITM_TRDREQ_ENT_PYLVAL,
-		CR8_SELLCHR_TRDREQ_ENT_PYLVAL,
-		CR8_BUYCHR_TRDREQ_ENT_PYLVAL,
-		RENAME_CHAR_ENT_NEWNAME:
+	case CreateBuyGoldTrdReqEnterGoldValue,
+		CreateBuyGoldTrdReqEnterPylonValue,
+		CreateSellGoldTrdReqEnterGoldValue,
+		CreateSellGoldTrdReqEnterPylonValue,
+		CreateSellItemTrdReqEnterPylonValue,
+		CreateBuyItmTrdReqEnterPylonValue,
+		CreateSellChrTrdReqEnterPylonValue,
+		CreateBuyChrTrdReqEnterPylonValue,
+		SelectRenameChrEntNewName:
 		return true
 	}
 	return false
 }
 
 // SetScreenStatusAndRefresh set screen status and do refresh
-func (screen *GameScreen) SetScreenStatusAndRefresh(newStatus ScreenStatus) {
+func (screen *GameScreen) SetScreenStatusAndRefresh(newStatus PageStatus) {
 	screen.SetScreenStatus(newStatus)
 	screen.Render()
 }
@@ -199,7 +199,7 @@ func (screen *GameScreen) FreshRender() {
 }
 
 // GetScreenStatus returns screen status
-func (screen *GameScreen) GetScreenStatus() ScreenStatus {
+func (screen *GameScreen) GetScreenStatus() PageStatus {
 	return screen.scrStatus
 }
 
@@ -212,48 +212,48 @@ func (screen *GameScreen) SelectDefaultActiveLine(arrayInterface interface{}) {
 }
 
 // SetScreenStatus select the screen status and do the intercept operations while switch
-func (screen *GameScreen) SetScreenStatus(newStatus ScreenStatus) {
+func (screen *GameScreen) SetScreenStatus(newStatus PageStatus) {
 	screen.scrStatus = newStatus
 
 	switch newStatus {
-	case RSLT_HUNT_RABBITS,
-		RSLT_FIGHT_GOBLIN,
-		RSLT_FIGHT_TROLL,
-		RSLT_FIGHT_WOLF,
-		RSLT_FIGHT_GIANT,
-		RSLT_FIGHT_DRAGONFIRE,
-		RSLT_FIGHT_DRAGONICE,
-		RSLT_FIGHT_DRAGONACID,
-		RSLT_FIGHT_DRAGONUNDEAD:
+	case RsltHuntRabbits,
+		RsltFightGoblin,
+		RsltFightTroll,
+		RsltFightWolf,
+		RsltFightGiant,
+		RsltFightDragonFire,
+		RsltFightDragonIce,
+		RsltFightDragonAcid,
+		RsltFightDragonUndead:
 		_, respOutput := screen.GetTxResponseOutput()
 		resLen := len(respOutput)
 		if resLen == 0 { // it means character is dead
 			screen.user.SetActiveCharacterIndex(-1)
 		}
-	case SEL_ACTIVE_CHAR, SEL_RENAME_CHAR:
+	case SelectActiveChr, SelectRenameChr:
 		screen.activeLine = screen.user.GetActiveCharacterIndex()
 		screen.SelectDefaultActiveLine(screen.user.InventoryCharacters())
-	case SEL_BUYCHR:
+	case SelectBuyChr:
 		screen.activeLine = 0
-	case SHW_LOUD_BUY_TRDREQS:
+	case ShowGoldBuyTrdReqs:
 		screen.SelectDefaultActiveLine(loud.BuyTrdReqs)
-	case SHW_LOUD_SELL_TRDREQS:
+	case ShowGoldSellTrdReqs:
 		screen.SelectDefaultActiveLine(loud.SellTrdReqs)
-	case SHW_BUYITM_TRDREQS:
+	case ShowBuyItemTrdReqs:
 		screen.SelectDefaultActiveLine(loud.ItemBuyTrdReqs)
-	case SHW_SELLITM_TRDREQS:
+	case ShowSellItemTrdReqs:
 		screen.SelectDefaultActiveLine(loud.ItemSellTrdReqs)
-	case SHW_BUYCHR_TRDREQS:
+	case ShowBuyChrTrdReqs:
 		screen.SelectDefaultActiveLine(loud.CharacterBuyTrdReqs)
-	case SHW_SELLCHR_TRDREQS:
+	case ShowSellChrTrdReqs:
 		screen.SelectDefaultActiveLine(loud.CharacterSellTrdReqs)
-	case CR8_BUYCHR_TRDREQ_SEL_CHR:
+	case CreateBuyChrTrdReqSelectChr:
 		screen.SelectDefaultActiveLine(loud.WorldCharacterSpecs)
-	case CR8_SELLCHR_TRDREQ_SEL_CHR:
+	case CreateSellChrTrdReqSelChr:
 		screen.SelectDefaultActiveLine(screen.user.InventoryCharacters())
-	case CR8_BUYITM_TRDREQ_SEL_ITEM:
+	case CreateBuyItemTrdReqSelectItem:
 		screen.SelectDefaultActiveLine(loud.WorldItemSpecs)
-	case CR8_SELLITM_TRDREQ_SEL_ITEM:
+	case CreateSellItemTrdReqSelectItem:
 		screen.SelectDefaultActiveLine(screen.user.InventoryItems())
 	}
 }

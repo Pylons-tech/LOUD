@@ -27,8 +27,8 @@ type Screen interface {
 	UpdateFakeBlockHeight(int64)
 	SetScreenSize(int, int)
 	HandleInputKey(termbox.Event)
-	GetScreenStatus() ScreenStatus
-	SetScreenStatus(ScreenStatus)
+	GetScreenStatus() PageStatus
+	SetScreenStatus(PageStatus)
 	GetTxFailReason() string
 	FakeSync()
 	Resync()
@@ -58,7 +58,7 @@ type GameScreen struct {
 	txFailReason     string
 	txResult         []byte
 	refreshed        bool
-	scrStatus        ScreenStatus
+	scrStatus        PageStatus
 	colorCodeCache   map[string](func(string) string)
 }
 
@@ -96,7 +96,7 @@ func (screen *GameScreen) Render() {
 		return
 	}
 	if screen.scrStatus == "" {
-		screen.SetScreenStatus(SHW_LOCATION)
+		screen.SetScreenStatus(ShowLocation)
 	}
 
 	if screen.Height() < 38 || screen.Width() < 120 {

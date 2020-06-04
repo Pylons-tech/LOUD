@@ -146,36 +146,36 @@ func Buy(user User, item Item) (string, error) {
 	rcpName := ""
 	itemIDs := []string{}
 	switch item.Name {
-	case WOODEN_SWORD:
+	case WoodenSword:
 		if item.Level == 1 {
 			rcpName = RCP_BUY_WOODEN_SWORD
 		}
-	case COPPER_SWORD:
+	case CopperSword:
 		if item.Level == 1 {
 			rcpName = RCP_BUY_COPPER_SWORD
 		}
-	case SILVER_SWORD:
+	case SilverSword:
 		if item.Level == 1 {
 			rcpName = RCP_BUY_SILVER_SWORD
-			itemIDs = []string{user.InventoryItemIDByName(GOBLIN_EAR)}
+			itemIDs = []string{user.InventoryItemIDByName(GoblinEar)}
 		}
-	case BRONZE_SWORD:
+	case BronzeSword:
 		if item.Level == 1 {
 			rcpName = RCP_BUY_BRONZE_SWORD
-			itemIDs = []string{user.InventoryItemIDByName(WOLF_TAIL)}
+			itemIDs = []string{user.InventoryItemIDByName(WolfTail)}
 		}
-	case IRON_SWORD:
+	case IronSword:
 		if item.Level == 1 {
 			rcpName = RCP_BUY_IRON_SWORD
-			itemIDs = []string{user.InventoryItemIDByName(TROLL_TOES)}
+			itemIDs = []string{user.InventoryItemIDByName(TrollToes)}
 		}
-	case ANGEL_SWORD:
+	case AngelSword:
 		if item.Level == 1 {
 			rcpName = RCP_BUY_ANGEL_SWORD
 			itemIDs = []string{
-				user.InventoryItemIDByName(DROP_DRAGONFIRE),
-				user.InventoryItemIDByName(DROP_DRAGONICE),
-				user.InventoryItemIDByName(DROP_DRAGONACID),
+				user.InventoryItemIDByName(DropDragonFire),
+				user.InventoryItemIDByName(DropDragonIce),
+				user.InventoryItemIDByName(DropDragonAcid),
 			}
 		}
 	default:
@@ -201,11 +201,11 @@ func Upgrade(user User, item Item) (string, error) {
 	itemIDs := []string{item.ID}
 	rcpName := ""
 	switch item.Name {
-	case WOODEN_SWORD:
+	case WoodenSword:
 		if item.Level == 1 {
 			rcpName = RCP_WOODEN_SWORD_UPG
 		}
-	case COPPER_SWORD:
+	case CopperSword:
 		if item.Level == 1 {
 			rcpName = RCP_COPPER_SWORD_UPG
 		}
