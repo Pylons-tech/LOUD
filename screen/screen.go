@@ -16,8 +16,9 @@ import (
 const allowMouseInputAndHideCursor string = "\x1b[?1003h\x1b[?25l"
 const resetScreen string = "\x1bc"
 const ellipsis = "…"
-const hpon = "◆"
-const hpoff = "◇"
+
+// const hpon = "◆"
+// const hpoff = "◇"
 const bgcolor = 232
 
 // Screen represents a UI screen.

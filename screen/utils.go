@@ -122,14 +122,14 @@ func truncateLeft(message string, width int) string {
 	return fillSpaceLeft(ellipsis+SliceFromEnd(message, width-1), width)
 }
 
-func justifyRight(message string, width int) string {
-	if NumberOfSpaces(message) < width {
-		fmtString := fmt.Sprintf("%%%vs", width)
+// func justifyRight(message string, width int) string {
+// 	if NumberOfSpaces(message) < width {
+// 		fmtString := fmt.Sprintf("%%%vs", width)
 
-		return fmt.Sprintf(fmtString, message)
-	}
-	return fillSpaceLeft(ellipsis+SliceFromEnd(message, width-1), width)
-}
+// 		return fmt.Sprintf(fmtString, message)
+// 	}
+// 	return fillSpaceLeft(ellipsis+SliceFromEnd(message, width-1), width)
+// }
 
 func centerText(message, pad string, width int) string {
 	if NumberOfSpaces(message) > width {
@@ -405,12 +405,12 @@ func (screen *GameScreen) renderItemTrdReqTableLine(text1 string, text2 string) 
 	return calcText
 }
 
-func min(a, b uint64) uint64 {
-	if a < b {
-		return a
-	}
-	return b
-}
+// func min(a, b uint64) uint64 {
+// 	if a < b {
+// 		return a
+// 	}
+// 	return b
+// }
 
 // RequestInfo returns basic info from several type of requests
 func RequestInfo(request interface{}) (bool, interface{}, int) {
