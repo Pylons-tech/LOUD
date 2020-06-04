@@ -14,11 +14,13 @@ import (
 	loud "github.com/Pylons-tech/LOUD/data"
 )
 
+// TextLine is a struct to manage a line on screen
 type TextLine struct {
 	content string
 	font    FontType
 }
 
+// TextLines is a struct to manage bulk TextLine objects
 type TextLines []TextLine
 
 func (tl TextLines) append(elems ...string) TextLines {
@@ -50,6 +52,7 @@ func (tl TextLines) appendT(elems ...string) TextLines {
 	return append(tl, elemsT...)
 }
 
+// SliceFromStart cut the text from the start, max width is provided
 func SliceFromStart(text string, width int) string {
 	sliceLen := 0
 	for {
@@ -63,7 +66,7 @@ func SliceFromStart(text string, width int) string {
 			}
 		}
 		if !startWithCustomUnicode {
-			newSliceLen += 1
+			newSliceLen++
 		}
 		if newSliceLen <= width {
 			sliceLen = newSliceLen
@@ -75,6 +78,7 @@ func SliceFromStart(text string, width int) string {
 	return text[:sliceLen]
 }
 
+// SliceFromEnd cut the text from the end, max width is provided
 func SliceFromEnd(text string, width int) string {
 	sliceLen := 0
 	for {
@@ -88,7 +92,7 @@ func SliceFromEnd(text string, width int) string {
 			}
 		}
 		if !endWithCustomUnicode {
-			newSliceLen += 1
+			newSliceLen++
 		}
 		if newSliceLen <= width {
 			sliceLen = newSliceLen
@@ -220,9 +224,8 @@ func formatItemP(item *loud.Item) string {
 func carryItemDesc(item *loud.Item) string {
 	if item == nil {
 		return ""
-	} else {
-		return "Carry: " + formatItemP(item)
 	}
+	return "Carry: " + formatItemP(item)
 }
 
 func formatIntRange(r [2]int) string {
@@ -346,6 +349,7 @@ func formatCharacterSpec(chs loud.CharacterSpec) string {
 	return chStr
 }
 
+// InterfaceSlice returns array from interface object
 func InterfaceSlice(slice interface{}) []interface{} {
 	s := reflect.ValueOf(slice)
 	if s.Kind() != reflect.Slice {
@@ -408,6 +412,7 @@ func min(a, b uint64) uint64 {
 	return b
 }
 
+// RequestInfo returns basic info from several type of requests
 func RequestInfo(request interface{}) (bool, interface{}, int) {
 	switch request.(type) {
 	case loud.ItemBuyTrdReq:
@@ -424,4 +429,50 @@ func RequestInfo(request interface{}) (bool, interface{}, int) {
 		return itr.IsMyTrdReq, itr.TCharacter, itr.Price
 	}
 	return false, loud.ItemBuyTrdReq{}, 0
+}
+
+// ForestStatusCheck checks if a player can fight target monster
+func (screen *GameScreen) ForestStatusCheck(newStus ScreenStatus) (string, string) {
+	activeCharacter := screen.user.GetActiveCharacter()
+	if activeCharacter == nil {
+		return loud.Sprintf("You need a character for this action!"), loud.Sprintf("no character!")
+	}
+	switch newStus {
+	case CONFIRM_FIGHT_GIANT:
+		if activeCharacter == nil || activeCharacter.Special != loud.NoSpecial {
+			return loud.Sprintf("You need no special character for this action!"), loud.Sprintf("no non-special character!")
+		}
+	case CONFIRM_FIGHT_DRAGONFIRE:
+		if activeCharacter == nil || activeCharacter.Special != loud.FireSpecial {
+			return loud.Sprintf("You need a fire character for this action!"), loud.Sprintf("no fire character!")
+		}
+	case CONFIRM_FIGHT_DRAGONICE:
+		if activeCharacter == nil || activeCharacter.Special != loud.IceSpecial {
+			return loud.Sprintf("You need a ice character for this action!"), loud.Sprintf("no ice character!")
+		}
+	case CONFIRM_FIGHT_DRAGONACID:
+		if activeCharacter == nil || activeCharacter.Special != loud.AcidSpecial {
+			return loud.Sprintf("You need a acid character for this action!"), loud.Sprintf("no acid character!")
+		}
+	}
+	switch newStus {
+	case CONFIRM_FIGHT_GOBLIN,
+		CONFIRM_FIGHT_WOLF,
+		CONFIRM_FIGHT_TROLL:
+		if len(screen.user.InventorySwords()) == 0 {
+			return loud.Sprintf("You need a sword for this action!"), loud.Sprintf("no sword!")
+		}
+	case CONFIRM_FIGHT_GIANT,
+		CONFIRM_FIGHT_DRAGONFIRE,
+		CONFIRM_FIGHT_DRAGONICE,
+		CONFIRM_FIGHT_DRAGONACID:
+		if len(screen.user.InventoryIronSwords()) == 0 {
+			return loud.Sprintf("You need an iron sword for this action!"), loud.Sprintf("no iron sword!")
+		}
+	case CONFIRM_FIGHT_DRAGONUNDEAD:
+		if len(screen.user.InventoryAngelSwords()) == 0 {
+			return loud.Sprintf("You need an angel sword for this action!"), loud.Sprintf("no angel sword!")
+		}
+	}
+	return "", ""
 }

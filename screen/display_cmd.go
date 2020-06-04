@@ -143,23 +143,23 @@ func (screen *GameScreen) renderUserCommands() {
 			for k, v := range forestStusMap {
 				if _, fst := screen.ForestStatusCheck(v); len(fst) > 0 {
 					infoLines[k].content += ": " + fst
-					infoLines[k].font = GREY
+					infoLines[k].font = GreyFont
 				}
 			}
 		}
 		if screen.user.GetLocation() == loud.SETTINGS && len(infoLines) > 2 {
 			switch loud.GameLanguage {
 			case "en":
-				infoLines[1].font = BLUE_BOLD
+				infoLines[1].font = BlueBoldFont
 			case "es":
-				infoLines[2].font = BLUE_BOLD
+				infoLines[2].font = BlueBoldFont
 			}
 		}
 		if screen.user.GetLocation() == loud.HOME {
 			if len(infoLines) > 1 && len(screen.user.InventoryCharacters()) == 0 {
 				// make it grey when no character's there
 				infoLines[1].content += ": " + loud.Sprintf("no character!")
-				infoLines[1].font = GREY
+				infoLines[1].font = GreyFont
 			}
 		}
 	case SHW_LOUD_BUY_TRDREQS:

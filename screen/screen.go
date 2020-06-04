@@ -36,6 +36,7 @@ type Screen interface {
 	Reset()
 }
 
+// GameScreen is a struct to manage screen of game
 type GameScreen struct {
 	world            loud.World
 	user             loud.User
@@ -80,6 +81,7 @@ func NewScreen(world loud.World, user loud.User) Screen {
 	return &screen
 }
 
+// Render method is for printing on terminal
 func (screen *GameScreen) Render() {
 	if len(loud.SomethingWentWrongMsg) > 0 {
 		clear := cursor.ClearEntireScreen()

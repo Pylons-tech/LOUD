@@ -10,6 +10,7 @@ import (
 	loud "github.com/Pylons-tech/LOUD/data"
 )
 
+// MenuDisplay describes the fields that are used for each menu item
 type MenuDisplay struct {
 	text     string
 	isActive bool

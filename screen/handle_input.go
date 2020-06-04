@@ -13,6 +13,7 @@ import (
 	"github.com/nsf/termbox-go"
 )
 
+// HandleInputKey process keyboard input events
 func (screen *GameScreen) HandleInputKey(input termbox.Event) {
 	// initialize actionText since it's turning into a new command
 	screen.actionText = ""
@@ -36,6 +37,7 @@ func (screen *GameScreen) HandleInputKey(input termbox.Event) {
 	}
 }
 
+// HandleInputKeyLocationSwitch process try to switch location with input events and returns false if it's not location switch key
 func (screen *GameScreen) HandleInputKeyLocationSwitch(input termbox.Event) bool {
 	Key := strings.ToUpper(string(input.Ch))
 
@@ -62,6 +64,8 @@ func (screen *GameScreen) HandleInputKeyLocationSwitch(input termbox.Event) bool
 	}
 	return false
 }
+
+// HandleInputKeyHomeEntryPoint handles input key at home
 func (screen *GameScreen) HandleInputKeyHomeEntryPoint(input termbox.Event) bool {
 	Key := string(input.Ch)
 
@@ -79,10 +83,11 @@ func (screen *GameScreen) HandleInputKeyHomeEntryPoint(input termbox.Event) bool
 		screen.SetScreenStatus(newStus)
 		screen.Render()
 		return true
-	} else {
-		return false
 	}
+	return false
 }
+
+// HandleInputKeyPylonsCentralEntryPoint handles input key at pylons central
 func (screen *GameScreen) HandleInputKeyPylonsCentralEntryPoint(input termbox.Event) bool {
 	Key := string(input.Ch)
 
@@ -107,11 +112,11 @@ func (screen *GameScreen) HandleInputKeyPylonsCentralEntryPoint(input termbox.Ev
 			screen.Render()
 		}
 		return true
-	} else {
-		return false
 	}
+	return false
 }
 
+// HandleInputKeySettingsEntryPoint handles input key at settings
 func (screen *GameScreen) HandleInputKeySettingsEntryPoint(input termbox.Event) bool {
 	Key := string(input.Ch)
 
@@ -124,56 +129,11 @@ func (screen *GameScreen) HandleInputKeySettingsEntryPoint(input termbox.Event) 
 		loud.GameLanguage = newLang
 		screen.Render()
 		return true
-	} else {
-		return false
 	}
+	return false
 }
 
-func (screen *GameScreen) ForestStatusCheck(newStus ScreenStatus) (string, string) {
-	activeCharacter := screen.user.GetActiveCharacter()
-	if activeCharacter == nil {
-		return loud.Sprintf("You need a character for this action!"), loud.Sprintf("no character!")
-	}
-	switch newStus {
-	case CONFIRM_FIGHT_GIANT:
-		if activeCharacter == nil || activeCharacter.Special != loud.NoSpecial {
-			return loud.Sprintf("You need no special character for this action!"), loud.Sprintf("no non-special character!")
-		}
-	case CONFIRM_FIGHT_DRAGONFIRE:
-		if activeCharacter == nil || activeCharacter.Special != loud.FireSpecial {
-			return loud.Sprintf("You need a fire character for this action!"), loud.Sprintf("no fire character!")
-		}
-	case CONFIRM_FIGHT_DRAGONICE:
-		if activeCharacter == nil || activeCharacter.Special != loud.IceSpecial {
-			return loud.Sprintf("You need a ice character for this action!"), loud.Sprintf("no ice character!")
-		}
-	case CONFIRM_FIGHT_DRAGONACID:
-		if activeCharacter == nil || activeCharacter.Special != loud.AcidSpecial {
-			return loud.Sprintf("You need a acid character for this action!"), loud.Sprintf("no acid character!")
-		}
-	}
-	switch newStus {
-	case CONFIRM_FIGHT_GOBLIN,
-		CONFIRM_FIGHT_WOLF,
-		CONFIRM_FIGHT_TROLL:
-		if len(screen.user.InventorySwords()) == 0 {
-			return loud.Sprintf("You need a sword for this action!"), loud.Sprintf("no sword!")
-		}
-	case CONFIRM_FIGHT_GIANT,
-		CONFIRM_FIGHT_DRAGONFIRE,
-		CONFIRM_FIGHT_DRAGONICE,
-		CONFIRM_FIGHT_DRAGONACID:
-		if len(screen.user.InventoryIronSwords()) == 0 {
-			return loud.Sprintf("You need an iron sword for this action!"), loud.Sprintf("no iron sword!")
-		}
-	case CONFIRM_FIGHT_DRAGONUNDEAD:
-		if len(screen.user.InventoryAngelSwords()) == 0 {
-			return loud.Sprintf("You need an angel sword for this action!"), loud.Sprintf("no angel sword!")
-		}
-	}
-	return "", ""
-}
-
+// HandleInputKeyForestEntryPoint handles input key at forest entry point
 func (screen *GameScreen) HandleInputKeyForestEntryPoint(input termbox.Event) bool {
 	Key := strings.ToUpper(string(input.Ch))
 
@@ -211,11 +171,11 @@ func (screen *GameScreen) HandleInputKeyForestEntryPoint(input termbox.Event) bo
 		screen.SetScreenStatus(newStus)
 		screen.Render()
 		return true
-	} else {
-		return false
 	}
+	return false
 }
 
+// HandleInputKeyShopEntryPoint handles input key for shop
 func (screen *GameScreen) HandleInputKeyShopEntryPoint(input termbox.Event) bool {
 	Key := strings.ToUpper(string(input.Ch))
 
@@ -232,11 +192,11 @@ func (screen *GameScreen) HandleInputKeyShopEntryPoint(input termbox.Event) bool
 		}
 		screen.Render()
 		return true
-	} else {
-		return false
 	}
+	return false
 }
 
+// HandleInputKeyHelpEntryPoint handles input key for help page
 func (screen *GameScreen) HandleInputKeyHelpEntryPoint(input termbox.Event) bool {
 	Key := strings.ToUpper(string(input.Ch))
 
@@ -256,11 +216,11 @@ func (screen *GameScreen) HandleInputKeyHelpEntryPoint(input termbox.Event) bool
 		screen.SetScreenStatus(newStus)
 		screen.Render()
 		return true
-	} else {
-		return false
 	}
+	return false
 }
 
+// MoveToNextStep handles next step command when press enter
 func (screen *GameScreen) MoveToNextStep() {
 	activeCharacter := screen.user.GetActiveCharacter()
 
@@ -345,6 +305,7 @@ func (screen *GameScreen) MoveToNextStep() {
 	screen.Render()
 }
 
+// MoveToPrevStep handles input key for go back action when press backspace
 func (screen *GameScreen) MoveToPrevStep() {
 	activeCharacter := screen.user.GetActiveCharacter()
 
@@ -433,6 +394,7 @@ func (screen *GameScreen) MoveToPrevStep() {
 	screen.Render()
 }
 
+// HandleFirstClassInputKeys handles the keys that are level one
 func (screen *GameScreen) HandleFirstClassInputKeys(input termbox.Event) bool {
 	if input.Key == termbox.KeyEsc {
 		switch screen.scrStatus {
@@ -487,6 +449,7 @@ func (screen *GameScreen) HandleFirstClassInputKeys(input termbox.Event) bool {
 	return true
 }
 
+// HandleSecondClassInputKeys handles the keys that are level 2
 func (screen *GameScreen) HandleSecondClassInputKeys(input termbox.Event) bool {
 	// implement second class commands, eg. input processing for show_location section
 	if screen.user.GetLocation() == loud.HOME {
@@ -523,6 +486,7 @@ func (screen *GameScreen) HandleSecondClassInputKeys(input termbox.Event) bool {
 	return false
 }
 
+// HandleThirdClassInputKeys handles the keys that are level 3
 func (screen *GameScreen) HandleThirdClassInputKeys(input termbox.Event) bool {
 	// implement thid class commands, eg. commands which are not processed by first, second classes
 	Key := strings.ToUpper(string(input.Ch))
@@ -531,11 +495,11 @@ func (screen *GameScreen) HandleThirdClassInputKeys(input termbox.Event) bool {
 	case termbox.KeyArrowRight:
 	case termbox.KeyArrowUp:
 		if screen.activeLine > 0 {
-			screen.activeLine -= 1
+			screen.activeLine--
 		}
 		return true
 	case termbox.KeyArrowDown:
-		screen.activeLine += 1
+		screen.activeLine++
 		return true
 	}
 	if input.Key == termbox.KeyEnter {
@@ -619,6 +583,7 @@ func (screen *GameScreen) HandleThirdClassInputKeys(input termbox.Event) bool {
 	return false
 }
 
+// HandleThirdClassKeyEnterEvent handles the keys that are level 3's enter event
 func (screen *GameScreen) HandleThirdClassKeyEnterEvent() bool {
 	switch screen.user.GetLocation() {
 	case loud.HOME, loud.PYLCNTRL, loud.SHOP, loud.FOREST:
@@ -724,6 +689,7 @@ func (screen *GameScreen) HandleThirdClassKeyEnterEvent() bool {
 	return true
 }
 
+// HandleTypingModeInputKeys handles input keys for input active mode screens
 func (screen *GameScreen) HandleTypingModeInputKeys(input termbox.Event) bool {
 	switch input.Key {
 	case termbox.KeyEsc:

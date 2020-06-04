@@ -20,6 +20,7 @@ func devDetailedResultDesc(res []string) string {
 	return fmt.Sprintf("\n%s:\n  %s\n", loud.Localize("Detailed result"), strings.Join(resT, "\n  "))
 }
 
+// GetTxResponseOutput returns parsed transaction output
 func (screen *GameScreen) GetTxResponseOutput() (int64, []handlers.ExecuteRecipeSerialize) {
 	respOutput := []handlers.ExecuteRecipeSerialize{}
 	earnedAmount := int64(0)
@@ -30,11 +31,12 @@ func (screen *GameScreen) GetTxResponseOutput() (int64, []handlers.ExecuteRecipe
 	return earnedAmount, respOutput
 }
 
+// GetDisabledFontByActiveLine returns bold or not for grey line
 func (screen *GameScreen) GetDisabledFontByActiveLine(idx int) FontType {
 	if screen.activeLine == idx {
-		return GREY_BOLD
+		return GreyBoldFont
 	}
-	return GREY
+	return GreyFont
 }
 
 func (screen *GameScreen) renderUserSituation() {
@@ -49,7 +51,7 @@ func (screen *GameScreen) renderUserSituation() {
 	infoLines := []string{}
 	tableLines := TextLines{}
 	desc := ""
-	descfont := REGULAR
+	descfont := RegularFont
 	activeWeapon := screen.user.GetFightWeapon()
 	switch screen.scrStatus {
 	case CONFIRM_ENDGAME:
@@ -331,6 +333,7 @@ func monsterTextWithUnicode(monster string) string {
 	return ""
 }
 
+// GetKilledByDesc returns who killed and who was killed description
 func (screen *GameScreen) GetKilledByDesc() string {
 	monsterDesc := monsterTextWithUnicode(screen.user.GetTargetMonster())
 	return loud.Sprintf(
@@ -340,6 +343,7 @@ func (screen *GameScreen) GetKilledByDesc() string {
 	)
 }
 
+// GetLostWeaponDesc returns description text when weapon is lost
 func (screen *GameScreen) GetLostWeaponDesc() string {
 	monsterDesc := monsterTextWithUnicode(screen.user.GetTargetMonster())
 	activeWeapon := screen.user.GetFightWeapon()
@@ -356,9 +360,10 @@ func (screen *GameScreen) GetLostWeaponDesc() string {
 		monsterDesc)
 }
 
+// TxResultSituationDesc returns transaction result as user friendly text
 func (screen *GameScreen) TxResultSituationDesc() (string, FontType) {
 	desc := ""
-	font := REGULAR
+	font := RegularFont
 	resDescMap := map[ScreenStatus]string{
 		RSLT_BUY_LOUD_TRDREQ_CREATION:  "gold buy request creation",
 		RSLT_SELL_LOUD_TRDREQ_CREATION: "gold sell request creation",
@@ -387,7 +392,7 @@ func (screen *GameScreen) TxResultSituationDesc() (string, FontType) {
 	}
 	if screen.txFailReason != "" {
 		desc = loud.Localize(resDescMap[screen.scrStatus]+" failure reason") + ": " + loud.Localize(screen.txFailReason)
-		font = RED_BOLD
+		font = RedBoldFont
 	} else {
 		switch screen.scrStatus {
 		case RSLT_BUY_LOUD_TRDREQ_CREATION:
@@ -416,7 +421,7 @@ func (screen *GameScreen) TxResultSituationDesc() (string, FontType) {
 			resLen := len(respOutput)
 			if resLen == 0 {
 				desc = loud.Sprintf("Your %s character is dead while following rabbits accidently", formatCharacter(*screen.user.GetActiveCharacter()))
-				font = RED
+				font = RedFont
 			} else {
 				desc = loud.Sprintf("You did hunt rabbits and earned %d.", earnedAmount)
 			}
@@ -425,21 +430,21 @@ func (screen *GameScreen) TxResultSituationDesc() (string, FontType) {
 			resLen := len(respOutput)
 			if resLen == 0 {
 				desc = screen.GetKilledByDesc()
-				font = RED
+				font = RedFont
 			} else {
 				desc = loud.Sprintf("You did fight with goblin and earned %d.", earnedAmount)
 
 				switch resLen {
 				case 2:
 					desc += screen.GetLostWeaponDesc()
-					font = YELLOW
+					font = YelloFont
 				case 4:
 					bonusItem := screen.user.GetItemByID(respOutput[3].ItemID)
 					if bonusItem == nil {
-						font = RED_BOLD
+						font = RedBoldFont
 						desc = loud.Localize("Something went wrong!\nReturned ItemID is not available on user's inventory.")
 					} else {
-						font = GREEN
+						font = GreenFont
 						desc += loud.Sprintf("You got bonus item called %s", bonusItem.Name)
 						desc += "\n"
 						if bonusItem.Name == loud.GOBLIN_BOOTS { // GOBLIN_BOOTS
@@ -455,21 +460,21 @@ func (screen *GameScreen) TxResultSituationDesc() (string, FontType) {
 			resLen := len(respOutput)
 			if resLen == 0 {
 				desc = screen.GetKilledByDesc()
-				font = RED
+				font = RedFont
 			} else {
 				desc = loud.Sprintf("You did fight with troll and earned %d.", earnedAmount)
 
 				switch resLen {
 				case 2:
 					desc += screen.GetLostWeaponDesc()
-					font = YELLOW
+					font = YelloFont
 				case 4:
 					bonusItem := screen.user.GetItemByID(respOutput[3].ItemID)
 					if bonusItem == nil {
-						font = RED_BOLD
+						font = RedBoldFont
 						desc = loud.Localize("Something went wrong!\nReturned ItemID is not available on user's inventory.")
 					} else {
-						font = GREEN
+						font = GreenFont
 						desc += loud.Sprintf("You got bonus item called %s", bonusItem.Name)
 						desc += "\n"
 						if bonusItem.Name == loud.TROLL_SMELLY_BONES { // TROLL_SMELLY_BONES
@@ -485,21 +490,21 @@ func (screen *GameScreen) TxResultSituationDesc() (string, FontType) {
 			resLen := len(respOutput)
 			if resLen == 0 {
 				desc = screen.GetKilledByDesc()
-				font = RED
+				font = RedFont
 			} else {
 				desc = loud.Sprintf("You did fight with wolf and earned %d.", earnedAmount)
 
 				switch resLen {
 				case 2:
 					desc += screen.GetLostWeaponDesc()
-					font = YELLOW
+					font = YelloFont
 				case 4:
 					bonusItem := screen.user.GetItemByID(respOutput[3].ItemID)
 					if bonusItem == nil {
-						font = RED_BOLD
+						font = RedBoldFont
 						desc = loud.Localize("Something went wrong!\nReturned ItemID is not available on user's inventory.")
 					} else {
-						font = GREEN
+						font = GreenFont
 						desc += loud.Sprintf("You got bonus item called %s", bonusItem.Name)
 						desc += "\n"
 						if bonusItem.Name == loud.WOLF_FUR { // WOLF_FUR
@@ -515,20 +520,20 @@ func (screen *GameScreen) TxResultSituationDesc() (string, FontType) {
 			resLen := len(respOutput)
 			if resLen == 0 {
 				desc = screen.GetKilledByDesc()
-				font = RED
+				font = RedFont
 			} else {
 				desc = loud.Sprintf("You did fight with giant and earned %d.", earnedAmount)
 				switch resLen {
 				case 2:
 					desc += screen.GetLostWeaponDesc()
-					font = YELLOW
+					font = YelloFont
 				case 3:
 					activeCharacter := screen.user.GetActiveCharacter()
 					if activeCharacter != nil && activeCharacter.Special != loud.NoSpecial { // Got special from this fight
 						desc += loud.Sprintf("You got %s (special) from the giant!!", formatSpecial(activeCharacter.Special))
 						desc += "\n"
 						desc += loud.Sprintf("You can now fight with %s with this character!", formatSpecialDragon(activeCharacter.Special))
-						font = GREEN
+						font = GreenFont
 					}
 				}
 			}
@@ -537,19 +542,19 @@ func (screen *GameScreen) TxResultSituationDesc() (string, FontType) {
 			resLen := len(respOutput)
 			if resLen == 0 {
 				desc = screen.GetKilledByDesc()
-				font = RED
+				font = RedFont
 			} else {
 				desc = loud.Sprintf("You did fight with fire dragon and earned %d.", earnedAmount)
 
 				switch resLen {
 				case 2:
 					desc += screen.GetLostWeaponDesc()
-					font = YELLOW
+					font = YelloFont
 				case 4:
 					desc += loud.Sprintf("You got bonus item called %s", loud.DROP_DRAGONFIRE)
 					desc += "\n"
 					desc += loud.Sprintf("Once you have drops from 3 special dragons, you can create angel sword at the shop!")
-					font = GREEN
+					font = GreenFont
 				}
 			}
 		case RSLT_FIGHT_DRAGONICE:
@@ -557,19 +562,19 @@ func (screen *GameScreen) TxResultSituationDesc() (string, FontType) {
 			resLen := len(respOutput)
 			if resLen == 0 {
 				desc = screen.GetKilledByDesc()
-				font = RED
+				font = RedFont
 			} else {
 				desc = loud.Sprintf("You did fight with ice dragon and earned %d.", earnedAmount)
 
 				switch resLen {
 				case 2:
 					desc += screen.GetLostWeaponDesc()
-					font = YELLOW
+					font = YelloFont
 				case 4:
 					desc += loud.Sprintf("You got bonus item called %s", loud.DROP_DRAGONICE)
 					desc += "\n"
 					desc += loud.Sprintf("Once you have drops from 3 special dragons, you can create angel sword at the shop!")
-					font = GREEN
+					font = GreenFont
 				}
 			}
 		case RSLT_FIGHT_DRAGONACID:
@@ -577,19 +582,19 @@ func (screen *GameScreen) TxResultSituationDesc() (string, FontType) {
 			resLen := len(respOutput)
 			if resLen == 0 {
 				desc = screen.GetKilledByDesc()
-				font = RED
+				font = RedFont
 			} else {
 				desc = loud.Sprintf("You did fight with acid dragon and earned %d.", earnedAmount)
 
 				switch resLen {
 				case 2:
 					desc += screen.GetLostWeaponDesc()
-					font = YELLOW
+					font = YelloFont
 				case 4:
 					desc += loud.Sprintf("You got bonus item called %s", loud.DROP_DRAGONACID)
 					desc += "\n"
 					desc += loud.Sprintf("Once you have drops from 3 special dragons, you can create angel sword at the shop!")
-					font = GREEN
+					font = GreenFont
 				}
 			}
 		case RSLT_FIGHT_DRAGONUNDEAD:
@@ -597,13 +602,13 @@ func (screen *GameScreen) TxResultSituationDesc() (string, FontType) {
 			resLen := len(respOutput)
 			if resLen == 0 {
 				desc = screen.GetKilledByDesc()
-				font = RED
+				font = RedFont
 			} else {
 				desc = loud.Sprintf("You did fight with undead dragon and earned %d.", earnedAmount)
 				switch resLen {
 				case 2:
 					desc += screen.GetLostWeaponDesc()
-					font = YELLOW
+					font = YelloFont
 				}
 			}
 		case RSLT_BUY_GOLD_WITH_PYLONS:
@@ -678,6 +683,7 @@ func (screen *GameScreen) TxResultSituationDesc() (string, FontType) {
 	return desc, font
 }
 
+// TxWaitSituationDesc returns wait text for a pending transaction
 func (screen *GameScreen) TxWaitSituationDesc(width int) ([]string, TextLines) {
 	desc := ""
 	monsterName := monsterTextWithUnicode(screen.user.GetTargetMonster())
@@ -689,7 +695,7 @@ func (screen *GameScreen) TxWaitSituationDesc(width int) ([]string, TextLines) {
 		activeWeaponLevel = activeWeapon.Level
 		activeWeaponName = activeWeapon.Name
 	}
-	W8_TO_END := "\n" + loud.Localize("Please wait for a moment to finish the process")
+	WaitToEnd := "\n" + loud.Localize("Please wait for a moment to finish the process")
 	switch screen.scrStatus {
 	case W8_RENAME_CHAR:
 		desc = loud.Sprintf("You are waiting to rename character from %s to %s.", screen.activeCharacter.Name, screen.inputText)
@@ -703,10 +709,10 @@ func (screen *GameScreen) TxWaitSituationDesc(width int) ([]string, TextLines) {
 		desc = loud.Sprintf("You are buying %s at the shop", screen.activeItem.Name)
 	case W8_BUYCHR:
 		desc = loud.Sprintf("You are buying %s at the pylons central", formatCharacter(screen.activeCharacter))
-		desc += W8_TO_END
+		desc += WaitToEnd
 	case W8_HUNT_RABBITS:
 		desc = loud.Sprintf("You are hunting rabbits")
-		desc += W8_TO_END
+		desc += WaitToEnd
 	case W8_FIGHT_TROLL,
 		W8_FIGHT_WOLF,
 		W8_FIGHT_GOBLIN,
@@ -720,7 +726,7 @@ func (screen *GameScreen) TxWaitSituationDesc(width int) ([]string, TextLines) {
 		desc = loud.Sprintf("spending %d pylon for %d gold", 100, 5000)
 	case W8_DEV_GET_TEST_ITEMS:
 		desc = loud.Sprintf("Getting dev test items from pylon")
-		desc += W8_TO_END
+		desc += WaitToEnd
 	case W8_GET_PYLONS:
 		desc = loud.Sprintf("You are waiting for getting pylons process")
 	case W8_SWITCH_USER:
@@ -773,5 +779,5 @@ func (screen *GameScreen) TxWaitSituationDesc(width int) ([]string, TextLines) {
 		desc += screen.buyLoudDesc(request.Amount, request.Total)
 	}
 	desc += "\n"
-	return loud.ChunkText(desc, width-2), TextLines{}.appendF(fillSpace("......", width), BLINK_BLUE_BOLD)
+	return loud.ChunkText(desc, width-2), TextLines{}.appendF(fillSpace("......", width), BlinkBlueFont)
 }
