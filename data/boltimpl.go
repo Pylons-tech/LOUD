@@ -359,12 +359,7 @@ func (user *dbUser) InventoryUpgradableItems() []Item {
 }
 
 func (user *dbUser) InventorySellableItems() []Item {
-	iis := user.InventoryItems()
-	uis := []Item{}
-	for _, ii := range iis {
-		uis = append(uis, ii)
-	}
-	return uis
+	return user.InventoryItems()
 }
 
 func (user *dbUser) GetLastTxHash() string {

@@ -59,7 +59,7 @@ func SliceFromStart(text string, width int) string {
 		newSliceLen := sliceLen
 		startWithCustomUnicode := false
 		for k, v := range customUnicodes {
-			if strings.HasPrefix(text[sliceLen:len(text)], k) {
+			if strings.HasPrefix(text[sliceLen:], k) {
 				newSliceLen += len(v)
 				startWithCustomUnicode = true
 				break
@@ -101,7 +101,7 @@ func SliceFromEnd(text string, width int) string {
 			break
 		}
 	}
-	return text[len(text)-sliceLen : len(text)]
+	return text[len(text)-sliceLen:]
 }
 
 func truncateRight(message string, width int) string {
