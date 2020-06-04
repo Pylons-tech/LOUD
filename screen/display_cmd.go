@@ -10,45 +10,52 @@ import (
 )
 
 const (
-	SEL_CMD           = "Select ( ↵ )"
-	UPDOWN_CMD        = "Table navigation (↑↓)"
-	GO_ON_ENTER_CMD   = "Go on ( ↵ )"
-	FINISH_ENTER_CMD  = "Finish Enter ( ↵ )"
-	GO_BACK_CMD       = "Go back ( ⌫ ) - Backspace Key"
-	GO_BACK_ESC_CMD   = "Go back ( Esc )"
-	EXIT_GAME_ESC_CMD = "Exit Game ( Esc )"
+	// SelectCommand express the select command text
+	SelectCommand = "Select ( ↵ )"
+	// UpdownCommand express table navigation command text
+	UpdownCommand = "Table navigation (↑↓)"
+	// GoonEnterCommand express go on enter command text
+	GoonEnterCommand = "Go on ( ↵ )"
+	// FinishEnterCommand express finish enter command text
+	FinishEnterCommand = "Finish Enter ( ↵ )"
+	// GobackCommand express go back command text
+	GobackCommand = "Go back ( ⌫ ) - Backspace Key"
+	// GobackEscCommand express go back by escape command
+	GobackEscCommand = "Go back ( Esc )"
+	// ExitGameEscCommand express exit game by escape key command
+	ExitGameEscCommand = "Exit Game ( Esc )"
 )
 
 func (tl TextLines) appendSelectGoBackCmds() TextLines {
 	return tl.appendT(
-		SEL_CMD,
-		UPDOWN_CMD,
-		GO_BACK_CMD)
+		SelectCommand,
+		UpdownCommand,
+		GobackCommand)
 }
 
 func (tl TextLines) appendGoOnBackCmds() TextLines {
 	return tl.appendT(
-		GO_ON_ENTER_CMD,
-		GO_BACK_CMD)
+		GoonEnterCommand,
+		GobackCommand)
 }
 
-var MAX_SHORTCUT_ITEM_CMDSEL = 3
+var maxShortcutItemCommands = 3
 
-func getWindowFromActiveLine(activeLine, window_size, max_window int) (int, int) {
-	if window_size > max_window {
-		window_size = max_window
+func getWindowFromActiveLine(activeLine, windowSize, maxWindow int) (int, int) {
+	if windowSize > maxWindow {
+		windowSize = maxWindow
 	}
-	if activeLine >= max_window {
-		activeLine = max_window - 1
+	if activeLine >= maxWindow {
+		activeLine = maxWindow - 1
 	}
-	startLine := activeLine - window_size/2
+	startLine := activeLine - windowSize/2
 	if startLine < 0 {
 		startLine = 0
 	}
-	endLine := startLine + window_size
-	if endLine >= max_window {
-		startLine -= endLine - max_window
-		endLine = max_window
+	endLine := startLine + windowSize
+	if endLine >= maxWindow {
+		startLine -= endLine - maxWindow
+		endLine = maxWindow
 	}
 	return startLine, endLine
 }
@@ -57,7 +64,7 @@ func (tl TextLines) appendCustomFontSelectCmds(itemsSlice interface{}, activeLin
 	moreText := loud.Sprintf("use arrows for more")
 	items := InterfaceSlice(itemsSlice)
 
-	startLine, endLine := getWindowFromActiveLine(activeLine, MAX_SHORTCUT_ITEM_CMDSEL, len(items))
+	startLine, endLine := getWindowFromActiveLine(activeLine, maxShortcutItemCommands, len(items))
 	if startLine != 0 {
 		tl = tl.append("..." + " " + moreText)
 	} else {
@@ -104,8 +111,8 @@ func (screen *GameScreen) renderUserCommands() {
 	case CONFIRM_ENDGAME:
 		infoLines = infoLines.
 			appendT(
-				GO_BACK_ESC_CMD,
-				GO_ON_ENTER_CMD)
+				GobackEscCommand,
+				GoonEnterCommand)
 	case SHW_LOCATION:
 		cmdMap := map[loud.UserLocation]string{
 			loud.HOME:     "home",
@@ -160,37 +167,37 @@ func (screen *GameScreen) renderUserCommands() {
 			appendT(
 				"Sell gold to fulfill selected request( ↵ )",
 				"Place order to buy gold(R)",
-				GO_BACK_CMD)
+				GobackCommand)
 	case SHW_LOUD_SELL_TRDREQS:
 		infoLines = infoLines.
 			appendT(
 				"Buy gold to fulfill selected request( ↵ )",
 				"place order to sell gold(R)",
-				GO_BACK_CMD)
+				GobackCommand)
 	case SHW_BUYITM_TRDREQS:
 		infoLines = infoLines.
 			appendT(
 				"Sell item to fulfill selected request( ↵ )",
 				"Place order to buy item(R)",
-				GO_BACK_CMD)
+				GobackCommand)
 	case SHW_SELLITM_TRDREQS:
 		infoLines = infoLines.
 			appendT(
 				"Buy item to fulfill selected request( ↵ )",
 				"Place order to sell item(R)",
-				GO_BACK_CMD)
+				GobackCommand)
 	case SHW_BUYCHR_TRDREQS:
 		infoLines = infoLines.
 			appendT(
 				"Sell character to fulfill selected request( ↵ )",
 				"Place order to buy character(R)",
-				GO_BACK_CMD)
+				GobackCommand)
 	case SHW_SELLCHR_TRDREQS:
 		infoLines = infoLines.
 			appendT(
 				"Buy character to fulfill selected request( ↵ )",
 				"Place order to sell character(R)",
-				GO_BACK_CMD)
+				GobackCommand)
 
 	case CR8_BUYCHR_TRDREQ_SEL_CHR,
 		CR8_SELLCHR_TRDREQ_SEL_CHR,
@@ -282,14 +289,14 @@ func (screen *GameScreen) renderUserCommands() {
 	default:
 		if screen.IsHelpScreen() {
 			infoLines = infoLines.
-				appendT(GO_BACK_CMD)
+				appendT(GobackCommand)
 		} else if screen.IsResultScreen() { // eg. RSLT_BUY_LOUD_TRDREQ_CREATION
-			infoLines = infoLines.appendT(GO_ON_ENTER_CMD)
+			infoLines = infoLines.appendT(GoonEnterCommand)
 		} else if screen.InputActive() { // eg. CR8_BUYITM_TRDREQ_ENT_PYLVAL
 			infoLines = infoLines.
 				appendT(
-					FINISH_ENTER_CMD,
-					GO_BACK_ESC_CMD)
+					FinishEnterCommand,
+					GobackEscCommand)
 		}
 	}
 

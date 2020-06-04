@@ -5,6 +5,7 @@ import (
 	"strings"
 )
 
+// Item is a struct to manage game item attributes
 type Item struct {
 	ID         string `json:""`
 	Name       string `json:""`
@@ -16,6 +17,7 @@ type Item struct {
 	LastUpdate int64
 }
 
+// ItemSpec is a struct to manage game item spec on trading
 type ItemSpec struct {
 	Name   string `json:""`
 	Level  [2]int
@@ -23,6 +25,7 @@ type ItemSpec struct {
 	Price  int
 }
 
+// Character is a struct to manage game character attributes
 type Character struct {
 	ID                string `json:""`
 	Name              string `json:""`
@@ -35,6 +38,8 @@ type Character struct {
 	UndeadDragonKill  int
 	LastUpdate        int64
 }
+
+// CharacterSpec is a struct to manage game character spec on trading
 type CharacterSpec struct {
 	Special int
 	Name    string `json:""`
@@ -44,22 +49,35 @@ type CharacterSpec struct {
 }
 
 const (
-	NO_SPECIAL   = 0
-	FIRE_SPECIAL = 1
-	ICE_SPECIAL  = 2
-	ACID_SPECIAL = 3
+	// NoSpecial means character has no special
+	NoSpecial = 0
+	// FireSpecial means character has fire special
+	FireSpecial = 1
+	// IceSpecial means character has ice special
+	IceSpecial = 2
+	// AcidSpecial means character has acid special
+	AcidSpecial = 3
 )
 
 const (
-	RABBIT        string = "Rabbit"
-	GOBLIN               = "Goblin"
-	WOLF                 = "Wolf"
-	TROLL                = "Troll"
-	GIANT                = "Giant"
-	DRAGON_FIRE          = "Fire dragon"
-	DRAGON_ICE           = "Ice dragon"
-	DRAGON_ACID          = "Acid dragon"
-	DRAGON_UNDEAD        = "Undead dragon"
+	// TextRabbit is constant for text Rabbit
+	TextRabbit string = "Rabbit"
+	// TextGoblin is constant for text Goblin
+	TextGoblin = "Goblin"
+	// TextWolf is constant for text Wolf
+	TextWolf = "Wolf"
+	// TextTroll is constant for text Troll
+	TextTroll = "Troll"
+	// TextGiant is constant for text Giant
+	TextGiant = "Giant"
+	// TextDragonFire is constant for text Fire Dragon
+	TextDragonFire = "Fire dragon"
+	// TextDragonIce is constant for text Ice Dragon
+	TextDragonIce = "Ice dragon"
+	// TextDragonAcid is constant for text Acid Dragon
+	TextDragonAcid = "Acid dragon"
+	// TextDragonUndead is constant for text Undead Dragon
+	TextDragonUndead = "Undead dragon"
 
 	WOODEN_SWORD = "Wooden sword"
 	COPPER_SWORD = "Copper sword"
@@ -79,10 +97,12 @@ const (
 	DROP_DRAGONACID    = "Poison claws"
 )
 
+// IsSword is a helper function to check if an item is a kind of sword item
 func (item Item) IsSword() bool {
 	return strings.Contains(item.Name, "sword")
 }
 
+// ShopItems describes the items that are buyable at shop
 var ShopItems = []Item{
 	Item{
 		ID:    "001",
@@ -126,6 +146,7 @@ var ShopItems = []Item{
 	},
 }
 
+// PreItemStr returns text that are required to make an item
 func (item Item) PreItemStr() string {
 	switch len(item.PreItems) {
 	case 1:
@@ -137,6 +158,7 @@ func (item Item) PreItemStr() string {
 	}
 }
 
+// WorldItemSpecs describes the items that are buyable by trading
 var WorldItemSpecs = []ItemSpec{
 	ItemSpec{
 		Name:   WOODEN_SWORD,
@@ -204,6 +226,7 @@ var WorldItemSpecs = []ItemSpec{
 	},
 }
 
+// WorldCharacterSpecs characters that are buyable from pylons central by trading
 var WorldCharacterSpecs = []CharacterSpec{
 	CharacterSpec{
 		Name:  "LionBaby",
@@ -211,31 +234,33 @@ var WorldCharacterSpecs = []CharacterSpec{
 		XP:    [2]float64{1, 1000000},
 	},
 	CharacterSpec{
-		Special: FIRE_SPECIAL,
+		Special: FireSpecial,
 		Name:    "FireBaby",
 		Level:   [2]int{1, 1000},
 		XP:      [2]float64{1, 1000000},
 	},
 	CharacterSpec{
-		Special: ICE_SPECIAL,
+		Special: IceSpecial,
 		Name:    "IceBaby",
 		Level:   [2]int{1, 1000},
 		XP:      [2]float64{1, 1000000},
 	},
 	CharacterSpec{
-		Special: ACID_SPECIAL,
+		Special: AcidSpecial,
 		Name:    "AcidBaby",
 		Level:   [2]int{1, 1000},
 		XP:      [2]float64{1, 1000000},
 	},
 }
 
+// GetSellPriceRange calculates sell price range based on item's value
 func (item *Item) GetSellPriceRange() string {
 	minPrice := item.Value * 8 / 10
 	maxPrice := minPrice + 20
 	return fmt.Sprintf("%d-%d", minPrice, maxPrice)
 }
 
+// GetUpgradePrice calculates the upgrade price based on item type
 func (item *Item) GetUpgradePrice() int {
 	switch item.Name {
 	case WOODEN_SWORD:

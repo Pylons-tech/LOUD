@@ -7,6 +7,7 @@ import (
 	"github.com/Pylons-tech/LOUD/log"
 )
 
+// RunTxProcess execute the screen status changes when running transaction
 func (screen *GameScreen) RunTxProcess(waitStatus ScreenStatus, resultStatus ScreenStatus, fn func() (string, error)) {
 	screen.SetScreenStatusAndRefresh(waitStatus)
 
@@ -26,17 +27,20 @@ func (screen *GameScreen) RunTxProcess(waitStatus ScreenStatus, resultStatus Scr
 	}()
 }
 
+// RunActiveCharacterSelect execute the active character selection
 func (screen *GameScreen) RunActiveCharacterSelect(index int) {
 	screen.user.SetActiveCharacterIndex(index)
 	screen.SetScreenStatusAndRefresh(RSLT_SEL_ACT_CHAR)
 }
 
+// RunCharacterRename execute the character rename process
 func (screen *GameScreen) RunCharacterRename(newName string) {
 	screen.RunTxProcess(W8_RENAME_CHAR, RSLT_RENAME_CHAR, func() (string, error) {
 		return loud.RenameCharacter(screen.user, screen.activeCharacter, newName)
 	})
 }
 
+// RunActiveItemBuy execute the item buying process
 func (screen *GameScreen) RunActiveItemBuy() {
 	if !screen.user.HasPreItemForAnItem(screen.activeItem) {
 		screen.txFailReason = loud.Sprintf("You don't have required item to make %s", screen.activeItem.Name)
@@ -48,30 +52,35 @@ func (screen *GameScreen) RunActiveItemBuy() {
 	})
 }
 
+// RunActiveCharacterBuy execute the character buying process
 func (screen *GameScreen) RunActiveCharacterBuy() {
 	screen.RunTxProcess(W8_BUYCHR, RSLT_BUYCHR, func() (string, error) {
 		return loud.BuyCharacter(screen.user, screen.activeCharacter)
 	})
 }
 
+// RunActiveItemSell execute the item sell process
 func (screen *GameScreen) RunActiveItemSell() {
 	screen.RunTxProcess(W8_SELLITM, RSLT_SELLITM, func() (string, error) {
 		return loud.Sell(screen.user, screen.activeItem)
 	})
 }
 
+// RunActiveItemUpgrade execute the item upgrade process
 func (screen *GameScreen) RunActiveItemUpgrade() {
 	screen.RunTxProcess(W8_UPGITM, RSLT_UPGITM, func() (string, error) {
 		return loud.Upgrade(screen.user, screen.activeItem)
 	})
 }
 
+// RunHuntRabbits execute the hunt rabbit process
 func (screen *GameScreen) RunHuntRabbits() {
 	screen.RunTxProcess(W8_HUNT_RABBITS, RSLT_HUNT_RABBITS, func() (string, error) {
 		return loud.HuntRabbits(screen.user)
 	})
 }
 
+// RunFightGiant execute the giant fight process
 func (screen *GameScreen) RunFightGiant() {
 	if len(screen.user.InventoryIronSwords()) == 0 {
 		screen.actionText = loud.Sprintf("You can't fight giant without iron sword.")
@@ -83,6 +92,7 @@ func (screen *GameScreen) RunFightGiant() {
 	})
 }
 
+// RunFightDragonFire execute the fight fire dragon process
 func (screen *GameScreen) RunFightDragonFire() {
 	if len(screen.user.InventoryIronSwords()) == 0 {
 		screen.actionText = loud.Sprintf("You can't fight fire dragon without iron sword.")
@@ -94,6 +104,7 @@ func (screen *GameScreen) RunFightDragonFire() {
 	})
 }
 
+// RunFightDragonIce execute the fight ice dragon process
 func (screen *GameScreen) RunFightDragonIce() {
 	if len(screen.user.InventoryIronSwords()) == 0 {
 		screen.actionText = loud.Sprintf("You can't fight ice dragon without iron sword.")
@@ -105,6 +116,7 @@ func (screen *GameScreen) RunFightDragonIce() {
 	})
 }
 
+// RunFightDragonAcid execute the fight acid dragon process
 func (screen *GameScreen) RunFightDragonAcid() {
 	if len(screen.user.InventoryIronSwords()) == 0 {
 		screen.actionText = loud.Sprintf("You can't fight acid dragon without iron sword.")
@@ -116,6 +128,7 @@ func (screen *GameScreen) RunFightDragonAcid() {
 	})
 }
 
+// RunFightDragonUndead execute the fight undead dragon process
 func (screen *GameScreen) RunFightDragonUndead() {
 	if len(screen.user.InventoryAngelSwords()) == 0 {
 		screen.actionText = loud.Sprintf("You can't fight undead dragon without angel sword.")
@@ -127,24 +140,28 @@ func (screen *GameScreen) RunFightDragonUndead() {
 	})
 }
 
+// RunFightTroll execute the fight troll process
 func (screen *GameScreen) RunFightTroll() {
 	screen.RunTxProcess(W8_FIGHT_TROLL, RSLT_FIGHT_TROLL, func() (string, error) {
 		return loud.FightTroll(screen.user)
 	})
 }
 
+// RunFightWolf execute the fight wolf process
 func (screen *GameScreen) RunFightWolf() {
 	screen.RunTxProcess(W8_FIGHT_WOLF, RSLT_FIGHT_WOLF, func() (string, error) {
 		return loud.FightWolf(screen.user)
 	})
 }
 
+// RunFightGoblin execute the fight goblin process
 func (screen *GameScreen) RunFightGoblin() {
 	screen.RunTxProcess(W8_FIGHT_GOBLIN, RSLT_FIGHT_GOBLIN, func() (string, error) {
 		return loud.FightGoblin(screen.user)
 	})
 }
 
+// RunSelectedLoudBuyTrdReq execute the gold buy trading process
 func (screen *GameScreen) RunSelectedLoudBuyTrdReq() {
 	if len(loud.BuyTrdReqs) <= screen.activeLine || screen.activeLine < 0 {
 		// when activeLine is not refering to real request but when it is refering to nil request
@@ -167,6 +184,7 @@ func (screen *GameScreen) RunSelectedLoudBuyTrdReq() {
 	}
 }
 
+// RunSelectedLoudSellTrdReq execute the gold sell trading process
 func (screen *GameScreen) RunSelectedLoudSellTrdReq() {
 	if len(loud.SellTrdReqs) <= screen.activeLine || screen.activeLine < 0 {
 		screen.txFailReason = loud.Localize("you haven't selected any sell request")
@@ -188,6 +206,7 @@ func (screen *GameScreen) RunSelectedLoudSellTrdReq() {
 	}
 }
 
+// RunSelectedItemBuyTrdReq execute the item buy trading process
 func (screen *GameScreen) RunSelectedItemBuyTrdReq() {
 	if len(loud.ItemBuyTrdReqs) <= screen.activeLine || screen.activeLine < 0 {
 		screen.txFailReason = loud.Localize("you haven't selected any buy item request")
@@ -210,6 +229,7 @@ func (screen *GameScreen) RunSelectedItemBuyTrdReq() {
 	}
 }
 
+// RunSelectedItemSellTrdReq execute the item sell trading process
 func (screen *GameScreen) RunSelectedItemSellTrdReq() {
 	if len(loud.ItemSellTrdReqs) <= screen.activeLine || screen.activeLine < 0 {
 		screen.txFailReason = loud.Localize("you haven't selected any sell item request")
@@ -232,6 +252,7 @@ func (screen *GameScreen) RunSelectedItemSellTrdReq() {
 	}
 }
 
+// RunSelectedCharacterBuyTrdReq execute the character buy trading process
 func (screen *GameScreen) RunSelectedCharacterBuyTrdReq() {
 	if len(loud.CharacterBuyTrdReqs) <= screen.activeLine || screen.activeLine < 0 {
 		screen.txFailReason = loud.Localize("you haven't selected any buy character request")
@@ -254,6 +275,7 @@ func (screen *GameScreen) RunSelectedCharacterBuyTrdReq() {
 	}
 }
 
+// RunSelectedCharacterSellTrdReq execute the character sell trading process
 func (screen *GameScreen) RunSelectedCharacterSellTrdReq() {
 	if len(loud.CharacterSellTrdReqs) <= screen.activeLine || screen.activeLine < 0 {
 		screen.txFailReason = loud.Localize("you haven't selected any sell character request")

@@ -44,10 +44,10 @@ func (screen *GameScreen) renderCharacterSheet() {
 		fmtFunc(fillSpace("", w)),
 	}
 
-	MAX_INVENTORY_LEN := h - 15
+	MaxInventorySize := h - 15
 
 	for idx, character := range characters {
-		if len(infoLines) > MAX_INVENTORY_LEN {
+		if len(infoLines) > MaxInventorySize {
 			infoLines = append(infoLines, fmtFunc(fillSpace("...", w)))
 			break
 		}
@@ -62,7 +62,7 @@ func (screen *GameScreen) renderCharacterSheet() {
 
 	items := screen.user.InventoryItems()
 	for _, item := range items {
-		if len(infoLines) > MAX_INVENTORY_LEN {
+		if len(infoLines) > MaxInventorySize {
 			infoLines = append(infoLines, fmtFunc(fillSpace("...", w)))
 			break
 		}

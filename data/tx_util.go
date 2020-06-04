@@ -90,13 +90,11 @@ var restEndpoint string
 var maxWaitBlock int64
 
 var useRestTx bool = false
-var useLocalDm bool = false
 var AutomateInput bool = false
 var AutomateRunCnt int = 0
 
 func init() {
 	cfg, cferr := cf.ReadConfig()
-	useLocalDm = cfg.Terminal.UseLocalDm
 	useRestTx = cfg.Terminal.UseRestTx
 	AutomateInput = cfg.Terminal.AutomateInput
 
@@ -339,6 +337,7 @@ func InitPylonAccount(username string) string {
 		privKey, _ = ComputePrivKeyFromMnemonic(mnemonic) // get privKey and cosmosAddr
 
 		addResult, err = json.Marshal(addedKeyResInterface)
+		log.Fatal("Couldn't marshal added Keys result")
 
 		usr, _ := user.Current()
 		pylonsDir := filepath.Join(usr.HomeDir, ".pylons")
@@ -573,7 +572,7 @@ func GetItemInputsFromCharacterSpec(chspec CharacterSpec) types.ItemInputList {
 			types.StringInputParam{Key: "Name", Value: chspec.Name},
 		},
 	}
-	if chspec.Special != NO_SPECIAL {
+	if chspec.Special != NoSpecial {
 		ii.Longs = append(ii.Longs, types.LongInputParam{
 			Key: "Special", MinValue: chspec.Special, MaxValue: chspec.Special})
 	}

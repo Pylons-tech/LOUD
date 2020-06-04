@@ -315,15 +315,15 @@ func (screen *GameScreen) renderUserSituation() {
 
 func monsterTextWithUnicode(monster string) string {
 	unicodeMonsterTexts := map[string]string{
-		loud.RABBIT:        "🐇 (rabbit)",
-		loud.GOBLIN:        "👺 (goblin)",
-		loud.WOLF:          "🐺 (wolf)",
-		loud.TROLL:         "👻 (troll)",
-		loud.GIANT:         "🗿 (giant)",
-		loud.DRAGON_FIRE:   "🦐 (fire dragon)",
-		loud.DRAGON_ICE:    "🦈 (ice dragon)",
-		loud.DRAGON_ACID:   "🐊 (acid dragon)",
-		loud.DRAGON_UNDEAD: "🐉 (undead dragon)",
+		loud.TextRabbit:       "🐇 (rabbit)",
+		loud.TextGoblin:       "👺 (goblin)",
+		loud.TextWolf:         "🐺 (wolf)",
+		loud.TextTroll:        "👻 (troll)",
+		loud.TextGiant:        "🗿 (giant)",
+		loud.TextDragonFire:   "🦐 (fire dragon)",
+		loud.TextDragonIce:    "🦈 (ice dragon)",
+		loud.TextDragonAcid:   "🐊 (acid dragon)",
+		loud.TextDragonUndead: "🐉 (undead dragon)",
 	}
 	if umt, ok := unicodeMonsterTexts[monster]; ok {
 		return umt
@@ -524,7 +524,7 @@ func (screen *GameScreen) TxResultSituationDesc() (string, FontType) {
 					font = YELLOW
 				case 3:
 					activeCharacter := screen.user.GetActiveCharacter()
-					if activeCharacter != nil && activeCharacter.Special != loud.NO_SPECIAL { // Got special from this fight
+					if activeCharacter != nil && activeCharacter.Special != loud.NoSpecial { // Got special from this fight
 						desc += loud.Sprintf("You got %s (special) from the giant!!", formatSpecial(activeCharacter.Special))
 						desc += "\n"
 						desc += loud.Sprintf("You can now fight with %s with this character!", formatSpecialDragon(activeCharacter.Special))

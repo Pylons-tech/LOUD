@@ -260,11 +260,11 @@ func formatItemSpec(itemSpec loud.ItemSpec) string {
 
 func formatSpecial(special int) string {
 	switch special {
-	case loud.FIRE_SPECIAL:
+	case loud.FireSpecial:
 		return "🔥"
-	case loud.ICE_SPECIAL:
+	case loud.IceSpecial:
 		return "🌊"
-	case loud.ACID_SPECIAL:
+	case loud.AcidSpecial:
 		return "🥗"
 	}
 	return ""
@@ -272,11 +272,11 @@ func formatSpecial(special int) string {
 
 func formatSpecialDragon(special int) string {
 	switch special {
-	case loud.FIRE_SPECIAL:
+	case loud.FireSpecial:
 		return "Fire dragon"
-	case loud.ICE_SPECIAL:
+	case loud.IceSpecial:
 		return "Ice dragon"
-	case loud.ACID_SPECIAL:
+	case loud.AcidSpecial:
 		return "Acid dragon"
 	}
 	return ""
@@ -294,7 +294,7 @@ func formatBigNumber(number int) string {
 
 func formatCharacter(ch loud.Character) string {
 	chStr := loud.Localize(ch.Name)
-	if ch.Special != loud.NO_SPECIAL {
+	if ch.Special != loud.NoSpecial {
 		chStr = formatSpecial(ch.Special) + " " + chStr // adding space for Sierra issue
 	}
 	if ch.GiantKill > 0 {
@@ -302,11 +302,11 @@ func formatCharacter(ch loud.Character) string {
 	}
 	if ch.SpecialDragonKill > 0 {
 		switch ch.Special {
-		case loud.FIRE_SPECIAL:
+		case loud.FireSpecial:
 			chStr = fmt.Sprintf("🦐 x%d %s", ch.SpecialDragonKill, chStr)
-		case loud.ICE_SPECIAL:
+		case loud.IceSpecial:
 			chStr = fmt.Sprintf("🦈 x%d %s", ch.SpecialDragonKill, chStr)
-		case loud.ACID_SPECIAL:
+		case loud.AcidSpecial:
 			chStr = fmt.Sprintf("🐊 x%d %s", ch.SpecialDragonKill, chStr)
 		}
 	}
@@ -331,7 +331,7 @@ func formatCharacterP(ch *loud.Character) string {
 
 func formatCharacterSpec(chs loud.CharacterSpec) string {
 	chStr := loud.Localize(chs.Name)
-	if chs.Special != loud.NO_SPECIAL {
+	if chs.Special != loud.NoSpecial {
 		chStr = formatSpecial(chs.Special) + " " + chStr // adding space for Sierra issue
 	}
 

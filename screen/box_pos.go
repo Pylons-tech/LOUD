@@ -1,22 +1,26 @@
 package screen
 
-type ScreenBox struct {
+// Box is a struct to manage regions on terminal
+type Box struct {
 	X int
 	Y int
 	W int // inner width
 	H int // inner height
 }
 
+// Width returns whole screen width
 func (screen *GameScreen) Width() int {
 	return screen.screenSize.Width
 }
 
+// Height returns whole screen height
 func (screen *GameScreen) Height() int {
 	return screen.screenSize.Height
 }
 
-func (screen *GameScreen) GetMenuBox() ScreenBox {
-	return ScreenBox{
+// GetMenuBox returns menubox region
+func (screen *GameScreen) GetMenuBox() Box {
+	return Box{
 		X: 2,
 		Y: 2,
 		W: screen.Width() - 2,
@@ -24,9 +28,10 @@ func (screen *GameScreen) GetMenuBox() ScreenBox {
 	}
 }
 
-func (screen *GameScreen) GetSituationBox() ScreenBox {
+// GetSituationBox returns situation box region
+func (screen *GameScreen) GetSituationBox() Box {
 	y := screen.situationCmdBorderY() + 1
-	return ScreenBox{
+	return Box{
 		X: 2,
 		Y: y,
 		W: screen.leftInnerWidth(),
@@ -34,8 +39,9 @@ func (screen *GameScreen) GetSituationBox() ScreenBox {
 	}
 }
 
-func (screen *GameScreen) GetCmdBox() ScreenBox {
-	return ScreenBox{
+// GetCmdBox returns command box region
+func (screen *GameScreen) GetCmdBox() Box {
+	return Box{
 		X: 2,
 		Y: 4,
 		W: screen.leftInnerWidth(),
@@ -43,8 +49,9 @@ func (screen *GameScreen) GetCmdBox() ScreenBox {
 	}
 }
 
-func (screen *GameScreen) GetCharacterSheetBox() ScreenBox {
-	return ScreenBox{
+// GetCharacterSheetBox returns character box region
+func (screen *GameScreen) GetCharacterSheetBox() Box {
+	return Box{
 		X: screen.rightInnerStartX(),
 		Y: 4,
 		W: screen.rightInnerWidth(),
@@ -64,9 +71,9 @@ func (screen *GameScreen) rightInnerStartX() int {
 	return screen.leftRightBorderX() + 1
 }
 
-func (screen *GameScreen) rightInnerEndX() int {
-	return screen.Width() - 1
-}
+// func (screen *GameScreen) rightInnerEndX() int {
+// 	return screen.Width() - 1
+// }
 
 func (screen *GameScreen) rightInnerWidth() int {
 	return screen.Width() - screen.leftInnerWidth() - 3

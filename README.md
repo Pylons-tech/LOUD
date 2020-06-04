@@ -116,7 +116,7 @@ make ARGS="eugen" run
 
 After creating eugen account on remote, check eugen account created correctly on node by running
 ```
-pylonscli query account $(pylonscli keys show -a eugen) --node 35.223.7.2:26657
+pylonscli query account $(pylonscli keys show -a eugen) --node tcp://35.223.7.2:26657
 ```
 Update cookbook name, id and recipe ID for correct version and timestamp.
 **Warn:** If cookbook name does not change, it's refering to old version of cookbook since now it's finding cookbooks by name.
@@ -128,7 +128,7 @@ make fixture_tests ARGS="-runserial"
 
 Check if cookbook and all recipes are created by using
 ```
-pylonscli query pylons list_recipe --node 35.223.7.2:26657
+pylonscli query pylons list_recipe --node tcp://35.223.7.2:26657
 ```
 
 If something went wrong, just create the remaining recipes by editing `scenario/loud.json`.

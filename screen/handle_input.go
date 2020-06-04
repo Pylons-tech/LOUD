@@ -136,19 +136,19 @@ func (screen *GameScreen) ForestStatusCheck(newStus ScreenStatus) (string, strin
 	}
 	switch newStus {
 	case CONFIRM_FIGHT_GIANT:
-		if activeCharacter == nil || activeCharacter.Special != loud.NO_SPECIAL {
+		if activeCharacter == nil || activeCharacter.Special != loud.NoSpecial {
 			return loud.Sprintf("You need no special character for this action!"), loud.Sprintf("no non-special character!")
 		}
 	case CONFIRM_FIGHT_DRAGONFIRE:
-		if activeCharacter == nil || activeCharacter.Special != loud.FIRE_SPECIAL {
+		if activeCharacter == nil || activeCharacter.Special != loud.FireSpecial {
 			return loud.Sprintf("You need a fire character for this action!"), loud.Sprintf("no fire character!")
 		}
 	case CONFIRM_FIGHT_DRAGONICE:
-		if activeCharacter == nil || activeCharacter.Special != loud.ICE_SPECIAL {
+		if activeCharacter == nil || activeCharacter.Special != loud.IceSpecial {
 			return loud.Sprintf("You need a ice character for this action!"), loud.Sprintf("no ice character!")
 		}
 	case CONFIRM_FIGHT_DRAGONACID:
-		if activeCharacter == nil || activeCharacter.Special != loud.ACID_SPECIAL {
+		if activeCharacter == nil || activeCharacter.Special != loud.AcidSpecial {
 			return loud.Sprintf("You need a acid character for this action!"), loud.Sprintf("no acid character!")
 		}
 	}
@@ -178,15 +178,15 @@ func (screen *GameScreen) HandleInputKeyForestEntryPoint(input termbox.Event) bo
 	Key := strings.ToUpper(string(input.Ch))
 
 	monsterMap := map[string]string{
-		"1": loud.RABBIT,
-		"2": loud.GOBLIN,
-		"3": loud.WOLF,
-		"4": loud.TROLL,
-		"5": loud.GIANT,
-		"6": loud.DRAGON_FIRE,
-		"7": loud.DRAGON_ICE,
-		"8": loud.DRAGON_ACID,
-		"9": loud.DRAGON_UNDEAD,
+		"1": loud.TextRabbit,
+		"2": loud.TextGoblin,
+		"3": loud.TextWolf,
+		"4": loud.TextTroll,
+		"5": loud.TextGiant,
+		"6": loud.TextDragonFire,
+		"7": loud.TextDragonIce,
+		"8": loud.TextDragonAcid,
+		"9": loud.TextDragonUndead,
 	}
 
 	tarStusMap := map[string]ScreenStatus{
@@ -329,7 +329,7 @@ func (screen *GameScreen) MoveToNextStep() {
 		} else if screen.user.GetLocation() == loud.FOREST && activeCharacter == nil {
 			// move back to home in forest if no active character
 			screen.SetScreenStatus(SHW_LOCATION)
-		} else if nextStatus == CONFIRM_FIGHT_GIANT && activeCharacter.Special != loud.NO_SPECIAL {
+		} else if nextStatus == CONFIRM_FIGHT_GIANT && activeCharacter.Special != loud.NoSpecial {
 			// go back to forest entrypoint when Special is not empty
 			screen.SetScreenStatus(SHW_LOCATION)
 		} else if nextStatus == SEL_ACTIVE_CHAR {
@@ -417,7 +417,7 @@ func (screen *GameScreen) MoveToPrevStep() {
 			screen.user.SetLocation(loud.HOME)
 		}
 	case CONFIRM_FIGHT_GIANT:
-		if activeCharacter.Special != loud.NO_SPECIAL {
+		if activeCharacter.Special != loud.NoSpecial {
 			// go back to forest entrypoint when Special is not empty
 			screen.SetScreenStatus(SHW_LOCATION)
 		}

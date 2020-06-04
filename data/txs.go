@@ -81,45 +81,45 @@ func RunHuntRecipe(monsterName, rcpName string, user User) (string, error) {
 }
 
 func HuntRabbits(user User) (string, error) {
-	return RunHuntRecipe(RABBIT, RCP_HUNT_RABBITS, user)
+	return RunHuntRecipe(TextRabbit, RCP_HUNT_RABBITS, user)
 }
 
 func FightTroll(user User) (string, error) {
-	return RunHuntRecipe(TROLL, RCP_FIGHT_TROLL, user)
+	return RunHuntRecipe(TextTroll, RCP_FIGHT_TROLL, user)
 }
 
 func FightWolf(user User) (string, error) { // 🐺
-	return RunHuntRecipe(WOLF, RCP_FIGHT_WOLF, user)
+	return RunHuntRecipe(TextWolf, RCP_FIGHT_WOLF, user)
 }
 
 func FightGoblin(user User) (string, error) { // 👺
-	return RunHuntRecipe(GOBLIN, RCP_FIGHT_GOBLIN, user)
+	return RunHuntRecipe(TextGoblin, RCP_FIGHT_GOBLIN, user)
 }
 
 func FightGiant(user User) (string, error) { // 🗿
-	return RunHuntRecipe(GIANT, RCP_FIGHT_GIANT, user)
+	return RunHuntRecipe(TextGiant, RCP_FIGHT_GIANT, user)
 }
 
 func FightDragonFire(user User) (string, error) { // 🦐
-	return RunHuntRecipe(DRAGON_FIRE, RCP_FIGHT_DRAGONFIRE, user)
+	return RunHuntRecipe(TextDragonFire, RCP_FIGHT_DRAGONFIRE, user)
 }
 
 func FightDragonIce(user User) (string, error) { // 🦈
-	return RunHuntRecipe(DRAGON_ICE, RCP_FIGHT_DRAGONICE, user)
+	return RunHuntRecipe(TextDragonIce, RCP_FIGHT_DRAGONICE, user)
 }
 
 func FightDragonAcid(user User) (string, error) { // 🐊
-	return RunHuntRecipe(DRAGON_ACID, RCP_FIGHT_DRAGONACID, user)
+	return RunHuntRecipe(TextDragonAcid, RCP_FIGHT_DRAGONACID, user)
 }
 
 func FightDragonUndead(user User) (string, error) { // 🐉
-	return RunHuntRecipe(DRAGON_UNDEAD, RCP_FIGHT_DRAGONUNDEAD, user)
+	return RunHuntRecipe(TextDragonUndead, RCP_FIGHT_DRAGONUNDEAD, user)
 }
 
 func BuyCharacter(user User, ch Character) (string, error) {
 	rcpName := ""
 	switch ch.Name {
-	case TIGER_CHR:
+	case TextTigerChr:
 		rcpName = RCP_BUY_CHARACTER
 	default:
 		return "", errors.New("You are trying to buy character which is not in shop")

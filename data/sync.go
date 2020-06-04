@@ -168,7 +168,7 @@ func SyncFromNode(user User) {
 						IsMyTrdReq: isMyTrdReq,
 					})
 				} else if tradeItem.ExtraInfo == CHAR_BUYREQ_TRDINFO { // character buy request created by loud game
-					Special := NO_SPECIAL
+					Special := NoSpecial
 					if len(firstItemInput.Longs) > 1 {
 						Special = firstItemInput.Longs[1].MinValue
 					}
