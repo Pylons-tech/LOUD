@@ -2,8 +2,6 @@ package screen
 
 import (
 	"fmt"
-	"io"
-	"os"
 
 	"github.com/ahmetb/go-cursor"
 	"github.com/gliderlabs/ssh"
@@ -88,11 +86,11 @@ func (screen *GameScreen) Render() {
 		clear := cursor.ClearEntireScreen()
 		dead := loud.Localize("Something went wrong, please close using Esc key and see loud.log")
 		move := cursor.MoveTo(screen.Height()/2, screen.Width()/2-NumberOfSpaces(dead)/2)
-		io.WriteString(os.Stdout, clear+move+dead)
+		PrintString(clear + move + dead)
 
 		detailedErrorMsg := fmt.Sprintf("%s: %s", loud.Localize("detailed error"), loud.SomethingWentWrongMsg)
 		move = cursor.MoveTo(screen.Height()/2+3, screen.Width()/2-NumberOfSpaces(dead)/2)
-		io.WriteString(os.Stdout, move+detailedErrorMsg)
+		PrintString(move + detailedErrorMsg)
 		screen.refreshed = false
 		return
 	}
@@ -103,14 +101,13 @@ func (screen *GameScreen) Render() {
 	if screen.Height() < 38 || screen.Width() < 120 {
 		clear := cursor.ClearEntireScreen()
 		move := cursor.MoveTo(1, 1)
-		io.WriteString(os.Stdout,
-			fmt.Sprintf("%s%s%s", clear, move, loud.Localize("screen size warning")))
+		PrintString(fmt.Sprintf("%s%s%s", clear, move, loud.Localize("screen size warning")))
 		return
 	}
 
 	if !screen.refreshed {
 		clear := cursor.ClearEntireScreen() + allowMouseInputAndHideCursor
-		io.WriteString(os.Stdout, clear)
+		PrintString(clear)
 		screen.redrawBorders()
 		screen.refreshed = true
 	}

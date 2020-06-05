@@ -2,8 +2,6 @@ package screen
 
 import (
 	"fmt"
-	"io"
-	"os"
 
 	loud "github.com/Pylons-tech/LOUD/data"
 	"github.com/ahmetb/go-cursor"
@@ -90,7 +88,7 @@ func (screen *GameScreen) renderCharacterSheet() {
 	lenInfoLines := len(infoLines)
 
 	for index, line := range infoLines {
-		io.WriteString(os.Stdout, fmt.Sprintf("%s%s",
+		PrintString(fmt.Sprintf("%s%s",
 			cursor.MoveTo(y+index, x),
 			line))
 	}
@@ -115,7 +113,7 @@ func (screen *GameScreen) renderCharacterSheet() {
 	nodeLines = append(nodeLines, fmtFunc(centerText(" ❦ ", "─", w)))
 
 	for index, line := range nodeLines {
-		io.WriteString(os.Stdout, fmt.Sprintf("%s%s",
+		PrintString(fmt.Sprintf("%s%s",
 			cursor.MoveTo(y+lenInfoLines+index, x),
 			line))
 	}

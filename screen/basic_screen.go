@@ -2,8 +2,6 @@ package screen
 
 import (
 	"fmt"
-	"io"
-	"os"
 	"strings"
 
 	"github.com/ahmetb/go-cursor"
@@ -92,7 +90,7 @@ func (screen *GameScreen) drawFill(x, y, width, height int) {
 
 	midString := fmt.Sprintf("%%s%%s%%%vs", width)
 	for i := 0; i <= height; i++ {
-		io.WriteString(os.Stdout, fmt.Sprintf(midString, cursor.MoveTo(y+i, x), color, " "))
+		PrintString(fmt.Sprintf(midString, cursor.MoveTo(y+i, x), color, " "))
 	}
 }
 
@@ -100,21 +98,21 @@ func (screen *GameScreen) drawBox(x, y, width, height int) {
 	color := ansi.ColorCode(fmt.Sprintf("255:%v", bgcolor))
 
 	for i := 1; i < width; i++ {
-		io.WriteString(os.Stdout, fmt.Sprintf("%s%s─", cursor.MoveTo(y, x+i), color))
-		io.WriteString(os.Stdout, fmt.Sprintf("%s%s─", cursor.MoveTo(y+height, x+i), color))
+		PrintString(fmt.Sprintf("%s%s─", cursor.MoveTo(y, x+i), color))
+		PrintString(fmt.Sprintf("%s%s─", cursor.MoveTo(y+height, x+i), color))
 	}
 
 	for i := 1; i < height; i++ {
 		midString := fmt.Sprintf("%%s%%s│%%%vs│", (width - 1))
-		io.WriteString(os.Stdout, fmt.Sprintf("%s%s│", cursor.MoveTo(y+i, x), color))
-		io.WriteString(os.Stdout, fmt.Sprintf("%s%s│", cursor.MoveTo(y+i, x+width), color))
-		io.WriteString(os.Stdout, fmt.Sprintf(midString, cursor.MoveTo(y+i, x), color, " "))
+		PrintString(fmt.Sprintf("%s%s│", cursor.MoveTo(y+i, x), color))
+		PrintString(fmt.Sprintf("%s%s│", cursor.MoveTo(y+i, x+width), color))
+		PrintString(fmt.Sprintf(midString, cursor.MoveTo(y+i, x), color, " "))
 	}
 
-	io.WriteString(os.Stdout, fmt.Sprintf("%s%s╭", cursor.MoveTo(y, x), color))
-	io.WriteString(os.Stdout, fmt.Sprintf("%s%s╰", cursor.MoveTo(y+height, x), color))
-	io.WriteString(os.Stdout, fmt.Sprintf("%s%s╮", cursor.MoveTo(y, x+width), color))
-	io.WriteString(os.Stdout, fmt.Sprintf("%s%s╯", cursor.MoveTo(y+height, x+width), color))
+	PrintString(fmt.Sprintf("%s%s╭", cursor.MoveTo(y, x), color))
+	PrintString(fmt.Sprintf("%s%s╰", cursor.MoveTo(y+height, x), color))
+	PrintString(fmt.Sprintf("%s%s╮", cursor.MoveTo(y, x+width), color))
+	PrintString(fmt.Sprintf("%s%s╯", cursor.MoveTo(y+height, x+width), color))
 }
 
 // SetScreenSize do handle the case user resize the terminal
@@ -260,7 +258,7 @@ func (screen *GameScreen) SetScreenStatus(newStatus PageStatus) {
 
 // Reset reset the screen stdout mode
 func (screen *GameScreen) Reset() {
-	io.WriteString(os.Stdout, fmt.Sprintf("%s👋\n", resetScreen))
+	PrintString(fmt.Sprintf("%s👋\n", resetScreen))
 }
 
 // SaveGame saves the game status into file

@@ -3,8 +3,6 @@ package screen
 import (
 	"encoding/json"
 	"fmt"
-	"io"
-	"os"
 	"strings"
 
 	loud "github.com/Pylons-tech/LOUD/data"
@@ -24,7 +22,10 @@ func devDetailedResultDesc(res []string) string {
 func (screen *GameScreen) GetTxResponseOutput() (int64, []handlers.ExecuteRecipeSerialize) {
 	respOutput := []handlers.ExecuteRecipeSerialize{}
 	earnedAmount := int64(0)
-	json.Unmarshal(screen.txResult, &respOutput)
+	err := json.Unmarshal(screen.txResult, &respOutput)
+	if err != nil {
+		return 0, respOutput
+	}
 	if len(respOutput) > 0 {
 		earnedAmount = respOutput[0].Amount
 	}
@@ -58,16 +59,16 @@ func (screen *GameScreen) renderUserSituation() {
 		desc = loud.Localize("Are you really gonna end game?")
 	case ShowLocation:
 		locationDescMap := map[loud.UserLocation]string{
-			loud.HOME:     loud.Localize("home desc"),
-			loud.FOREST:   loud.Localize("forest desc"),
-			loud.SHOP:     loud.Localize("shop desc"),
-			loud.PYLCNTRL: loud.Localize("pylons central desc"),
-			loud.SETTINGS: loud.Localize("settings desc"),
-			loud.DEVELOP:  loud.Localize("develop desc"),
-			loud.HELP:     loud.Localize("help desc"),
+			loud.Home:          loud.Localize("home desc"),
+			loud.Forest:        loud.Localize("forest desc"),
+			loud.Shop:          loud.Localize("shop desc"),
+			loud.PylonsCentral: loud.Localize("pylons central desc"),
+			loud.Settings:      loud.Localize("settings desc"),
+			loud.Develop:       loud.Localize("develop desc"),
+			loud.Help:          loud.Localize("help desc"),
 		}
 		desc = locationDescMap[screen.user.GetLocation()]
-		if screen.user.GetLocation() == loud.HOME {
+		if screen.user.GetLocation() == loud.Home {
 			activeCharacter := screen.user.GetActiveCharacter()
 			if activeCharacter == nil {
 				desc = loud.Localize("home desc without character")
@@ -293,7 +294,7 @@ func (screen *GameScreen) renderUserSituation() {
 
 	fmtFunc := screen.regularFont()
 	for index, line := range infoLines {
-		io.WriteString(os.Stdout, fmt.Sprintf("%s%s",
+		PrintString(fmt.Sprintf("%s%s",
 			cursor.MoveTo(y+index, x),
 			fmtFunc(fillSpace(line, w))))
 		if index+2 > int(screen.Height()) {
@@ -303,7 +304,7 @@ func (screen *GameScreen) renderUserSituation() {
 	infoLen := len(infoLines)
 
 	for index, line := range tableLines {
-		io.WriteString(os.Stdout, fmt.Sprintf("%s%s",
+		PrintString(fmt.Sprintf("%s%s",
 			cursor.MoveTo(y+infoLen+index, x),
 			screen.getFont(line.font)(fillSpace(line.content, w))))
 		if index+2 > int(screen.Height()) {

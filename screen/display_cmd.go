@@ -2,8 +2,6 @@ package screen
 
 import (
 	"fmt"
-	"io"
-	"os"
 
 	loud "github.com/Pylons-tech/LOUD/data"
 	"github.com/ahmetb/go-cursor"
@@ -115,19 +113,19 @@ func (screen *GameScreen) renderUserCommands() {
 				GoonEnterCommand)
 	case ShowLocation:
 		cmdMap := map[loud.UserLocation]string{
-			loud.HOME:     "home",
-			loud.FOREST:   "forest",
-			loud.SHOP:     "shop",
-			loud.PYLCNTRL: "pylons central",
-			loud.SETTINGS: "settings",
-			loud.DEVELOP:  "develop",
-			loud.HELP:     "help",
+			loud.Home:          "home",
+			loud.Forest:        "forest",
+			loud.Shop:          "shop",
+			loud.PylonsCentral: "pylons central",
+			loud.Settings:      "settings",
+			loud.Develop:       "develop",
+			loud.Help:          "help",
 		}
 		cmdString := loud.Localize(cmdMap[screen.user.GetLocation()])
 		infoLines = infoLines.
 			append(loud.ChunkText(cmdString, w)...)
 
-		if screen.user.GetLocation() == loud.FOREST {
+		if screen.user.GetLocation() == loud.Forest {
 			forestStusMap := map[int]PageStatus{
 				0: ConfirmHuntRabbits,
 				1: ConfirmFightGoblin,
@@ -147,7 +145,7 @@ func (screen *GameScreen) renderUserCommands() {
 				}
 			}
 		}
-		if screen.user.GetLocation() == loud.SETTINGS && len(infoLines) > 2 {
+		if screen.user.GetLocation() == loud.Settings && len(infoLines) > 2 {
 			switch loud.GameLanguage {
 			case "en":
 				infoLines[1].font = BlueBoldFont
@@ -155,7 +153,7 @@ func (screen *GameScreen) renderUserCommands() {
 				infoLines[2].font = BlueBoldFont
 			}
 		}
-		if screen.user.GetLocation() == loud.HOME {
+		if screen.user.GetLocation() == loud.Home {
 			if len(infoLines) > 1 && len(screen.user.InventoryCharacters()) == 0 {
 				// make it grey when no character's there
 				infoLines[1].content += ": " + loud.Sprintf("no character!")
@@ -302,7 +300,7 @@ func (screen *GameScreen) renderUserCommands() {
 
 	for index, line := range infoLines {
 		lineFont := screen.getFont(line.font)
-		io.WriteString(os.Stdout, fmt.Sprintf("%s%s",
+		PrintString(fmt.Sprintf("%s%s",
 			cursor.MoveTo(y+index, x),
 			lineFont(fillSpace(line.content, w))))
 	}
@@ -310,7 +308,7 @@ func (screen *GameScreen) renderUserCommands() {
 	infoLen := len(infoLines)
 
 	for index, line := range tableLines {
-		io.WriteString(os.Stdout, fmt.Sprintf("%s%s",
+		PrintString(fmt.Sprintf("%s%s",
 			cursor.MoveTo(y+infoLen+index, x),
 			line))
 	}

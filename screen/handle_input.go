@@ -42,17 +42,17 @@ func (screen *GameScreen) HandleInputKeyLocationSwitch(input termbox.Event) bool
 	Key := strings.ToUpper(string(input.Ch))
 
 	tarLctMap := map[string]loud.UserLocation{
-		"F": loud.FOREST,
-		"S": loud.SHOP,
-		"H": loud.HOME,
-		"T": loud.SETTINGS,
-		"C": loud.PYLCNTRL,
-		"D": loud.DEVELOP,
-		"P": loud.HELP,
+		"F": loud.Forest,
+		"S": loud.Shop,
+		"H": loud.Home,
+		"T": loud.Settings,
+		"C": loud.PylonsCentral,
+		"D": loud.Develop,
+		"P": loud.Help,
 	}
 
 	if newLct, ok := tarLctMap[Key]; ok {
-		if newLct == loud.FOREST && screen.user.GetActiveCharacter() == nil {
+		if newLct == loud.Forest && screen.user.GetActiveCharacter() == nil {
 			screen.actionText = loud.Sprintf("You can't go to forest without character")
 			screen.Render()
 		} else {
@@ -284,16 +284,16 @@ func (screen *GameScreen) MoveToNextStep() {
 		RsltUpgradeItem:            SelectUpgradeItem,
 	}
 	if nextStatus, ok := nextMapper[screen.scrStatus]; ok {
-		if screen.user.GetLocation() == loud.DEVELOP {
+		if screen.user.GetLocation() == loud.Develop {
 			screen.SetScreenStatus(ShowLocation)
-		} else if screen.user.GetLocation() == loud.FOREST && activeCharacter == nil {
+		} else if screen.user.GetLocation() == loud.Forest && activeCharacter == nil {
 			// move back to home in forest if no active character
 			screen.SetScreenStatus(ShowLocation)
 		} else if nextStatus == ConfirmFightGiant && activeCharacter.Special != loud.NoSpecial {
 			// go back to forest entrypoint when Special is not empty
 			screen.SetScreenStatus(ShowLocation)
 		} else if nextStatus == SelectActiveChr {
-			screen.user.SetLocation(loud.HOME)
+			screen.user.SetLocation(loud.Home)
 			screen.SetScreenStatus(nextStatus)
 		} else {
 			screen.SetScreenStatus(nextStatus)
@@ -375,7 +375,7 @@ func (screen *GameScreen) MoveToPrevStep() {
 	case ShowLocation:
 		// move to home if it's somewhere else's entrypoint
 		if screen.scrStatus == ShowLocation {
-			screen.user.SetLocation(loud.HOME)
+			screen.user.SetLocation(loud.Home)
 		}
 	case ConfirmFightGiant:
 		if activeCharacter.Special != loud.NoSpecial {
@@ -384,10 +384,10 @@ func (screen *GameScreen) MoveToPrevStep() {
 		}
 	}
 
-	if screen.user.GetLocation() == loud.FOREST && activeCharacter == nil {
+	if screen.user.GetLocation() == loud.Forest && activeCharacter == nil {
 		// move back to home in forest if no active character
 		screen.SetScreenStatus(ShowLocation)
-		screen.user.SetLocation(loud.HOME)
+		screen.user.SetLocation(loud.Home)
 	}
 
 	screen.SetScreenStatus(nxtStatus)
@@ -437,9 +437,11 @@ func (screen *GameScreen) HandleFirstClassInputKeys(input termbox.Event) bool {
 			return loud.DevGetTestItems(screen.user)
 		})
 	case "L": // copy last txhash to CLIPBOARD
-		clipboard.WriteAll(screen.user.GetLastTxHash())
+		err := clipboard.WriteAll(screen.user.GetLastTxHash())
+		return err == nil
 	case "M": // copy user's cosmos address to CLIPBOARD
-		clipboard.WriteAll(screen.user.GetAddress())
+		err := clipboard.WriteAll(screen.user.GetAddress())
+		return err == nil
 	case "E": // REFRESH
 		screen.Resync()
 		return true
@@ -452,32 +454,32 @@ func (screen *GameScreen) HandleFirstClassInputKeys(input termbox.Event) bool {
 // HandleSecondClassInputKeys handles the keys that are level 2
 func (screen *GameScreen) HandleSecondClassInputKeys(input termbox.Event) bool {
 	// implement second class commands, eg. input processing for show_location section
-	if screen.user.GetLocation() == loud.HOME {
+	if screen.user.GetLocation() == loud.Home {
 		switch screen.scrStatus {
 		case ShowLocation:
 			return screen.HandleInputKeyHomeEntryPoint(input)
 		}
-	} else if screen.user.GetLocation() == loud.PYLCNTRL {
+	} else if screen.user.GetLocation() == loud.PylonsCentral {
 		switch screen.scrStatus {
 		case ShowLocation:
 			return screen.HandleInputKeyPylonsCentralEntryPoint(input)
 		}
-	} else if screen.user.GetLocation() == loud.SETTINGS {
+	} else if screen.user.GetLocation() == loud.Settings {
 		switch screen.scrStatus {
 		case ShowLocation:
 			return screen.HandleInputKeySettingsEntryPoint(input)
 		}
-	} else if screen.user.GetLocation() == loud.FOREST {
+	} else if screen.user.GetLocation() == loud.Forest {
 		switch screen.scrStatus {
 		case ShowLocation:
 			return screen.HandleInputKeyForestEntryPoint(input)
 		}
-	} else if screen.user.GetLocation() == loud.SHOP {
+	} else if screen.user.GetLocation() == loud.Shop {
 		switch screen.scrStatus {
 		case ShowLocation:
 			return screen.HandleInputKeyShopEntryPoint(input)
 		}
-	} else if screen.user.GetLocation() == loud.HELP {
+	} else if screen.user.GetLocation() == loud.Help {
 		switch screen.scrStatus {
 		case ShowLocation:
 			return screen.HandleInputKeyHelpEntryPoint(input)
@@ -512,7 +514,7 @@ func (screen *GameScreen) HandleThirdClassInputKeys(input termbox.Event) bool {
 
 	switch Key {
 	case "R": // CREATE ORDER
-		if screen.user.GetLocation() == loud.PYLCNTRL {
+		if screen.user.GetLocation() == loud.PylonsCentral {
 			newStatus := screen.scrStatus
 			switch screen.scrStatus {
 			case ShowGoldBuyTrdReqs:
@@ -586,7 +588,7 @@ func (screen *GameScreen) HandleThirdClassInputKeys(input termbox.Event) bool {
 // HandleThirdClassKeyEnterEvent handles the keys that are level 3's enter event
 func (screen *GameScreen) HandleThirdClassKeyEnterEvent() bool {
 	switch screen.user.GetLocation() {
-	case loud.HOME, loud.PYLCNTRL, loud.SHOP, loud.FOREST:
+	case loud.Home, loud.PylonsCentral, loud.Shop, loud.Forest:
 		switch screen.scrStatus {
 		case ShowGoldBuyTrdReqs:
 			screen.RunSelectedLoudBuyTrdReq()
@@ -725,7 +727,7 @@ func (screen *GameScreen) HandleTypingModeInputKeys(input termbox.Event) bool {
 			screen.SetScreenStatus(WaitBuyGoldTrdReqCreation)
 			screen.pylonEnterValue = screen.inputText
 			screen.SetInputTextAndRender("")
-			txhash, err := loud.CreateBuyLoudTrdReq(screen.user, screen.loudEnterValue, screen.pylonEnterValue)
+			txhash, err := loud.CreateBuyGoldTrdReq(screen.user, screen.loudEnterValue, screen.pylonEnterValue)
 			log.Println("ended sending request for creating buy loud request")
 			if err != nil {
 				screen.txFailReason = err.Error()
@@ -746,7 +748,7 @@ func (screen *GameScreen) HandleTypingModeInputKeys(input termbox.Event) bool {
 			screen.Render()
 			screen.pylonEnterValue = screen.inputText
 			screen.SetInputTextAndRender("")
-			txhash, err := loud.CreateSellLoudTrdReq(screen.user, screen.loudEnterValue, screen.pylonEnterValue)
+			txhash, err := loud.CreateSellGoldTrdReq(screen.user, screen.loudEnterValue, screen.pylonEnterValue)
 
 			log.Println("ended sending request for creating buy loud request")
 			if err != nil {

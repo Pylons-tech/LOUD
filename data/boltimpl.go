@@ -19,7 +19,7 @@ func (w *dbWorld) GetUser(username string) User {
 func (w *dbWorld) newUser(username string) UserData {
 	userData := UserData{
 		Username: username,
-		Location: HOME,
+		Location: Home,
 		Gold:     0,
 		Items:    []Item{},
 	}
@@ -41,7 +41,7 @@ func (w *dbWorld) load() {
 		log.Println("error reading database file:", err)
 	} else {
 		// Make default tables
-		db.Update(func(tx *bolt.Tx) error {
+		err = db.Update(func(tx *bolt.Tx) error {
 			buckets := []string{"users"}
 
 			for _, bucket := range buckets {
@@ -54,6 +54,9 @@ func (w *dbWorld) load() {
 
 			return nil
 		})
+		if err != nil {
+			log.Println("Couldn't update database:", err)
+		}
 	}
 	w.database = db
 }
@@ -77,8 +80,8 @@ type UserData struct {
 	ActiveCharacter Character
 	DeadCharacter   Character
 	PrivKey         string
-	targetMonster   string
-	usingWeapon     Item
+	TargetMonster   string
+	UsingWeapon     Item
 	lastTransaction string
 	lastTxMetaData  string
 	lastUpdate      int64
@@ -104,12 +107,15 @@ func (user *dbUser) SetLocation(loc UserLocation) {
 func (user *dbUser) Reload() {
 	var record []byte
 	if user.world.database != nil {
-		user.world.database.View(func(tx *bolt.Tx) error {
+		err := user.world.database.View(func(tx *bolt.Tx) error {
 			bucket := tx.Bucket([]byte("users"))
 			record = bucket.Get([]byte(user.UserData.Username))
 
 			return nil
 		})
+		if err != nil {
+			log.Println("Couldn't view database")
+		}
 	}
 
 	if record == nil {
@@ -117,7 +123,10 @@ func (user *dbUser) Reload() {
 		user.UserData = user.world.newUser(user.UserData.Username)
 		user.Save()
 	} else {
-		MSGUnpack(record, &(user.UserData))
+		err := MSGUnpack(record, &(user.UserData))
+		if err != nil {
+			log.Println("Was not able to unpack data record into user data")
+		}
 		log.Printf("Loaded user %v", user.UserData)
 		user.FixLoadedData()
 	}
@@ -138,13 +147,16 @@ func (user *dbUser) Save() {
 	}
 
 	if user.world.database != nil {
-		user.world.database.Update(func(tx *bolt.Tx) error {
+		err = user.world.database.Update(func(tx *bolt.Tx) error {
 			bucket := tx.Bucket([]byte("users"))
 
 			err = bucket.Put([]byte(user.UserData.Username), bytes)
 
 			return err
 		})
+		if err != nil {
+			log.Println("Was not able to update world database")
+		}
 	}
 }
 
@@ -180,36 +192,36 @@ func (user *dbUser) SetItems(items []Item) {
 }
 
 func (user *dbUser) SelectFightWeapon() {
-	switch user.targetMonster {
+	switch user.TargetMonster {
 	case TextRabbit: // no weapon is needed
-		user.usingWeapon = Item{}
+		user.UsingWeapon = Item{}
 	case TextGoblin, TextWolf, TextTroll: // any sword is ok
 		weapons := user.InventorySwords()
 		if len := len(weapons); len > 0 {
-			user.usingWeapon = weapons[len-1]
+			user.UsingWeapon = weapons[len-1]
 		}
 	case TextGiant, TextDragonFire, TextDragonIce, TextDragonAcid: // iron sword is needed
 		weapons := user.InventoryIronSwords()
 		if len := len(weapons); len > 0 {
-			user.usingWeapon = weapons[len-1]
+			user.UsingWeapon = weapons[len-1]
 		}
 	case TextDragonUndead: // angel sword is needed
 		weapons := user.InventoryAngelSwords()
 		if len := len(weapons); len > 0 {
-			user.usingWeapon = weapons[len-1]
+			user.UsingWeapon = weapons[len-1]
 		}
 	default:
-		user.usingWeapon = Item{}
+		user.UsingWeapon = Item{}
 	}
 }
 
 func (user *dbUser) SetFightMonster(monster string) {
-	user.targetMonster = monster
+	user.TargetMonster = monster
 	user.SelectFightWeapon()
 }
 
 func (user *dbUser) GetTargetMonster() string {
-	return user.targetMonster
+	return user.TargetMonster
 }
 
 func (user *dbUser) GetItemByID(ID string) *Item {
@@ -223,10 +235,10 @@ func (user *dbUser) GetItemByID(ID string) *Item {
 }
 
 func (user *dbUser) GetFightWeapon() *Item {
-	if user.usingWeapon.Name == "" {
+	if user.UsingWeapon.Name == "" {
 		return nil
 	}
-	return &user.usingWeapon
+	return &user.UsingWeapon
 }
 
 func (user *dbUser) SetCharacters(items []Character) {

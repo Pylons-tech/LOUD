@@ -8,15 +8,16 @@ import (
 	pylonSDK "github.com/Pylons-tech/pylons_sdk/cmd/test"
 )
 
-var IsSyncingFromNode = false
+var isSyncingFromNode = false
 
+// SyncFromNode is a function to handle sync from node
 func SyncFromNode(user User) {
-	if IsSyncingFromNode {
+	if isSyncingFromNode {
 		return
 	}
-	IsSyncingFromNode = true
+	isSyncingFromNode = true
 	defer func() {
-		IsSyncingFromNode = false
+		isSyncingFromNode = false
 	}()
 	log.Println("SyncFromNode Function Body")
 	log.Println("username=", user.GetUserName())
@@ -34,7 +35,7 @@ func SyncFromNode(user User) {
 	myItems := []Item{}
 	myCharacters := []Character{}
 	for _, rawItem := range rawItems {
-		if rawItem.CookbookID != LOUD_CBID {
+		if rawItem.CookbookID != GameCookbookID {
 			continue
 		}
 		XP, _ := rawItem.FindDouble("XP")
@@ -99,9 +100,8 @@ func SyncFromNode(user User) {
 		itj := myItems[j]
 		if iti.Attack != itj.Attack {
 			return iti.Attack > itj.Attack
-		} else {
-			return iti.Name > itj.Name
 		}
+		return iti.Name > itj.Name
 	})
 	user.SetItems(myItems)
 
@@ -116,7 +116,7 @@ func SyncFromNode(user User) {
 	nSellCharacterTrdReqs := []CharacterSellTrdReq{}
 	rawTrades, _ := pylonSDK.ListTradeViaCLI("")
 	for _, tradeItem := range rawTrades {
-		if tradeItem.Completed == false && tradeItem.Disabled == false && strings.Contains(tradeItem.ExtraInfo, CR8BY_LOUD) {
+		if !tradeItem.Completed && !tradeItem.Disabled && strings.Contains(tradeItem.ExtraInfo, TextCreatedByLOUD) {
 			inputCoin := ""
 			if len(tradeItem.CoinInputs) > 0 {
 				inputCoin = tradeItem.CoinInputs[0].Coin
@@ -156,7 +156,7 @@ func SyncFromNode(user User) {
 					MaxLevel = firstItemInput.Longs[0].MaxValue
 				}
 				Name := firstItemInput.Strings[0].Value
-				if tradeItem.ExtraInfo == ITEM_BUYREQ_TRDINFO {
+				if tradeItem.ExtraInfo == ItemBuyReqTrdInfo {
 					tItem := ItemSpec{
 						Level: [2]int{MinLevel, MaxLevel},
 						Name:  Name,
@@ -167,7 +167,7 @@ func SyncFromNode(user User) {
 						Price:      int(pylonOutputAmount),
 						IsMyTrdReq: isMyTrdReq,
 					})
-				} else if tradeItem.ExtraInfo == CHAR_BUYREQ_TRDINFO { // character buy request created by loud game
+				} else if tradeItem.ExtraInfo == ChrBuyReqTrdInfo { // character buy request created by loud game
 					Special := NoSpecial
 					if len(firstItemInput.Longs) > 1 {
 						Special = firstItemInput.Longs[1].MinValue
@@ -204,7 +204,7 @@ func SyncFromNode(user User) {
 				SpecialDragonKill, _ := firstItemOutput.FindLong("SpecialDragonKill")
 				UndeadDragonKill, _ := firstItemOutput.FindLong("UndeadDragonKill")
 
-				if tradeItem.ExtraInfo == ITEM_SELREQ_TRDINFO {
+				if tradeItem.ExtraInfo == ItemSellReqTrdInfo {
 					tItem := Item{
 						ID:    firstItemOutput.ID,
 						Level: level,
@@ -216,7 +216,7 @@ func SyncFromNode(user User) {
 						Price:      int(inputPylonAmount),
 						IsMyTrdReq: isMyTrdReq,
 					})
-				} else if tradeItem.ExtraInfo == CHAR_SELREQ_TRDINFO { // character sell request created by loud game
+				} else if tradeItem.ExtraInfo == ChrSellReqTrdInfo { // character sell request created by loud game
 					XP, _ := firstItemOutput.FindDouble("XP")
 					tCharacter := Character{
 						ID:                firstItemOutput.ID,

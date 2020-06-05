@@ -21,12 +21,14 @@ import (
 
 var terminalCloseSignal chan os.Signal = make(chan os.Signal, 2)
 
+// SetupLoggingFile set custom file for logging output
 func SetupLoggingFile(f *os.File) {
 	log.Println("Starting to save log into file")
 	log.SetOutput(f)
 	log.Println("Starting")
 }
 
+// SetupScreenAndEvents setup screen object and events
 func SetupScreenAndEvents(world data.World, logFile *os.File) {
 	args := os.Args
 	username := ""
@@ -60,12 +62,12 @@ func SetupScreenAndEvents(world data.World, logFile *os.File) {
 
 	log.Println("setting up screen and events")
 
-	tick := time.Tick(300 * time.Millisecond)
+	tick := time.NewTicker(300 * time.Millisecond)
 	config, cferr := cf.ReadConfig()
 	if cferr != nil {
 		log.Fatal("Couldn't load configuration file, log=\"", cferr, "\"")
 	}
-	regRefreshTick := time.Tick(time.Duration(config.App.DaemonTimeoutCommit) * time.Second)
+	regRefreshTick := time.NewTicker(time.Duration(config.App.DaemonTimeoutCommit) * time.Second)
 
 	if data.AutomateInput {
 		screenInstance.SetScreenStatus(screen.RsltSwitchUser)
@@ -91,7 +93,7 @@ func SetupScreenAndEvents(world data.World, logFile *os.File) {
 					screenInstance.HandleInputKey(termbox.Event{
 						Ch: 121, // "y" 121 get initial pylons
 					})
-					data.AutomateRunCnt += 1
+					data.AutomateRunCnt++
 					log.Printf("Running %dth automation task", data.AutomateRunCnt)
 				}
 				time.Sleep(2 * time.Second)
@@ -114,12 +116,12 @@ func SetupScreenAndEvents(world data.World, logFile *os.File) {
 	go func() {
 		for {
 			select {
-			case <-regRefreshTick:
+			case <-regRefreshTick.C:
 				screenInstance.FakeSync()
 			case <-terminalCloseSignal:
 				screenInstance.Reset()
 				os.Exit(0)
-			case <-tick:
+			case <-tick.C:
 				screenInstance.Render()
 			}
 		}

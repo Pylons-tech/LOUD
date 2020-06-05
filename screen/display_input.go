@@ -2,8 +2,6 @@ package screen
 
 import (
 	"fmt"
-	"io"
-	"os"
 
 	"github.com/ahmetb/go-cursor"
 )
@@ -28,5 +26,5 @@ func (screen *GameScreen) renderInputValue() {
 		inputText = fmt.Sprintf("%s%s", move, chatFunc(fillSpace(screen.actionText, int(inputBoxWidth))))
 	}
 
-	io.WriteString(os.Stdout, inputText)
+	PrintString(inputText)
 }

@@ -48,7 +48,7 @@ func (screen *GameScreen) RunActiveItemBuy() {
 		return
 	}
 	screen.RunTxProcess(WaitBuyItem, RsltBuyItem, func() (string, error) {
-		return loud.Buy(screen.user, screen.activeItem)
+		return loud.BuyItem(screen.user, screen.activeItem)
 	})
 }
 
@@ -62,14 +62,14 @@ func (screen *GameScreen) RunActiveCharacterBuy() {
 // RunActiveItemSell execute the item sell process
 func (screen *GameScreen) RunActiveItemSell() {
 	screen.RunTxProcess(WaitSellItem, RsltSellItem, func() (string, error) {
-		return loud.Sell(screen.user, screen.activeItem)
+		return loud.SellItem(screen.user, screen.activeItem)
 	})
 }
 
 // RunActiveItemUpgrade execute the item upgrade process
 func (screen *GameScreen) RunActiveItemUpgrade() {
 	screen.RunTxProcess(WaitUpgradeItem, RsltUpgradeItem, func() (string, error) {
-		return loud.Upgrade(screen.user, screen.activeItem)
+		return loud.UpgradeItem(screen.user, screen.activeItem)
 	})
 }
 

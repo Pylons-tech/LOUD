@@ -3,6 +3,7 @@ package screen
 import (
 	"fmt"
 	"io"
+	"log"
 	"reflect"
 	"strings"
 
@@ -186,21 +187,21 @@ func fillSpace(message string, width int) string {
 func drawVerticalLine(x, y, height int) {
 	color := ansi.ColorCode(fmt.Sprintf("255:%v", bgcolor))
 	for i := 1; i < height; i++ {
-		io.WriteString(os.Stdout, fmt.Sprintf("%s%s│", cursor.MoveTo(y+i, x), color))
+		PrintString(fmt.Sprintf("%s%s│", cursor.MoveTo(y+i, x), color))
 	}
 
-	io.WriteString(os.Stdout, fmt.Sprintf("%s%s┬", cursor.MoveTo(y, x), color))
-	io.WriteString(os.Stdout, fmt.Sprintf("%s%s┴", cursor.MoveTo(y+height, x), color))
+	PrintString(fmt.Sprintf("%s%s┬", cursor.MoveTo(y, x), color))
+	PrintString(fmt.Sprintf("%s%s┴", cursor.MoveTo(y+height, x), color))
 }
 
 func drawHorizontalLine(x, y, width int) {
 	color := ansi.ColorCode(fmt.Sprintf("255:%v", bgcolor))
 	for i := 1; i < width; i++ {
-		io.WriteString(os.Stdout, fmt.Sprintf("%s%s─", cursor.MoveTo(y, x+i), color))
+		PrintString(fmt.Sprintf("%s%s─", cursor.MoveTo(y, x+i), color))
 	}
 
-	io.WriteString(os.Stdout, fmt.Sprintf("%s%s├", cursor.MoveTo(y, x), color))
-	io.WriteString(os.Stdout, fmt.Sprintf("%s%s┤", cursor.MoveTo(y, x+width), color))
+	PrintString(fmt.Sprintf("%s%s├", cursor.MoveTo(y, x), color))
+	PrintString(fmt.Sprintf("%s%s┤", cursor.MoveTo(y, x+width), color))
 }
 
 func formatItem(item loud.Item) string {
@@ -366,15 +367,15 @@ func InterfaceSlice(slice interface{}) []interface{} {
 }
 
 func formatByStructType(item interface{}) string {
-	switch item.(type) {
+	switch item := item.(type) {
 	case loud.Item:
-		return formatItem(item.(loud.Item))
+		return formatItem(item)
 	case loud.Character:
-		return formatCharacter(item.(loud.Character))
+		return formatCharacter(item)
 	case loud.ItemSpec:
-		return formatItemSpec(item.(loud.ItemSpec))
+		return formatItemSpec(item)
 	case loud.CharacterSpec:
-		return formatCharacterSpec(item.(loud.CharacterSpec))
+		return formatCharacterSpec(item)
 	default:
 		return "unrecognized struct type"
 	}
@@ -414,18 +415,14 @@ func (screen *GameScreen) renderItemTrdReqTableLine(text1 string, text2 string) 
 
 // RequestInfo returns basic info from several type of requests
 func RequestInfo(request interface{}) (bool, interface{}, int) {
-	switch request.(type) {
+	switch itr := request.(type) {
 	case loud.ItemBuyTrdReq:
-		itr := request.(loud.ItemBuyTrdReq)
 		return itr.IsMyTrdReq, itr.TItem, itr.Price
 	case loud.ItemSellTrdReq:
-		itr := request.(loud.ItemSellTrdReq)
 		return itr.IsMyTrdReq, itr.TItem, itr.Price
 	case loud.CharacterBuyTrdReq:
-		itr := request.(loud.CharacterBuyTrdReq)
 		return itr.IsMyTrdReq, itr.TCharacter, itr.Price
 	case loud.CharacterSellTrdReq:
-		itr := request.(loud.CharacterSellTrdReq)
 		return itr.IsMyTrdReq, itr.TCharacter, itr.Price
 	}
 	return false, loud.ItemBuyTrdReq{}, 0
@@ -475,4 +472,12 @@ func (screen *GameScreen) ForestStatusCheck(newStus PageStatus) (string, string)
 		}
 	}
 	return "", ""
+}
+
+// PrintString is a utility function to print text on game board
+func PrintString(s string) {
+	_, err := io.WriteString(os.Stdout, s)
+	if err != nil {
+		log.Println("Was not able to write string to screen", err)
+	}
 }
