@@ -215,7 +215,7 @@ func CheckSignatureMatchWithAftiCli(t *testing.T, txhash string, privKey string,
 	}
 
 	log.Println("RunSHCmd output, err=", string(aftiOutput), err)
-	cliTxOutput, err, _ := pylonSDK.RunPylonsCli([]string{"query", "tx", txhash}, "")
+	cliTxOutput, _, err := pylonSDK.RunPylonsCli([]string{"query", "tx", txhash}, "")
 	if err != nil {
 		log.Println("txhash=", txhash, "txoutput=", string(cliTxOutput), "queryerr=", err)
 	}
@@ -287,7 +287,7 @@ func GetInitialPylons(username string) (string, error) {
 		"--sequence", "0",
 		"--account-number", "0",
 	}
-	signedTx, err, _ := pylonSDK.RunPylonsCli(txSignArgs, "11111111\n")
+	signedTx, _, err := pylonSDK.RunPylonsCli(txSignArgs, "11111111\n")
 	if err != nil {
 		return "", err
 	}
@@ -349,7 +349,7 @@ func ComputePrivKeyFromMnemonic(mnemonic string) (string, string) {
 func InitPylonAccount(username string) string {
 	var privKey string
 	// "pylonscli keys add ${username}"
-	addResult, err, _ := pylonSDK.RunPylonsCli([]string{
+	addResult, _, err := pylonSDK.RunPylonsCli([]string{
 		"keys", "add", username,
 	}, "11111111\n11111111\n")
 
@@ -411,7 +411,7 @@ func InitPylonAccount(username string) string {
 		log.Println("created new account for", username, "and saved to ~/.pylons/"+username+".json")
 	}
 	addr := pylonSDK.GetAccountAddr(username, GetTestingT())
-	accBytes, err, _ := pylonSDK.RunPylonsCli([]string{"query", "account", addr}, "")
+	accBytes, _, err := pylonSDK.RunPylonsCli([]string{"query", "account", addr}, "")
 	log.Println("query account for", addr, "result", string(accBytes), err)
 	if err != nil {
 		log.Println("err.Error()", err.Error())
@@ -443,7 +443,7 @@ func InitPylonAccount(username string) string {
 
 // LogFullTxResultByHash implements log for a transaction hash
 func LogFullTxResultByHash(txhash string) {
-	output, err, _ := pylonSDK.RunPylonsCli([]string{"query", "tx", txhash}, "")
+	output, _, err := pylonSDK.RunPylonsCli([]string{"query", "tx", txhash}, "")
 
 	log.Println("txhash=", txhash, "txoutput=", string(output), "queryerr=", err)
 }

@@ -257,7 +257,7 @@ func SyncFromNode(user User) {
 
 	user.FixLoadedData()
 
-	ds, err, _ := pylonSDK.GetDaemonStatus()
+	ds, _, err := pylonSDK.GetDaemonStatus()
 	if err == nil {
 		user.SetLatestBlockHeight(ds.SyncInfo.LatestBlockHeight)
 	}
