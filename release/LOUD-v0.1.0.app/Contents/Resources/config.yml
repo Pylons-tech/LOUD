@@ -6,3 +6,4 @@ sdk:
 
 # app configurations
 app:
+  daemon_timeout_commit: 2
