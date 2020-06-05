@@ -2,6 +2,15 @@
 
 ![Pylons Central](https://github.com/Pylons-tech/LOUD/blob/master/screenshots/pylons_central.png)
 
+## Setup development environment
+
+```
+git clone https://github.com/Pylons-tech/LOUD
+brew install pre-commit
+brew install golangci/tap/golangci-lint
+pre-commit install
+```
+
 ## Building
 
 You need a correctly set up Golang environment over 1.11; this proejct uses `go mod`.
