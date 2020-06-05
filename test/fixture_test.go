@@ -1,4 +1,4 @@
-package loudFixture
+package loudfixture
 
 import (
 	"flag"
