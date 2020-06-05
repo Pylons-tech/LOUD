@@ -5,6 +5,7 @@ import (
 	"strings"
 )
 
+// Item is a struct to manage game item attributes
 type Item struct {
 	ID         string `json:""`
 	Name       string `json:""`
@@ -16,6 +17,7 @@ type Item struct {
 	LastUpdate int64
 }
 
+// ItemSpec is a struct to manage game item spec on trading
 type ItemSpec struct {
 	Name   string `json:""`
 	Level  [2]int
@@ -23,6 +25,7 @@ type ItemSpec struct {
 	Price  int
 }
 
+// Character is a struct to manage game character attributes
 type Character struct {
 	ID                string `json:""`
 	Name              string `json:""`
@@ -35,6 +38,8 @@ type Character struct {
 	UndeadDragonKill  int
 	LastUpdate        int64
 }
+
+// CharacterSpec is a struct to manage game character spec on trading
 type CharacterSpec struct {
 	Special int
 	Name    string `json:""`
@@ -44,88 +49,119 @@ type CharacterSpec struct {
 }
 
 const (
-	NO_SPECIAL   = 0
-	FIRE_SPECIAL = 1
-	ICE_SPECIAL  = 2
-	ACID_SPECIAL = 3
+	// NoSpecial means character has no special
+	NoSpecial = 0
+	// FireSpecial means character has fire special
+	FireSpecial = 1
+	// IceSpecial means character has ice special
+	IceSpecial = 2
+	// AcidSpecial means character has acid special
+	AcidSpecial = 3
 )
 
 const (
-	RABBIT        string = "Rabbit"
-	GOBLIN               = "Goblin"
-	WOLF                 = "Wolf"
-	TROLL                = "Troll"
-	GIANT                = "Giant"
-	DRAGON_FIRE          = "Fire dragon"
-	DRAGON_ICE           = "Ice dragon"
-	DRAGON_ACID          = "Acid dragon"
-	DRAGON_UNDEAD        = "Undead dragon"
+	// TextRabbit is constant for text Rabbit
+	TextRabbit string = "Rabbit"
+	// TextGoblin is constant for text Goblin
+	TextGoblin = "Goblin"
+	// TextWolf is constant for text Wolf
+	TextWolf = "Wolf"
+	// TextTroll is constant for text Troll
+	TextTroll = "Troll"
+	// TextGiant is constant for text Giant
+	TextGiant = "Giant"
+	// TextDragonFire is constant for text Fire Dragon
+	TextDragonFire = "Fire dragon"
+	// TextDragonIce is constant for text Ice Dragon
+	TextDragonIce = "Ice dragon"
+	// TextDragonAcid is constant for text Acid Dragon
+	TextDragonAcid = "Acid dragon"
+	// TextDragonUndead is constant for text Undead Dragon
+	TextDragonUndead = "Undead dragon"
 
-	WOODEN_SWORD = "Wooden sword"
-	COPPER_SWORD = "Copper sword"
-	SILVER_SWORD = "Silver sword"
-	BRONZE_SWORD = "Bronze sword"
-	IRON_SWORD   = "Iron sword"
-	ANGEL_SWORD  = "Angel sword"
+	// WoodenSword is string for wooden sword
+	WoodenSword = "Wooden sword"
+	// CopperSword is string for copper sword
+	CopperSword = "Copper sword"
+	// SilverSword is string for silver sword
+	SilverSword = "Silver sword"
+	// BronzeSword is string for bronze sword
+	BronzeSword = "Bronze sword"
+	// IronSword is string for iron sword
+	IronSword = "Iron sword"
+	// AngelSword is string for angel sword
+	AngelSword = "Angel sword"
 
-	GOBLIN_EAR         = "Goblin ear"
-	GOBLIN_BOOTS       = "Goblin boots"
-	WOLF_FUR           = "Wolf fur"
-	TROLL_SMELLY_BONES = "Troll smelly bones"
-	WOLF_TAIL          = "Wolf tail"
-	TROLL_TOES         = "Troll toes"
-	DROP_DRAGONICE     = "Icy shards"
-	DROP_DRAGONFIRE    = "Fire scale"
-	DROP_DRAGONACID    = "Poison claws"
+	// GoblinEar is string for goblin ear
+	GoblinEar = "Goblin ear"
+	// GoblinBoots is string for goblin boots
+	GoblinBoots = "Goblin boots"
+	// WolfFur is string for wolf fur
+	WolfFur = "Wolf fur"
+	// TrollSmellyBones is string for troll smelly bones
+	TrollSmellyBones = "Troll smelly bones"
+	// WolfTail is string for wolf tail
+	WolfTail = "Wolf tail"
+	// TrollToes is string for troll toes
+	TrollToes = "Troll toes"
+	// DropDragonIce is string for icy shards
+	DropDragonIce = "Icy shards"
+	// DropDragonFire is string for Fire scale
+	DropDragonFire = "Fire scale"
+	// DropDragonAcid is string for Poison claws
+	DropDragonAcid = "Poison claws"
 )
 
+// IsSword is a helper function to check if an item is a kind of sword item
 func (item Item) IsSword() bool {
 	return strings.Contains(item.Name, "sword")
 }
 
+// ShopItems describes the items that are buyable at shop
 var ShopItems = []Item{
 	Item{
 		ID:    "001",
-		Name:  WOODEN_SWORD,
+		Name:  WoodenSword,
 		Level: 1,
 		Price: 100,
 	},
 	Item{
 		ID:    "002",
-		Name:  COPPER_SWORD,
+		Name:  CopperSword,
 		Level: 1,
 		Price: 250,
 	},
 	Item{
 		ID:       "003",
-		Name:     SILVER_SWORD,
+		Name:     SilverSword,
 		Level:    1,
 		Price:    50,
-		PreItems: []string{GOBLIN_EAR},
+		PreItems: []string{GoblinEar},
 	},
 	Item{
 		ID:       "004",
-		Name:     BRONZE_SWORD,
+		Name:     BronzeSword,
 		Level:    1,
 		Price:    10,
-		PreItems: []string{WOLF_TAIL},
+		PreItems: []string{WolfTail},
 	},
 	Item{
 		ID:       "005",
-		Name:     IRON_SWORD,
+		Name:     IronSword,
 		Level:    1,
 		Price:    250,
-		PreItems: []string{TROLL_TOES},
+		PreItems: []string{TrollToes},
 	},
 	Item{
 		ID:       "006",
-		Name:     ANGEL_SWORD,
+		Name:     AngelSword,
 		Level:    1,
 		Price:    20000,
-		PreItems: []string{DROP_DRAGONFIRE, DROP_DRAGONICE, DROP_DRAGONACID},
+		PreItems: []string{DropDragonFire, DropDragonIce, DropDragonAcid},
 	},
 }
 
+// PreItemStr returns text that are required to make an item
 func (item Item) PreItemStr() string {
 	switch len(item.PreItems) {
 	case 1:
@@ -137,73 +173,75 @@ func (item Item) PreItemStr() string {
 	}
 }
 
+// WorldItemSpecs describes the items that are buyable by trading
 var WorldItemSpecs = []ItemSpec{
 	ItemSpec{
-		Name:   WOODEN_SWORD,
+		Name:   WoodenSword,
 		Level:  [2]int{1, 1},
 		Attack: [2]int{3, 3},
 	},
 	ItemSpec{
-		Name:   WOODEN_SWORD,
+		Name:   WoodenSword,
 		Level:  [2]int{2, 2},
 		Attack: [2]int{6, 6},
 	},
 	ItemSpec{
-		Name:   COPPER_SWORD,
+		Name:   CopperSword,
 		Level:  [2]int{1, 1},
 		Attack: [2]int{10, 10},
 	},
 	ItemSpec{
-		Name:   COPPER_SWORD,
+		Name:   CopperSword,
 		Level:  [2]int{2, 2},
 		Attack: [2]int{20, 20},
 	},
 	ItemSpec{
-		Name:   SILVER_SWORD,
+		Name:   SilverSword,
 		Level:  [2]int{1, 1},
 		Attack: [2]int{30, 30},
 	},
 	ItemSpec{
-		Name:   BRONZE_SWORD,
+		Name:   BronzeSword,
 		Level:  [2]int{1, 1},
 		Attack: [2]int{50, 50},
 	},
 	ItemSpec{
-		Name:   IRON_SWORD,
+		Name:   IronSword,
 		Level:  [2]int{1, 1},
 		Attack: [2]int{100, 100},
 	},
 	ItemSpec{
-		Name:  TROLL_TOES,
+		Name:  TrollToes,
 		Level: [2]int{1, 1},
 	},
 	ItemSpec{
-		Name:  WOLF_TAIL,
+		Name:  WolfTail,
 		Level: [2]int{1, 1},
 	},
 	ItemSpec{
-		Name:  GOBLIN_EAR,
+		Name:  GoblinEar,
 		Level: [2]int{1, 1},
 	},
 	ItemSpec{
-		Name:   ANGEL_SWORD,
+		Name:   AngelSword,
 		Level:  [2]int{1, 1},
 		Attack: [2]int{1000, 1000},
 	},
 	ItemSpec{
-		Name:  DROP_DRAGONFIRE,
+		Name:  DropDragonFire,
 		Level: [2]int{1, 1},
 	},
 	ItemSpec{
-		Name:  DROP_DRAGONICE,
+		Name:  DropDragonIce,
 		Level: [2]int{1, 1},
 	},
 	ItemSpec{
-		Name:  DROP_DRAGONACID,
+		Name:  DropDragonAcid,
 		Level: [2]int{1, 1},
 	},
 }
 
+// WorldCharacterSpecs characters that are buyable from pylons central by trading
 var WorldCharacterSpecs = []CharacterSpec{
 	CharacterSpec{
 		Name:  "LionBaby",
@@ -211,36 +249,38 @@ var WorldCharacterSpecs = []CharacterSpec{
 		XP:    [2]float64{1, 1000000},
 	},
 	CharacterSpec{
-		Special: FIRE_SPECIAL,
+		Special: FireSpecial,
 		Name:    "FireBaby",
 		Level:   [2]int{1, 1000},
 		XP:      [2]float64{1, 1000000},
 	},
 	CharacterSpec{
-		Special: ICE_SPECIAL,
+		Special: IceSpecial,
 		Name:    "IceBaby",
 		Level:   [2]int{1, 1000},
 		XP:      [2]float64{1, 1000000},
 	},
 	CharacterSpec{
-		Special: ACID_SPECIAL,
+		Special: AcidSpecial,
 		Name:    "AcidBaby",
 		Level:   [2]int{1, 1000},
 		XP:      [2]float64{1, 1000000},
 	},
 }
 
+// GetSellPriceRange calculates sell price range based on item's value
 func (item *Item) GetSellPriceRange() string {
 	minPrice := item.Value * 8 / 10
 	maxPrice := minPrice + 20
 	return fmt.Sprintf("%d-%d", minPrice, maxPrice)
 }
 
+// GetUpgradePrice calculates the upgrade price based on item type
 func (item *Item) GetUpgradePrice() int {
 	switch item.Name {
-	case WOODEN_SWORD:
+	case WoodenSword:
 		return 100
-	case COPPER_SWORD:
+	case CopperSword:
 		return 250
 	}
 	return -1

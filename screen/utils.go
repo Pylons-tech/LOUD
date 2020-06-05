@@ -3,6 +3,7 @@ package screen
 import (
 	"fmt"
 	"io"
+	"log"
 	"reflect"
 	"strings"
 
@@ -14,11 +15,13 @@ import (
 	loud "github.com/Pylons-tech/LOUD/data"
 )
 
+// TextLine is a struct to manage a line on screen
 type TextLine struct {
 	content string
 	font    FontType
 }
 
+// TextLines is a struct to manage bulk TextLine objects
 type TextLines []TextLine
 
 func (tl TextLines) append(elems ...string) TextLines {
@@ -50,20 +53,21 @@ func (tl TextLines) appendT(elems ...string) TextLines {
 	return append(tl, elemsT...)
 }
 
+// SliceFromStart cut the text from the start, max width is provided
 func SliceFromStart(text string, width int) string {
 	sliceLen := 0
 	for {
 		newSliceLen := sliceLen
 		startWithCustomUnicode := false
 		for k, v := range customUnicodes {
-			if strings.HasPrefix(text[sliceLen:len(text)], k) {
+			if strings.HasPrefix(text[sliceLen:], k) {
 				newSliceLen += len(v)
 				startWithCustomUnicode = true
 				break
 			}
 		}
 		if !startWithCustomUnicode {
-			newSliceLen += 1
+			newSliceLen++
 		}
 		if newSliceLen <= width {
 			sliceLen = newSliceLen
@@ -75,6 +79,7 @@ func SliceFromStart(text string, width int) string {
 	return text[:sliceLen]
 }
 
+// SliceFromEnd cut the text from the end, max width is provided
 func SliceFromEnd(text string, width int) string {
 	sliceLen := 0
 	for {
@@ -88,7 +93,7 @@ func SliceFromEnd(text string, width int) string {
 			}
 		}
 		if !endWithCustomUnicode {
-			newSliceLen += 1
+			newSliceLen++
 		}
 		if newSliceLen <= width {
 			sliceLen = newSliceLen
@@ -97,7 +102,7 @@ func SliceFromEnd(text string, width int) string {
 			break
 		}
 	}
-	return text[len(text)-sliceLen : len(text)]
+	return text[len(text)-sliceLen:]
 }
 
 func truncateRight(message string, width int) string {
@@ -118,14 +123,14 @@ func truncateLeft(message string, width int) string {
 	return fillSpaceLeft(ellipsis+SliceFromEnd(message, width-1), width)
 }
 
-func justifyRight(message string, width int) string {
-	if NumberOfSpaces(message) < width {
-		fmtString := fmt.Sprintf("%%%vs", width)
+// func justifyRight(message string, width int) string {
+// 	if NumberOfSpaces(message) < width {
+// 		fmtString := fmt.Sprintf("%%%vs", width)
 
-		return fmt.Sprintf(fmtString, message)
-	}
-	return fillSpaceLeft(ellipsis+SliceFromEnd(message, width-1), width)
-}
+// 		return fmt.Sprintf(fmtString, message)
+// 	}
+// 	return fillSpaceLeft(ellipsis+SliceFromEnd(message, width-1), width)
+// }
 
 func centerText(message, pad string, width int) string {
 	if NumberOfSpaces(message) > width {
@@ -182,21 +187,21 @@ func fillSpace(message string, width int) string {
 func drawVerticalLine(x, y, height int) {
 	color := ansi.ColorCode(fmt.Sprintf("255:%v", bgcolor))
 	for i := 1; i < height; i++ {
-		io.WriteString(os.Stdout, fmt.Sprintf("%s%s│", cursor.MoveTo(y+i, x), color))
+		PrintString(fmt.Sprintf("%s%s│", cursor.MoveTo(y+i, x), color))
 	}
 
-	io.WriteString(os.Stdout, fmt.Sprintf("%s%s┬", cursor.MoveTo(y, x), color))
-	io.WriteString(os.Stdout, fmt.Sprintf("%s%s┴", cursor.MoveTo(y+height, x), color))
+	PrintString(fmt.Sprintf("%s%s┬", cursor.MoveTo(y, x), color))
+	PrintString(fmt.Sprintf("%s%s┴", cursor.MoveTo(y+height, x), color))
 }
 
 func drawHorizontalLine(x, y, width int) {
 	color := ansi.ColorCode(fmt.Sprintf("255:%v", bgcolor))
 	for i := 1; i < width; i++ {
-		io.WriteString(os.Stdout, fmt.Sprintf("%s%s─", cursor.MoveTo(y, x+i), color))
+		PrintString(fmt.Sprintf("%s%s─", cursor.MoveTo(y, x+i), color))
 	}
 
-	io.WriteString(os.Stdout, fmt.Sprintf("%s%s├", cursor.MoveTo(y, x), color))
-	io.WriteString(os.Stdout, fmt.Sprintf("%s%s┤", cursor.MoveTo(y, x+width), color))
+	PrintString(fmt.Sprintf("%s%s├", cursor.MoveTo(y, x), color))
+	PrintString(fmt.Sprintf("%s%s┤", cursor.MoveTo(y, x+width), color))
 }
 
 func formatItem(item loud.Item) string {
@@ -220,9 +225,8 @@ func formatItemP(item *loud.Item) string {
 func carryItemDesc(item *loud.Item) string {
 	if item == nil {
 		return ""
-	} else {
-		return "Carry: " + formatItemP(item)
 	}
+	return "Carry: " + formatItemP(item)
 }
 
 func formatIntRange(r [2]int) string {
@@ -260,11 +264,11 @@ func formatItemSpec(itemSpec loud.ItemSpec) string {
 
 func formatSpecial(special int) string {
 	switch special {
-	case loud.FIRE_SPECIAL:
+	case loud.FireSpecial:
 		return "🔥"
-	case loud.ICE_SPECIAL:
+	case loud.IceSpecial:
 		return "🌊"
-	case loud.ACID_SPECIAL:
+	case loud.AcidSpecial:
 		return "🥗"
 	}
 	return ""
@@ -272,11 +276,11 @@ func formatSpecial(special int) string {
 
 func formatSpecialDragon(special int) string {
 	switch special {
-	case loud.FIRE_SPECIAL:
+	case loud.FireSpecial:
 		return "Fire dragon"
-	case loud.ICE_SPECIAL:
+	case loud.IceSpecial:
 		return "Ice dragon"
-	case loud.ACID_SPECIAL:
+	case loud.AcidSpecial:
 		return "Acid dragon"
 	}
 	return ""
@@ -294,7 +298,7 @@ func formatBigNumber(number int) string {
 
 func formatCharacter(ch loud.Character) string {
 	chStr := loud.Localize(ch.Name)
-	if ch.Special != loud.NO_SPECIAL {
+	if ch.Special != loud.NoSpecial {
 		chStr = formatSpecial(ch.Special) + " " + chStr // adding space for Sierra issue
 	}
 	if ch.GiantKill > 0 {
@@ -302,11 +306,11 @@ func formatCharacter(ch loud.Character) string {
 	}
 	if ch.SpecialDragonKill > 0 {
 		switch ch.Special {
-		case loud.FIRE_SPECIAL:
+		case loud.FireSpecial:
 			chStr = fmt.Sprintf("🦐 x%d %s", ch.SpecialDragonKill, chStr)
-		case loud.ICE_SPECIAL:
+		case loud.IceSpecial:
 			chStr = fmt.Sprintf("🦈 x%d %s", ch.SpecialDragonKill, chStr)
-		case loud.ACID_SPECIAL:
+		case loud.AcidSpecial:
 			chStr = fmt.Sprintf("🐊 x%d %s", ch.SpecialDragonKill, chStr)
 		}
 	}
@@ -331,7 +335,7 @@ func formatCharacterP(ch *loud.Character) string {
 
 func formatCharacterSpec(chs loud.CharacterSpec) string {
 	chStr := loud.Localize(chs.Name)
-	if chs.Special != loud.NO_SPECIAL {
+	if chs.Special != loud.NoSpecial {
 		chStr = formatSpecial(chs.Special) + " " + chStr // adding space for Sierra issue
 	}
 
@@ -346,6 +350,7 @@ func formatCharacterSpec(chs loud.CharacterSpec) string {
 	return chStr
 }
 
+// InterfaceSlice returns array from interface object
 func InterfaceSlice(slice interface{}) []interface{} {
 	s := reflect.ValueOf(slice)
 	if s.Kind() != reflect.Slice {
@@ -362,15 +367,15 @@ func InterfaceSlice(slice interface{}) []interface{} {
 }
 
 func formatByStructType(item interface{}) string {
-	switch item.(type) {
+	switch item := item.(type) {
 	case loud.Item:
-		return formatItem(item.(loud.Item))
+		return formatItem(item)
 	case loud.Character:
-		return formatCharacter(item.(loud.Character))
+		return formatCharacter(item)
 	case loud.ItemSpec:
-		return formatItemSpec(item.(loud.ItemSpec))
+		return formatItemSpec(item)
 	case loud.CharacterSpec:
-		return formatCharacterSpec(item.(loud.CharacterSpec))
+		return formatCharacterSpec(item)
 	default:
 		return "unrecognized struct type"
 	}
@@ -401,27 +406,78 @@ func (screen *GameScreen) renderItemTrdReqTableLine(text1 string, text2 string) 
 	return calcText
 }
 
-func min(a, b uint64) uint64 {
-	if a < b {
-		return a
-	}
-	return b
-}
+// func min(a, b uint64) uint64 {
+// 	if a < b {
+// 		return a
+// 	}
+// 	return b
+// }
 
+// RequestInfo returns basic info from several type of requests
 func RequestInfo(request interface{}) (bool, interface{}, int) {
-	switch request.(type) {
+	switch itr := request.(type) {
 	case loud.ItemBuyTrdReq:
-		itr := request.(loud.ItemBuyTrdReq)
 		return itr.IsMyTrdReq, itr.TItem, itr.Price
 	case loud.ItemSellTrdReq:
-		itr := request.(loud.ItemSellTrdReq)
 		return itr.IsMyTrdReq, itr.TItem, itr.Price
 	case loud.CharacterBuyTrdReq:
-		itr := request.(loud.CharacterBuyTrdReq)
 		return itr.IsMyTrdReq, itr.TCharacter, itr.Price
 	case loud.CharacterSellTrdReq:
-		itr := request.(loud.CharacterSellTrdReq)
 		return itr.IsMyTrdReq, itr.TCharacter, itr.Price
 	}
 	return false, loud.ItemBuyTrdReq{}, 0
+}
+
+// ForestStatusCheck checks if a player can fight target monster
+func (screen *GameScreen) ForestStatusCheck(newStus PageStatus) (string, string) {
+	activeCharacter := screen.user.GetActiveCharacter()
+	if activeCharacter == nil {
+		return loud.Sprintf("You need a character for this action!"), loud.Sprintf("no character!")
+	}
+	switch newStus {
+	case ConfirmFightGiant:
+		if activeCharacter == nil || activeCharacter.Special != loud.NoSpecial {
+			return loud.Sprintf("You need no special character for this action!"), loud.Sprintf("no non-special character!")
+		}
+	case ConfirmFightDragonFire:
+		if activeCharacter == nil || activeCharacter.Special != loud.FireSpecial {
+			return loud.Sprintf("You need a fire character for this action!"), loud.Sprintf("no fire character!")
+		}
+	case ConfirmFightDragonIce:
+		if activeCharacter == nil || activeCharacter.Special != loud.IceSpecial {
+			return loud.Sprintf("You need a ice character for this action!"), loud.Sprintf("no ice character!")
+		}
+	case ConfirmFightDragonAcid:
+		if activeCharacter == nil || activeCharacter.Special != loud.AcidSpecial {
+			return loud.Sprintf("You need a acid character for this action!"), loud.Sprintf("no acid character!")
+		}
+	}
+	switch newStus {
+	case ConfirmFightGoblin,
+		ConfirmFightWolf,
+		ConfirmFightTroll:
+		if len(screen.user.InventorySwords()) == 0 {
+			return loud.Sprintf("You need a sword for this action!"), loud.Sprintf("no sword!")
+		}
+	case ConfirmFightGiant,
+		ConfirmFightDragonFire,
+		ConfirmFightDragonIce,
+		ConfirmFightDragonAcid:
+		if len(screen.user.InventoryIronSwords()) == 0 {
+			return loud.Sprintf("You need an iron sword for this action!"), loud.Sprintf("no iron sword!")
+		}
+	case ConfirmFightDragonUndead:
+		if len(screen.user.InventoryAngelSwords()) == 0 {
+			return loud.Sprintf("You need an angel sword for this action!"), loud.Sprintf("no angel sword!")
+		}
+	}
+	return "", ""
+}
+
+// PrintString is a utility function to print text on game board
+func PrintString(s string) {
+	_, err := io.WriteString(os.Stdout, s)
+	if err != nil {
+		log.Println("Was not able to write string to screen", err)
+	}
 }

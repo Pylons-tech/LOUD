@@ -6,6 +6,7 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
+// Config is a struct to manage game configuration
 type Config struct {
 	SDK struct {
 		MaxWaitBlock int64  `yaml:"max_wait_block"`
@@ -22,6 +23,7 @@ type Config struct {
 	}
 }
 
+// ReadConfig is a function to read configuration
 func ReadConfig() (Config, error) {
 	args := os.Args
 
@@ -30,7 +32,7 @@ func ReadConfig() (Config, error) {
 	var automateInput bool = false
 
 	if len(args) > 1 {
-		for _, arg := range args[2:len(args)] {
+		for _, arg := range args[2:] {
 			switch arg {
 			case "-locald":
 				useLocalDm = true

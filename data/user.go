@@ -1,15 +1,23 @@
 package loud
 
+// UserLocation is a struct to manage user's location
 type UserLocation int
 
 const (
-	HOME UserLocation = iota
-	FOREST
-	SHOP
-	PYLCNTRL
-	SETTINGS
-	DEVELOP
-	HELP
+	// Home is home
+	Home UserLocation = iota
+	// Forest is a place to fight monsters
+	Forest
+	// Shop is a place to do shopping
+	Shop
+	// PylonsCentral is a place to do trading and buying from pylons
+	PylonsCentral
+	// Settings is a place to control game settings
+	Settings
+	// Develop is a place to run development functions
+	Develop
+	// Help is a place to get help text
+	Help
 )
 
 // User represents an active user in the system.

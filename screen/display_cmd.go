@@ -2,53 +2,58 @@ package screen
 
 import (
 	"fmt"
-	"io"
-	"os"
 
 	loud "github.com/Pylons-tech/LOUD/data"
 	"github.com/ahmetb/go-cursor"
 )
 
 const (
-	SEL_CMD           = "Select ( ↵ )"
-	UPDOWN_CMD        = "Table navigation (↑↓)"
-	GO_ON_ENTER_CMD   = "Go on ( ↵ )"
-	FINISH_ENTER_CMD  = "Finish Enter ( ↵ )"
-	GO_BACK_CMD       = "Go back ( ⌫ ) - Backspace Key"
-	GO_BACK_ESC_CMD   = "Go back ( Esc )"
-	EXIT_GAME_ESC_CMD = "Exit Game ( Esc )"
+	// SelectCommand express the select command text
+	SelectCommand = "Select ( ↵ )"
+	// UpdownCommand express table navigation command text
+	UpdownCommand = "Table navigation (↑↓)"
+	// GoonEnterCommand express go on enter command text
+	GoonEnterCommand = "Go on ( ↵ )"
+	// FinishEnterCommand express finish enter command text
+	FinishEnterCommand = "Finish Enter ( ↵ )"
+	// GobackCommand express go back command text
+	GobackCommand = "Go back ( ⌫ ) - Backspace Key"
+	// GobackEscCommand express go back by escape command
+	GobackEscCommand = "Go back ( Esc )"
+	// ExitGameEscCommand express exit game by escape key command
+	ExitGameEscCommand = "Exit Game ( Esc )"
 )
 
 func (tl TextLines) appendSelectGoBackCmds() TextLines {
 	return tl.appendT(
-		SEL_CMD,
-		UPDOWN_CMD,
-		GO_BACK_CMD)
+		SelectCommand,
+		UpdownCommand,
+		GobackCommand)
 }
 
 func (tl TextLines) appendGoOnBackCmds() TextLines {
 	return tl.appendT(
-		GO_ON_ENTER_CMD,
-		GO_BACK_CMD)
+		GoonEnterCommand,
+		GobackCommand)
 }
 
-var MAX_SHORTCUT_ITEM_CMDSEL = 3
+var maxShortcutItemCommands = 3
 
-func getWindowFromActiveLine(activeLine, window_size, max_window int) (int, int) {
-	if window_size > max_window {
-		window_size = max_window
+func getWindowFromActiveLine(activeLine, windowSize, maxWindow int) (int, int) {
+	if windowSize > maxWindow {
+		windowSize = maxWindow
 	}
-	if activeLine >= max_window {
-		activeLine = max_window - 1
+	if activeLine >= maxWindow {
+		activeLine = maxWindow - 1
 	}
-	startLine := activeLine - window_size/2
+	startLine := activeLine - windowSize/2
 	if startLine < 0 {
 		startLine = 0
 	}
-	endLine := startLine + window_size
-	if endLine >= max_window {
-		startLine -= endLine - max_window
-		endLine = max_window
+	endLine := startLine + windowSize
+	if endLine >= maxWindow {
+		startLine -= endLine - maxWindow
+		endLine = maxWindow
 	}
 	return startLine, endLine
 }
@@ -57,7 +62,7 @@ func (tl TextLines) appendCustomFontSelectCmds(itemsSlice interface{}, activeLin
 	moreText := loud.Sprintf("use arrows for more")
 	items := InterfaceSlice(itemsSlice)
 
-	startLine, endLine := getWindowFromActiveLine(activeLine, MAX_SHORTCUT_ITEM_CMDSEL, len(items))
+	startLine, endLine := getWindowFromActiveLine(activeLine, maxShortcutItemCommands, len(items))
 	if startLine != 0 {
 		tl = tl.append("..." + " " + moreText)
 	} else {
@@ -101,112 +106,112 @@ func (screen *GameScreen) renderUserCommands() {
 	infoLines := TextLines{}
 	tableLines := []string{}
 	switch screen.scrStatus {
-	case CONFIRM_ENDGAME:
+	case ConfirmEndGame:
 		infoLines = infoLines.
 			appendT(
-				GO_BACK_ESC_CMD,
-				GO_ON_ENTER_CMD)
-	case SHW_LOCATION:
+				GobackEscCommand,
+				GoonEnterCommand)
+	case ShowLocation:
 		cmdMap := map[loud.UserLocation]string{
-			loud.HOME:     "home",
-			loud.FOREST:   "forest",
-			loud.SHOP:     "shop",
-			loud.PYLCNTRL: "pylons central",
-			loud.SETTINGS: "settings",
-			loud.DEVELOP:  "develop",
-			loud.HELP:     "help",
+			loud.Home:          "home",
+			loud.Forest:        "forest",
+			loud.Shop:          "shop",
+			loud.PylonsCentral: "pylons central",
+			loud.Settings:      "settings",
+			loud.Develop:       "develop",
+			loud.Help:          "help",
 		}
 		cmdString := loud.Localize(cmdMap[screen.user.GetLocation()])
 		infoLines = infoLines.
 			append(loud.ChunkText(cmdString, w)...)
 
-		if screen.user.GetLocation() == loud.FOREST {
-			forestStusMap := map[int]ScreenStatus{
-				0: CONFIRM_HUNT_RABBITS,
-				1: CONFIRM_FIGHT_GOBLIN,
-				2: CONFIRM_FIGHT_WOLF,
-				3: CONFIRM_FIGHT_TROLL,
-				4: CONFIRM_FIGHT_GIANT,
-				5: CONFIRM_FIGHT_DRAGONFIRE,
-				6: CONFIRM_FIGHT_DRAGONICE,
-				7: CONFIRM_FIGHT_DRAGONACID,
-				8: CONFIRM_FIGHT_DRAGONUNDEAD,
+		if screen.user.GetLocation() == loud.Forest {
+			forestStusMap := map[int]PageStatus{
+				0: ConfirmHuntRabbits,
+				1: ConfirmFightGoblin,
+				2: ConfirmFightWolf,
+				3: ConfirmFightTroll,
+				4: ConfirmFightGiant,
+				5: ConfirmFightDragonFire,
+				6: ConfirmFightDragonIce,
+				7: ConfirmFightDragonAcid,
+				8: ConfirmFightDragonUndead,
 			}
 
 			for k, v := range forestStusMap {
 				if _, fst := screen.ForestStatusCheck(v); len(fst) > 0 {
 					infoLines[k].content += ": " + fst
-					infoLines[k].font = GREY
+					infoLines[k].font = GreyFont
 				}
 			}
 		}
-		if screen.user.GetLocation() == loud.SETTINGS && len(infoLines) > 2 {
+		if screen.user.GetLocation() == loud.Settings && len(infoLines) > 2 {
 			switch loud.GameLanguage {
 			case "en":
-				infoLines[1].font = BLUE_BOLD
+				infoLines[1].font = BlueBoldFont
 			case "es":
-				infoLines[2].font = BLUE_BOLD
+				infoLines[2].font = BlueBoldFont
 			}
 		}
-		if screen.user.GetLocation() == loud.HOME {
+		if screen.user.GetLocation() == loud.Home {
 			if len(infoLines) > 1 && len(screen.user.InventoryCharacters()) == 0 {
 				// make it grey when no character's there
 				infoLines[1].content += ": " + loud.Sprintf("no character!")
-				infoLines[1].font = GREY
+				infoLines[1].font = GreyFont
 			}
 		}
-	case SHW_LOUD_BUY_TRDREQS:
+	case ShowGoldBuyTrdReqs:
 		infoLines = infoLines.
 			appendT(
 				"Sell gold to fulfill selected request( ↵ )",
 				"Place order to buy gold(R)",
-				GO_BACK_CMD)
-	case SHW_LOUD_SELL_TRDREQS:
+				GobackCommand)
+	case ShowGoldSellTrdReqs:
 		infoLines = infoLines.
 			appendT(
 				"Buy gold to fulfill selected request( ↵ )",
 				"place order to sell gold(R)",
-				GO_BACK_CMD)
-	case SHW_BUYITM_TRDREQS:
+				GobackCommand)
+	case ShowBuyItemTrdReqs:
 		infoLines = infoLines.
 			appendT(
 				"Sell item to fulfill selected request( ↵ )",
 				"Place order to buy item(R)",
-				GO_BACK_CMD)
-	case SHW_SELLITM_TRDREQS:
+				GobackCommand)
+	case ShowSellItemTrdReqs:
 		infoLines = infoLines.
 			appendT(
 				"Buy item to fulfill selected request( ↵ )",
 				"Place order to sell item(R)",
-				GO_BACK_CMD)
-	case SHW_BUYCHR_TRDREQS:
+				GobackCommand)
+	case ShowBuyChrTrdReqs:
 		infoLines = infoLines.
 			appendT(
 				"Sell character to fulfill selected request( ↵ )",
 				"Place order to buy character(R)",
-				GO_BACK_CMD)
-	case SHW_SELLCHR_TRDREQS:
+				GobackCommand)
+	case ShowSellChrTrdReqs:
 		infoLines = infoLines.
 			appendT(
 				"Buy character to fulfill selected request( ↵ )",
 				"Place order to sell character(R)",
-				GO_BACK_CMD)
+				GobackCommand)
 
-	case CR8_BUYCHR_TRDREQ_SEL_CHR,
-		CR8_SELLCHR_TRDREQ_SEL_CHR,
-		CR8_SELLITM_TRDREQ_SEL_ITEM,
-		CR8_BUYITM_TRDREQ_SEL_ITEM:
+	case CreateBuyChrTrdReqSelectChr,
+		CreateSellChrTrdReqSelChr,
+		CreateSellItemTrdReqSelectItem,
+		CreateBuyItemTrdReqSelectItem:
 		infoLines = infoLines.appendSelectGoBackCmds()
-	case SEL_RENAME_CHAR:
+	case SelectRenameChr:
 		infoLines = infoLines.
 			appendCustomFontSelectCmdsScreenCharacters(screen).
 			appendSelectGoBackCmds()
-	case SEL_ACTIVE_CHAR:
+	case SelectActiveChr:
 		infoLines = infoLines.
 			append(fmt.Sprintf("0) %s", loud.Localize("No character selection"))).
 			appendCustomFontSelectCmdsScreenCharacters(screen).
 			appendSelectGoBackCmds()
-	case SEL_BUYITM:
+	case SelectBuyItem:
 		infoLines = infoLines.
 			appendCustomFontSelectCmds(
 				loud.ShopItems, screen.activeLine,
@@ -232,7 +237,7 @@ func (screen *GameScreen) renderUserCommands() {
 					}
 				}).
 			appendSelectGoBackCmds()
-	case SEL_BUYCHR:
+	case SelectBuyChr:
 		infoLines = infoLines.
 			appendCustomFontSelectCmds(
 				loud.ShopCharacters, screen.activeLine,
@@ -244,7 +249,7 @@ func (screen *GameScreen) renderUserCommands() {
 					}
 				}).
 			appendSelectGoBackCmds()
-	case SEL_SELLITM:
+	case SelectSellItem:
 		infoLines = infoLines.
 			appendCustomFontSelectCmds(
 				screen.user.InventorySellableItems(), screen.activeLine,
@@ -256,7 +261,7 @@ func (screen *GameScreen) renderUserCommands() {
 					}
 				}).
 			appendSelectGoBackCmds()
-	case SEL_UPGITM:
+	case SelectUpgradeItem:
 		infoLines = infoLines.
 			appendCustomFontSelectCmds(
 				screen.user.InventoryUpgradableItems(), screen.activeLine,
@@ -268,34 +273,34 @@ func (screen *GameScreen) renderUserCommands() {
 					}
 				}).
 			appendSelectGoBackCmds()
-	case CONFIRM_HUNT_RABBITS,
-		CONFIRM_FIGHT_GOBLIN,
-		CONFIRM_FIGHT_TROLL,
-		CONFIRM_FIGHT_WOLF,
-		CONFIRM_FIGHT_GIANT,
-		CONFIRM_FIGHT_DRAGONFIRE,
-		CONFIRM_FIGHT_DRAGONICE,
-		CONFIRM_FIGHT_DRAGONACID,
-		CONFIRM_FIGHT_DRAGONUNDEAD:
+	case ConfirmHuntRabbits,
+		ConfirmFightGoblin,
+		ConfirmFightTroll,
+		ConfirmFightWolf,
+		ConfirmFightGiant,
+		ConfirmFightDragonFire,
+		ConfirmFightDragonIce,
+		ConfirmFightDragonAcid,
+		ConfirmFightDragonUndead:
 		infoLines = infoLines.
 			appendGoOnBackCmds()
 	default:
 		if screen.IsHelpScreen() {
 			infoLines = infoLines.
-				appendT(GO_BACK_CMD)
-		} else if screen.IsResultScreen() { // eg. RSLT_BUY_LOUD_TRDREQ_CREATION
-			infoLines = infoLines.appendT(GO_ON_ENTER_CMD)
-		} else if screen.InputActive() { // eg. CR8_BUYITM_TRDREQ_ENT_PYLVAL
+				appendT(GobackCommand)
+		} else if screen.IsResultScreen() { // eg. RsltBuyGoldTrdReqCreation
+			infoLines = infoLines.appendT(GoonEnterCommand)
+		} else if screen.InputActive() { // eg. CreateBuyItmTrdReqEnterPylonValue
 			infoLines = infoLines.
 				appendT(
-					FINISH_ENTER_CMD,
-					GO_BACK_ESC_CMD)
+					FinishEnterCommand,
+					GobackEscCommand)
 		}
 	}
 
 	for index, line := range infoLines {
 		lineFont := screen.getFont(line.font)
-		io.WriteString(os.Stdout, fmt.Sprintf("%s%s",
+		PrintString(fmt.Sprintf("%s%s",
 			cursor.MoveTo(y+index, x),
 			lineFont(fillSpace(line.content, w))))
 	}
@@ -303,7 +308,7 @@ func (screen *GameScreen) renderUserCommands() {
 	infoLen := len(infoLines)
 
 	for index, line := range tableLines {
-		io.WriteString(os.Stdout, fmt.Sprintf("%s%s",
+		PrintString(fmt.Sprintf("%s%s",
 			cursor.MoveTo(y+infoLen+index, x),
 			line))
 	}

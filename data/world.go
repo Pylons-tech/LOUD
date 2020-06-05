@@ -6,4 +6,5 @@ type World interface {
 	Close()
 }
 
+// SomethingWentWrongMsg is a global variable to report something went wrong message to a user
 var SomethingWentWrongMsg string = ""

@@ -2,8 +2,6 @@ package screen
 
 import (
 	"fmt"
-	"io"
-	"os"
 
 	loud "github.com/Pylons-tech/LOUD/data"
 	"github.com/ahmetb/go-cursor"
@@ -44,10 +42,10 @@ func (screen *GameScreen) renderCharacterSheet() {
 		fmtFunc(fillSpace("", w)),
 	}
 
-	MAX_INVENTORY_LEN := h - 15
+	MaxInventorySize := h - 15
 
 	for idx, character := range characters {
-		if len(infoLines) > MAX_INVENTORY_LEN {
+		if len(infoLines) > MaxInventorySize {
 			infoLines = append(infoLines, fmtFunc(fillSpace("...", w)))
 			break
 		}
@@ -62,7 +60,7 @@ func (screen *GameScreen) renderCharacterSheet() {
 
 	items := screen.user.InventoryItems()
 	for _, item := range items {
-		if len(infoLines) > MAX_INVENTORY_LEN {
+		if len(infoLines) > MaxInventorySize {
 			infoLines = append(infoLines, fmtFunc(fillSpace("...", w)))
 			break
 		}
@@ -90,7 +88,7 @@ func (screen *GameScreen) renderCharacterSheet() {
 	lenInfoLines := len(infoLines)
 
 	for index, line := range infoLines {
-		io.WriteString(os.Stdout, fmt.Sprintf("%s%s",
+		PrintString(fmt.Sprintf("%s%s",
 			cursor.MoveTo(y+index, x),
 			line))
 	}
@@ -115,7 +113,7 @@ func (screen *GameScreen) renderCharacterSheet() {
 	nodeLines = append(nodeLines, fmtFunc(centerText(" ❦ ", "─", w)))
 
 	for index, line := range nodeLines {
-		io.WriteString(os.Stdout, fmt.Sprintf("%s%s",
+		PrintString(fmt.Sprintf("%s%s",
 			cursor.MoveTo(y+lenInfoLines+index, x),
 			line))
 	}

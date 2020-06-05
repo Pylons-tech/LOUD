@@ -125,8 +125,8 @@ func (screen *GameScreen) tradeTableColorDesc(width int) TextLines {
 		append(loud.Localize("trade request tables colors meaning")).
 		append("").
 		append(loud.Localize("white trade line desc")).
-		appendF(loud.Localize("bluebold trade line desc"), BLUE_BOLD).
-		appendF(loud.Localize("brownbold trade line desc"), BROWN_BOLD).
-		appendF(loud.Localize("brown trade line desc"), BROWN)
+		appendF(loud.Localize("bluebold trade line desc"), BlueBoldFont).
+		appendF(loud.Localize("brownbold trade line desc"), BrownBoldFont).
+		appendF(loud.Localize("brown trade line desc"), BrownFont)
 	return infoLines
 }

@@ -2,6 +2,15 @@
 
 ![Pylons Central](https://github.com/Pylons-tech/LOUD/blob/master/screenshots/pylons_central.png)
 
+## Setup development environment
+
+```
+git clone https://github.com/Pylons-tech/LOUD
+brew install pre-commit
+brew install golangci/tap/golangci-lint
+pre-commit install
+```
+
 ## Building
 
 You need a correctly set up Golang environment over 1.11; this proejct uses `go mod`.
@@ -116,7 +125,7 @@ make ARGS="eugen" run
 
 After creating eugen account on remote, check eugen account created correctly on node by running
 ```
-pylonscli query account $(pylonscli keys show -a eugen) --node 35.223.7.2:26657
+pylonscli query account $(pylonscli keys show -a eugen) --node tcp://35.223.7.2:26657
 ```
 Update cookbook name, id and recipe ID for correct version and timestamp.
 **Warn:** If cookbook name does not change, it's refering to old version of cookbook since now it's finding cookbooks by name.
@@ -128,7 +137,7 @@ make fixture_tests ARGS="-runserial"
 
 Check if cookbook and all recipes are created by using
 ```
-pylonscli query pylons list_recipe --node 35.223.7.2:26657
+pylonscli query pylons list_recipe --node tcp://35.223.7.2:26657
 ```
 
 If something went wrong, just create the remaining recipes by editing `scenario/loud.json`.

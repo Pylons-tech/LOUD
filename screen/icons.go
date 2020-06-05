@@ -49,6 +49,7 @@ var customUnicodes = map[string]string{
 	"◇":  "x",  // empty progress
 }
 
+// NumberOfSpaces returns the length of a message provided via param, message
 func NumberOfSpaces(message string) int {
 	for k, v := range customUnicodes {
 		message = strings.ReplaceAll(message, k, v)

@@ -2,14 +2,13 @@ package screen
 
 import (
 	"fmt"
-	"io"
-	"os"
 
 	"github.com/ahmetb/go-cursor"
 
 	loud "github.com/Pylons-tech/LOUD/data"
 )
 
+// MenuDisplay describes the fields that are used for each menu item
 type MenuDisplay struct {
 	text     string
 	isActive bool
@@ -26,23 +25,23 @@ func (screen *GameScreen) renderMenu() {
 	// h := scrBox.H
 
 	cmdMap := map[loud.UserLocation]string{
-		loud.HOME:     "home",
-		loud.FOREST:   "forest",
-		loud.SHOP:     "shop",
-		loud.PYLCNTRL: "pylons central",
-		loud.SETTINGS: "settings",
-		loud.DEVELOP:  "develop",
-		loud.HELP:     "help",
+		loud.Home:          "home",
+		loud.Forest:        "forest",
+		loud.Shop:          "shop",
+		loud.PylonsCentral: "pylons central",
+		loud.Settings:      "settings",
+		loud.Develop:       "develop",
+		loud.Help:          "help",
 	}
 
 	locations := []loud.UserLocation{
-		loud.HOME,
-		loud.FOREST,
-		loud.SHOP,
-		loud.PYLCNTRL,
-		loud.SETTINGS,
-		loud.DEVELOP,
-		loud.HELP,
+		loud.Home,
+		loud.Forest,
+		loud.Shop,
+		loud.PylonsCentral,
+		loud.Settings,
+		loud.Develop,
+		loud.Help,
 	}
 
 	menuDisplays := []MenuDisplay{}
@@ -63,8 +62,8 @@ func (screen *GameScreen) renderMenu() {
 	}
 
 	md := MenuDisplay{
-		text:     loud.Localize(EXIT_GAME_ESC_CMD),
-		isActive: screen.scrStatus == CONFIRM_ENDGAME,
+		text:     loud.Localize(ExitGameEscCommand),
+		isActive: screen.scrStatus == ConfirmEndGame,
 	}
 	md.width = len(md.text) + 4
 	md.start = w - md.width
@@ -82,11 +81,11 @@ func (screen *GameScreen) renderMenu() {
 		if md.split {
 			text = centerText(md.text, " ", md.width-1)
 			splitText := fmt.Sprintf("%s%s", cursor.MoveTo(y, md.start+md.width-1), screen.regularFont()("│"))
-			io.WriteString(os.Stdout, splitText)
+			PrintString(splitText)
 		} else {
 			text = centerText(md.text, " ", md.width)
 		}
 		menuText := fmt.Sprintf("%s%s", move, menuFont(text))
-		io.WriteString(os.Stdout, menuText)
+		PrintString(menuText)
 	}
 }

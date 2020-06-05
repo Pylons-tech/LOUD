@@ -8,8 +8,10 @@ import (
 	"golang.org/x/text/language"
 )
 
+// GameLanguage shows which language is active
 var GameLanguage string = "en"
 
+// Localize convert translate string to specific language
 func Localize(key string) string {
 	bundle := i18n.NewBundle(language.English)
 	bundle.RegisterUnmarshalFunc("json", json.Unmarshal)
@@ -29,6 +31,7 @@ func Localize(key string) string {
 	return translate
 }
 
+// Sprintf returns the translated format
 func Sprintf(format string, a ...interface{}) string {
 	return fmt.Sprintf(Localize(format), a...)
 }

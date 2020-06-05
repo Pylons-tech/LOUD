@@ -6,48 +6,61 @@ import (
 	loud "github.com/Pylons-tech/LOUD/data"
 )
 
+// FontType is a struct to mange type of font
 type FontType string
 
 const (
-	REGULAR           FontType = ""
-	GREY                       = "grey"
-	BROWN                      = "brown"
-	RED                        = "red"
-	RED_BOLD                   = "red_bold"
-	YELLOW                     = "yellow"
-	GREEN                      = "green"
-	BLINK_BLUE_BOLD            = "blink_blue_bold"
-	INPUT_ACTIVE_FONT          = "input_active_font"
-	BROWN_BOLD                 = "brown_bold"
-	BLUE_BOLD                  = "blue_bold"
-	GREY_BOLD                  = "grey_bold"
+	// RegularFont describes regular text font
+	RegularFont FontType = ""
+	// GreyFont describes grey text font
+	GreyFont = "grey"
+	// BrownFont describes brown text font
+	BrownFont = "brown"
+	// RedFont describes red text font
+	RedFont = "red"
+	// RedBoldFont describes red bold text font
+	RedBoldFont = "red_bold"
+	// YelloFont describes yellow text font
+	YelloFont = "yellow"
+	// GreenFont describes green text font
+	GreenFont = "green"
+	// BlinkBlueFont describes blinking blue bold text
+	BlinkBlueFont = "blink_blue_bold"
+	// InputActiveFont describes font for input enter text
+	InputActiveFont = "input_active_font"
+	// BrownBoldFont describes font for brown bold text
+	BrownBoldFont = "brown_bold"
+	// BlueBoldFont describes font for blue bold text
+	BlueBoldFont = "blue_bold"
+	// GreyBoldFont describes font for blue bold text
+	GreyBoldFont = "grey_bold"
 )
 
 func (screen *GameScreen) getFont(ft FontType) func(string) string {
 	switch ft {
-	case REGULAR:
+	case RegularFont:
 		return screen.regularFont()
-	case GREY:
+	case GreyFont:
 		return screen.greyFont()
-	case BROWN:
+	case BrownFont:
 		return screen.brownFont()
-	case RED:
+	case RedFont:
 		return screen.redFont()
-	case YELLOW:
+	case YelloFont:
 		return screen.yellowFont()
-	case GREEN:
+	case GreenFont:
 		return screen.greenFont()
-	case RED_BOLD:
+	case RedBoldFont:
 		return screen.redBoldFont()
-	case BLUE_BOLD:
+	case BlueBoldFont:
 		return screen.blueBoldFont()
-	case GREY_BOLD:
+	case GreyBoldFont:
 		return screen.greyBoldFont()
-	case BLINK_BLUE_BOLD:
+	case BlinkBlueFont:
 		return screen.blinkBlueBoldFont()
-	case INPUT_ACTIVE_FONT:
+	case InputActiveFont:
 		return screen.inputActiveFont()
-	case BROWN_BOLD:
+	case BrownBoldFont:
 		return screen.brownBoldFont()
 	default:
 		return screen.regularFont()
@@ -112,40 +125,40 @@ func (screen *GameScreen) inputActiveFont() func(string) string {
 
 func (screen *GameScreen) getFontByActiveIndex(idx int) FontType {
 	activeLine := screen.activeLine
-	font := REGULAR
+	font := RegularFont
 	if activeLine == idx {
-		font = BLUE_BOLD
+		font = BlueBoldFont
 	}
 	return font
 }
 
 func (screen *GameScreen) getFontOfTableLine(idx int, disabled bool) FontType {
-	font := REGULAR
+	font := RegularFont
 	isActiveLine := screen.activeLine == idx
 	if isActiveLine && disabled {
-		font = BROWN_BOLD
+		font = BrownBoldFont
 	} else if isActiveLine {
-		font = BLUE_BOLD
+		font = BlueBoldFont
 	} else if disabled {
-		font = BROWN
+		font = BrownFont
 	}
 	return font
 }
 
 func (screen *GameScreen) getFontOfShopItem(idx int, item loud.Item) FontType {
-	font := REGULAR
+	font := RegularFont
 	switch {
 	case !screen.user.HasPreItemForAnItem(item): // ! preitem ok
-		font = GREY
+		font = GreyFont
 	case !(item.Price <= screen.user.GetGold()): // ! gold enough
-		font = GREY
+		font = GreyFont
 	}
 	if idx == screen.activeLine {
 		switch font {
-		case REGULAR:
-			font = BLUE_BOLD
-		case GREY:
-			font = GREY_BOLD
+		case RegularFont:
+			font = BlueBoldFont
+		case GreyFont:
+			font = GreyBoldFont
 		}
 	}
 	return font

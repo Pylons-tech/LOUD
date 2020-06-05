@@ -6,20 +6,21 @@ import (
 	loud "github.com/Pylons-tech/LOUD/data"
 )
 
+// FontFuncType is a function to convert an object to font type
 type FontFuncType func(int, interface{}) FontType
 
-func tableHeaderBodySeparator(TABLE_SEPARATORS []string, showFull bool) string {
+func tableHeaderBodySeparator(TableSeparators []string, showFull bool) string {
 	if showFull {
-		return TABLE_SEPARATORS[1]
+		return TableSeparators[1]
 	}
-	return TABLE_SEPARATORS[2]
+	return TableSeparators[2]
 }
 
-func tableBodyFooterSeparator(TABLE_SEPARATORS []string, showFull bool) string {
+func tableBodyFooterSeparator(TableSeparators []string, showFull bool) string {
 	if showFull {
-		return TABLE_SEPARATORS[3]
+		return TableSeparators[3]
 	}
-	return TABLE_SEPARATORS[4]
+	return TableSeparators[4]
 }
 
 func (screen *GameScreen) calcTLFont(fontFunc FontFuncType, idx int, disabled bool, request interface{}) FontType {
@@ -29,6 +30,7 @@ func (screen *GameScreen) calcTLFont(fontFunc FontFuncType, idx int, disabled bo
 	return screen.getFontOfTableLine(idx, disabled)
 }
 
+// TableHeightWindow determines table startLine and endLine from existing header
 func (screen *GameScreen) TableHeightWindow(header string, rawArrayInterFace interface{}, width int) ([]string, int, int) {
 	rawArray := InterfaceSlice(rawArrayInterFace)
 	infoLines := loud.ChunkText(loud.Localize(header), width)
@@ -44,21 +46,24 @@ func (screen *GameScreen) TableHeightWindow(header string, rawArrayInterFace int
 	return infoLines, startLine, endLine
 }
 
-func (screen *GameScreen) TableHeader(titleLines []string, TABLE_SEPARATORS []string, headerVisual string, startLine int) TextLines {
+// TableHeader convert table header params into TextLines
+func (screen *GameScreen) TableHeader(titleLines []string, TableSeparators []string, headerVisual string, startLine int) TextLines {
 	return TextLines{}.
 		append(titleLines...).
-		append(TABLE_SEPARATORS[0]).
+		append(TableSeparators[0]).
 		append(headerVisual).
-		append(tableHeaderBodySeparator(TABLE_SEPARATORS, startLine == 0))
+		append(tableHeaderBodySeparator(TableSeparators, startLine == 0))
 }
 
-func (screen *GameScreen) TableFooter(TABLE_SEPARATORS []string, endLine int, rawArrayInterFace interface{}) string {
+// TableFooter convert table footer params into TextLines
+func (screen *GameScreen) TableFooter(TableSeparators []string, endLine int, rawArrayInterFace interface{}) string {
 	rawArray := InterfaceSlice(rawArrayInterFace)
-	return tableBodyFooterSeparator(TABLE_SEPARATORS, endLine == len(rawArray))
+	return tableBodyFooterSeparator(TableSeparators, endLine == len(rawArray))
 }
 
+// renderTRTable convert trade request table params into TextLines
 func (screen *GameScreen) renderTRTable(rawArray []loud.TrdReq, width int, fontFunc FontFuncType) TextLines {
-	TABLE_SEPARATORS := []string{
+	TableSeparators := []string{
 		"╭────────────────────┬───────────────┬───────────────╮",
 		"├────────────────────┼───────────────┼───────────────┤",
 		"├─────↓↓↓↓↓↓↓↓↓──────┼───↓↓↓↓↓↓↓↓↓───┼───↓↓↓↓↓↓↓↓↓───┤",
@@ -70,7 +75,7 @@ func (screen *GameScreen) renderTRTable(rawArray []loud.TrdReq, width int, fontF
 
 	tableLines := screen.TableHeader(
 		[]string{},
-		TABLE_SEPARATORS,
+		TableSeparators,
 		screen.renderTRLine("GOLD price (pylon)", "Amount (gold)", "Total (pylon)"),
 		startLine,
 	)
@@ -84,13 +89,13 @@ func (screen *GameScreen) renderTRTable(rawArray []loud.TrdReq, width int, fontF
 		tableLines = tableLines.appendF(line, font)
 	}
 	tableLines = tableLines.
-		append(screen.TableFooter(TABLE_SEPARATORS, endLine, rawArray))
+		append(screen.TableFooter(TableSeparators, endLine, rawArray))
 	return tableLines
 }
 
 func (screen *GameScreen) renderITRTable(header string, theads [2]string, rawArrayInterFace interface{}, width int, fontFunc FontFuncType) TextLines {
 	rawArray := InterfaceSlice(rawArrayInterFace)
-	TABLE_SEPARATORS := []string{
+	TableSeparators := []string{
 		"╭────────────────────────────────────┬───────────────╮",
 		"├────────────────────────────────────┼───────────────┤",
 		"├──────────↓↓↓↓↓↓↓↓↓↓↓↓↓↓────────────┼─────↓↓↓↓↓↓────┤",
@@ -101,7 +106,7 @@ func (screen *GameScreen) renderITRTable(header string, theads [2]string, rawArr
 	infoLines, startLine, endLine := screen.TableHeightWindow(header, rawArrayInterFace, width)
 	tableLines := screen.TableHeader(
 		infoLines,
-		TABLE_SEPARATORS,
+		TableSeparators,
 		screen.renderItemTrdReqTableLine(theads[0], theads[1]),
 		startLine,
 	)
@@ -115,13 +120,13 @@ func (screen *GameScreen) renderITRTable(header string, theads [2]string, rawArr
 		tableLines = tableLines.appendF(line, font)
 	}
 	tableLines = tableLines.
-		append(screen.TableFooter(TABLE_SEPARATORS, endLine, rawArray))
+		append(screen.TableFooter(TableSeparators, endLine, rawArray))
 	return tableLines
 }
 
 func (screen *GameScreen) renderITTable(header string, th string, rawArrayInterFace interface{}, width int, fontFunc FontFuncType) TextLines {
 	rawArray := InterfaceSlice(rawArrayInterFace)
-	TABLE_SEPARATORS := []string{
+	TableSeparators := []string{
 		"╭────────────────────────────────────────────────────╮",
 		"├────────────────────────────────────────────────────┤",
 		"├──────────────────↓↓↓↓↓↓↓↓↓↓↓↓↓↓────────────────────┤",
@@ -131,7 +136,7 @@ func (screen *GameScreen) renderITTable(header string, th string, rawArrayInterF
 	infoLines, startLine, endLine := screen.TableHeightWindow(header, rawArrayInterFace, width)
 	tableLines := screen.TableHeader(
 		infoLines,
-		TABLE_SEPARATORS,
+		TableSeparators,
 		screen.renderItemTableLine(-1, th),
 		startLine,
 	)
@@ -144,6 +149,6 @@ func (screen *GameScreen) renderITTable(header string, th string, rawArrayInterF
 		tableLines = tableLines.appendF(line, font)
 	}
 	tableLines = tableLines.
-		append(screen.TableFooter(TABLE_SEPARATORS, endLine, rawArray))
+		append(screen.TableFooter(TableSeparators, endLine, rawArray))
 	return tableLines
 }
