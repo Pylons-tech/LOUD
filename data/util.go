@@ -29,6 +29,7 @@ func MSGUnpack(inBytes []byte, outItem interface{}) error {
 	return err
 }
 
+// ChunkString split string by specific size
 func ChunkString(s string, chunkSize int) []string {
 	var chunks []string
 	runes := []rune(s)
@@ -47,6 +48,7 @@ func ChunkString(s string, chunkSize int) []string {
 	return chunks
 }
 
+// ChunkText split text including line break into specific size
 func ChunkText(bigtext string, width int) []string {
 	basicLines := strings.Split(bigtext, "\n")
 	infoLines := []string{}
