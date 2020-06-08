@@ -4,8 +4,8 @@ import (
 	"flag"
 	"testing"
 
-	pylonsFixture "github.com/Pylons-tech/pylons_sdk/cmd/fixtures_test"
-	pylonSDK "github.com/Pylons-tech/pylons_sdk/cmd/test"
+	fixturetestSDK "github.com/Pylons-tech/pylons_sdk/cmd/fixtures_test"
+	inttestSDK "github.com/Pylons-tech/pylons_sdk/cmd/test"
 )
 
 var runSerialMode bool = false
@@ -21,11 +21,12 @@ func init() {
 func TestFixturesViaCLI(t *testing.T) {
 	flag.Parse()
 	if connectLocalDaemon {
-		pylonSDK.CLIOpts.CustomNode = "tcp://localhost:26657"
+		inttestSDK.CLIOpts.CustomNode = "tcp://localhost:26657"
 	} else {
-		pylonSDK.CLIOpts.CustomNode = "tcp://35.223.7.2:26657"
+		inttestSDK.CLIOpts.CustomNode = "tcp://35.223.7.2:26657"
 	}
-	pylonsFixture.FixtureTestOpts.CreateNewCookbook = !useKnownCookbook
-	pylonsFixture.FixtureTestOpts.IsParallel = !runSerialMode
-	pylonsFixture.RunTestScenarios("scenarios", t)
+	fixturetestSDK.FixtureTestOpts.CreateNewCookbook = !useKnownCookbook
+	fixturetestSDK.FixtureTestOpts.IsParallel = !runSerialMode
+	fixturetestSDK.RegisterDefaultActionRunners()
+	fixturetestSDK.RunTestScenarios("scenarios", t)
 }
