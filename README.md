@@ -130,9 +130,17 @@ pylonscli query account $(pylonscli keys show -a eugen) --node tcp://35.223.7.2:
 Update cookbook name, id and recipe ID for correct version and timestamp.
 **Warn:** If cookbook name does not change, it's refering to old version of cookbook since now it's finding cookbooks by name.
 
-Create recipes and cookbooks by running
+Deployment of recipes and cookbooks by running
 ```
 make fixture_tests ARGS="-runserial"
+```
+Deployment of recipes using REST endpoint.
+```
+make fixture_tests ARGS="-userest"
+```
+Deployment of recipes with using existing cookbook (known cookbook)
+```
+make fixture_tests ARGS="-use-known-cookbook"
 ```
 
 Check if cookbook and all recipes are created by using

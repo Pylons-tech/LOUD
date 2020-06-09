@@ -11,10 +11,12 @@ import (
 var runSerialMode bool = false
 var connectLocalDaemon bool = false
 var useKnownCookbook bool = false
+var useRest bool = false
 
 func init() {
 	flag.BoolVar(&runSerialMode, "runserial", false, "true/false value to check if test will be running in parallel")
 	flag.BoolVar(&connectLocalDaemon, "locald", false, "true/false value to check if test will be connecting to local daemon")
+	flag.BoolVar(&useRest, "userest", false, "use rest endpoint for Tx send")
 	flag.BoolVar(&useKnownCookbook, "use-known-cookbook", false, "use existing cookbook or not")
 }
 
@@ -27,6 +29,9 @@ func TestFixturesViaCLI(t *testing.T) {
 	}
 	fixturetestSDK.FixtureTestOpts.CreateNewCookbook = !useKnownCookbook
 	fixturetestSDK.FixtureTestOpts.IsParallel = !runSerialMode
+	if useRest {
+		inttestSDK.CLIOpts.RestEndpoint = "http://localhost:1317"
+	}
 	fixturetestSDK.RegisterDefaultActionRunners()
 	fixturetestSDK.RunTestScenarios("scenarios", t)
 }
