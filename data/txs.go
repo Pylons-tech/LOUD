@@ -245,8 +245,8 @@ func UpgradeItem(user User, item Item) (string, error) {
 }
 
 // CreateBuyGoldTrdReq is a function to create gold buying trade request
-func CreateBuyGoldTrdReq(user User, loudEnterValue string, pylonEnterValue string) (string, error) {
-	loudValue, err := strconv.Atoi(loudEnterValue)
+func CreateBuyGoldTrdReq(user User, goldEnterValue string, pylonEnterValue string) (string, error) {
+	loudValue, err := strconv.Atoi(goldEnterValue)
 	if err != nil {
 		return "", err
 	}
@@ -279,13 +279,13 @@ func CreateBuyGoldTrdReq(user User, loudEnterValue string, pylonEnterValue strin
 }
 
 // CreateSellGoldTrdReq is a function to create sell gold trade request
-func CreateSellGoldTrdReq(user User, loudEnterValue string, pylonEnterValue string) (string, error) {
-	loudValue, err := strconv.Atoi(loudEnterValue)
+func CreateSellGoldTrdReq(user User, goldEnterValue string, pylonEnterValue string) (string, error) {
+	loudValue, err := strconv.Atoi(goldEnterValue)
 	if err != nil {
 		return "", err
 	}
 	if loudValue == 0 {
-		return "", errors.New("pylon amount shouldn't be zero to be a valid trading")
+		return "", errors.New("gold amount shouldn't be zero to be a valid trading")
 	}
 	pylonValue, err := strconv.Atoi(pylonEnterValue)
 	if err != nil {

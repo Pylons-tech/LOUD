@@ -371,7 +371,7 @@ func (screen *GameScreen) MoveToPrevStep() {
 	case CreateBuyGoldTrdReqEnterGoldValue,
 		CreateSellGoldTrdReqEnterGoldValue:
 		// set loud value previously entered
-		screen.inputText = screen.loudEnterValue
+		screen.inputText = screen.goldEnterValue
 	case ShowLocation:
 		// move to home if it's somewhere else's entrypoint
 		if screen.scrStatus == ShowLocation {
@@ -720,14 +720,14 @@ func (screen *GameScreen) HandleTypingModeInputKeys(input termbox.Event) bool {
 			screen.RunCharacterRename(screen.inputText)
 		case CreateBuyGoldTrdReqEnterGoldValue:
 			screen.SetScreenStatus(CreateBuyGoldTrdReqEnterPylonValue)
-			screen.loudEnterValue = screen.inputText
+			screen.goldEnterValue = screen.inputText
 			screen.inputText = ""
 			screen.Render()
 		case CreateBuyGoldTrdReqEnterPylonValue:
 			screen.SetScreenStatus(WaitBuyGoldTrdReqCreation)
 			screen.pylonEnterValue = screen.inputText
 			screen.SetInputTextAndRender("")
-			txhash, err := loud.CreateBuyGoldTrdReq(screen.user, screen.loudEnterValue, screen.pylonEnterValue)
+			txhash, err := loud.CreateBuyGoldTrdReq(screen.user, screen.goldEnterValue, screen.pylonEnterValue)
 			log.Println("ended sending request for creating buy loud request")
 			if err != nil {
 				screen.txFailReason = err.Error()
@@ -741,14 +741,14 @@ func (screen *GameScreen) HandleTypingModeInputKeys(input termbox.Event) bool {
 		case CreateSellGoldTrdReqEnterGoldValue:
 			screen.SetScreenStatus(CreateSellGoldTrdReqEnterPylonValue)
 			screen.Render()
-			screen.loudEnterValue = screen.inputText
+			screen.goldEnterValue = screen.inputText
 			screen.inputText = ""
 		case CreateSellGoldTrdReqEnterPylonValue:
 			screen.SetScreenStatus(WaitSellGoldTrdReqCreation)
 			screen.Render()
 			screen.pylonEnterValue = screen.inputText
 			screen.SetInputTextAndRender("")
-			txhash, err := loud.CreateSellGoldTrdReq(screen.user, screen.loudEnterValue, screen.pylonEnterValue)
+			txhash, err := loud.CreateSellGoldTrdReq(screen.user, screen.goldEnterValue, screen.pylonEnterValue)
 
 			log.Println("ended sending request for creating buy loud request")
 			if err != nil {

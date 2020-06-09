@@ -48,7 +48,7 @@ type GameScreen struct {
 	activeTrdReq     loud.TrdReq
 	activeItemTrdReq interface{}
 	pylonEnterValue  string
-	loudEnterValue   string
+	goldEnterValue   string
 	actionText       string
 	inputText        string
 	syncingData      bool

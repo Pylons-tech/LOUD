@@ -398,10 +398,10 @@ func (screen *GameScreen) TxResultSituationDesc() (string, FontType) {
 		switch screen.scrStatus {
 		case RsltBuyGoldTrdReqCreation:
 			desc = loud.Localize("gold buy request was successfully created")
-			desc += screen.buyLoudDesc(screen.loudEnterValue, screen.pylonEnterValue)
+			desc += screen.buyLoudDesc(screen.goldEnterValue, screen.pylonEnterValue)
 		case RsltSellGoldTrdReqCreation:
 			desc = loud.Localize("gold sell request was successfully created")
-			desc += screen.sellLoudDesc(screen.loudEnterValue, screen.pylonEnterValue)
+			desc += screen.sellLoudDesc(screen.goldEnterValue, screen.pylonEnterValue)
 		case RsltSelectActiveChr:
 			if screen.user.GetActiveCharacter() == nil {
 				desc = loud.Localize("You have successfully unset the active character!")
@@ -702,10 +702,10 @@ func (screen *GameScreen) TxWaitSituationDesc(width int) ([]string, TextLines) {
 		desc = loud.Sprintf("You are waiting to rename character from %s to %s.", screen.activeCharacter.Name, screen.inputText)
 	case WaitBuyGoldTrdReqCreation:
 		desc = loud.Localize("You are waiting for gold buy request creation")
-		desc += screen.buyLoudDesc(screen.loudEnterValue, screen.pylonEnterValue)
+		desc += screen.buyLoudDesc(screen.goldEnterValue, screen.pylonEnterValue)
 	case WaitSellGoldTrdReqCreation:
 		desc = loud.Localize("You are waiting for gold sell request creation")
-		desc += screen.sellLoudDesc(screen.loudEnterValue, screen.pylonEnterValue)
+		desc += screen.sellLoudDesc(screen.goldEnterValue, screen.pylonEnterValue)
 	case WaitBuyItem:
 		desc = loud.Sprintf("You are buying %s at the shop", screen.activeItem.Name)
 	case WaitBuyChr:
