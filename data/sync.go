@@ -12,6 +12,7 @@ var isSyncingFromNode = false
 
 // SyncFromNode is a function to handle sync from node
 func SyncFromNode(user User) {
+	log.Debugln("SyncFromNode has started")
 	if isSyncingFromNode {
 		return
 	}
@@ -261,4 +262,5 @@ func SyncFromNode(user User) {
 	if err == nil {
 		user.SetLatestBlockHeight(ds.SyncInfo.LatestBlockHeight)
 	}
+	log.Debugln("SyncFromNode has ended")
 }

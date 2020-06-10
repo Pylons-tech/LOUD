@@ -23,13 +23,14 @@ var terminalCloseSignal chan os.Signal = make(chan os.Signal, 2)
 
 // SetupLoggingFile set custom file for logging output
 func SetupLoggingFile(f *os.File) {
-	log.Infoln("Starting to save log into file")
+	log.Debugln("SetupLoggingFile has started")
 	log.SetOutput(f)
-	log.Infoln("Starting")
+	log.Debugln("You should see this log as a first line of loud.log")
 }
 
 // SetupScreenAndEvents setup screen object and events
 func SetupScreenAndEvents(world data.World, logFile *os.File) {
+	log.Debugln("SetupScreenAndEvents has started")
 	args := os.Args
 	username := ""
 	log.Debugln("SetupScreenAndEvents os.args", args)
@@ -94,7 +95,7 @@ func SetupScreenAndEvents(world data.World, logFile *os.File) {
 						Ch: 121, // "y" 121 get initial pylons
 					})
 					data.AutomateRunCnt++
-					log.Printf("Running %dth automation task", data.AutomateRunCnt)
+					log.Infof("Running %dth automation task", data.AutomateRunCnt)
 				}
 				time.Sleep(2 * time.Second)
 			}

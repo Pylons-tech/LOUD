@@ -136,7 +136,7 @@ func init() {
 	if useRestTx {
 		pylonSDK.CLIOpts.RestEndpoint = restEndpoint
 	}
-	log.Infoln("initializing pylonSDK to connect to customNode", customNode, "and to custom rest endpoint", useRestTx)
+	log.Infoln("initialized pylonSDK to connect to customNode", customNode, "and to custom rest endpoint", useRestTx)
 }
 
 func fileExists(filename string) bool {
@@ -236,13 +236,13 @@ func CheckSignatureMatchWithAftiCli(t *testing.T, txhash string, privKey string,
 		aftiSignature := string(aftiTxSign[1])
 		log.Infof("comparing afticli and pyloncli \n%s\nand\n %s", pylonCliSignature, aftiSignature)
 	}
-	log.Debugln("where")
-	log.Debugln("msg=", string(output))
-	log.Debugln("username=", originSigner)
-	log.Debugln("Bech32Addr=", signer)
-	log.Debugln("privKey=", privKey)
-	log.Debugln("account-number=", strconv.FormatUint(accInfo.GetAccountNumber(), 10))
-	log.Debugln("sequence", strconv.FormatUint(nonce, 10))
+	log.Infoln("where")
+	log.Infoln("msg=", string(output))
+	log.Infoln("username=", originSigner)
+	log.Infoln("Bech32Addr=", signer)
+	log.Infoln("privKey=", privKey)
+	log.Infoln("account-number=", strconv.FormatUint(accInfo.GetAccountNumber(), 10))
+	log.Infoln("sequence", strconv.FormatUint(nonce, 10))
 
 	if string(cliTxSign[1]) != string(aftiTxSign[1]) {
 		return false, errors.New("comparison different afticli and pyloncli ")
@@ -347,6 +347,7 @@ func ComputePrivKeyFromMnemonic(mnemonic string) (string, string) {
 
 // InitPylonAccount initialize an account on local and get initial balance from faucet
 func InitPylonAccount(username string) string {
+	log.Debugln("InitPylonAccount has started")
 	var privKey string
 	// "pylonscli keys add ${username}"
 	addResult, _, err := pylonSDK.RunPylonsCli([]string{
@@ -437,6 +438,7 @@ func InitPylonAccount(username string) string {
 	nonceFile := filepath.Join(nonceRootDir, "nonce.json")
 	err = os.Remove(nonceFile)
 	log.Debugln("remove nonce file result", err)
+	log.Debugln("InitPylonAccount has ended with privKey", privKey)
 	return privKey
 }
 
@@ -475,7 +477,7 @@ func ProcessTxResult(user User, txhash string) ([]byte, string) {
 		log.Warnln(errString)
 		return []byte{}, errString
 	}
-	log.Debugln("ProcessTxResult::txResp", resp.Message, string(resp.Output))
+	log.Debugln("ProcessTxResult ==>", resp.Message, string(resp.Output))
 	return resp.Output, ""
 }
 

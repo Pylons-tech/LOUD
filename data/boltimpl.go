@@ -34,7 +34,7 @@ func (w *dbWorld) Close() {
 }
 
 func (w *dbWorld) load() {
-	log.Printf("Loading world database %s", w.filename)
+	log.Debugf("Loading world database %s has started", w.filename)
 	db, err := bolt.Open(w.filename, 0600, nil)
 
 	if err != nil {
@@ -59,6 +59,7 @@ func (w *dbWorld) load() {
 		}
 	}
 	w.database = db
+	log.Debugln("Loading world database has ended")
 }
 
 // LoadWorldFromDB will set up an on-disk based world
@@ -105,6 +106,7 @@ func (user *dbUser) SetLocation(loc UserLocation) {
 }
 
 func (user *dbUser) Reload() {
+	log.Debugln("user.Reload started")
 	var record []byte
 	if user.world.database != nil {
 		err := user.world.database.View(func(tx *bolt.Tx) error {
@@ -114,35 +116,34 @@ func (user *dbUser) Reload() {
 			return nil
 		})
 		if err != nil {
-			log.Infoln("Couldn't view database")
+			log.Warnln("Couldn't view database")
 		}
 	}
 
 	if record == nil {
-		log.Printf("User %s does not exist, creating anew...", user.UserData.Username)
+		log.Infof("User %s does not exist, creating a new one ...", user.UserData.Username)
 		user.UserData = user.world.newUser(user.UserData.Username)
 		user.Save()
 	} else {
 		err := MSGUnpack(record, &(user.UserData))
 		if err != nil {
-			log.Infoln("Was not able to unpack data record into user data")
+			log.Warnln("Was not able to unpack data record into user data")
 		}
-		log.Printf("Loaded user %v", user.UserData)
+		log.Infof("Loaded user %v", user.UserData)
 		user.FixLoadedData()
 	}
-	log.Infoln("start InitPylonAccount")
 	user.UserData.PrivKey = InitPylonAccount(user.UserData.Username)
-	log.Infoln("finished InitPylonAccount PrivKey=", user.UserData.PrivKey)
+
 	// Initial Sync
-	log.Infoln("start initial sync")
 	SyncFromNode(user)
-	log.Infoln("finished initial sync")
+
+	log.Debugln("user.Reload ended")
 }
 
 func (user *dbUser) Save() {
 	bytes, err := MSGPack(user.UserData)
 	if err != nil {
-		log.Printf("Can't marshal user: %v", err)
+		log.Warnf("Can't marshal user: %v", err)
 		return
 	}
 
@@ -155,7 +156,7 @@ func (user *dbUser) Save() {
 			return err
 		})
 		if err != nil {
-			log.Infoln("Was not able to update world database")
+			log.Warnln("Was not able to update world database")
 		}
 	}
 }

@@ -63,7 +63,7 @@ func getFrame(skipFrames int) runtime.Frame {
 
 func printCallerLine() {
 	frame := getFrame(2)
-	text := fmt.Sprintf("%s %s:%d", frame.Function, frame.File, frame.Line)
+	text := fmt.Sprintf("%s:%d %s", frame.File, frame.Line, frame.Function)
 	oLog.Trace(text)
 }
 
@@ -99,7 +99,6 @@ func Info(args ...interface{}) {
 	if isSetOutput && customLogOutput == nil {
 		return
 	}
-	printCallerLine()
 	oLog.Info(args...)
 }
 
@@ -167,7 +166,6 @@ func Infof(format string, args ...interface{}) {
 	if isSetOutput && customLogOutput == nil {
 		return
 	}
-	printCallerLine()
 	oLog.Infof(format, args...)
 }
 
@@ -244,7 +242,6 @@ func Infoln(args ...interface{}) {
 	if isSetOutput && customLogOutput == nil {
 		return
 	}
-	printCallerLine()
 	oLog.Infoln(args...)
 }
 
@@ -253,7 +250,6 @@ func Println(args ...interface{}) {
 	if isSetOutput && customLogOutput == nil {
 		return
 	}
-	printCallerLine()
 	oLog.Infoln(args...)
 }
 

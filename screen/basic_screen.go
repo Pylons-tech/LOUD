@@ -10,7 +10,6 @@ import (
 	"github.com/nsf/termbox-go"
 
 	loud "github.com/Pylons-tech/LOUD/data"
-	"github.com/Pylons-tech/LOUD/log"
 )
 
 // Resync execute new sync from node
@@ -18,9 +17,7 @@ func (screen *GameScreen) Resync() {
 	screen.syncingData = true
 	screen.Render()
 	go func() {
-		log.Debugln("start syncing from node")
 		loud.SyncFromNode(screen.user)
-		log.Debugln("end syncing from node")
 		screen.syncingData = false
 		screen.Render()
 	}()
