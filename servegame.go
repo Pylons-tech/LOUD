@@ -23,19 +23,19 @@ var terminalCloseSignal chan os.Signal = make(chan os.Signal, 2)
 
 // SetupLoggingFile set custom file for logging output
 func SetupLoggingFile(f *os.File) {
-	log.Println("Starting to save log into file")
+	log.Infoln("Starting to save log into file")
 	log.SetOutput(f)
-	log.Println("Starting")
+	log.Infoln("Starting")
 }
 
 // SetupScreenAndEvents setup screen object and events
 func SetupScreenAndEvents(world data.World, logFile *os.File) {
 	args := os.Args
 	username := ""
-	log.Println("args SetupScreenAndEvents", args)
+	log.Debugln("SetupScreenAndEvents os.args", args)
 	if len(args) < 2 {
-		log.Println("you didn't configure username when running!")
-		log.Println("Please enter your username!")
+		log.Infoln("you didn't configure username when running!")
+		log.Infoln("Please enter your username!")
 		// for {
 		reader := bufio.NewReader(os.Stdin)
 		username, _ = reader.ReadString('\n')
@@ -47,20 +47,20 @@ func SetupScreenAndEvents(world data.World, logFile *os.File) {
 		// if isValid {
 		// 	break
 		// } else {
-		// 	log.Println("username should consist of only a-z and 0-9. And first letter should be a-z.")
+		// 	log.Infoln("username should consist of only a-z and 0-9. And first letter should be a-z.")
 		// }
 		// }
 	} else {
 		username = args[1]
 	}
-	log.Println("configured username as ", username, len(username))
+	log.Infoln("configured username as ", username, len(username))
 	user := world.GetUser(username)
 
 	SetupLoggingFile(logFile)
 
 	screenInstance := screen.NewScreen(world, user)
 
-	log.Println("setting up screen and events")
+	log.Debugln("setting up screen and events")
 
 	tick := time.NewTicker(300 * time.Millisecond)
 	config, cferr := cf.ReadConfig()
@@ -75,7 +75,7 @@ func SetupScreenAndEvents(world data.World, logFile *os.File) {
 
 		automateloop:
 			for {
-				log.Println("<-automateTick")
+				log.Debugln("<-automateTick")
 				switch screenInstance.GetScreenStatus() {
 				case screen.RsltCreateCookbook:
 					if screenInstance.GetTxFailReason() != "" {
@@ -144,7 +144,7 @@ eventloop:
 			}
 		case termbox.EventResize:
 			logMessage := fmt.Sprintf("Handling TermBox Resize Event (%d, %d) at %s", ev.Width, ev.Height, time.Now().UTC().Format(time.RFC3339))
-			log.Println(logMessage)
+			log.Debugln(logMessage)
 
 			screenInstance.SetScreenSize(ev.Width, ev.Height)
 		case termbox.EventError:

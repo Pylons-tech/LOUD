@@ -18,9 +18,9 @@ func (screen *GameScreen) Resync() {
 	screen.syncingData = true
 	screen.Render()
 	go func() {
-		log.Println("start syncing from node")
+		log.Debugln("start syncing from node")
 		loud.SyncFromNode(screen.user)
-		log.Println("end syncing from node")
+		log.Debugln("end syncing from node")
 		screen.syncingData = false
 		screen.Render()
 	}()

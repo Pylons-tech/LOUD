@@ -23,6 +23,7 @@ require (
 	github.com/nsf/termbox-go v0.0.0-20191229070316-58d4fcbce2a7
 	github.com/prometheus/client_golang v1.5.1 // indirect
 	github.com/rcrowley/go-metrics v0.0.0-20200313005456-10cdbea86bc0 // indirect
+	github.com/sirupsen/logrus v1.6.0
 	github.com/tendermint/tendermint v0.33.3
 	github.com/tyler-smith/go-bip39 v1.0.2
 	github.com/vmihailenco/msgpack v0.0.0-20190804092921-cd92a145e6d2

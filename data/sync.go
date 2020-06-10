@@ -19,15 +19,15 @@ func SyncFromNode(user User) {
 	defer func() {
 		isSyncingFromNode = false
 	}()
-	log.Println("SyncFromNode Function Body")
-	log.Println("username=", user.GetUserName())
-	log.Println("userinfo=", pylonSDK.GetAccountAddr(user.GetUserName(), GetTestingT()))
+	log.Debugln("SyncFromNode Function Body")
+	log.Debugln("username=", user.GetUserName())
+	log.Debugln("userinfo=", pylonSDK.GetAccountAddr(user.GetUserName(), GetTestingT()))
 	accAddr := pylonSDK.GetAccountAddr(user.GetUserName(), GetTestingT())
 	accInfo := pylonSDK.GetAccountInfoFromName(user.GetUserName(), GetTestingT())
-	log.Println("accountInfo=", accInfo)
+	log.Debugln("accountInfo=", accInfo)
 
 	user.SetGold(int(accInfo.Coins.AmountOf("loudcoin").Int64()))
-	log.Println("gold=", accInfo.Coins.AmountOf("loudcoin").Int64())
+	log.Debugln("gold=", accInfo.Coins.AmountOf("loudcoin").Int64())
 	user.SetPylonAmount(int(accInfo.Coins.AmountOf("pylon").Int64()))
 	user.SetAddress(accAddr)
 
@@ -105,8 +105,8 @@ func SyncFromNode(user User) {
 	})
 	user.SetItems(myItems)
 
-	log.Println("myItems=", myItems)
-	log.Println("myCharacters=", myCharacters)
+	log.Debugln("myItems=", myItems)
+	log.Debugln("myCharacters=", myCharacters)
 
 	nBuyTrdReqs := []TrdReq{}
 	nSellTrdReqs := []TrdReq{}
@@ -252,8 +252,8 @@ func SyncFromNode(user User) {
 	ItemSellTrdReqs = nSellItemTrdReqs
 	CharacterBuyTrdReqs = nBuyCharacterTrdReqs
 	CharacterSellTrdReqs = nSellCharacterTrdReqs
-	log.Println("BuyTrdReqs=", BuyTrdReqs)
-	log.Println("SellTrdReqs=", SellTrdReqs)
+	log.Debugln("BuyTrdReqs=", BuyTrdReqs)
+	log.Debugln("SellTrdReqs=", SellTrdReqs)
 
 	user.FixLoadedData()
 

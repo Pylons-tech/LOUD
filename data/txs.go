@@ -50,7 +50,7 @@ func CreateCookbook(user User) (string, error) {
 	if AutomateInput {
 		ok, err := CheckSignatureMatchWithAftiCli(t, txhash, user.GetPrivKey(), ccbMsg, username, false)
 		if !ok || err != nil {
-			log.Println("error checking afticli", ok, err)
+			log.Warnln("error checking afticli", ok, err)
 			SomethingWentWrongMsg = "automation test failed, " + err.Error()
 		}
 	}
@@ -160,10 +160,10 @@ func RenameCharacter(user User, ch Character, newName string) (string, error) {
 	addr := pylonSDK.GetAccountAddr(user.GetUserName(), nil)
 	sdkAddr, _ := sdk.AccAddressFromBech32(addr)
 	renameMsg := msgs.NewMsgUpdateItemString(ch.ID, "Name", newName, sdkAddr)
-	log.Println("started sending transaction", user.GetUserName(), renameMsg)
+	log.Infoln("started sending transaction", user.GetUserName(), renameMsg)
 	txhash := pylonSDK.TestTxWithMsgWithNonce(t, renameMsg, user.GetUserName(), false)
 	user.SetLastTransaction(txhash, Sprintf("rename character from %s to %s", ch.Name, newName))
-	log.Println("ended sending transaction")
+	log.Infoln("ended sending transaction")
 	return txhash, nil
 }
 

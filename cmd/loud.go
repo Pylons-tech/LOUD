@@ -10,8 +10,8 @@ import (
 func main() {
 	f, err := os.OpenFile("loud.log", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
 	if err != nil {
-		log.Printf("error opening file: %v", err)
-		log.Println("just going on without using log file ...")
+		log.Warnf("error opening file: %v", err)
+		log.Debugln("just going on without using log file ...")
 	}
 	defer f.Close()
 	loud.ServeGame(f)

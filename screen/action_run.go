@@ -11,10 +11,10 @@ import (
 func (screen *GameScreen) RunTxProcess(waitStatus PageStatus, resultStatus PageStatus, fn func() (string, error)) {
 	screen.SetScreenStatusAndRefresh(waitStatus)
 
-	log.Println("started sending request for ", waitStatus)
+	log.Debugln("started sending request for ", waitStatus)
 	go func() {
 		txhash, err := fn()
-		log.Println("ended sending request for ", waitStatus)
+		log.Debugln("ended sending request for ", waitStatus)
 		if err != nil {
 			screen.txFailReason = err.Error()
 			screen.SetScreenStatusAndRefresh(resultStatus)

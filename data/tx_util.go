@@ -136,7 +136,7 @@ func init() {
 	if useRestTx {
 		pylonSDK.CLIOpts.RestEndpoint = restEndpoint
 	}
-	log.Println("initing pylonSDK to customNode", customNode, "useRestTx=", useRestTx)
+	log.Infoln("initializing pylonSDK to connect to customNode", customNode, "and to custom rest endpoint", useRestTx)
 }
 
 func fileExists(filename string) bool {
@@ -151,7 +151,7 @@ func fileExists(filename string) bool {
 func RunSHCmd(args []string) ([]byte, error) {
 	cmd := exec.Command("/bin/sh", args...)
 	res, err := cmd.CombinedOutput()
-	log.Println("Running command /bin/sh", args)
+	log.Debugln("Running command /bin/sh", args)
 	return res, err
 }
 
@@ -214,10 +214,10 @@ func CheckSignatureMatchWithAftiCli(t *testing.T, txhash string, privKey string,
 		return false, err
 	}
 
-	log.Println("RunSHCmd output, err=", string(aftiOutput), err)
+	log.Debugln("RunSHCmd output, err=", string(aftiOutput), err)
 	cliTxOutput, _, err := pylonSDK.RunPylonsCli([]string{"query", "tx", txhash}, "")
 	if err != nil {
-		log.Println("txhash=", txhash, "txoutput=", string(cliTxOutput), "queryerr=", err)
+		log.Debugln("txhash=", txhash, "txoutput=", string(cliTxOutput), "queryerr=", err)
 	}
 
 	// use regexp to find signature from cli command response
@@ -226,23 +226,23 @@ func CheckSignatureMatchWithAftiCli(t *testing.T, txhash string, privKey string,
 	aftiTxSign := re.FindSubmatch([]byte(aftiOutput))
 
 	if len(cliTxSign) < 2 {
-		log.Println("couldn't get pyloncli signature from", string(cliTxOutput))
+		log.Warnln("couldn't get pyloncli signature from", string(cliTxOutput))
 		return false, errors.New("couldn't get pyloncli signature")
 	} else if len(aftiTxSign) < 2 {
-		log.Println("couldn't get afticli signature from", string(aftiOutput))
+		log.Warnln("couldn't get afticli signature from", string(aftiOutput))
 		return false, errors.New("couldn't get afticli signature")
 	} else {
 		pylonCliSignature := string(cliTxSign[1])
-		aftiSignatue := string(aftiTxSign[1])
-		log.Println("comparing afticli and pyloncli ;)", pylonCliSignature, "\nand\n", aftiSignatue)
+		aftiSignature := string(aftiTxSign[1])
+		log.Infof("comparing afticli and pyloncli \n%s\nand\n %s", pylonCliSignature, aftiSignature)
 	}
-	log.Println("where")
-	log.Println("msg=", string(output))
-	log.Println("username=", originSigner)
-	log.Println("Bech32Addr=", signer)
-	log.Println("privKey=", privKey)
-	log.Println("account-number=", strconv.FormatUint(accInfo.GetAccountNumber(), 10))
-	log.Println("sequence", strconv.FormatUint(nonce, 10))
+	log.Debugln("where")
+	log.Debugln("msg=", string(output))
+	log.Debugln("username=", originSigner)
+	log.Debugln("Bech32Addr=", signer)
+	log.Debugln("privKey=", privKey)
+	log.Debugln("account-number=", strconv.FormatUint(accInfo.GetAccountNumber(), 10))
+	log.Debugln("sequence", strconv.FormatUint(nonce, 10))
 
 	if string(cliTxSign[1]) != string(aftiTxSign[1]) {
 		return false, errors.New("comparison different afticli and pyloncli ")
@@ -257,7 +257,7 @@ func CheckSignatureMatchWithAftiCli(t *testing.T, txhash string, privKey string,
 func GetInitialPylons(username string) (string, error) {
 	addr := pylonSDK.GetAccountAddr(username, GetTestingT())
 	sdkAddr, err := sdk.AccAddressFromBech32(addr)
-	log.Println("GetInitialPylons => sdkAddr, err", sdkAddr, err)
+	log.Debugln("GetInitialPylons => sdkAddr, err", sdkAddr, err)
 
 	// this code is making the account to useable by doing get-pylons
 	txModel, err := pylonSDK.GenTxWithMsg([]sdk.Msg{msgs.NewMsgGetPylons(types.PremiumTier.Fee, sdkAddr)})
@@ -302,7 +302,7 @@ func GetInitialPylons(username string) (string, error) {
 	postBodyJSON["mode"] = "sync"
 	postBody, err := json.Marshal(postBodyJSON)
 
-	log.Println("postBody", string(postBody))
+	log.Debugln("postBody", string(postBody))
 
 	if err != nil {
 		return "", err
@@ -319,7 +319,7 @@ func GetInitialPylons(username string) (string, error) {
 		log.Fatal("Error decoding api response to result")
 	}
 	defer resp.Body.Close()
-	log.Println("get_pylons_api_response", result)
+	log.Debugln("get_pylons_api_response", result)
 	return result["txhash"], nil
 }
 
@@ -353,13 +353,13 @@ func InitPylonAccount(username string) string {
 		"keys", "add", username,
 	}, "11111111\n11111111\n")
 
-	log.Println("addResult, err := pylonSDK.RunPylonsCli", string(addResult), "---", err)
+	log.Debugln("addResult, err := pylonSDK.RunPylonsCli", string(addResult), "---", err)
 	if err != nil {
 		if strings.Contains(err.Error(), "no such file or directory") {
-			log.Println("pylonscli is not globally installed on your machine")
+			log.Warnln("pylonscli is not globally installed on your machine")
 			SomethingWentWrongMsg = "pylonscli is not globally installed on your machine"
 		} else {
-			log.Println("using existing account for", username)
+			log.Infoln("using existing account for", username)
 			usr, _ := user.Current()
 			pylonsDir := filepath.Join(usr.HomeDir, ".pylons")
 			err = os.MkdirAll(pylonsDir, os.ModePerm)
@@ -377,7 +377,7 @@ func InitPylonAccount(username string) string {
 				log.Fatal("Couldn't parse file for", username, ".json", err.Error())
 			}
 			privKey = addedKeyResInterface["privkey"]
-			log.Println("privKey=", privKey)
+			log.Debugln("privKey=", privKey)
 		}
 	} else {
 		addedKeyResInterface := make(map[string]string)
@@ -388,7 +388,7 @@ func InitPylonAccount(username string) string {
 
 		// mnemonic key from the pylonscli add result
 		mnemonic := addedKeyResInterface["mnemonic"]
-		log.Println("using mnemonic: ", mnemonic)
+		log.Debugln("using mnemonic: ", mnemonic)
 
 		privKey, _ = ComputePrivKeyFromMnemonic(mnemonic) // get privKey and cosmosAddr
 
@@ -407,37 +407,36 @@ func InitPylonAccount(username string) string {
 		if ioutil.WriteFile(keyFile, addResult, 0644) != nil {
 			log.Fatal("error writing file to ~/.pylons directory")
 		}
-		log.Println("privKey=", privKey)
-		log.Println("created new account for", username, "and saved to ~/.pylons/"+username+".json")
+		log.Debugln("privKey=", privKey)
+		log.Infoln("created new account for", username, "and saved to ~/.pylons/"+username+".json")
 	}
 	addr := pylonSDK.GetAccountAddr(username, GetTestingT())
 	accBytes, _, err := pylonSDK.RunPylonsCli([]string{"query", "account", addr}, "")
-	log.Println("query account for", addr, "result", string(accBytes), err)
+	log.Debugln("query account for", addr, "result", string(accBytes), err)
 	if err != nil {
-		log.Println("err.Error()", err.Error())
+		log.Debugln("err.Error()", err.Error())
 		if strings.Contains(string(accBytes), "dial tcp [::1]:26657: connect: connection refused") { // Daemon is off
-			log.Println("Daemon refused to connect, please check daemon is running!")
-			os.Exit(3)
+			log.Fatalln("Daemon refused to connect, please check daemon is running!")
 		} else { // account does not exist
 			txhash, err := GetInitialPylons(username)
 			if err != nil {
 				log.Fatalln("txhash, err := GetInitialPylons", txhash, err)
 			}
-			log.Println("ran command for new account on remote chain and waiting for next block ...", addr)
+			log.Debugln("ran command for new account on remote chain and waiting for next block ...", addr)
 			if pylonSDK.WaitForNextBlock() != nil {
 				return "error waiting for block"
 			}
 		}
 	} else {
-		log.Println("using existing account on remote chain", addr)
+		log.Infoln("using existing account on remote chain", addr)
 	}
 
 	// Remove nonce file
-	log.Println("start removing nonce file")
+	log.Debugln("start removing nonce file")
 	nonceRootDir := "./"
 	nonceFile := filepath.Join(nonceRootDir, "nonce.json")
 	err = os.Remove(nonceFile)
-	log.Println("remove nonce file result", err)
+	log.Debugln("remove nonce file result", err)
 	return privKey
 }
 
@@ -445,7 +444,7 @@ func InitPylonAccount(username string) string {
 func LogFullTxResultByHash(txhash string) {
 	output, _, err := pylonSDK.RunPylonsCli([]string{"query", "tx", txhash}, "")
 
-	log.Println("txhash=", txhash, "txoutput=", string(output), "queryerr=", err)
+	log.Debugln("txhash=", txhash, "txoutput=", string(output), "queryerr=", err)
 }
 
 // ProcessTxResult is a function to handle result of a transaction made
@@ -457,7 +456,7 @@ func ProcessTxResult(user User, txhash string) ([]byte, string) {
 	txHandleResBytes, err := pylonSDK.WaitAndGetTxData(txhash, pylonSDK.GetMaxWaitBlock(), t)
 	if err != nil {
 		errString := fmt.Sprintf("error getting tx result bytes %+v", err)
-		log.Println(errString)
+		log.Warnln(errString)
 		LogFullTxResultByHash(txhash)
 		return []byte{}, errString
 	}
@@ -465,7 +464,7 @@ func ProcessTxResult(user User, txhash string) ([]byte, string) {
 	hmrErrMsg := pylonSDK.GetHumanReadableErrorFromTxHash(txhash, t)
 	if len(hmrErrMsg) > 0 {
 		errString := fmt.Sprintf("txhash=%s hmrErrMsg=%s", txhash, hmrErrMsg)
-		log.Println(errString)
+		log.Warnln(errString)
 		return []byte{}, errString
 	}
 	SyncFromNode(user)
@@ -473,10 +472,10 @@ func ProcessTxResult(user User, txhash string) ([]byte, string) {
 	err = pylonSDK.GetAminoCdc().UnmarshalJSON(txHandleResBytes, &resp)
 	if err != nil {
 		errString := fmt.Sprintf("failed to parse transaction result; maybe this is get_pylons then ignore. txhash=%s", txhash)
-		log.Println(errString)
+		log.Warnln(errString)
 		return []byte{}, errString
 	}
-	log.Println("ProcessTxResult::txResp", resp.Message, string(resp.Output))
+	log.Debugln("ProcessTxResult::txResp", resp.Message, string(resp.Output))
 	return resp.Output, ""
 }
 
@@ -500,10 +499,10 @@ func ExecuteRecipe(user User, rcpName string, itemIDs []string) (string, error) 
 	addr := pylonSDK.GetAccountAddr(user.GetUserName(), nil)
 	sdkAddr, _ := sdk.AccAddressFromBech32(addr)
 	execMsg := msgs.NewMsgExecuteRecipe(rcpID, sdkAddr, itemIDs)
-	log.Println("started sending transaction", user.GetUserName(), execMsg)
+	log.Debugln("started sending transaction", user.GetUserName(), execMsg)
 	txhash := pylonSDK.TestTxWithMsgWithNonce(t, execMsg, user.GetUserName(), false)
 	user.SetLastTransaction(txhash, rcpName)
-	log.Println("ended sending transaction")
+	log.Debugln("ended sending transaction")
 	return txhash, nil
 }
 
@@ -647,9 +646,9 @@ func GetSDKAddrFromUserName(username string) sdk.AccAddress {
 // SendTxMsg returns transaction from a user
 func SendTxMsg(user User, txMsg sdk.Msg) (string, error) {
 	t := GetTestingT()
-	log.Println("started sending transaction", user.GetUserName(), txMsg)
+	log.Debugln("started sending transaction", user.GetUserName(), txMsg)
 	txhash := pylonSDK.TestTxWithMsgWithNonce(t, txMsg, user.GetUserName(), false)
 	user.SetLastTransaction(txhash, txMsg.Type())
-	log.Println("ended sending transaction")
+	log.Debugln("ended sending transaction")
 	return txhash, nil
 }

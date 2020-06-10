@@ -38,7 +38,7 @@ func (w *dbWorld) load() {
 	db, err := bolt.Open(w.filename, 0600, nil)
 
 	if err != nil {
-		log.Println("error reading database file:", err)
+		log.Warnln("error reading database file:", err)
 	} else {
 		// Make default tables
 		err = db.Update(func(tx *bolt.Tx) error {
@@ -55,7 +55,7 @@ func (w *dbWorld) load() {
 			return nil
 		})
 		if err != nil {
-			log.Println("Couldn't update database:", err)
+			log.Warnln("Couldn't update database:", err)
 		}
 	}
 	w.database = db
@@ -114,7 +114,7 @@ func (user *dbUser) Reload() {
 			return nil
 		})
 		if err != nil {
-			log.Println("Couldn't view database")
+			log.Infoln("Couldn't view database")
 		}
 	}
 
@@ -125,18 +125,18 @@ func (user *dbUser) Reload() {
 	} else {
 		err := MSGUnpack(record, &(user.UserData))
 		if err != nil {
-			log.Println("Was not able to unpack data record into user data")
+			log.Infoln("Was not able to unpack data record into user data")
 		}
 		log.Printf("Loaded user %v", user.UserData)
 		user.FixLoadedData()
 	}
-	log.Println("start InitPylonAccount")
+	log.Infoln("start InitPylonAccount")
 	user.UserData.PrivKey = InitPylonAccount(user.UserData.Username)
-	log.Println("finished InitPylonAccount PrivKey=", user.UserData.PrivKey)
+	log.Infoln("finished InitPylonAccount PrivKey=", user.UserData.PrivKey)
 	// Initial Sync
-	log.Println("start initial sync")
+	log.Infoln("start initial sync")
 	SyncFromNode(user)
-	log.Println("finished initial sync")
+	log.Infoln("finished initial sync")
 }
 
 func (user *dbUser) Save() {
@@ -155,7 +155,7 @@ func (user *dbUser) Save() {
 			return err
 		})
 		if err != nil {
-			log.Println("Was not able to update world database")
+			log.Infoln("Was not able to update world database")
 		}
 	}
 }
