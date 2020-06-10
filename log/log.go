@@ -1,7 +1,9 @@
 package log
 
 import (
+	"fmt"
 	"io"
+	"runtime"
 
 	oLog "github.com/sirupsen/logrus"
 )
@@ -10,8 +12,6 @@ var isSetOutput = false
 var customLogOutput io.Writer = nil
 
 func init() {
-	oLog.SetFormatter(&oLog.JSONFormatter{})
-	oLog.SetReportCaller(true)
 
 	oLog.SetLevel(oLog.TraceLevel)
 
@@ -24,11 +24,55 @@ func init() {
 	// oLog.Panic("I'm bailing.")
 }
 
+// SetOutput is a way to setup outout to different one
+func SetOutput(w io.Writer) {
+	isSetOutput = true
+	customLogOutput = w
+	if w != nil {
+		oLog.SetOutput(w)
+		// oLog.SetFormatter(&oLog.TextFormatter{
+		// 	DisableTimestamp: true,
+		// 	DisableColors:    true,
+		// })
+		// oLog.SetReportCaller(true)
+	}
+}
+
+func getFrame(skipFrames int) runtime.Frame {
+	// We need the frame at index skipFrames+2, since we never want runtime.Callers and getFrame
+	targetFrameIndex := skipFrames + 2
+
+	// Set size to targetFrameIndex+2 to ensure we have room for one more caller than we need
+	programCounters := make([]uintptr, targetFrameIndex+2)
+	n := runtime.Callers(0, programCounters)
+
+	frame := runtime.Frame{Function: "unknown"}
+	if n > 0 {
+		frames := runtime.CallersFrames(programCounters[:n])
+		for more, frameIndex := true, 0; more && frameIndex <= targetFrameIndex; frameIndex++ {
+			var frameCandidate runtime.Frame
+			frameCandidate, more = frames.Next()
+			if frameIndex == targetFrameIndex {
+				frame = frameCandidate
+			}
+		}
+	}
+
+	return frame
+}
+
+func printCallerLine() {
+	frame := getFrame(2)
+	text := fmt.Sprintf("%s %s:%d", frame.Function, frame.File, frame.Line)
+	oLog.Trace(text)
+}
+
 // Trace is function to replicate logrus's Trace
 func Trace(args ...interface{}) {
 	if isSetOutput && customLogOutput == nil {
 		return
 	}
+	printCallerLine()
 	oLog.Trace(args...)
 }
 
@@ -37,6 +81,7 @@ func Debug(args ...interface{}) {
 	if isSetOutput && customLogOutput == nil {
 		return
 	}
+	printCallerLine()
 	oLog.Debug(args...)
 }
 
@@ -45,6 +90,7 @@ func Print(args ...interface{}) {
 	if isSetOutput && customLogOutput == nil {
 		return
 	}
+	printCallerLine()
 	oLog.Print(args...)
 }
 
@@ -53,6 +99,7 @@ func Info(args ...interface{}) {
 	if isSetOutput && customLogOutput == nil {
 		return
 	}
+	printCallerLine()
 	oLog.Info(args...)
 }
 
@@ -61,6 +108,7 @@ func Warn(args ...interface{}) {
 	if isSetOutput && customLogOutput == nil {
 		return
 	}
+	printCallerLine()
 	oLog.Warn(args...)
 }
 
@@ -69,6 +117,7 @@ func Warning(args ...interface{}) {
 	if isSetOutput && customLogOutput == nil {
 		return
 	}
+	printCallerLine()
 	oLog.Warning(args...)
 }
 
@@ -77,16 +126,19 @@ func Error(args ...interface{}) {
 	if isSetOutput && customLogOutput == nil {
 		return
 	}
+	printCallerLine()
 	oLog.Error(args...)
 }
 
 // Fatal is function to replicate logrus's Fatal
 func Fatal(args ...interface{}) {
+	printCallerLine()
 	oLog.Fatal(args...)
 }
 
 // Panic is function to replicate logrus's Panic
 func Panic(args ...interface{}) {
+	printCallerLine()
 	oLog.Panic(args...)
 }
 
@@ -97,6 +149,7 @@ func Tracef(format string, args ...interface{}) {
 	if isSetOutput && customLogOutput == nil {
 		return
 	}
+	printCallerLine()
 	oLog.Tracef(format, args...)
 }
 
@@ -105,6 +158,7 @@ func Debugf(format string, args ...interface{}) {
 	if isSetOutput && customLogOutput == nil {
 		return
 	}
+	printCallerLine()
 	oLog.Debugf(format, args...)
 }
 
@@ -113,6 +167,7 @@ func Infof(format string, args ...interface{}) {
 	if isSetOutput && customLogOutput == nil {
 		return
 	}
+	printCallerLine()
 	oLog.Infof(format, args...)
 }
 
@@ -121,6 +176,7 @@ func Printf(format string, args ...interface{}) {
 	if isSetOutput && customLogOutput == nil {
 		return
 	}
+	printCallerLine()
 	oLog.Printf(format, args...)
 }
 
@@ -129,6 +185,7 @@ func Warnf(format string, args ...interface{}) {
 	if isSetOutput && customLogOutput == nil {
 		return
 	}
+	printCallerLine()
 	oLog.Warnf(format, args...)
 }
 
@@ -137,6 +194,7 @@ func Warningf(format string, args ...interface{}) {
 	if isSetOutput && customLogOutput == nil {
 		return
 	}
+	printCallerLine()
 	oLog.Warningf(format, args...)
 }
 
@@ -145,16 +203,19 @@ func Errorf(format string, args ...interface{}) {
 	if isSetOutput && customLogOutput == nil {
 		return
 	}
+	printCallerLine()
 	oLog.Errorf(format, args...)
 }
 
 // Fatalf is function to replicate logrus's Fatalf
 func Fatalf(format string, args ...interface{}) {
+	printCallerLine()
 	oLog.Fatalf(format, args...)
 }
 
 // Panicf is function to replicate logrus's Panicf
 func Panicf(format string, args ...interface{}) {
+	printCallerLine()
 	oLog.Panicf(format, args...)
 }
 
@@ -165,6 +226,7 @@ func Traceln(args ...interface{}) {
 	if isSetOutput && customLogOutput == nil {
 		return
 	}
+	printCallerLine()
 	oLog.Traceln(args...)
 }
 
@@ -173,6 +235,7 @@ func Debugln(args ...interface{}) {
 	if isSetOutput && customLogOutput == nil {
 		return
 	}
+	printCallerLine()
 	oLog.Debugln(args...)
 }
 
@@ -181,6 +244,7 @@ func Infoln(args ...interface{}) {
 	if isSetOutput && customLogOutput == nil {
 		return
 	}
+	printCallerLine()
 	oLog.Infoln(args...)
 }
 
@@ -189,9 +253,7 @@ func Println(args ...interface{}) {
 	if isSetOutput && customLogOutput == nil {
 		return
 	}
-	if isSetOutput && customLogOutput == nil {
-		return
-	}
+	printCallerLine()
 	oLog.Infoln(args...)
 }
 
@@ -200,6 +262,7 @@ func Warnln(args ...interface{}) {
 	if isSetOutput && customLogOutput == nil {
 		return
 	}
+	printCallerLine()
 	oLog.Warnln(args...)
 }
 
@@ -208,6 +271,7 @@ func Warningln(args ...interface{}) {
 	if isSetOutput && customLogOutput == nil {
 		return
 	}
+	printCallerLine()
 	oLog.Warningln(args...)
 }
 
@@ -216,6 +280,7 @@ func Errorln(args ...interface{}) {
 	if isSetOutput && customLogOutput == nil {
 		return
 	}
+	printCallerLine()
 	oLog.Errorln(args...)
 }
 
@@ -227,13 +292,4 @@ func Fatalln(args ...interface{}) {
 // Panicln is function to replicate logrus's Panicln
 func Panicln(args ...interface{}) {
 	oLog.Panicln(args...)
-}
-
-// SetOutput is a way to setup outout to different one
-func SetOutput(w io.Writer) {
-	isSetOutput = true
-	customLogOutput = w
-	if w != nil {
-		oLog.SetOutput(w)
-	}
 }
