@@ -312,7 +312,7 @@ func GetInitialPylons(username string) (string, error) {
 		"--sequence", "0",
 		"--account-number", "0",
 	}
-	signedTx, _, err := pylonSDK.RunPylonsCli(txSignArgs, "11111111\n")
+	signedTx, _, err := pylonSDK.RunPylonsCli(txSignArgs, "")
 	if err != nil {
 		return "", err
 	}
@@ -381,7 +381,7 @@ func InitPylonAccount(username string) string {
 	// "pylonscli keys add ${username}"
 	addResult, _, err := pylonSDK.RunPylonsCli([]string{
 		"keys", "add", username,
-	}, "11111111\n11111111\n")
+	}, "")
 
 	log.WithFields(log.Fields{
 		"addResult": string(addResult),
