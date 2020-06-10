@@ -12,16 +12,7 @@ var isSetOutput = false
 var customLogOutput io.Writer = nil
 
 func init() {
-
 	oLog.SetLevel(oLog.TraceLevel)
-
-	// oLog.Trace("Something very low level.")
-	// oLog.Debug("Useful debugging information.")
-	// oLog.Info("Something noteworthy happened!")
-	// oLog.Warn("You should probably take a look at this.")
-	// oLog.Error("Something failed but I'm not quitting.")
-	// oLog.Fatal("Bye.")
-	// oLog.Panic("I'm bailing.")
 }
 
 // SetOutput is a way to setup outout to different one
@@ -30,10 +21,11 @@ func SetOutput(w io.Writer) {
 	customLogOutput = w
 	if w != nil {
 		oLog.SetOutput(w)
-		// oLog.SetFormatter(&oLog.TextFormatter{
-		// 	DisableTimestamp: true,
-		// 	DisableColors:    true,
-		// })
+		// oLog.SetFormatter(&oLog.JSONFormatter{})
+		oLog.SetFormatter(&oLog.TextFormatter{
+			DisableTimestamp: true,
+			DisableColors:    true,
+		})
 		// oLog.SetReportCaller(true)
 	}
 }
@@ -64,7 +56,10 @@ func getFrame(skipFrames int) runtime.Frame {
 func printCallerLine() {
 	frame := getFrame(2)
 	text := fmt.Sprintf("%s:%d %s", frame.File, frame.Line, frame.Function)
-	oLog.Trace(text)
+	oLog.WithFields(oLog.Fields{
+		"file_line": fmt.Sprintf("%s:%d", frame.File, frame.Line),
+		"func":      frame.Function,
+	}).Trace(text)
 }
 
 // Trace is function to replicate logrus's Trace

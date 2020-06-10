@@ -3,7 +3,6 @@ package loud
 import (
 	// "regexp"
 	"bufio"
-	"fmt"
 	"math/rand"
 	"os"
 	"os/signal"
@@ -23,17 +22,23 @@ var terminalCloseSignal chan os.Signal = make(chan os.Signal, 2)
 
 // SetupLoggingFile set custom file for logging output
 func SetupLoggingFile(f *os.File) {
-	log.Debugln("SetupLoggingFile has started")
+	log.WithFields(log.Fields{
+		"func_start": "SetupLoggingFile",
+	}).Debugln("function start")
+
 	log.SetOutput(f)
-	log.Debugln("You should see this log as a first line of loud.log")
+	log.Debugln("You should see this log as a first line of log file")
 }
 
 // SetupScreenAndEvents setup screen object and events
 func SetupScreenAndEvents(world data.World, logFile *os.File) {
-	log.Debugln("SetupScreenAndEvents has started")
+	log.WithFields(log.Fields{
+		"func_start": "SetupScreenAndEvents",
+		"os.args":    os.Args,
+	}).Debugln("function start")
+
 	args := os.Args
 	username := ""
-	log.Debugln("SetupScreenAndEvents os.args", args)
 	if len(args) < 2 {
 		log.Infoln("you didn't configure username when running!")
 		log.Infoln("Please enter your username!")
@@ -54,19 +59,26 @@ func SetupScreenAndEvents(world data.World, logFile *os.File) {
 	} else {
 		username = args[1]
 	}
-	log.Infoln("configured username as ", username, len(username))
+
+	log.WithFields(log.Fields{
+		"set_username": "SetupScreenAndEvents",
+		"username":     username,
+		"username_len": len(username),
+	}).Infoln("set the username")
+
 	user := world.GetUser(username)
 
 	SetupLoggingFile(logFile)
 
 	screenInstance := screen.NewScreen(world, user)
-
 	log.Debugln("setting up screen and events")
 
 	tick := time.NewTicker(300 * time.Millisecond)
 	config, cferr := cf.ReadConfig()
 	if cferr != nil {
-		log.Fatal("Couldn't load configuration file, log=\"", cferr, "\"")
+		log.WithFields(log.Fields{
+			"log": cferr,
+		}).Fatal("Couldn't load configuration file")
 	}
 	regRefreshTick := time.NewTicker(time.Duration(config.App.DaemonTimeoutCommit) * time.Second)
 
@@ -76,7 +88,7 @@ func SetupScreenAndEvents(world data.World, logFile *os.File) {
 
 		automateloop:
 			for {
-				log.Debugln("<-automateTick")
+				log.Debugln("automation tick")
 				switch screenInstance.GetScreenStatus() {
 				case screen.RsltCreateCookbook:
 					if screenInstance.GetTxFailReason() != "" {
@@ -95,7 +107,9 @@ func SetupScreenAndEvents(world data.World, logFile *os.File) {
 						Ch: 121, // "y" 121 get initial pylons
 					})
 					data.AutomateRunCnt++
-					log.Infof("Running %dth automation task", data.AutomateRunCnt)
+					log.WithFields(log.Fields{
+						"index": data.AutomateRunCnt,
+					}).Infof("Running automation task")
 				}
 				time.Sleep(2 * time.Second)
 			}
@@ -144,8 +158,10 @@ eventloop:
 				screenInstance.HandleInputKey(ev)
 			}
 		case termbox.EventResize:
-			logMessage := fmt.Sprintf("Handling TermBox Resize Event (%d, %d) at %s", ev.Width, ev.Height, time.Now().UTC().Format(time.RFC3339))
-			log.Debugln(logMessage)
+			log.WithFields(log.Fields{
+				"width":  ev.Width,
+				"height": ev.Height,
+			}).Infoln("Handling TermBox Resize Event")
 
 			screenInstance.SetScreenSize(ev.Width, ev.Height)
 		case termbox.EventError:

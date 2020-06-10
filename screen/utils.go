@@ -477,6 +477,8 @@ func (screen *GameScreen) ForestStatusCheck(newStus PageStatus) (string, string)
 func PrintString(s string) {
 	_, err := io.WriteString(os.Stdout, s)
 	if err != nil {
-		log.Warnln("Was not able to write string to screen", err)
+		log.WithFields(log.Fields{
+			"error": err,
+		}).Warnln("Was not able to write string to screen")
 	}
 }

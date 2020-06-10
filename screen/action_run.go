@@ -9,12 +9,15 @@ import (
 
 // RunTxProcess execute the screen status changes when running transaction
 func (screen *GameScreen) RunTxProcess(waitStatus PageStatus, resultStatus PageStatus, fn func() (string, error)) {
+	log.WithFields(log.Fields{
+		"func_start":    "RunTxProcess",
+		"wait_status":   waitStatus,
+		"result_status": resultStatus,
+	}).Debugln("")
 	screen.SetScreenStatusAndRefresh(waitStatus)
 
-	log.Debugln("started sending request for ", waitStatus)
 	go func() {
 		txhash, err := fn()
-		log.Debugln("ended sending request for ", waitStatus)
 		if err != nil {
 			screen.txFailReason = err.Error()
 			screen.SetScreenStatusAndRefresh(resultStatus)

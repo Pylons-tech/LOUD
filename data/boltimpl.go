@@ -34,11 +34,17 @@ func (w *dbWorld) Close() {
 }
 
 func (w *dbWorld) load() {
-	log.Debugf("Loading world database %s has started", w.filename)
+	log.WithFields(log.Fields{
+		"func_start": "dbWorld.load",
+		"file_name":  w.filename,
+	}).Debugf("function start")
+
 	db, err := bolt.Open(w.filename, 0600, nil)
 
 	if err != nil {
-		log.Warnln("error reading database file:", err)
+		log.WithFields(log.Fields{
+			"error": err,
+		}).Warnln("error reading database file")
 	} else {
 		// Make default tables
 		err = db.Update(func(tx *bolt.Tx) error {
@@ -55,11 +61,17 @@ func (w *dbWorld) load() {
 			return nil
 		})
 		if err != nil {
-			log.Warnln("Couldn't update database:", err)
+			log.WithFields(log.Fields{
+				"error": err,
+			}).Warnln("update database error")
 		}
 	}
 	w.database = db
-	log.Debugln("Loading world database has ended")
+
+	log.WithFields(log.Fields{
+		"func_end":  "dbWorld.load",
+		"file_name": w.filename,
+	}).Debugln("function end")
 }
 
 // LoadWorldFromDB will set up an on-disk based world
@@ -106,7 +118,9 @@ func (user *dbUser) SetLocation(loc UserLocation) {
 }
 
 func (user *dbUser) Reload() {
-	log.Debugln("user.Reload started")
+	log.WithFields(log.Fields{
+		"func_start": "user.Reload",
+	}).Debugln("function start")
 	var record []byte
 	if user.world.database != nil {
 		err := user.world.database.View(func(tx *bolt.Tx) error {
@@ -116,12 +130,17 @@ func (user *dbUser) Reload() {
 			return nil
 		})
 		if err != nil {
-			log.Warnln("Couldn't view database")
+			log.WithFields(log.Fields{
+				"db_error": "db.View",
+				"error":    err,
+			}).Warnln("db error")
 		}
 	}
 
 	if record == nil {
-		log.Infof("User %s does not exist, creating a new one ...", user.UserData.Username)
+		log.WithFields(log.Fields{
+			"user_not_exist": user.UserData.Username,
+		}).Info("user does not exist, creating a new one ...")
 		user.UserData = user.world.newUser(user.UserData.Username)
 		user.Save()
 	} else {
@@ -129,7 +148,9 @@ func (user *dbUser) Reload() {
 		if err != nil {
 			log.Warnln("Was not able to unpack data record into user data")
 		}
-		log.Infof("Loaded user %v", user.UserData)
+		log.WithFields(log.Fields{
+			"loaded_user": user.UserData,
+		}).Infof("loaded user")
 		user.FixLoadedData()
 	}
 	user.UserData.PrivKey = InitPylonAccount(user.UserData.Username)
@@ -137,13 +158,17 @@ func (user *dbUser) Reload() {
 	// Initial Sync
 	SyncFromNode(user)
 
-	log.Debugln("user.Reload ended")
+	log.WithFields(log.Fields{
+		"func_end": "user.Reload",
+	}).Debugln("function end")
 }
 
 func (user *dbUser) Save() {
 	bytes, err := MSGPack(user.UserData)
 	if err != nil {
-		log.Warnf("Can't marshal user: %v", err)
+		log.WithFields(log.Fields{
+			"error": err,
+		}).Warnf("userdata MSGPack error")
 		return
 	}
 
@@ -156,7 +181,9 @@ func (user *dbUser) Save() {
 			return err
 		})
 		if err != nil {
-			log.Warnln("Was not able to update world database")
+			log.WithFields(log.Fields{
+				"db_error": "db.Update",
+			}).Warnln("update world database error")
 		}
 	}
 }

@@ -7,7 +7,7 @@ const (
 
 // ShopCharacters are characters that are buyable at blacksmith
 var ShopCharacters = []Character{
-	Character{
+	{
 		ID:    "001",
 		Name:  TextTigerChr,
 		Level: 1,

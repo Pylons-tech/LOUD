@@ -12,7 +12,10 @@ var isSyncingFromNode = false
 
 // SyncFromNode is a function to handle sync from node
 func SyncFromNode(user User) {
-	log.Debugln("SyncFromNode has started")
+	log.WithFields(log.Fields{
+		"func_start": "SyncFromNode",
+	}).Debugln("function start")
+
 	if isSyncingFromNode {
 		return
 	}
@@ -20,15 +23,21 @@ func SyncFromNode(user User) {
 	defer func() {
 		isSyncingFromNode = false
 	}()
-	log.Debugln("SyncFromNode Function Body")
-	log.Debugln("username=", user.GetUserName())
-	log.Debugln("userinfo=", pylonSDK.GetAccountAddr(user.GetUserName(), GetTestingT()))
+	log.WithFields(log.Fields{
+		"username": user.GetUserName(),
+		"address":  pylonSDK.GetAccountAddr(user.GetUserName(), GetTestingT()),
+	}).Debugln("user info debug")
+
 	accAddr := pylonSDK.GetAccountAddr(user.GetUserName(), GetTestingT())
 	accInfo := pylonSDK.GetAccountInfoFromName(user.GetUserName(), GetTestingT())
-	log.Debugln("accountInfo=", accInfo)
+	log.WithFields(log.Fields{
+		"account_info": accInfo,
+	}).Debugln("")
 
 	user.SetGold(int(accInfo.Coins.AmountOf("loudcoin").Int64()))
-	log.Debugln("gold=", accInfo.Coins.AmountOf("loudcoin").Int64())
+	log.WithFields(log.Fields{
+		"gold": accInfo.Coins.AmountOf("loudcoin").Int64(),
+	}).Debugln("")
 	user.SetPylonAmount(int(accInfo.Coins.AmountOf("pylon").Int64()))
 	user.SetAddress(accAddr)
 
@@ -106,8 +115,10 @@ func SyncFromNode(user User) {
 	})
 	user.SetItems(myItems)
 
-	log.Debugln("myItems=", myItems)
-	log.Debugln("myCharacters=", myCharacters)
+	log.WithFields(log.Fields{
+		"my_items":      myItems,
+		"my_characters": myCharacters,
+	}).Debugln("")
 
 	nBuyTrdReqs := []TrdReq{}
 	nSellTrdReqs := []TrdReq{}
@@ -253,8 +264,10 @@ func SyncFromNode(user User) {
 	ItemSellTrdReqs = nSellItemTrdReqs
 	CharacterBuyTrdReqs = nBuyCharacterTrdReqs
 	CharacterSellTrdReqs = nSellCharacterTrdReqs
-	log.Debugln("BuyTrdReqs=", BuyTrdReqs)
-	log.Debugln("SellTrdReqs=", SellTrdReqs)
+	log.WithFields(log.Fields{
+		"buy_trade_reqs":  BuyTrdReqs,
+		"sell_trade_reqs": SellTrdReqs,
+	}).Debugln("")
 
 	user.FixLoadedData()
 
@@ -262,5 +275,7 @@ func SyncFromNode(user User) {
 	if err == nil {
 		user.SetLatestBlockHeight(ds.SyncInfo.LatestBlockHeight)
 	}
-	log.Debugln("SyncFromNode has ended")
+	log.WithFields(log.Fields{
+		"func_end": "SyncFromNode",
+	}).Debugln("function end")
 }
