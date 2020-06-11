@@ -163,13 +163,8 @@ func RenameCharacter(user User, ch Character, newName string) (string, error) {
 	addr := pylonSDK.GetAccountAddr(user.GetUserName(), nil)
 	sdkAddr, _ := sdk.AccAddressFromBech32(addr)
 	renameMsg := msgs.NewMsgUpdateItemString(ch.ID, "Name", newName, sdkAddr)
-	log.WithFields(log.Fields{
-		"username": user.GetUserName(),
-		"tx_msg":   renameMsg,
-	}).Infoln("started sending transaction")
 	txhash := pylonSDK.TestTxWithMsgWithNonce(t, renameMsg, user.GetUserName(), false)
 	user.SetLastTransaction(txhash, Sprintf("rename character from %s to %s", ch.Name, newName))
-	log.Infoln("ended sending transaction")
 	return txhash, nil
 }
 
