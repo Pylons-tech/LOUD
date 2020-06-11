@@ -6,44 +6,17 @@ Gold: 💰
 It is described as loudcoin denom.
 
 ## Items
-1. Wooden sword
-- Lv1
-```
-    attack: 3
-```
-- Lv2
-```
-    attack: 6
-```
-2. Copper sword
-- Lv1
-```
-    attack: 10
-```
-- Lv2
-```
-    attack: 20
-```
-3. Silver sword
-- Lv1
-```
-    attack: 30
-```
-4. Bronze sword
-- Lv1
-```
-    attack: 50
-```
-5. Iron sword
-- Lv1
-```
-    attack: 100
-```
-6. Angel sword
-- Lv1
-```
-    attack: 1000
-```
+
+Reference of [Table generator](https://www.tablesgenerator.com/markdown_tables)
+
+| No | Type  | Name         | Attributes                         |
+|----|-------|--------------|------------------------------------|
+| 1  | sword | Wooden sword | lv1 => attack:3, lv2 => attack:6   |
+| 2  | sword | Copper sword | lv1 => attack:10, lv2 => attack:20 |
+| 3  | sword | Silver sword | attack: 30                         |
+| 4  | sword | Bronze sword | attack: 50                         |
+| 5  | sword | Iron sword   | attack: 100                        |
+| 6  | sword | Angel sword  | attack: 1000                       |
 
 ## Recipes
 
