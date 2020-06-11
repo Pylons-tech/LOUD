@@ -12,3 +12,16 @@ No, it's just the logging output and if you can play the game with it, it's not 
 ## What is rest block?
 
 Rest block is the number of blocks created after a character had fight, upgraded or been created.
+
+## Is there any failure in the hunting?
+
+Yes, but percentage is low and it's different per monster.
+
+## Recipes deployment failed, what can be the reason?
+- insufficient account balance to create cookbook
+- no account registered on node
+- no account registered on local
+- daemon not opened
+- rest server not opened
+- deployment of same recipe id and cookbook id
+
