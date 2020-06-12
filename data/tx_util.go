@@ -280,7 +280,7 @@ func GetInitialPylons(username string) (string, error) {
 	addr := pylonSDK.GetAccountAddr(username, GetTestingT())
 	sdkAddr, err := sdk.AccAddressFromBech32(addr)
 	log.WithFields(log.Fields{
-		"sdk_addr": sdkAddr,
+		"sdk_addr": sdkAddr.String(),
 		"error":    err,
 	}).Debugln("sdkAddr get result")
 
@@ -347,7 +347,7 @@ func GetInitialPylons(username string) (string, error) {
 	}
 	defer resp.Body.Close()
 	log.WithFields(log.Fields{
-		"get_pylons_api_response": result,
+		"get_pylons_api_response": pylonSDK.JSONFormatter(result),
 	}).Debugln("")
 	return result["txhash"], nil
 }
@@ -400,21 +400,22 @@ func InitPylonAccount(username string) string {
 			err = os.MkdirAll(pylonsDir, os.ModePerm)
 			if err != nil {
 				log.WithFields(log.Fields{
-					"dir_path": "~/.pylons",
+					"dir_path": pylonsDir,
 				}).Fatal("create dir error")
 			}
-			keyFile := filepath.Join(pylonsDir, username+".json")
-			addResult, err = ioutil.ReadFile(keyFile)
+			userKeyFileName := username + ".json"
+			keyFilePath := filepath.Join(pylonsDir, userKeyFileName)
+			addResult, err = ioutil.ReadFile(keyFilePath)
 			if err != nil && AutomateInput {
 				log.WithFields(log.Fields{
-					"key_file": username + ".json",
+					"key_file": userKeyFileName,
 				}).Fatal("get private key error")
 			}
 			addedKeyResInterface := make(map[string]string)
 			err = json.Unmarshal(addResult, &addedKeyResInterface)
 			if err != nil && AutomateInput {
 				log.WithFields(log.Fields{
-					"key_file": username + ".json",
+					"key_file": userKeyFileName,
 					"error":    err,
 				}).Fatal("parse file error")
 			}
@@ -448,13 +449,14 @@ func InitPylonAccount(username string) string {
 		err = os.MkdirAll(pylonsDir, os.ModePerm)
 		if err != nil {
 			log.WithFields(log.Fields{
-				"dir_path": "~/.pylons",
+				"dir_path": pylonsDir,
 			}).Fatal("create directory error")
 		}
-		keyFile := filepath.Join(pylonsDir, username+".json")
-		if ioutil.WriteFile(keyFile, addResult, 0644) != nil {
+		userKeyFileName := username + ".json"
+		keyFilePath := filepath.Join(pylonsDir, userKeyFileName)
+		if ioutil.WriteFile(keyFilePath, addResult, 0644) != nil {
 			log.WithFields(log.Fields{
-				"dir_path": "~/.pylons",
+				"dir_path": pylonsDir,
 			}).Fatal("error writing file to directory")
 		}
 		log.WithFields(log.Fields{
@@ -462,7 +464,7 @@ func InitPylonAccount(username string) string {
 		}).Debugln("")
 		log.WithFields(log.Fields{
 			"username":  username,
-			"file_path": "~/.pylons/" + username + ".json",
+			"file_path": pylonsDir + "/" + userKeyFileName,
 		}).Infoln("created new account")
 	}
 	addr := pylonSDK.GetAccountAddr(username, GetTestingT())

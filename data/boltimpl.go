@@ -4,6 +4,7 @@ import (
 	"strings"
 
 	"github.com/Pylons-tech/LOUD/log"
+	pylonSDK "github.com/Pylons-tech/pylons_sdk/cmd/test"
 	bolt "github.com/coreos/bbolt"
 )
 
@@ -149,7 +150,7 @@ func (user *dbUser) Reload() {
 			log.Warnln("Was not able to unpack data record into user data")
 		}
 		log.WithFields(log.Fields{
-			"loaded_user": user.UserData,
+			"loaded_user": pylonSDK.JSONFormatter(user.UserData),
 		}).Infof("loaded user")
 		user.FixLoadedData()
 	}
