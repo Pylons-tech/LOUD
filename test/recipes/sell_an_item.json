@@ -7,7 +7,7 @@
     "Entries": {
         "CoinOutputs": [{
             "Coin":"loudcoin",
-            "Count": "value*8/10+rand_int(20)"
+            "Count": "value*8/10+rand(20)"
         }]
     },
     "Outputs": [
