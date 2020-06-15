@@ -3,16 +3,15 @@ package screen
 import (
 	"fmt"
 	"io"
-	"log"
 	"reflect"
 	"strings"
 
 	"os"
 
+	loud "github.com/Pylons-tech/LOUD/data"
+	"github.com/Pylons-tech/LOUD/log"
 	"github.com/ahmetb/go-cursor"
 	"github.com/mgutz/ansi"
-
-	loud "github.com/Pylons-tech/LOUD/data"
 )
 
 // TextLine is a struct to manage a line on screen
@@ -478,6 +477,8 @@ func (screen *GameScreen) ForestStatusCheck(newStus PageStatus) (string, string)
 func PrintString(s string) {
 	_, err := io.WriteString(os.Stdout, s)
 	if err != nil {
-		log.Println("Was not able to write string to screen", err)
+		log.WithFields(log.Fields{
+			"error": err,
+		}).Warnln("Was not able to write string to screen")
 	}
 }

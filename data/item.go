@@ -119,40 +119,40 @@ func (item Item) IsSword() bool {
 
 // ShopItems describes the items that are buyable at shop
 var ShopItems = []Item{
-	Item{
+	{
 		ID:    "001",
 		Name:  WoodenSword,
 		Level: 1,
 		Price: 100,
 	},
-	Item{
+	{
 		ID:    "002",
 		Name:  CopperSword,
 		Level: 1,
 		Price: 250,
 	},
-	Item{
+	{
 		ID:       "003",
 		Name:     SilverSword,
 		Level:    1,
 		Price:    50,
 		PreItems: []string{GoblinEar},
 	},
-	Item{
+	{
 		ID:       "004",
 		Name:     BronzeSword,
 		Level:    1,
 		Price:    10,
 		PreItems: []string{WolfTail},
 	},
-	Item{
+	{
 		ID:       "005",
 		Name:     IronSword,
 		Level:    1,
 		Price:    250,
 		PreItems: []string{TrollToes},
 	},
-	Item{
+	{
 		ID:       "006",
 		Name:     AngelSword,
 		Level:    1,
@@ -175,67 +175,67 @@ func (item Item) PreItemStr() string {
 
 // WorldItemSpecs describes the items that are buyable by trading
 var WorldItemSpecs = []ItemSpec{
-	ItemSpec{
+	{
 		Name:   WoodenSword,
 		Level:  [2]int{1, 1},
 		Attack: [2]int{3, 3},
 	},
-	ItemSpec{
+	{
 		Name:   WoodenSword,
 		Level:  [2]int{2, 2},
 		Attack: [2]int{6, 6},
 	},
-	ItemSpec{
+	{
 		Name:   CopperSword,
 		Level:  [2]int{1, 1},
 		Attack: [2]int{10, 10},
 	},
-	ItemSpec{
+	{
 		Name:   CopperSword,
 		Level:  [2]int{2, 2},
 		Attack: [2]int{20, 20},
 	},
-	ItemSpec{
+	{
 		Name:   SilverSword,
 		Level:  [2]int{1, 1},
 		Attack: [2]int{30, 30},
 	},
-	ItemSpec{
+	{
 		Name:   BronzeSword,
 		Level:  [2]int{1, 1},
 		Attack: [2]int{50, 50},
 	},
-	ItemSpec{
+	{
 		Name:   IronSword,
 		Level:  [2]int{1, 1},
 		Attack: [2]int{100, 100},
 	},
-	ItemSpec{
+	{
 		Name:  TrollToes,
 		Level: [2]int{1, 1},
 	},
-	ItemSpec{
+	{
 		Name:  WolfTail,
 		Level: [2]int{1, 1},
 	},
-	ItemSpec{
+	{
 		Name:  GoblinEar,
 		Level: [2]int{1, 1},
 	},
-	ItemSpec{
+	{
 		Name:   AngelSword,
 		Level:  [2]int{1, 1},
 		Attack: [2]int{1000, 1000},
 	},
-	ItemSpec{
+	{
 		Name:  DropDragonFire,
 		Level: [2]int{1, 1},
 	},
-	ItemSpec{
+	{
 		Name:  DropDragonIce,
 		Level: [2]int{1, 1},
 	},
-	ItemSpec{
+	{
 		Name:  DropDragonAcid,
 		Level: [2]int{1, 1},
 	},
@@ -243,24 +243,24 @@ var WorldItemSpecs = []ItemSpec{
 
 // WorldCharacterSpecs characters that are buyable from pylons central by trading
 var WorldCharacterSpecs = []CharacterSpec{
-	CharacterSpec{
+	{
 		Name:  "LionBaby",
 		Level: [2]int{1, 2},
 		XP:    [2]float64{1, 1000000},
 	},
-	CharacterSpec{
+	{
 		Special: FireSpecial,
 		Name:    "FireBaby",
 		Level:   [2]int{1, 1000},
 		XP:      [2]float64{1, 1000000},
 	},
-	CharacterSpec{
+	{
 		Special: IceSpecial,
 		Name:    "IceBaby",
 		Level:   [2]int{1, 1000},
 		XP:      [2]float64{1, 1000000},
 	},
-	CharacterSpec{
+	{
 		Special: AcidSpecial,
 		Name:    "AcidBaby",
 		Level:   [2]int{1, 1000},
