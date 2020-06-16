@@ -55,11 +55,10 @@ func getFrame(skipFrames int) runtime.Frame {
 
 func printCallerLine() {
 	frame := getFrame(2)
-	text := fmt.Sprintf("%s:%d %s", frame.File, frame.Line, frame.Function)
 	oLog.WithFields(oLog.Fields{
 		"file_line": fmt.Sprintf("%s:%d", frame.File, frame.Line),
 		"func":      frame.Function,
-	}).Trace(text)
+	}).Trace("debug caller line")
 }
 
 // Trace is function to replicate logrus's Trace
