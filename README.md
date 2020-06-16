@@ -183,3 +183,8 @@ And then run `make` and `make ARGS="XXX XXX" run` on each folder.
 - Build pyloncli and loud game using go on a mac machine.
 - Go to "Contents/Resources/" and paste resource files there like "bin", "locale".
 - Publish new version
+
+### How to debug log file
+
+To find the errors happened in that log, you need to search for `level=warning`, `level=error`, `level=fatal`, `level=panic`.
+Once that's found you can debug the `debug` and `info` logs near that log and it will make sense for you what happened.
