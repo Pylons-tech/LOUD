@@ -743,7 +743,7 @@ func (screen *GameScreen) HandleTypingModeInputKeys(input termbox.Event) bool {
 			txhash, err := loud.CreateBuyGoldTrdReq(screen.user, screen.goldEnterValue, screen.pylonEnterValue)
 			log.WithFields(log.Fields{
 				"sent_request": "buy gold",
-			}).Infoln("")
+			}).Infoln("info log")
 			if err != nil {
 				screen.txFailReason = err.Error()
 				screen.SetScreenStatusAndRefresh(RsltBuyGoldTrdReqCreation)
@@ -766,7 +766,7 @@ func (screen *GameScreen) HandleTypingModeInputKeys(input termbox.Event) bool {
 			txhash, err := loud.CreateSellGoldTrdReq(screen.user, screen.goldEnterValue, screen.pylonEnterValue)
 			log.WithFields(log.Fields{
 				"sent_request": "sell gold",
-			}).Infoln("")
+			}).Infoln("info log")
 			if err != nil {
 				screen.txFailReason = err.Error()
 				screen.SetScreenStatusAndRefresh(RsltSellGoldTrdReqCreation)
@@ -783,7 +783,7 @@ func (screen *GameScreen) HandleTypingModeInputKeys(input termbox.Event) bool {
 			txhash, err := loud.CreateSellItemTrdReq(screen.user, screen.activeItem, screen.pylonEnterValue)
 			log.WithFields(log.Fields{
 				"sent_request": "sell item",
-			}).Infoln("")
+			}).Infoln("info log")
 			if err != nil {
 				screen.txFailReason = err.Error()
 				screen.SetScreenStatusAndRefresh(RsltSellItemTrdReqCreation)
@@ -800,7 +800,7 @@ func (screen *GameScreen) HandleTypingModeInputKeys(input termbox.Event) bool {
 			txhash, err := loud.CreateBuyItemTrdReq(screen.user, screen.activeItSpec, screen.pylonEnterValue)
 			log.WithFields(log.Fields{
 				"sent_request": "buy item",
-			}).Infoln("")
+			}).Infoln("info log")
 			if err != nil {
 				screen.txFailReason = err.Error()
 				screen.SetScreenStatusAndRefresh(RsltBuyItemTrdReqCreation)
@@ -818,7 +818,7 @@ func (screen *GameScreen) HandleTypingModeInputKeys(input termbox.Event) bool {
 			txhash, err := loud.CreateSellCharacterTrdReq(screen.user, screen.activeCharacter, screen.pylonEnterValue)
 			log.WithFields(log.Fields{
 				"sent_request": "sell character",
-			}).Infoln("")
+			}).Infoln("info log")
 			if err != nil {
 				screen.txFailReason = err.Error()
 				screen.SetScreenStatusAndRefresh(RsltSellChrTrdReqCreation)
@@ -835,7 +835,7 @@ func (screen *GameScreen) HandleTypingModeInputKeys(input termbox.Event) bool {
 			txhash, err := loud.CreateBuyCharacterTrdReq(screen.user, screen.activeChSpec, screen.pylonEnterValue)
 			log.WithFields(log.Fields{
 				"sent_request": "buy character",
-			}).Infoln("")
+			}).Infoln("info log")
 			if err != nil {
 				screen.txFailReason = err.Error()
 				screen.SetScreenStatusAndRefresh(RsltBuyChrTrdReqCreation)
