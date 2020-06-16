@@ -13,7 +13,7 @@ func (screen *GameScreen) RunTxProcess(waitStatus PageStatus, resultStatus PageS
 		"func_start":    "RunTxProcess",
 		"wait_status":   waitStatus,
 		"result_status": resultStatus,
-	}).Debugln("")
+	}).Debugln("debug log")
 	screen.SetScreenStatusAndRefresh(waitStatus)
 
 	go func() {

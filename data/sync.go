@@ -32,12 +32,12 @@ func SyncFromNode(user User) {
 	accInfo := pylonSDK.GetAccountInfoFromName(user.GetUserName(), GetTestingT())
 	log.WithFields(log.Fields{
 		"account_info": pylonSDK.AminoCodecFormatter(accInfo),
-	}).Debugln("")
+	}).Debugln("debug log")
 
 	user.SetGold(int(accInfo.Coins.AmountOf("loudcoin").Int64()))
 	log.WithFields(log.Fields{
 		"gold": accInfo.Coins.AmountOf("loudcoin").Int64(),
-	}).Debugln("")
+	}).Debugln("debug log")
 	user.SetPylonAmount(int(accInfo.Coins.AmountOf("pylon").Int64()))
 	user.SetAddress(accAddr)
 
@@ -118,7 +118,7 @@ func SyncFromNode(user User) {
 	log.WithFields(log.Fields{
 		"my_items":      pylonSDK.JSONFormatter(myItems),
 		"my_characters": pylonSDK.JSONFormatter(myCharacters),
-	}).Debugln("")
+	}).Debugln("debug log")
 
 	nBuyTrdReqs := []TrdReq{}
 	nSellTrdReqs := []TrdReq{}
@@ -267,7 +267,7 @@ func SyncFromNode(user User) {
 	log.WithFields(log.Fields{
 		"buy_trade_reqs":  pylonSDK.JSONFormatter(BuyTrdReqs),
 		"sell_trade_reqs": pylonSDK.JSONFormatter(SellTrdReqs),
-	}).Debugln("")
+	}).Debugln("debug log")
 
 	user.FixLoadedData()
 

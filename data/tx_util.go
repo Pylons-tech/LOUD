@@ -264,7 +264,7 @@ func CheckSignatureMatchWithAftiCli(t *testing.T, txhash string, privKey string,
 		"privKey":        privKey,
 		"account-number": strconv.FormatUint(accInfo.GetAccountNumber(), 10),
 		"sequence":       strconv.FormatUint(nonce, 10),
-	}).Infoln("")
+	}).Infoln("info log")
 
 	if string(cliTxSign[1]) != string(aftiTxSign[1]) {
 		return false, errors.New("comparison different afticli and pyloncli ")
@@ -329,7 +329,7 @@ func GetInitialPylons(username string) (string, error) {
 
 	log.WithFields(log.Fields{
 		"postBody": string(postBody),
-	}).Debugln("")
+	}).Debugln("debug log")
 
 	if err != nil {
 		return "", err
@@ -348,7 +348,7 @@ func GetInitialPylons(username string) (string, error) {
 	defer resp.Body.Close()
 	log.WithFields(log.Fields{
 		"get_pylons_api_response": pylonSDK.JSONFormatter(result),
-	}).Debugln("")
+	}).Debugln("debug log")
 	return result["txhash"], nil
 }
 
@@ -386,7 +386,7 @@ func InitPylonAccount(username string) string {
 	log.WithFields(log.Fields{
 		"addResult": string(addResult),
 		"error":     err,
-	}).Debugln("")
+	}).Debugln("debug log")
 	if err != nil {
 		if strings.Contains(err.Error(), "no such file or directory") {
 			log.Warnln("pylonscli is not globally installed on your machine")
@@ -422,7 +422,7 @@ func InitPylonAccount(username string) string {
 			privKey = addedKeyResInterface["privkey"]
 			log.WithFields(log.Fields{
 				"privKey": privKey,
-			}).Debugln("")
+			}).Debugln("debug log")
 		}
 	} else {
 		addedKeyResInterface := make(map[string]string)
@@ -461,7 +461,7 @@ func InitPylonAccount(username string) string {
 		}
 		log.WithFields(log.Fields{
 			"privKey": privKey,
-		}).Debugln("")
+		}).Debugln("debug log")
 		log.WithFields(log.Fields{
 			"username":  username,
 			"file_path": pylonsDir + "/" + userKeyFileName,
@@ -523,33 +523,33 @@ func LogFullTxResultByHash(txhash string) {
 		"txhash": txhash,
 		"output": string(output),
 		"error":  err,
-		"func":   "LogFullTxResultByHash",
-	}).Debugln("")
+	}).Debugln("debug log")
 }
 
 // ProcessTxResult is a function to handle result of a transaction made
 func ProcessTxResult(user User, txhash string) ([]byte, string) {
 	t := GetTestingT()
 
-	resp := handlers.ExecuteRecipeResp{}
+	resp := handlers.ExecuteRecipeResponse{}
 
 	txHandleResBytes, err := pylonSDK.WaitAndGetTxData(txhash, pylonSDK.GetMaxWaitBlock(), t)
 	if err != nil {
 		log.WithFields(log.Fields{
 			"error": err,
-		}).Warnln("error getting tx result bytes")
+		}).Warnln("error getting tx result, checkout full log printed below")
 		LogFullTxResultByHash(txhash)
 		return []byte{}, fmt.Sprintf("error getting tx result bytes %+v", err)
 	}
-	LogFullTxResultByHash(txhash)
 	txErrorText := pylonSDK.GetHumanReadableErrorFromTxHash(txhash, t)
 	if len(txErrorText) > 0 {
 		log.WithFields(log.Fields{
 			"txhash":   txhash,
 			"tx_error": txErrorText,
-		}).Warnln("")
+		}).Warnln("error in transaction, check out full log printed below")
+		LogFullTxResultByHash(txhash)
 		return []byte{}, fmt.Sprintf("txhash=%s tx_error=%s", txhash, txErrorText)
 	}
+	LogFullTxResultByHash(txhash)
 	SyncFromNode(user)
 
 	err = pylonSDK.GetAminoCdc().UnmarshalJSON(txHandleResBytes, &resp)
@@ -560,9 +560,10 @@ func ProcessTxResult(user User, txhash string) ([]byte, string) {
 		return []byte{}, "failed to parse transaction result; maybe this is get_pylons then ignore."
 	}
 	log.WithFields(log.Fields{
-		"func_end": "ProcessTxResult",
-		"message":  resp.Message,
-		"output":   string(resp.Output),
+		"action":  "func_end",
+		"message": resp.Message,
+		"output":  string(resp.Output),
+		"txhash":  txhash,
 	}).Debugln("log")
 	return resp.Output, ""
 }
@@ -570,6 +571,7 @@ func ProcessTxResult(user User, txhash string) ([]byte, string) {
 // GetTestingT is a function to convert testing.T to cusomized testing.T
 func GetTestingT() *testing.T {
 	newT := testing.NewT(nil)
+	// this can be replaced with NewLogLevelT(nil, log.DebugLevel) to reduce log amount from TraceLevel
 	t := &newT
 	return t
 }
