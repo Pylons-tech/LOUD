@@ -14,7 +14,6 @@ require (
 	github.com/flynn/go-shlex v0.0.0-20150515145356-3f9db97f8568 // indirect
 	github.com/gliderlabs/ssh v0.2.2
 	github.com/golang/protobuf v1.4.0 // indirect
-	github.com/gorilla/websocket v1.4.2 // indirect
 	github.com/gtank/merlin v0.1.1 // indirect
 	github.com/mattn/go-colorable v0.1.4 // indirect
 	github.com/mattn/go-runewidth v0.0.7 // indirect
@@ -23,6 +22,7 @@ require (
 	github.com/nsf/termbox-go v0.0.0-20191229070316-58d4fcbce2a7
 	github.com/prometheus/client_golang v1.5.1 // indirect
 	github.com/rcrowley/go-metrics v0.0.0-20200313005456-10cdbea86bc0 // indirect
+	github.com/sirupsen/logrus v1.6.0
 	github.com/tendermint/tendermint v0.33.3
 	github.com/tyler-smith/go-bip39 v1.0.2
 	github.com/vmihailenco/msgpack v0.0.0-20190804092921-cd92a145e6d2

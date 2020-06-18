@@ -12,6 +12,10 @@ var isSyncingFromNode = false
 
 // SyncFromNode is a function to handle sync from node
 func SyncFromNode(user User) {
+	log.WithFields(log.Fields{
+		"func_start": "SyncFromNode",
+	}).Debugln("function start")
+
 	if isSyncingFromNode {
 		return
 	}
@@ -19,15 +23,21 @@ func SyncFromNode(user User) {
 	defer func() {
 		isSyncingFromNode = false
 	}()
-	log.Println("SyncFromNode Function Body")
-	log.Println("username=", user.GetUserName())
-	log.Println("userinfo=", pylonSDK.GetAccountAddr(user.GetUserName(), GetTestingT()))
+	log.WithFields(log.Fields{
+		"username": user.GetUserName(),
+		"address":  pylonSDK.GetAccountAddr(user.GetUserName(), GetTestingT()),
+	}).Debugln("user info debug")
+
 	accAddr := pylonSDK.GetAccountAddr(user.GetUserName(), GetTestingT())
 	accInfo := pylonSDK.GetAccountInfoFromName(user.GetUserName(), GetTestingT())
-	log.Println("accountInfo=", accInfo)
+	log.WithFields(log.Fields{
+		"account_info": pylonSDK.AminoCodecFormatter(accInfo),
+	}).Debugln("debug log")
 
 	user.SetGold(int(accInfo.Coins.AmountOf("loudcoin").Int64()))
-	log.Println("gold=", accInfo.Coins.AmountOf("loudcoin").Int64())
+	log.WithFields(log.Fields{
+		"gold": accInfo.Coins.AmountOf("loudcoin").Int64(),
+	}).Debugln("debug log")
 	user.SetPylonAmount(int(accInfo.Coins.AmountOf("pylon").Int64()))
 	user.SetAddress(accAddr)
 
@@ -105,8 +115,10 @@ func SyncFromNode(user User) {
 	})
 	user.SetItems(myItems)
 
-	log.Println("myItems=", myItems)
-	log.Println("myCharacters=", myCharacters)
+	log.WithFields(log.Fields{
+		"my_items":      pylonSDK.JSONFormatter(myItems),
+		"my_characters": pylonSDK.JSONFormatter(myCharacters),
+	}).Debugln("debug log")
 
 	nBuyTrdReqs := []TrdReq{}
 	nSellTrdReqs := []TrdReq{}
@@ -252,8 +264,10 @@ func SyncFromNode(user User) {
 	ItemSellTrdReqs = nSellItemTrdReqs
 	CharacterBuyTrdReqs = nBuyCharacterTrdReqs
 	CharacterSellTrdReqs = nSellCharacterTrdReqs
-	log.Println("BuyTrdReqs=", BuyTrdReqs)
-	log.Println("SellTrdReqs=", SellTrdReqs)
+	log.WithFields(log.Fields{
+		"buy_trade_reqs":  pylonSDK.JSONFormatter(BuyTrdReqs),
+		"sell_trade_reqs": pylonSDK.JSONFormatter(SellTrdReqs),
+	}).Debugln("debug log")
 
 	user.FixLoadedData()
 
@@ -261,4 +275,7 @@ func SyncFromNode(user User) {
 	if err == nil {
 		user.SetLatestBlockHeight(ds.SyncInfo.LatestBlockHeight)
 	}
+	log.WithFields(log.Fields{
+		"func_end": "SyncFromNode",
+	}).Debugln("function end")
 }
