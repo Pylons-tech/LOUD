@@ -662,17 +662,20 @@ func GetToUpgradeItemFromKey(user User, key string) Item {
 }
 
 // GetItemInputsFromItemSpec calculate ItemInput from ItemSpec
-func GetItemInputsFromItemSpec(itspec ItemSpec) types.ItemInputList {
-	var itemInputs types.ItemInputList
+func GetItemInputsFromItemSpec(itspec ItemSpec) types.TradeItemInputList {
+	var itemInputs types.TradeItemInputList
 
-	ii := types.ItemInput{
-		Doubles: nil,
-		Longs: types.LongInputParamList{
-			types.LongInputParam{Key: "level", MinValue: itspec.Level[0], MaxValue: itspec.Level[1]},
+	ii := types.TradeItemInput{
+		ItemInput: types.ItemInput{
+			Doubles: nil,
+			Longs: types.LongInputParamList{
+				types.LongInputParam{Key: "level", MinValue: itspec.Level[0], MaxValue: itspec.Level[1]},
+			},
+			Strings: types.StringInputParamList{
+				types.StringInputParam{Key: "Name", Value: itspec.Name},
+			},
 		},
-		Strings: types.StringInputParamList{
-			types.StringInputParam{Key: "Name", Value: itspec.Name},
-		},
+		CookbookID: GameCookbookID,
 	}
 	itemInputs = append(itemInputs, ii)
 	return itemInputs
@@ -687,23 +690,26 @@ func GetItemOutputFromActiveItem(activeItem Item) (types.ItemList, error) {
 }
 
 // GetItemInputsFromCharacterSpec calculate ItemInputs from CharacterSpec
-func GetItemInputsFromCharacterSpec(chspec CharacterSpec) types.ItemInputList {
+func GetItemInputsFromCharacterSpec(chspec CharacterSpec) types.TradeItemInputList {
 	// TODO should make this to express all the required fields like GiantKill, SpecialDragonKill, UndeadDragonKill
 	// But for now expressing only XP, level, Name and Special as it's the main requirement.
 	// If possible, we can try removing XP, and level too.
 
-	var itemInputs types.ItemInputList
+	var itemInputs types.TradeItemInputList
 
-	ii := types.ItemInput{
-		Doubles: types.DoubleInputParamList{
-			types.DoubleInputParam{Key: "XP", MinValue: types.ToFloatString(chspec.XP[0]), MaxValue: types.ToFloatString(chspec.XP[1])},
+	ii := types.TradeItemInput{
+		ItemInput: types.ItemInput{
+			Doubles: types.DoubleInputParamList{
+				types.DoubleInputParam{Key: "XP", MinValue: types.ToFloatString(chspec.XP[0]), MaxValue: types.ToFloatString(chspec.XP[1])},
+			},
+			Longs: types.LongInputParamList{
+				types.LongInputParam{Key: "level", MinValue: chspec.Level[0], MaxValue: chspec.Level[1]},
+			},
+			Strings: types.StringInputParamList{
+				types.StringInputParam{Key: "Name", Value: chspec.Name},
+			},
 		},
-		Longs: types.LongInputParamList{
-			types.LongInputParam{Key: "level", MinValue: chspec.Level[0], MaxValue: chspec.Level[1]},
-		},
-		Strings: types.StringInputParamList{
-			types.StringInputParam{Key: "Name", Value: chspec.Name},
-		},
+		CookbookID: GameCookbookID,
 	}
 	if chspec.Special != NoSpecial {
 		ii.Longs = append(ii.Longs, types.LongInputParam{
