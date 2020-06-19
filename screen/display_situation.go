@@ -109,6 +109,14 @@ func (screen *GameScreen) renderUserSituation() {
 				}
 				return screen.getFontOfTableLine(idx, itr.IsMyTrdReq)
 			})
+	case SelectFitBuyItemTrdReq:
+		atir := screen.activeItemTrdReq.(loud.ItemBuyTrdReq)
+		matchingItems := screen.user.GetMatchedItems(atir.TItem)
+		tableLines = screen.renderITTable(
+			"Select item to sell",
+			"Item",
+			matchingItems,
+			w, nil)
 	case ShowSellItemTrdReqs:
 		tableLines = screen.renderITRTable(
 			"Sell item requests",
@@ -136,6 +144,7 @@ func (screen *GameScreen) renderUserSituation() {
 				return screen.getFontOfTableLine(idx, isMyTrdReq)
 			})
 	case ShowBuyChrTrdReqs:
+		// log.Debugln("InventoryCharacters", screen.user.InventoryCharacters())
 		tableLines = screen.renderITRTable(
 			"Buy character requests",
 			[2]string{"Character", "Price (pylon)"},
@@ -143,11 +152,23 @@ func (screen *GameScreen) renderUserSituation() {
 			w,
 			func(idx int, request interface{}) FontType {
 				itr := request.(loud.CharacterBuyTrdReq)
+				// log.Debugln("GetMatchedCharacters",
+				// 	len(screen.user.GetMatchedCharacters(itr.TCharacter)),
+				// 	request.(loud.CharacterBuyTrdReq),
+				// 	screen.user.InventoryCharacters())
 				if len(screen.user.GetMatchedCharacters(itr.TCharacter)) == 0 {
 					return screen.GetDisabledFontByActiveLine(idx)
 				}
 				return screen.getFontOfTableLine(idx, itr.IsMyTrdReq)
 			})
+	case SelectFitBuyChrTrdReq:
+		cbtr := screen.activeItemTrdReq.(loud.CharacterBuyTrdReq)
+		matchingChrs := screen.user.GetMatchedCharacters(cbtr.TCharacter)
+		tableLines = screen.renderITTable(
+			"Select character to sell",
+			"Character",
+			matchingChrs,
+			w, nil)
 	case CreateBuyGoldTrdReqEnterPylonValue:
 		desc = loud.Localize("Please enter pylon amount to use (should be integer value)")
 	case CreateSellGoldTrdReqEnterPylonValue:

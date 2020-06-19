@@ -178,6 +178,12 @@ func (screen *GameScreen) renderUserCommands() {
 				"Sell item to fulfill selected request( ↵ )",
 				"Place order to buy item(R)",
 				GobackCommand)
+	case SelectFitBuyItemTrdReq:
+		infoLines = infoLines.
+			appendT(
+				"Sell item to fulfill selected request( ↵ )",
+				"Place order to buy item(R)",
+				GobackCommand)
 	case ShowSellItemTrdReqs:
 		infoLines = infoLines.
 			appendT(
@@ -185,6 +191,12 @@ func (screen *GameScreen) renderUserCommands() {
 				"Place order to sell item(R)",
 				GobackCommand)
 	case ShowBuyChrTrdReqs:
+		infoLines = infoLines.
+			appendT(
+				"Sell character to fulfill selected request( ↵ )",
+				"Place order to buy character(R)",
+				GobackCommand)
+	case SelectFitBuyChrTrdReq:
 		infoLines = infoLines.
 			appendT(
 				"Sell character to fulfill selected request( ↵ )",

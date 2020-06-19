@@ -181,7 +181,7 @@ func (screen *GameScreen) RunSelectedLoudBuyTrdReq() {
 			})
 		} else {
 			screen.RunTxProcess(WaitFulfillBuyGoldTrdReq, RsltFulfillBuyGoldTrdReq, func() (string, error) {
-				return loud.FulfillTrade(screen.user, screen.activeTrdReq.ID)
+				return loud.FulfillTrade(screen.user, screen.activeTrdReq.ID, []string{})
 			})
 		}
 	}
@@ -203,7 +203,7 @@ func (screen *GameScreen) RunSelectedLoudSellTrdReq() {
 			})
 		} else {
 			screen.RunTxProcess(WaitFulfillSellGoldTrdReq, RsltFulfillSellGoldTrdReq, func() (string, error) {
-				return loud.FulfillTrade(screen.user, screen.activeTrdReq.ID)
+				return loud.FulfillTrade(screen.user, screen.activeTrdReq.ID, []string{})
 			})
 		}
 	}
@@ -211,22 +211,21 @@ func (screen *GameScreen) RunSelectedLoudSellTrdReq() {
 
 // RunSelectedItemBuyTrdReq execute the item buy trading process
 func (screen *GameScreen) RunSelectedItemBuyTrdReq() {
-	if len(loud.ItemBuyTrdReqs) <= screen.activeLine || screen.activeLine < 0 {
-		screen.txFailReason = loud.Localize("you haven't selected any buy item request")
-		screen.SetScreenStatusAndRefresh(RsltFulfillBuyItemTrdReq)
+	atir := screen.activeItemTrdReq.(loud.ItemBuyTrdReq)
+
+	if atir.IsMyTrdReq {
+		screen.RunTxProcess(WaitCancelTrdReq, RsltCancelTrdReq, func() (string, error) {
+			return loud.CancelTrade(screen.user, atir.ID)
+		})
 	} else {
-		atir := loud.ItemBuyTrdReqs[screen.activeLine]
-		screen.activeItemTrdReq = atir
-		if len(screen.user.GetMatchedItems(atir.TItem)) == 0 {
-			screen.actionText = loud.Sprintf("You don't have matched items to fulfill this trade.")
-			screen.Render()
-		} else if atir.IsMyTrdReq {
-			screen.RunTxProcess(WaitCancelTrdReq, RsltCancelTrdReq, func() (string, error) {
-				return loud.CancelTrade(screen.user, atir.ID)
-			})
+		matchingItems := screen.user.GetMatchedItems(atir.TItem)
+		if len(matchingItems) <= screen.activeLine || screen.activeLine < 0 {
+			screen.txFailReason = loud.Localize("You haven't selected any matched item for the request")
+			screen.SetScreenStatusAndRefresh(RsltFulfillBuyItemTrdReq)
 		} else {
+			itemIDs := []string{matchingItems[screen.activeLine].ID}
 			screen.RunTxProcess(WaitFulfillBuyItemTrdReq, RsltFulfillBuyItemTrdReq, func() (string, error) {
-				return loud.FulfillTrade(screen.user, atir.ID)
+				return loud.FulfillTrade(screen.user, atir.ID, itemIDs)
 			})
 		}
 	}
@@ -249,7 +248,7 @@ func (screen *GameScreen) RunSelectedItemSellTrdReq() {
 			})
 		} else {
 			screen.RunTxProcess(WaitFulfillSellItemTrdReq, RsltFulfillSellItemTrdReq, func() (string, error) {
-				return loud.FulfillTrade(screen.user, sstr.ID)
+				return loud.FulfillTrade(screen.user, sstr.ID, []string{})
 			})
 		}
 	}
@@ -257,22 +256,21 @@ func (screen *GameScreen) RunSelectedItemSellTrdReq() {
 
 // RunSelectedCharacterBuyTrdReq execute the character buy trading process
 func (screen *GameScreen) RunSelectedCharacterBuyTrdReq() {
-	if len(loud.CharacterBuyTrdReqs) <= screen.activeLine || screen.activeLine < 0 {
-		screen.txFailReason = loud.Localize("you haven't selected any buy character request")
-		screen.SetScreenStatusAndRefresh(RsltFulfillBuyChrTrdReq)
+	cbtr := screen.activeItemTrdReq.(loud.CharacterBuyTrdReq)
+
+	if cbtr.IsMyTrdReq {
+		screen.RunTxProcess(WaitCancelTrdReq, RsltCancelTrdReq, func() (string, error) {
+			return loud.CancelTrade(screen.user, cbtr.ID)
+		})
 	} else {
-		cbtr := loud.CharacterBuyTrdReqs[screen.activeLine]
-		screen.activeItemTrdReq = cbtr
-		if len(screen.user.GetMatchedCharacters(cbtr.TCharacter)) == 0 {
-			screen.actionText = loud.Sprintf("You don't have matched characters to fulfill this trade.")
-			screen.Render()
-		} else if cbtr.IsMyTrdReq {
-			screen.RunTxProcess(WaitCancelTrdReq, RsltCancelTrdReq, func() (string, error) {
-				return loud.CancelTrade(screen.user, cbtr.ID)
-			})
+		matchingChrs := screen.user.GetMatchedCharacters(cbtr.TCharacter)
+		if len(matchingChrs) <= screen.activeLine || screen.activeLine < 0 {
+			screen.txFailReason = loud.Localize("You haven't selected any matched characters for the request")
+			screen.SetScreenStatusAndRefresh(RsltFulfillBuyChrTrdReq)
 		} else {
+			itemIDs := []string{matchingChrs[screen.activeLine].ID}
 			screen.RunTxProcess(WaitFulfillBuyChrTrdReq, RsltFulfillBuyChrTrdReq, func() (string, error) {
-				return loud.FulfillTrade(screen.user, cbtr.ID)
+				return loud.FulfillTrade(screen.user, cbtr.ID, itemIDs)
 			})
 		}
 	}
@@ -295,7 +293,7 @@ func (screen *GameScreen) RunSelectedCharacterSellTrdReq() {
 			})
 		} else {
 			screen.RunTxProcess(WaitFulfillSellChrTrdReq, RsltFulfillSellChrTrdReq, func() (string, error) {
-				return loud.FulfillTrade(screen.user, cstr.ID)
+				return loud.FulfillTrade(screen.user, cstr.ID, []string{})
 			})
 		}
 	}

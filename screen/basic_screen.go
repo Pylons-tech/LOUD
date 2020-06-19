@@ -236,10 +236,18 @@ func (screen *GameScreen) SetScreenStatus(newStatus PageStatus) {
 		screen.SelectDefaultActiveLine(loud.SellTrdReqs)
 	case ShowBuyItemTrdReqs:
 		screen.SelectDefaultActiveLine(loud.ItemBuyTrdReqs)
+	case SelectFitBuyItemTrdReq:
+		atir := screen.activeItemTrdReq.(loud.ItemBuyTrdReq)
+		matchingItems := screen.user.GetMatchedItems(atir.TItem)
+		screen.SelectDefaultActiveLine(matchingItems)
 	case ShowSellItemTrdReqs:
 		screen.SelectDefaultActiveLine(loud.ItemSellTrdReqs)
 	case ShowBuyChrTrdReqs:
 		screen.SelectDefaultActiveLine(loud.CharacterBuyTrdReqs)
+	case SelectFitBuyChrTrdReq:
+		cbtr := screen.activeItemTrdReq.(loud.CharacterBuyTrdReq)
+		matchingChrs := screen.user.GetMatchedCharacters(cbtr.TCharacter)
+		screen.SelectDefaultActiveLine(matchingChrs)
 	case ShowSellChrTrdReqs:
 		screen.SelectDefaultActiveLine(loud.CharacterSellTrdReqs)
 	case CreateBuyChrTrdReqSelectChr:

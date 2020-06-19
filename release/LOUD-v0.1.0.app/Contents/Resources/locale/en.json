@@ -683,6 +683,12 @@
   "You don't have matched characters to fulfill this trade.": {
     "one": "You don't have matched characters to fulfill this trade."
   },
+  "You haven't selected any matched item for the request": {
+    "one": "You haven't selected any matched item for the request"
+  },
+  "You haven't selected any matched characters for the request": {
+    "one": "You haven't selected any matched characters for the request"
+  },
   "pylon amount shouldn't be zero to be a valid trading": {
     "one": "Pylon amount shouldn't be zero to be a valid trading"
   },

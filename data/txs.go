@@ -439,9 +439,9 @@ func CreateSellCharacterTrdReq(user User, activeCharacter Character, pylonEnterV
 }
 
 // FulfillTrade is a function to create fulfill trade by id
-func FulfillTrade(user User, tradeID string) (string, error) {
+func FulfillTrade(user User, tradeID string, itemIDs []string) (string, error) {
 	sdkAddr := GetSDKAddrFromUserName(user.GetUserName())
-	ffTrdMsg := msgs.NewMsgFulfillTrade(tradeID, sdkAddr, []string{})
+	ffTrdMsg := msgs.NewMsgFulfillTrade(tradeID, sdkAddr, itemIDs)
 
 	return SendTxMsg(user, ffTrdMsg)
 }

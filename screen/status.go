@@ -188,6 +188,8 @@ const (
 
 	// ShowBuyItemTrdReqs describes the listing page for buying item trade requests
 	ShowBuyItemTrdReqs = "SHW_BUYITM_TRDREQS"
+	// SelectFitBuyItemTrdReq describes the page for selecting buy item trade request
+	SelectFitBuyItemTrdReq = "SEL_FIT_BUYITM_TRDREQ"
 	// CreateBuyItemTrdReqSelectItem describes the item buying trade request creation page's select item
 	CreateBuyItemTrdReqSelectItem = "CR8_BUYITM_TRDREQ_SEL_ITEM"
 	// CreateBuyItmTrdReqEnterPylonValue describes the item buying trade request creation page's enter pylon amount
@@ -218,6 +220,8 @@ const (
 
 	// ShowBuyChrTrdReqs describes the listing page for buying character trade requests
 	ShowBuyChrTrdReqs = "SHW_BUYCHR_TRDREQS"
+	// SelectFitBuyChrTrdReq describes the page for selecting buy item trade request
+	SelectFitBuyChrTrdReq = "SEL_FIT_BUYCHR_TRDREQ"
 	// CreateBuyChrTrdReqSelectChr describes the character buy trade request creation page's select character
 	CreateBuyChrTrdReqSelectChr = "CR8_BUYCHR_TRDREQ_SEL_CHR"
 	// CreateBuyChrTrdReqEnterPylonValue describes the character buy trade request creation page's enter pylon amount

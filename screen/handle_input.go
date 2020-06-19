@@ -289,8 +289,8 @@ func (screen *GameScreen) MoveToNextStep() {
 		RsltSellChrTrdReqCreation:  ShowSellChrTrdReqs,
 		RsltFulfillSellChrTrdReq:   ShowSellChrTrdReqs,
 		RsltBuyChrTrdReqCreation:   ShowBuyChrTrdReqs,
-		RsltCancelTrdReq:           ShowLocation,
 		RsltFulfillBuyChrTrdReq:    ShowBuyChrTrdReqs,
+		RsltCancelTrdReq:           ShowLocation,
 		RsltRenameChr:              SelectRenameChr,
 		RsltSelectActiveChr:        SelectActiveChr,
 		RsltBuyItem:                SelectBuyItem,
@@ -353,13 +353,15 @@ func (screen *GameScreen) MoveToPrevStep() {
 		RsltFulfillSellGoldTrdReq:           ShowGoldSellTrdReqs,
 		RsltSellItemTrdReqCreation:          ShowSellItemTrdReqs,
 		RsltFulfillSellItemTrdReq:           ShowSellItemTrdReqs,
+		SelectFitBuyItemTrdReq:              ShowBuyItemTrdReqs,
 		RsltBuyItemTrdReqCreation:           ShowBuyItemTrdReqs,
 		RsltFulfillBuyItemTrdReq:            ShowBuyItemTrdReqs,
 		RsltSellChrTrdReqCreation:           ShowSellChrTrdReqs,
 		RsltFulfillSellChrTrdReq:            ShowSellChrTrdReqs,
+		SelectFitBuyChrTrdReq:               ShowBuyChrTrdReqs,
 		RsltBuyChrTrdReqCreation:            ShowBuyChrTrdReqs,
-		RsltCancelTrdReq:                    ShowLocation,
 		RsltFulfillBuyChrTrdReq:             ShowBuyChrTrdReqs,
+		RsltCancelTrdReq:                    ShowLocation,
 		RsltRenameChr:                       SelectRenameChr,
 		RsltSelectActiveChr:                 SelectActiveChr,
 		RsltBuyItem:                         SelectBuyItem,
@@ -610,10 +612,38 @@ func (screen *GameScreen) HandleThirdClassKeyEnterEvent() bool {
 		case ShowGoldSellTrdReqs:
 			screen.RunSelectedLoudSellTrdReq()
 		case ShowBuyItemTrdReqs:
+			if len(loud.ItemBuyTrdReqs) <= screen.activeLine || screen.activeLine < 0 {
+				screen.txFailReason = loud.Localize("you haven't selected any buy item request")
+				screen.SetScreenStatusAndRefresh(RsltFulfillBuyItemTrdReq)
+			} else {
+				atir := loud.ItemBuyTrdReqs[screen.activeLine]
+				screen.activeItemTrdReq = atir
+				if len(screen.user.GetMatchedItems(atir.TItem)) == 0 {
+					screen.actionText = loud.Sprintf("You don't have matched items to fulfill this trade.")
+					screen.Render()
+				} else {
+					screen.SetScreenStatusAndRefresh(SelectFitBuyItemTrdReq)
+				}
+			}
+		case SelectFitBuyItemTrdReq:
 			screen.RunSelectedItemBuyTrdReq()
 		case ShowSellItemTrdReqs:
 			screen.RunSelectedItemSellTrdReq()
 		case ShowBuyChrTrdReqs:
+			if len(loud.CharacterBuyTrdReqs) <= screen.activeLine || screen.activeLine < 0 {
+				screen.txFailReason = loud.Localize("you haven't selected any buy character request")
+				screen.SetScreenStatusAndRefresh(RsltFulfillBuyChrTrdReq)
+			} else {
+				cbtr := loud.CharacterBuyTrdReqs[screen.activeLine]
+				screen.activeItemTrdReq = cbtr
+				if len(screen.user.GetMatchedCharacters(cbtr.TCharacter)) == 0 {
+					screen.actionText = loud.Sprintf("You don't have matched characters to fulfill this trade.")
+					screen.Render()
+				} else {
+					screen.SetScreenStatusAndRefresh(SelectFitBuyChrTrdReq)
+				}
+			}
+		case SelectFitBuyChrTrdReq:
 			screen.RunSelectedCharacterBuyTrdReq()
 		case ShowSellChrTrdReqs:
 			screen.RunSelectedCharacterSellTrdReq()
