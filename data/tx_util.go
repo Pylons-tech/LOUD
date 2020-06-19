@@ -589,7 +589,10 @@ func ExecuteRecipe(user User, rcpName string, itemIDs []string) (string, error) 
 	addr := pylonSDK.GetAccountAddr(user.GetUserName(), nil)
 	sdkAddr, _ := sdk.AccAddressFromBech32(addr)
 	execMsg := msgs.NewMsgExecuteRecipe(rcpID, sdkAddr, itemIDs)
-	txhash := pylonSDK.TestTxWithMsgWithNonce(t, execMsg, user.GetUserName(), false)
+	txhash, err := pylonSDK.TestTxWithMsgWithNonce(t, execMsg, user.GetUserName(), false)
+	if err != nil {
+		return "", fmt.Errorf("error sending transaction; %+v", err)
+	}
 	user.SetLastTransaction(txhash, rcpName)
 	return txhash, nil
 }
@@ -740,7 +743,10 @@ func GetSDKAddrFromUserName(username string) sdk.AccAddress {
 // SendTxMsg returns transaction from a user
 func SendTxMsg(user User, txMsg sdk.Msg) (string, error) {
 	t := GetTestingT()
-	txhash := pylonSDK.TestTxWithMsgWithNonce(t, txMsg, user.GetUserName(), false)
+	txhash, err := pylonSDK.TestTxWithMsgWithNonce(t, txMsg, user.GetUserName(), false)
+	if err != nil {
+		return "", fmt.Errorf("error sending transaction; %+v", err)
+	}
 	user.SetLastTransaction(txhash, txMsg.Type())
 	return txhash, nil
 }
