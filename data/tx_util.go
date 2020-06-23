@@ -715,7 +715,7 @@ func GetItemInputsFromCharacterSpec(chspec CharacterSpec) types.TradeItemInputLi
 		CookbookID: GameCookbookID,
 	}
 	if chspec.Special != NoSpecial {
-		ii.Longs = append(ii.Longs, types.LongInputParam{
+		ii.ItemInput.Longs = append(ii.ItemInput.Longs, types.LongInputParam{
 			Key: "Special", MinValue: chspec.Special, MaxValue: chspec.Special})
 	}
 	itemInputs = append(itemInputs, ii)

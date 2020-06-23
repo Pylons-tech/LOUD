@@ -618,7 +618,9 @@ func (screen *GameScreen) HandleThirdClassKeyEnterEvent() bool {
 			} else {
 				atir := loud.ItemBuyTrdReqs[screen.activeLine]
 				screen.activeItemTrdReq = atir
-				if len(screen.user.GetMatchedItems(atir.TItem)) == 0 {
+				if atir.IsMyTrdReq { // cancel the trade
+					screen.RunSelectedItemBuyTrdReq()
+				} else if len(screen.user.GetMatchedItems(atir.TItem)) == 0 {
 					screen.actionText = loud.Sprintf("You don't have matched items to fulfill this trade.")
 					screen.Render()
 				} else {
@@ -636,7 +638,9 @@ func (screen *GameScreen) HandleThirdClassKeyEnterEvent() bool {
 			} else {
 				cbtr := loud.CharacterBuyTrdReqs[screen.activeLine]
 				screen.activeItemTrdReq = cbtr
-				if len(screen.user.GetMatchedCharacters(cbtr.TCharacter)) == 0 {
+				if cbtr.IsMyTrdReq { // cancel the trade
+					screen.RunSelectedCharacterBuyTrdReq()
+				} else if len(screen.user.GetMatchedCharacters(cbtr.TCharacter)) == 0 {
 					screen.actionText = loud.Sprintf("You don't have matched characters to fulfill this trade.")
 					screen.Render()
 				} else {

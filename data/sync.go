@@ -162,7 +162,7 @@ func SyncFromNode(user User) {
 			} else if itemInputLen > 0 { // buy item trade
 				MinLevel := 0
 				MaxLevel := 0
-				firstItemInput := tradeItem.ItemInputs[0]
+				firstItemInput := tradeItem.ItemInputs[0].ItemInput
 				if len(firstItemInput.Longs) > 0 {
 					MinLevel = firstItemInput.Longs[0].MinValue
 					MaxLevel = firstItemInput.Longs[0].MaxValue

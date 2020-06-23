@@ -172,13 +172,13 @@ func (screen *GameScreen) RunSelectedLoudBuyTrdReq() {
 		screen.SetScreenStatusAndRefresh(RsltFulfillBuyGoldTrdReq)
 	} else {
 		screen.activeTrdReq = loud.BuyTrdReqs[screen.activeLine]
-		if screen.user.GetGold() < screen.activeTrdReq.Amount {
-			screen.actionText = loud.Sprintf("You don't have enough gold to fulfill this trade.")
-			screen.Render()
-		} else if screen.activeTrdReq.IsMyTrdReq {
+		if screen.activeTrdReq.IsMyTrdReq {
 			screen.RunTxProcess(WaitCancelTrdReq, RsltCancelTrdReq, func() (string, error) {
 				return loud.CancelTrade(screen.user, screen.activeTrdReq.ID)
 			})
+		} else if screen.user.GetGold() < screen.activeTrdReq.Amount {
+			screen.actionText = loud.Sprintf("You don't have enough gold to fulfill this trade.")
+			screen.Render()
 		} else {
 			screen.RunTxProcess(WaitFulfillBuyGoldTrdReq, RsltFulfillBuyGoldTrdReq, func() (string, error) {
 				return loud.FulfillTrade(screen.user, screen.activeTrdReq.ID, []string{})
@@ -194,13 +194,13 @@ func (screen *GameScreen) RunSelectedLoudSellTrdReq() {
 		screen.SetScreenStatusAndRefresh(RsltFulfillSellGoldTrdReq)
 	} else {
 		screen.activeTrdReq = loud.SellTrdReqs[screen.activeLine]
-		if screen.user.GetPylonAmount() < screen.activeTrdReq.Total {
-			screen.actionText = loud.Sprintf("You don't have enough pylons to fulfill this trade.")
-			screen.Render()
-		} else if screen.activeTrdReq.IsMyTrdReq {
+		if screen.activeTrdReq.IsMyTrdReq {
 			screen.RunTxProcess(WaitCancelTrdReq, RsltCancelTrdReq, func() (string, error) {
 				return loud.CancelTrade(screen.user, screen.activeTrdReq.ID)
 			})
+		} else if screen.user.GetPylonAmount() < screen.activeTrdReq.Total {
+			screen.actionText = loud.Sprintf("You don't have enough pylons to fulfill this trade.")
+			screen.Render()
 		} else {
 			screen.RunTxProcess(WaitFulfillSellGoldTrdReq, RsltFulfillSellGoldTrdReq, func() (string, error) {
 				return loud.FulfillTrade(screen.user, screen.activeTrdReq.ID, []string{})
@@ -239,13 +239,13 @@ func (screen *GameScreen) RunSelectedItemSellTrdReq() {
 	} else {
 		sstr := loud.ItemSellTrdReqs[screen.activeLine]
 		screen.activeItemTrdReq = sstr
-		if screen.user.GetPylonAmount() < sstr.Price {
-			screen.actionText = loud.Sprintf("You don't have enough pylons to fulfill this trade.")
-			screen.Render()
-		} else if sstr.IsMyTrdReq {
+		if sstr.IsMyTrdReq {
 			screen.RunTxProcess(WaitCancelTrdReq, RsltCancelTrdReq, func() (string, error) {
 				return loud.CancelTrade(screen.user, sstr.ID)
 			})
+		} else if screen.user.GetPylonAmount() < sstr.Price {
+			screen.actionText = loud.Sprintf("You don't have enough pylons to fulfill this trade.")
+			screen.Render()
 		} else {
 			screen.RunTxProcess(WaitFulfillSellItemTrdReq, RsltFulfillSellItemTrdReq, func() (string, error) {
 				return loud.FulfillTrade(screen.user, sstr.ID, []string{})
@@ -284,13 +284,13 @@ func (screen *GameScreen) RunSelectedCharacterSellTrdReq() {
 	} else {
 		cstr := loud.CharacterSellTrdReqs[screen.activeLine]
 		screen.activeItemTrdReq = cstr
-		if screen.user.GetPylonAmount() < cstr.Price {
-			screen.actionText = loud.Sprintf("You don't have enough pylons to fulfill this trade.")
-			screen.Render()
-		} else if cstr.IsMyTrdReq {
+		if cstr.IsMyTrdReq {
 			screen.RunTxProcess(WaitCancelTrdReq, RsltCancelTrdReq, func() (string, error) {
 				return loud.CancelTrade(screen.user, cstr.ID)
 			})
+		} else if screen.user.GetPylonAmount() < cstr.Price {
+			screen.actionText = loud.Sprintf("You don't have enough pylons to fulfill this trade.")
+			screen.Render()
 		} else {
 			screen.RunTxProcess(WaitFulfillSellChrTrdReq, RsltFulfillSellChrTrdReq, func() (string, error) {
 				return loud.FulfillTrade(screen.user, cstr.ID, []string{})
