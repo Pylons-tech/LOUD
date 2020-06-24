@@ -66,6 +66,12 @@ const (
 	RcpFightTroll = "LOUD's fight with troll with a sword recipe"
 	// RcpFightGiant is a recipe to fight giant
 	RcpFightGiant = "LOUD's fight with giant with a sword recipe" // 🗿
+	// RcpFightFireGiant is a recipe to fight gaint for fire bonus
+	RcpFightFireGiant = "LOUD's fight with giant with a sword for fire bonus recipe"
+	// RcpFightIceGiant is a recipe to fight gaint for ice bonus
+	RcpFightIceGiant = "LOUD's fight with giant with a sword for ice bonus recipe"
+	// RcpFightAcidGiant is a recipe to fight gaint for acid bonus
+	RcpFightAcidGiant = "LOUD's fight with giant with a sword for acid bonus recipe"
 	// RcpFightDragonFire is a recipe to fight fire dragon
 	RcpFightDragonFire = "LOUD's fight with fire dragon with an iron sword recipe"
 	// RcpFightDragonIce is a recipe to fight ice dragon
@@ -95,6 +101,9 @@ var RcpIDs map[string]string = map[string]string{
 
 	RcpHuntRabbits:       "LOUD-hunt-rabbits-with-no-weapon-recipe-v0.1.0-1589853709",
 	RcpFightGiant:        "LOUD-fight-giant-with-iron-sword-recipe-v0.1.0-1589853709",
+	RcpFightFireGiant:    "LOUD-fight-giant-with-iron-sword-for-fire-bonus-recipe-v0.1.0-1589853709",
+	RcpFightIceGiant:     "LOUD-fight-giant-with-iron-sword-for-ice-bonus-recipe-v0.1.0-1589853709",
+	RcpFightAcidGiant:    "LOUD-fight-giant-with-iron-sword-for-acid-bonus-recipe-v0.1.0-1589853709",
 	RcpFightGoblin:       "LOUD-fight-goblin-with-a-sword-recipe-v0.1.0-1589853709",
 	RcpFightTroll:        "LOUD-fight-troll-with-a-sword-recipe-v0.1.0-1589853709",
 	RcpFightWolf:         "LOUD-fight-wolf-with-a-sword-recipe-v0.1.0-1589853709",

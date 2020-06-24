@@ -84,14 +84,14 @@ func (screen *GameScreen) RunHuntRabbits() {
 }
 
 // RunFightGiant execute the giant fight process
-func (screen *GameScreen) RunFightGiant() {
+func (screen *GameScreen) RunFightGiant(tarBonus int) {
 	if len(screen.user.InventoryIronSwords()) == 0 {
 		screen.actionText = loud.Sprintf("You can't fight giant without iron sword.")
 		screen.Render()
 		return
 	}
 	screen.RunTxProcess(WaitFightGiant, RsltFightGiant, func() (string, error) {
-		return loud.FightGiant(screen.user)
+		return loud.FightGiant(screen.user, tarBonus)
 	})
 }
 

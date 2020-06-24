@@ -50,6 +50,9 @@
   "help": {
     "one": "1) About\n2) Game Objective\n3) Navigation\n4) Pages layout\n5) Game rules\n6) How it works\n7) Pylons central\n8) Upcoming releases\n9) Support\n"
   },
+  "confirm fight giant cmds": {
+    "one": "1) Fire Giant\n2) Ice Giant\n3) Acid Giant\n"
+  },
   "go to home": {
     "one": "H)ome"
   },

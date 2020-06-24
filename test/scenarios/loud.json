@@ -298,6 +298,66 @@
         }
     },
     {
+        "ID": "CREATE_FIGHT_GIANT_FOR_FIRE_BONUS_RECIPE",
+        "runAfter": {
+            "precondition": ["CREATE_LOUD_COOKBOOK"],
+            "blockWait": 0
+        },
+        "action": "create_recipe",
+        "paramsRef": "./recipes/fight_giant_for_fire_bonus.json",
+        "output": {
+            "txResult": {
+                "status": "Success"
+            },
+            "property": [
+                {
+                    "owner": "eugen",
+                    "recipes": ["LOUD's fight with giant with a sword for fire bonus recipe"]
+                }
+            ]
+        }
+    },
+    {
+        "ID": "CREATE_FIGHT_GIANT_FOR_ICE_BONUS_RECIPE",
+        "runAfter": {
+            "precondition": ["CREATE_LOUD_COOKBOOK"],
+            "blockWait": 0
+        },
+        "action": "create_recipe",
+        "paramsRef": "./recipes/fight_giant_for_ice_bonus.json",
+        "output": {
+            "txResult": {
+                "status": "Success"
+            },
+            "property": [
+                {
+                    "owner": "eugen",
+                    "recipes": ["LOUD's fight with giant with a sword for ice bonus recipe"]
+                }
+            ]
+        }
+    },
+    {
+        "ID": "CREATE_FIGHT_GIANT_FOR_ACID_BONUS_RECIPE",
+        "runAfter": {
+            "precondition": ["CREATE_LOUD_COOKBOOK"],
+            "blockWait": 0
+        },
+        "action": "create_recipe",
+        "paramsRef": "./recipes/fight_giant_for_acid_bonus.json",
+        "output": {
+            "txResult": {
+                "status": "Success"
+            },
+            "property": [
+                {
+                    "owner": "eugen",
+                    "recipes": ["LOUD's fight with giant with a sword for acid bonus recipe"]
+                }
+            ]
+        }
+    },
+    {
         "ID": "CREATE_FIGHT_GOBLIN_WITH_SWORD_RECIPE",
         "runAfter": {
             "precondition": ["CREATE_LOUD_COOKBOOK"],

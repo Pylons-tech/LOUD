@@ -253,7 +253,7 @@ func (screen *GameScreen) MoveToNextStep() {
 		screen.RunFightTroll()
 		return
 	case ConfirmFightGiant:
-		screen.RunFightGiant()
+		screen.RunFightGiant(loud.NoSpecial)
 		return
 	case ConfirmFightDragonFire:
 		screen.RunFightDragonFire()
@@ -525,6 +525,10 @@ func (screen *GameScreen) HandleThirdClassInputKeys(input termbox.Event) bool {
 		return screen.HandleThirdClassKeyEnterEvent()
 	}
 
+	if screen.HandleFightGiantSpecialBonusInputKeys(input) {
+		return true
+	}
+
 	if input.Key == termbox.KeyBackspace2 || input.Key == termbox.KeyBackspace {
 		screen.MoveToPrevStep()
 	}
@@ -738,6 +742,26 @@ func (screen *GameScreen) HandleThirdClassKeyEnterEvent() bool {
 		return false
 	}
 	return true
+}
+
+// HandleFightGiantSpecialBonusInputKeys handles keys for confirm fight giant page except enter
+func (screen *GameScreen) HandleFightGiantSpecialBonusInputKeys(input termbox.Event) bool {
+	Key := string(input.Ch)
+	if screen.scrStatus != ConfirmFightGiant {
+		return false
+	}
+
+	tarBonusMap := map[string]int{
+		"1": loud.FireSpecial,
+		"2": loud.IceSpecial,
+		"3": loud.AcidSpecial,
+	}
+
+	if tarBonus, ok := tarBonusMap[Key]; ok {
+		screen.RunFightGiant(tarBonus)
+		return true
+	}
+	return false
 }
 
 // HandleTypingModeInputKeys handles input keys for input active mode screens

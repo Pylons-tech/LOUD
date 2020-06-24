@@ -1,0 +1,60 @@
+{
+    "ID": "LOUD-fight-giant-with-iron-sword-for-acid-bonus-recipe-v0.1.0-1589853709",
+    "CoinInputs":[{
+        "Coin": "pylon",
+        "Count": "5"
+    }],
+    "ItemInputRefs":[
+        "./recipes/item_input/character_nospecial.json",
+        "./recipes/item_input/iron_sword.json"
+    ],
+    "Entries":{
+        "CoinOutputs":[{
+            "Coin":"loudcoin",
+            "Count": "3000"
+        }],
+        "ItemOutputs":[
+            {
+                "ModifyItem": {
+                    "ItemInputRef": 0,
+                    "ModifyParamsRef": "./recipes/upgrader/character_after_fighting_giant.json"
+                }
+            },
+            {
+                "ModifyItem": {
+                    "ItemInputRef": 1 
+                }
+            },
+            {
+                "ModifyItem": {
+                    "ItemInputRef": 0,
+                    "ModifyParamsRef": "./recipes/upgrader/character_after_fighting_giant_get_acid_special.json"
+                }
+            }
+        ]
+    },
+    "Outputs": [
+        {
+            "ResultEntries": [],
+            "Weight": "5"
+        },
+        {
+            "ResultEntries": ["0", "1"],
+            "Weight": "3"
+        },
+        {
+            "ResultEntries": ["0", "1", "2"],
+            "Weight": "82"
+        },
+        {
+            "ResultEntries": ["0", "2", "3"],
+            "Weight": "10"
+        }
+    ],
+    "ExtraInfo":"",
+    "Sender":"eugen",
+    "Name": "LOUD's fight with giant with a sword for acid bonus recipe",
+    "CookbookID": "LOUD-v0.1.0-1589853709",
+    "Description": "this recipe is used to fight with giant with a sword for acid bonus.",
+    "BlockInterval":"0"
+}

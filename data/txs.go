@@ -118,8 +118,17 @@ func FightGoblin(user User) (string, error) { // 👺
 }
 
 // FightGiant is a function to execute fight giant recipe
-func FightGiant(user User) (string, error) { // 🗿
-	return RunHuntRecipe(TextGiant, RcpFightGiant, user)
+func FightGiant(user User, tarBonus int) (string, error) { // 🗿
+	rcp := RcpFightGiant
+	switch tarBonus {
+	case FireSpecial:
+		rcp = RcpFightFireGiant
+	case IceSpecial:
+		rcp = RcpFightIceGiant
+	case AcidSpecial:
+		rcp = RcpFightAcidGiant
+	}
+	return RunHuntRecipe(TextGiant, rcp, user)
 }
 
 // FightDragonFire is a function to execute fight fire dragon recipe

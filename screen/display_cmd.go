@@ -289,12 +289,16 @@ func (screen *GameScreen) renderUserCommands() {
 		ConfirmFightGoblin,
 		ConfirmFightTroll,
 		ConfirmFightWolf,
-		ConfirmFightGiant,
 		ConfirmFightDragonFire,
 		ConfirmFightDragonIce,
 		ConfirmFightDragonAcid,
 		ConfirmFightDragonUndead:
 		infoLines = infoLines.
+			appendGoOnBackCmds()
+	case ConfirmFightGiant:
+		cmdString := loud.Localize("confirm fight giant cmds")
+		infoLines = infoLines.
+			append(loud.ChunkText(cmdString, w)...).
 			appendGoOnBackCmds()
 	default:
 		if screen.IsHelpScreen() {
