@@ -12,6 +12,6 @@ var ShopCharacters = []Character{
 		Name:  TextTigerChr,
 		Level: 1,
 		XP:    1,
-		Price: 1, // in pylon
+		Price: 0, // in pylon
 	},
 }

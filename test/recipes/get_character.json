@@ -1,9 +1,6 @@
 {
     "ID": "LOUD-get-character-recipe-v0.1.0-1589853709",
-    "CoinInputs":[{
-        "Coin": "pylon",
-        "Count": "1"
-    }],
+    "CoinInputs":[],
     "ItemInputRefs": [],
     "Entries":{
         "CoinOutputs":[],
