@@ -25,6 +25,7 @@ import (
 	"github.com/Pylons-tech/pylons_sdk/x/pylons/types"
 	"github.com/cosmos/cosmos-sdk/crypto/keys/hd"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	logrus "github.com/sirupsen/logrus"
 	"github.com/tendermint/tendermint/crypto/secp256k1"
 	"github.com/tyler-smith/go-bip39"
 )
@@ -127,7 +128,11 @@ var AutomateInput bool = false
 // AutomateRunCnt refers to automatic keyboard input event generation count
 var AutomateRunCnt int = 0
 
+// LogLevel refers to custom logging level
+var LogLevel logrus.Level
+
 func init() {
+	var err error
 	cfg, cferr := cf.ReadConfig()
 	useRestTx = cfg.Terminal.UseRestTx
 	AutomateInput = cfg.Terminal.AutomateInput
@@ -147,9 +152,13 @@ func init() {
 	if useRestTx {
 		pylonSDK.CLIOpts.RestEndpoint = restEndpoint
 	}
+	LogLevel, err = logrus.ParseLevel(cfg.SDK.LogLevel)
 	log.WithFields(log.Fields{
-		"node_endpoint": customNode,
-		"rest_endpoint": useRestTx,
+		"node_endpoint":         customNode,
+		"rest_endpoint":         useRestTx,
+		"parsed_log_level":      LogLevel,
+		"raw_log_level":         cfg.SDK.LogLevel,
+		"log_level_parse_error": err,
 	}).Infoln("configure node")
 }
 
@@ -579,8 +588,9 @@ func ProcessTxResult(user User, txhash string) ([]byte, string) {
 
 // GetTestingT is a function to convert testing.T to cusomized testing.T
 func GetTestingT() *testing.T {
-	newT := testing.NewT(nil)
-	// this can be replaced with NewLogLevelT(nil, log.DebugLevel) to reduce log amount from TraceLevel
+	// testing.NewT(nil) default set to TraceLevel
+	// testing.NewLogLevelT(nil, log.DebugLevel) set custom level
+	newT := testing.NewLogLevelT(nil, LogLevel)
 	t := &newT
 	return t
 }

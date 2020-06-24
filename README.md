@@ -191,4 +191,11 @@ Once that's found you can debug the `debug` and `info` logs near that log and it
 
 To set log level directly for log file, you can update something like this, `testing.NewT(nil)` to `NewLogLevelT(nil, log.DebugLevel)`.
 
-We will add custom log level configuration at `config.yml` soon.
+Set custom logging level at `config.yml`.
+```
+# sdk configurations
+sdk:
+  # trace, debug, info, warn, error, fatal, panic
+  log_level: trace
+```
+For local work, use `config_local.yml`. I used to have the configuration issue when I configured on `config.yml` and did run app on local node.
