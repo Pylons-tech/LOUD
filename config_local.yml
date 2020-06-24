@@ -3,6 +3,8 @@ sdk:
   max_wait_block: 3
   rest_endpoint: http://localhost:1317
   cli_endpoint: tcp://localhost:26657
+  # trace, debug, info, warn, error, fatal, panic
+  log_level: debug
 
 # app configurations
 app:

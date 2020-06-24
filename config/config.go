@@ -12,6 +12,7 @@ type Config struct {
 		MaxWaitBlock int64  `yaml:"max_wait_block"`
 		RestEndpoint string `yaml:"rest_endpoint"`
 		CliEndpoint  string `yaml:"cli_endpoint"`
+		LogLevel     string `yaml:"log_level"`
 	} `yaml:"sdk"`
 	App struct {
 		DaemonTimeoutCommit int `yaml:"daemon_timeout_commit"`
