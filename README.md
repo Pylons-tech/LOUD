@@ -79,6 +79,10 @@ Run game with name "michael" and use rest endpoint for tx send
 ```
 make ARGS="michael -locald -userest" run
 ```
+Deployment of recipes with custom account, this replace account1 to eugen at runtime.
+```
+make fixture_tests ARGS="-locald --accounts=eugen"
+```
 ##### Development channel
 
 Development channel is available and to do automation process on development channel
@@ -141,6 +145,10 @@ make fixture_tests ARGS="-userest"
 Deployment of recipes with using existing cookbook (known cookbook)
 ```
 make fixture_tests ARGS="-use-known-cookbook"
+```
+Deployment of recipes with custom account, this replace account1 to eugen at runtime.
+```
+make fixture_tests ARGS="--accounts=eugen"
 ```
 
 Check if cookbook and all recipes are created by using

@@ -9,11 +9,12 @@ import (
 	inttestSDK "github.com/Pylons-tech/pylons_sdk/cmd/test"
 )
 
-var runSerialMode bool = false
-var connectLocalDaemon bool = false
-var useKnownCookbook bool = false
-var useRest bool = false
+var runSerialMode = false
+var connectLocalDaemon = false
+var useKnownCookbook = false
+var useRest = false
 var scenarios = ""
+var accounts = ""
 
 func init() {
 	flag.BoolVar(&runSerialMode, "runserial", false, "true/false value to check if test will be running in parallel")
@@ -21,6 +22,7 @@ func init() {
 	flag.BoolVar(&useRest, "userest", false, "use rest endpoint for Tx send")
 	flag.BoolVar(&useKnownCookbook, "use-known-cookbook", false, "use existing cookbook or not")
 	flag.StringVar(&scenarios, "scenarios", "", "custom scenario file names")
+	flag.StringVar(&accounts, "accounts", "", "custom account names")
 }
 
 func TestFixturesViaCLI(t *testing.T) {
@@ -39,6 +41,10 @@ func TestFixturesViaCLI(t *testing.T) {
 	scenarioFileNames := []string{}
 	if len(scenarios) > 0 {
 		scenarioFileNames = strings.Split(scenarios, ",")
+	}
+	fixturetestSDK.FixtureTestOpts.AccountNames = []string{}
+	if len(accounts) > 0 {
+		fixturetestSDK.FixtureTestOpts.AccountNames = strings.Split(accounts, ",")
 	}
 	fixturetestSDK.RunTestScenarios("scenarios", scenarioFileNames, t)
 }
