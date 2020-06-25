@@ -1,5 +1,5 @@
 {
-    "Doubles": [],
+    "Doubles": [{ "Key":"attack", "Value": "3.0" }],
     "Longs": [{ "Key": "level", "Value": "1" }],
     "Strings": [{ "Key": "Name","Value": "Wooden sword" }],
     "CookbookID": "LOUD-v0.1.0-1589853709",
