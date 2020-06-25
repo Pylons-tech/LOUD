@@ -307,6 +307,8 @@ func (screen *GameScreen) MoveToNextStep() {
 		} else if nextStatus == ConfirmFightGiant && activeCharacter.Special != loud.NoSpecial {
 			// go back to forest entrypoint when Special is not empty
 			screen.SetScreenStatus(ShowLocation)
+		} else if screen.scrStatus == RsltBuyChr && screen.txFailReason != "" {
+			screen.SetScreenStatus(SelectBuyChr)
 		} else if nextStatus == SelectActiveChr {
 			screen.user.SetLocation(loud.Home)
 			screen.SetScreenStatus(nextStatus)
