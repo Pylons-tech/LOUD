@@ -67,9 +67,9 @@ Create eugen account by running
 ```
 make ARGS="eugen -locald" run
 ```
-Create cookbook and recipes by running
+Create cookbook and recipes with eugen account in test keyring-backend by running
 ```
-make fixture_tests ARGS="-locald"
+make fixture_tests ARGS="-locald --accounts=eugen"
 ```
 Run game with name "michael"
 ```
@@ -80,9 +80,6 @@ Run game with name "michael" and use rest endpoint for tx send
 make ARGS="michael -locald -userest" run
 ```
 Deployment of recipes with custom account, this replace account1 to eugen at runtime.
-```
-make fixture_tests ARGS="-locald --accounts=eugen"
-```
 ##### Development channel
 
 Development channel is available and to do automation process on development channel
@@ -134,22 +131,19 @@ pylonscli query account $(pylonscli keys show -a eugen) --node tcp://35.223.7.2:
 Update cookbook name, id and recipe ID for correct version and timestamp.
 **Warn:** If cookbook name does not change, it's refering to old version of cookbook since now it's finding cookbooks by name.
 
-Deployment of recipes and cookbooks by running
+Deployment of recipes and cookbooks witu eugen account in test keyring-backend by running
 ```
-make fixture_tests ARGS="-runserial"
+make fixture_tests ARGS="-runserial --accounts=eugen"
 ```
 Deployment of recipes using REST endpoint.
 ```
-make fixture_tests ARGS="-userest"
+make fixture_tests ARGS="-userest --accounts=eugen"
 ```
 Deployment of recipes with using existing cookbook (known cookbook)
 ```
-make fixture_tests ARGS="-use-known-cookbook"
+make fixture_tests ARGS="-use-known-cookbook --accounts=eugen"
 ```
 Deployment of recipes with custom account, this replace account1 to eugen at runtime.
-```
-make fixture_tests ARGS="--accounts=eugen"
-```
 
 Check if cookbook and all recipes are created by using
 ```
