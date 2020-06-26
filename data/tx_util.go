@@ -605,7 +605,7 @@ func ExecuteRecipe(user User, rcpName string, itemIDs []string) (string, error) 
 	if !ok {
 		return "", errors.New("RecipeID does not exist for rcpName=" + rcpName)
 	}
-	addr := pylonSDK.GetAccountAddr(user.GetUserName(), nil)
+	addr := pylonSDK.GetAccountAddr(user.GetUserName(), GetTestingT())
 	sdkAddr, _ := sdk.AccAddressFromBech32(addr)
 	execMsg := msgs.NewMsgExecuteRecipe(rcpID, sdkAddr, itemIDs)
 	txhash, err := pylonSDK.TestTxWithMsgWithNonce(t, execMsg, user.GetUserName(), false)
@@ -751,7 +751,7 @@ func GetItemOutputFromActiveCharacter(activeCharacter Character) (types.ItemList
 
 // GetSDKAddrFromUserName convert key to sdk address
 func GetSDKAddrFromUserName(username string) sdk.AccAddress {
-	addr := pylonSDK.GetAccountAddr(username, nil)
+	addr := pylonSDK.GetAccountAddr(username, GetTestingT())
 	sdkAddr, err := sdk.AccAddressFromBech32(addr)
 	if err != nil {
 		log.Fatal("sdkAddr, err := sdk.AccAddressFromBech32(addr)", sdkAddr, err)

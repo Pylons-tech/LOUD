@@ -169,7 +169,7 @@ func BuyCharacter(user User, ch Character) (string, error) {
 // RenameCharacter is a function to execute rename character recipe
 func RenameCharacter(user User, ch Character, newName string) (string, error) {
 	t := GetTestingT()
-	addr := pylonSDK.GetAccountAddr(user.GetUserName(), nil)
+	addr := pylonSDK.GetAccountAddr(user.GetUserName(), GetTestingT())
 	sdkAddr, _ := sdk.AccAddressFromBech32(addr)
 	renameMsg := msgs.NewMsgUpdateItemString(ch.ID, "Name", newName, sdkAddr)
 	txhash, err := pylonSDK.TestTxWithMsgWithNonce(t, renameMsg, user.GetUserName(), false)
