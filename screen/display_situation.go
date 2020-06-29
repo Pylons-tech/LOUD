@@ -388,7 +388,11 @@ func (screen *GameScreen) TxResultSituationDesc() (string, FontType) {
 	font := RegularFont
 	resDescMap := map[PageStatus]string{
 		RsltBuyGoldTrdReqCreation:  "gold buy request creation",
+		RsltFulfillBuyGoldTrdReq:   "sell loud", // for fullfill direction is reversed
+		RsltCancelBuyGoldTrdReq:    "cancel buy gold trade",
 		RsltSellGoldTrdReqCreation: "gold sell request creation",
+		RsltFulfillSellGoldTrdReq:  "buy loud", // for fullfill direction is reversed
+		RsltCancelSellGoldTrdReq:   "cancel sell gold trade",
 		RsltSelectActiveChr:        "selecting active character",
 		RsltRenameChr:              "renaming character",
 		RsltBuyItem:                "buy item",
@@ -401,16 +405,17 @@ func (screen *GameScreen) TxResultSituationDesc() (string, FontType) {
 		RsltSellItem:               "sell item",
 		RsltUpgradeItem:            "upgrade item",
 		RsltSellItemTrdReqCreation: "sell item request creation",
+		RsltFulfillSellItemTrdReq:  "buy item", // for fullfill direction is reversed
+		RsltCancelSellItemTrdReq:   "cancel sell item trade",
 		RsltBuyItemTrdReqCreation:  "buy item request creation",
+		RsltFulfillBuyItemTrdReq:   "sell item", // for fullfill direction is reversed
+		RsltCancelBuyItemTrdReq:    "cancel buy item trade",
 		RsltSellChrTrdReqCreation:  "sell character request creation",
+		RsltFulfillSellChrTrdReq:   "buy character", // for fullfill direction is reversed
+		RsltCancelSellChrTrdReq:    "cancel sell character trade",
 		RsltBuyChrTrdReqCreation:   "buy character request creation",
-		RsltCancelTrdReq:           "cancel trade",
-		RsltFulfillBuyGoldTrdReq:   "sell loud", // for fullfill direction is reversed
-		RsltFulfillSellGoldTrdReq:  "buy loud",
-		RsltFulfillSellItemTrdReq:  "buy item",
-		RsltFulfillSellChrTrdReq:   "buy character",
-		RsltFulfillBuyItemTrdReq:   "sell item",
 		RsltFulfillBuyChrTrdReq:    "sell character",
+		RsltCancelBuyChrTrdReq:     "cancel buy character trade",
 	}
 	if screen.txFailReason != "" {
 		desc = loud.Localize(resDescMap[screen.scrStatus]+" failure reason") + ": " + loud.Localize(screen.txFailReason)
@@ -674,8 +679,18 @@ func (screen *GameScreen) TxResultSituationDesc() (string, FontType) {
 		case RsltBuyChrTrdReqCreation:
 			desc = loud.Localize("character buy request was successfully created")
 			desc += screen.buyCharacterSpecDesc(screen.activeChSpec, screen.pylonEnterValue)
-		case RsltCancelTrdReq:
-			desc = loud.Localize("successfully cancelled trade request")
+		case RsltCancelBuyGoldTrdReq:
+			desc = loud.Localize("successfully cancelled the buy gold trade request")
+		case RsltCancelSellGoldTrdReq:
+			desc = loud.Localize("successfully cancelled the sell gold trade request")
+		case RsltCancelBuyItemTrdReq:
+			desc = loud.Localize("successfully cancelled the buy item trade request")
+		case RsltCancelSellItemTrdReq:
+			desc = loud.Localize("successfully cancelled the sell item trade request")
+		case RsltCancelSellChrTrdReq:
+			desc = loud.Localize("successfully cancelled the sell character trade request")
+		case RsltCancelBuyChrTrdReq:
+			desc = loud.Localize("successfully cancelled the buy character trade request")
 		case RsltFulfillBuyGoldTrdReq:
 			request := screen.activeTrdReq
 			desc = loud.Sprintf("you have sold gold successfully from coin market at %.4f", request.Price)
@@ -772,8 +787,18 @@ func (screen *GameScreen) TxWaitSituationDesc(width int) ([]string, TextLines) {
 	case WaitBuyChrTrdReqCreation:
 		desc = loud.Localize("You are waiting for character buy request creation")
 		desc += screen.buyCharacterSpecDesc(screen.activeChSpec, screen.pylonEnterValue)
-	case WaitCancelTrdReq:
-		desc = loud.Localize("You are waiting for cancelling one of your trades")
+	case WaitCancelBuyGoldTrdReq:
+		desc = loud.Localize("You are waiting to cancel your buy gold trade")
+	case WaitCancelSellGoldTrdReq:
+		desc = loud.Localize("You are waiting to cancel your sell gold trade")
+	case WaitCancelBuyItemTrdReq:
+		desc = loud.Localize("You are waiting to cancel your buy item trade")
+	case WaitCancelSellItemTrdReq:
+		desc = loud.Localize("You are waiting to cancel your sell item trade")
+	case WaitCancelBuyChrTrdReq:
+		desc = loud.Localize("You are waiting to cancel your buy character trade")
+	case WaitCancelSellChrTrdReq:
+		desc = loud.Localize("You are waiting to cancel your sell character trade")
 	// For FULFILL trades, msg should be reversed, since user is opposite
 	case WaitFulfillSellItemTrdReq:
 		request := screen.activeItemTrdReq.(loud.ItemSellTrdReq)

@@ -280,17 +280,22 @@ func (screen *GameScreen) MoveToNextStep() {
 		RsltFightDragonUndead:      ConfirmFightDragonUndead,
 		RsltBuyGoldTrdReqCreation:  ShowGoldBuyTrdReqs,
 		RsltFulfillBuyGoldTrdReq:   ShowGoldBuyTrdReqs,
+		RsltCancelBuyGoldTrdReq:    ShowGoldBuyTrdReqs,
 		RsltSellGoldTrdReqCreation: ShowGoldSellTrdReqs,
 		RsltFulfillSellGoldTrdReq:  ShowGoldSellTrdReqs,
+		RsltCancelSellGoldTrdReq:   ShowGoldSellTrdReqs,
 		RsltSellItemTrdReqCreation: ShowSellItemTrdReqs,
 		RsltFulfillSellItemTrdReq:  ShowSellItemTrdReqs,
+		RsltCancelSellItemTrdReq:   ShowSellItemTrdReqs,
 		RsltBuyItemTrdReqCreation:  ShowBuyItemTrdReqs,
 		RsltFulfillBuyItemTrdReq:   ShowBuyItemTrdReqs,
+		RsltCancelBuyItemTrdReq:    ShowBuyItemTrdReqs,
 		RsltSellChrTrdReqCreation:  ShowSellChrTrdReqs,
 		RsltFulfillSellChrTrdReq:   ShowSellChrTrdReqs,
+		RsltCancelSellChrTrdReq:    ShowSellChrTrdReqs,
 		RsltBuyChrTrdReqCreation:   ShowBuyChrTrdReqs,
 		RsltFulfillBuyChrTrdReq:    ShowBuyChrTrdReqs,
-		RsltCancelTrdReq:           ShowLocation,
+		RsltCancelBuyChrTrdReq:     ShowBuyChrTrdReqs,
 		RsltRenameChr:              SelectRenameChr,
 		RsltSelectActiveChr:        SelectActiveChr,
 		RsltBuyItem:                SelectBuyItem,
@@ -351,19 +356,24 @@ func (screen *GameScreen) MoveToPrevStep() {
 		RsltFightDragonUndead:               ConfirmFightDragonUndead,
 		RsltBuyGoldTrdReqCreation:           ShowGoldBuyTrdReqs,
 		RsltFulfillBuyGoldTrdReq:            ShowGoldBuyTrdReqs,
+		RsltCancelBuyGoldTrdReq:             ShowGoldBuyTrdReqs,
 		RsltSellGoldTrdReqCreation:          ShowGoldSellTrdReqs,
 		RsltFulfillSellGoldTrdReq:           ShowGoldSellTrdReqs,
+		RsltCancelSellGoldTrdReq:            ShowGoldSellTrdReqs,
 		RsltSellItemTrdReqCreation:          ShowSellItemTrdReqs,
 		RsltFulfillSellItemTrdReq:           ShowSellItemTrdReqs,
+		RsltCancelSellItemTrdReq:            ShowSellItemTrdReqs,
 		SelectFitBuyItemTrdReq:              ShowBuyItemTrdReqs,
 		RsltBuyItemTrdReqCreation:           ShowBuyItemTrdReqs,
 		RsltFulfillBuyItemTrdReq:            ShowBuyItemTrdReqs,
+		RsltCancelBuyItemTrdReq:             ShowBuyItemTrdReqs,
 		RsltSellChrTrdReqCreation:           ShowSellChrTrdReqs,
 		RsltFulfillSellChrTrdReq:            ShowSellChrTrdReqs,
+		RsltCancelSellChrTrdReq:             ShowSellChrTrdReqs,
 		SelectFitBuyChrTrdReq:               ShowBuyChrTrdReqs,
 		RsltBuyChrTrdReqCreation:            ShowBuyChrTrdReqs,
 		RsltFulfillBuyChrTrdReq:             ShowBuyChrTrdReqs,
-		RsltCancelTrdReq:                    ShowLocation,
+		RsltCancelBuyChrTrdReq:              ShowBuyChrTrdReqs,
 		RsltRenameChr:                       SelectRenameChr,
 		RsltSelectActiveChr:                 SelectActiveChr,
 		RsltBuyItem:                         SelectBuyItem,
@@ -614,9 +624,9 @@ func (screen *GameScreen) HandleThirdClassKeyEnterEvent() bool {
 	case loud.Home, loud.PylonsCentral, loud.Shop, loud.Forest:
 		switch screen.scrStatus {
 		case ShowGoldBuyTrdReqs:
-			screen.RunSelectedLoudBuyTrdReq()
+			screen.RunSelectedBuyGoldTrdReq()
 		case ShowGoldSellTrdReqs:
-			screen.RunSelectedLoudSellTrdReq()
+			screen.RunSelectedSellGoldTrdReq()
 		case ShowBuyItemTrdReqs:
 			if len(loud.ItemBuyTrdReqs) <= screen.activeLine || screen.activeLine < 0 {
 				screen.txFailReason = loud.Localize("you haven't selected any buy item request")

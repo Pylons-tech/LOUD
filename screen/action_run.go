@@ -164,8 +164,8 @@ func (screen *GameScreen) RunFightGoblin() {
 	})
 }
 
-// RunSelectedLoudBuyTrdReq execute the gold buy trading process
-func (screen *GameScreen) RunSelectedLoudBuyTrdReq() {
+// RunSelectedBuyGoldTrdReq execute the gold buy trading process
+func (screen *GameScreen) RunSelectedBuyGoldTrdReq() {
 	if len(loud.BuyTrdReqs) <= screen.activeLine || screen.activeLine < 0 {
 		// when activeLine is not refering to real request but when it is refering to nil request
 		screen.txFailReason = loud.Localize("you haven't selected any buy request")
@@ -173,7 +173,7 @@ func (screen *GameScreen) RunSelectedLoudBuyTrdReq() {
 	} else {
 		screen.activeTrdReq = loud.BuyTrdReqs[screen.activeLine]
 		if screen.activeTrdReq.IsMyTrdReq {
-			screen.RunTxProcess(WaitCancelTrdReq, RsltCancelTrdReq, func() (string, error) {
+			screen.RunTxProcess(WaitCancelBuyGoldTrdReq, RsltCancelBuyGoldTrdReq, func() (string, error) {
 				return loud.CancelTrade(screen.user, screen.activeTrdReq.ID)
 			})
 		} else if screen.user.GetGold() < screen.activeTrdReq.Amount {
@@ -187,15 +187,15 @@ func (screen *GameScreen) RunSelectedLoudBuyTrdReq() {
 	}
 }
 
-// RunSelectedLoudSellTrdReq execute the gold sell trading process
-func (screen *GameScreen) RunSelectedLoudSellTrdReq() {
+// RunSelectedSellGoldTrdReq execute the gold sell trading process
+func (screen *GameScreen) RunSelectedSellGoldTrdReq() {
 	if len(loud.SellTrdReqs) <= screen.activeLine || screen.activeLine < 0 {
 		screen.txFailReason = loud.Localize("you haven't selected any sell request")
 		screen.SetScreenStatusAndRefresh(RsltFulfillSellGoldTrdReq)
 	} else {
 		screen.activeTrdReq = loud.SellTrdReqs[screen.activeLine]
 		if screen.activeTrdReq.IsMyTrdReq {
-			screen.RunTxProcess(WaitCancelTrdReq, RsltCancelTrdReq, func() (string, error) {
+			screen.RunTxProcess(WaitCancelSellGoldTrdReq, RsltCancelSellGoldTrdReq, func() (string, error) {
 				return loud.CancelTrade(screen.user, screen.activeTrdReq.ID)
 			})
 		} else if screen.user.GetPylonAmount() < screen.activeTrdReq.Total {
@@ -214,7 +214,7 @@ func (screen *GameScreen) RunSelectedItemBuyTrdReq() {
 	atir := screen.activeItemTrdReq.(loud.ItemBuyTrdReq)
 
 	if atir.IsMyTrdReq {
-		screen.RunTxProcess(WaitCancelTrdReq, RsltCancelTrdReq, func() (string, error) {
+		screen.RunTxProcess(WaitCancelBuyItemTrdReq, RsltCancelBuyItemTrdReq, func() (string, error) {
 			return loud.CancelTrade(screen.user, atir.ID)
 		})
 	} else {
@@ -240,7 +240,7 @@ func (screen *GameScreen) RunSelectedItemSellTrdReq() {
 		sstr := loud.ItemSellTrdReqs[screen.activeLine]
 		screen.activeItemTrdReq = sstr
 		if sstr.IsMyTrdReq {
-			screen.RunTxProcess(WaitCancelTrdReq, RsltCancelTrdReq, func() (string, error) {
+			screen.RunTxProcess(WaitCancelSellItemTrdReq, RsltCancelSellItemTrdReq, func() (string, error) {
 				return loud.CancelTrade(screen.user, sstr.ID)
 			})
 		} else if screen.user.GetPylonAmount() < sstr.Price {
@@ -259,7 +259,7 @@ func (screen *GameScreen) RunSelectedCharacterBuyTrdReq() {
 	cbtr := screen.activeItemTrdReq.(loud.CharacterBuyTrdReq)
 
 	if cbtr.IsMyTrdReq {
-		screen.RunTxProcess(WaitCancelTrdReq, RsltCancelTrdReq, func() (string, error) {
+		screen.RunTxProcess(WaitCancelBuyChrTrdReq, RsltCancelBuyChrTrdReq, func() (string, error) {
 			return loud.CancelTrade(screen.user, cbtr.ID)
 		})
 	} else {
@@ -285,7 +285,7 @@ func (screen *GameScreen) RunSelectedCharacterSellTrdReq() {
 		cstr := loud.CharacterSellTrdReqs[screen.activeLine]
 		screen.activeItemTrdReq = cstr
 		if cstr.IsMyTrdReq {
-			screen.RunTxProcess(WaitCancelTrdReq, RsltCancelTrdReq, func() (string, error) {
+			screen.RunTxProcess(WaitCancelSellChrTrdReq, RsltCancelSellChrTrdReq, func() (string, error) {
 				return loud.CancelTrade(screen.user, cstr.ID)
 			})
 		} else if screen.user.GetPylonAmount() < cstr.Price {

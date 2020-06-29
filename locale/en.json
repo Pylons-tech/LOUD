@@ -545,8 +545,23 @@
   "character buy request was successfully created": {
     "one": "character buy request was successfully created"
   },
-  "successfully cancelled trade request": {
-    "one": "successfully cancelled trade request"
+  "successfully cancelled the buy gold trade request": {
+    "one": "successfully cancelled the buy gold trade request"
+  },
+  "successfully cancelled the sell gold trade request": {
+    "one": "successfully cancelled the sell gold trade request"
+  },
+  "successfully cancelled the buy item trade request": {
+    "one": "successfully cancelled the buy item trade request"
+  },
+  "successfully cancelled the sell item trade request": {
+    "one": "successfully cancelled the sell item trade request"
+  },
+  "successfully cancelled the buy character trade request": {
+    "one": "successfully cancelled the buy character trade request"
+  },
+  "successfully cancelled the sell character trade request": {
+    "one": "successfully cancelled the sell character trade request"
   },
   "you have bought item successfully from item/pylon market": {
     "one": "you have bought item successfully from item/Pylon market"
@@ -590,8 +605,23 @@
   "You are waiting for character buy request creation": {
     "one": "You are waiting to create a character buy request"
   },
-  "You are waiting for cancelling one of your trades": {
-    "one": "You are waiting to cancel one of your trades"
+  "You are waiting to cancel your buy gold trade": {
+    "one": "You are waiting to cancel your buy gold trade"
+  },
+  "You are waiting to cancel your sell gold trade": {
+    "one": "You are waiting to cancel your sell gold trade"
+  },
+  "You are waiting to cancel your sell item trade": {
+    "one": "You are waiting to cancel your sell item trade"
+  },
+  "You are waiting to cancel your buy item trade": {
+    "one": "You are waiting to cancel your buy item trade"
+  },
+  "You are waiting to cancel your buy character trade": {
+    "one": "You are waiting to cancel your buy character trade"
+  },
+  "You are waiting to cancel your sell character trade": {
+    "one": "You are waiting to cancel your sell character trade"
   },
   "You are buying item at %d": {
     "one": "You are buying an item at %d"

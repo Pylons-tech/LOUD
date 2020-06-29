@@ -155,6 +155,10 @@ const (
 	WaitFulfillBuyGoldTrdReq = "W8_FULFILL_BUY_LOUD_TRDREQ"
 	// RsltFulfillBuyGoldTrdReq describes the result page for fulfilling the buying gold trade request
 	RsltFulfillBuyGoldTrdReq = "RSLT_FULFILL_BUY_LOUD_TRDREQ"
+	// WaitCancelBuyGoldTrdReq describes the wait page to cancel trade request
+	WaitCancelBuyGoldTrdReq = "W8_CANCEL_BUY_GOLD_TRDREQ"
+	// RsltCancelBuyGoldTrdReq describes the result page to cancel trade request
+	RsltCancelBuyGoldTrdReq = "RSLT_CANCEL_BUY_GOLD_TRDREQ"
 
 	// ShowGoldSellTrdReqs describes the listing page for selling gold trade requests
 	ShowGoldSellTrdReqs = "SHW_LOUD_SELL_TRDREQS"
@@ -170,6 +174,10 @@ const (
 	WaitFulfillSellGoldTrdReq = "W8_FULFILL_SELL_LOUD_TRDREQ"
 	// RsltFulfillSellGoldTrdReq describes the result page for fulfilling the selling gold trade request
 	RsltFulfillSellGoldTrdReq = "RSLT_FULFILL_SELL_LOUD_TRDREQ"
+	// WaitCancelSellGoldTrdReq describes the wait page to cancel trade request
+	WaitCancelSellGoldTrdReq = "W8_CANCEL_SELL_GOLD_TRDREQ"
+	// RsltCancelSellGoldTrdReq describes the result page to cancel trade request
+	RsltCancelSellGoldTrdReq = "RSLT_CANCEL_SELL_GOLD_TRDREQ"
 
 	// ShowSellItemTrdReqs describes the listing page for selling item trade requests
 	ShowSellItemTrdReqs = "SHW_SELLITM_TRDREQS"
@@ -185,6 +193,10 @@ const (
 	WaitFulfillSellItemTrdReq = "W8_FULFILL_SELLITM_TRDREQ"
 	// RsltFulfillSellItemTrdReq describes the result page for fulfilling the selling item trade request
 	RsltFulfillSellItemTrdReq = "RSLT_FULFILL_SELLITM_TRDREQ"
+	// WaitCancelSellItemTrdReq describes the wait page to cancel trade request
+	WaitCancelSellItemTrdReq = "W8_CANCEL_SELLITM_TRDREQ"
+	// RsltCancelSellItemTrdReq describes the result page to cancel trade request
+	RsltCancelSellItemTrdReq = "RSLT_CANCEL_SELLITM_TRDREQ"
 
 	// ShowBuyItemTrdReqs describes the listing page for buying item trade requests
 	ShowBuyItemTrdReqs = "SHW_BUYITM_TRDREQS"
@@ -202,6 +214,10 @@ const (
 	WaitFulfillBuyItemTrdReq = "W8_FULFILL_BUYITM_TRDREQ"
 	// RsltFulfillBuyItemTrdReq describes the result page for fulfilling the buying item trade request
 	RsltFulfillBuyItemTrdReq = "RSLT_FULFILL_BUYITM_TRDREQ"
+	// WaitCancelBuyItemTrdReq describes the wait page to cancel trade request
+	WaitCancelBuyItemTrdReq = "W8_CANCEL_BUYITM_TRDREQ"
+	// RsltCancelBuyItemTrdReq describes the result page to cancel trade request
+	RsltCancelBuyItemTrdReq = "RSLT_CANCEL_BUYITM_TRDREQ"
 
 	// ShowSellChrTrdReqs describes the listing page for selling character trade requests
 	ShowSellChrTrdReqs = "SHW_SELLCHR_TRDREQS"
@@ -217,6 +233,10 @@ const (
 	WaitFulfillSellChrTrdReq = "W8_FULFILL_SELLCHR_TRDREQ"
 	// RsltFulfillSellChrTrdReq describes the result page for fulfilling the sell character trade request
 	RsltFulfillSellChrTrdReq = "RSLT_FULFILL_SELLCHR_TRDREQ"
+	// WaitCancelSellChrTrdReq describes the wait page to cancel trade request
+	WaitCancelSellChrTrdReq = "W8_CANCEL_SELLCHR_TRDREQ"
+	// RsltCancelSellChrTrdReq describes the result page to cancel trade request
+	RsltCancelSellChrTrdReq = "RSLT_CANCEL_SELLCHR_TRDREQ"
 
 	// ShowBuyChrTrdReqs describes the listing page for buying character trade requests
 	ShowBuyChrTrdReqs = "SHW_BUYCHR_TRDREQS"
@@ -234,11 +254,10 @@ const (
 	WaitFulfillBuyChrTrdReq = "W8_FULFILL_BUYCHR_TRDREQ"
 	// RsltFulfillBuyChrTrdReq describes the result page for fulfilling the buy character trade request
 	RsltFulfillBuyChrTrdReq = "RSLT_FULFILL_BUYCHR_TRDREQ"
-
-	// WaitCancelTrdReq describes the wait page to cancel trade request
-	WaitCancelTrdReq = "W8_CANCEL_TRDREQ"
-	// RsltCancelTrdReq describes the result page to cancel trade request
-	RsltCancelTrdReq = "RSLT_CANCEL_TRDREQ"
+	// WaitCancelBuyChrTrdReq describes the wait page to cancel trade request
+	WaitCancelBuyChrTrdReq = "W8_CANCEL_BUYCHR_TRDREQ"
+	// RsltCancelBuyChrTrdReq describes the result page to cancel trade request
+	RsltCancelBuyChrTrdReq = "RSLT_CANCEL_BUYCHR_TRDREQ"
 
 	// HelpAbout describes the help page about the game
 	HelpAbout = "HELP_ABOUT"
