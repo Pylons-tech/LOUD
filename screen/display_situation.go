@@ -110,6 +110,9 @@ func (screen *GameScreen) renderUserSituation() {
 			w,
 			func(idx int, request interface{}) (FontType, string) {
 				itr := request.(loud.ItemBuyTrdReq)
+				if itr.IsMyTrdReq {
+					return screen.GetDisabledFontByActiveLine(idx), "self"
+				}
 				if len(screen.user.GetMatchedItems(itr.TItem)) == 0 {
 					return screen.GetDisabledFontByActiveLine(idx), "noitem"
 				}
@@ -131,6 +134,9 @@ func (screen *GameScreen) renderUserSituation() {
 			w,
 			func(idx int, request interface{}) (FontType, string) {
 				isMyTrdReq, _, requestPrice := RequestInfo(request)
+				if isMyTrdReq {
+					return screen.GetDisabledFontByActiveLine(idx), "self"
+				}
 				if screen.user.GetPylonAmount() < requestPrice {
 					return screen.GetDisabledFontByActiveLine(idx), "pylonlack"
 				}
@@ -144,6 +150,9 @@ func (screen *GameScreen) renderUserSituation() {
 			w,
 			func(idx int, request interface{}) (FontType, string) {
 				isMyTrdReq, _, requestPrice := RequestInfo(request)
+				if isMyTrdReq {
+					return screen.GetDisabledFontByActiveLine(idx), "self"
+				}
 				if screen.user.GetPylonAmount() < requestPrice {
 					return screen.GetDisabledFontByActiveLine(idx), "pylonlack"
 				}
@@ -162,6 +171,9 @@ func (screen *GameScreen) renderUserSituation() {
 				// 	len(screen.user.GetMatchedCharacters(itr.TCharacter)),
 				// 	request.(loud.CharacterBuyTrdReq),
 				// 	screen.user.InventoryCharacters())
+				if itr.IsMyTrdReq {
+					return screen.GetDisabledFontByActiveLine(idx), "self"
+				}
 				if len(screen.user.GetMatchedCharacters(itr.TCharacter)) == 0 {
 					return screen.GetDisabledFontByActiveLine(idx), "nochr"
 				}

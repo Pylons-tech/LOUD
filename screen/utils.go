@@ -398,10 +398,10 @@ func (screen *GameScreen) renderItemTableLine(index int, text1 string) string {
 	return calcText
 }
 
-func (screen *GameScreen) renderItemTrdReqTableLine(text1 string, text2 string) string {
+func (screen *GameScreen) renderItemTrdReqTableLine(text1 string, text2 string, memo string) string {
 	text1 = loud.Localize(text1)
 	text2 = loud.Localize(text2)
-	calcText := "│" + centerText(text1, " ", 36) + "│" + centerText(text2, " ", 15) + "│"
+	calcText := "│" + centerText(text1, " ", 36) + "│" + centerText(text2, " ", 15) + "│" + centerText(memo, " ", 15) + "│"
 	return calcText
 }
 
