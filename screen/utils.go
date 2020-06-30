@@ -380,12 +380,12 @@ func formatByStructType(item interface{}) string {
 	}
 }
 
-func (screen *GameScreen) renderTRLine(text1 string, text2 string, text3 string) string {
+func (screen *GameScreen) renderTRLine(text1 string, text2 string, text3 string, memo string) string {
 	text1 = loud.Localize(text1)
 	text2 = loud.Localize(text2)
 	text3 = loud.Localize(text3)
 
-	calcText := "│" + centerText(text1, " ", 20) + "│" + centerText(text2, " ", 15) + "│" + centerText(text3, " ", 15) + "│"
+	calcText := "│" + centerText(text1, " ", 20) + "│" + centerText(text2, " ", 15) + "│" + centerText(text3, " ", 15) + "│" + centerText(memo, " ", 15) + "│"
 	return calcText
 }
 

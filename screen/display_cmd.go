@@ -229,7 +229,7 @@ func (screen *GameScreen) renderUserCommands() {
 				loud.ShopItems, screen.activeLine,
 				func(idx int, it interface{}) TextLine {
 					item := it.(loud.Item)
-					font := screen.getFontOfShopItem(idx, it.(loud.Item))
+					font, _ := screen.getFontOfShopItem(idx, it.(loud.Item))
 					bonusText := ""
 					contentStr := ""
 					switch {

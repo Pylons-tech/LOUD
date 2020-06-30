@@ -7,7 +7,7 @@ import (
 )
 
 // FontFuncType is a function to convert an object to font type
-type FontFuncType func(int, interface{}) FontType
+type FontFuncType func(int, interface{}) (FontType, string)
 
 func tableHeaderBodySeparator(TableSeparators []string, showFull bool) string {
 	if showFull {
@@ -23,7 +23,7 @@ func tableBodyFooterSeparator(TableSeparators []string, showFull bool) string {
 	return TableSeparators[4]
 }
 
-func (screen *GameScreen) calcTLFont(fontFunc FontFuncType, idx int, disabled bool, request interface{}) FontType {
+func (screen *GameScreen) calcTLFont(fontFunc FontFuncType, idx int, disabled bool, request interface{}) (FontType, string) {
 	if fontFunc != nil {
 		return fontFunc(idx, request)
 	}
@@ -64,11 +64,11 @@ func (screen *GameScreen) TableFooter(TableSeparators []string, endLine int, raw
 // renderTRTable convert trade request table params into TextLines
 func (screen *GameScreen) renderTRTable(rawArray []loud.TrdReq, width int, fontFunc FontFuncType) TextLines {
 	TableSeparators := []string{
-		"╭────────────────────┬───────────────┬───────────────╮",
-		"├────────────────────┼───────────────┼───────────────┤",
-		"├─────↓↓↓↓↓↓↓↓↓──────┼───↓↓↓↓↓↓↓↓↓───┼───↓↓↓↓↓↓↓↓↓───┤",
-		"╰────────────────────┴───────────────┴───────────────╯",
-		"╰──────↑↑↑↑↑↑↑↑↑─────┴───↑↑↑↑↑↑↑↑↑───┴───↑↑↑↑↑↑↑↑↑───╯",
+		"╭────────────────────┬───────────────┬───────────────┬───────────────╮",
+		"├────────────────────┼───────────────┼───────────────┼───────────────┤",
+		"├─────↓↓↓↓↓↓↓↓↓──────┼───↓↓↓↓↓↓↓↓↓───┼───↓↓↓↓↓↓↓↓↓───┼───────────────┤",
+		"╰────────────────────┴───────────────┴───────────────┴───────────────╯",
+		"╰──────↑↑↑↑↑↑↑↑↑─────┴───↑↑↑↑↑↑↑↑↑───┴───↑↑↑↑↑↑↑↑↑───┴───────────────╯",
 	}
 
 	_, startLine, endLine := screen.TableHeightWindow("", rawArray, width)
@@ -76,16 +76,17 @@ func (screen *GameScreen) renderTRTable(rawArray []loud.TrdReq, width int, fontF
 	tableLines := screen.TableHeader(
 		[]string{},
 		TableSeparators,
-		screen.renderTRLine("GOLD price (pylon)", "Amount (gold)", "Total (pylon)"),
+		screen.renderTRLine("GOLD price (pylon)", "Amount (gold)", "Total (pylon)", "memo"),
 		startLine,
 	)
 
 	for li, request := range rawArray[startLine:endLine] {
+		font, memo := screen.calcTLFont(fontFunc, startLine+li, request.IsMyTrdReq, request)
 		line := screen.renderTRLine(
 			fmt.Sprintf("%.4f", request.Price),
 			fmt.Sprintf("%d", request.Amount),
-			fmt.Sprintf("%d", request.Total))
-		font := screen.calcTLFont(fontFunc, startLine+li, request.IsMyTrdReq, request)
+			fmt.Sprintf("%d", request.Total),
+			memo)
 		tableLines = tableLines.appendF(line, font)
 	}
 	tableLines = tableLines.
@@ -116,7 +117,7 @@ func (screen *GameScreen) renderITRTable(header string, theads [2]string, rawArr
 		line := screen.renderItemTrdReqTableLine(
 			fmt.Sprintf("%s  ", formatByStructType(requestItem)),
 			fmt.Sprintf("%d", requestPrice))
-		font := screen.calcTLFont(fontFunc, startLine+li, isMyTrdReq, request)
+		font, _ := screen.calcTLFont(fontFunc, startLine+li, isMyTrdReq, request)
 		tableLines = tableLines.appendF(line, font)
 	}
 	tableLines = tableLines.
@@ -145,7 +146,7 @@ func (screen *GameScreen) renderITTable(header string, th string, rawArrayInterF
 		line := screen.renderItemTableLine(
 			startLine+li,
 			fmt.Sprintf("%s  ", formatByStructType(item)))
-		font := screen.calcTLFont(fontFunc, startLine+li, false, item)
+		font, _ := screen.calcTLFont(fontFunc, startLine+li, false, item)
 		tableLines = tableLines.appendF(line, font)
 	}
 	tableLines = tableLines.

@@ -79,20 +79,26 @@ func (screen *GameScreen) renderUserSituation() {
 	case ShowGoldBuyTrdReqs:
 		tableLines = screen.renderTRTable(
 			loud.BuyTrdReqs, w,
-			func(idx int, request interface{}) FontType {
+			func(idx int, request interface{}) (FontType, string) {
 				tr := request.(loud.TrdReq)
+				if tr.IsMyTrdReq {
+					return screen.GetDisabledFontByActiveLine(idx), "self"
+				}
 				if screen.user.GetGold() < tr.Amount {
-					return screen.GetDisabledFontByActiveLine(idx)
+					return screen.GetDisabledFontByActiveLine(idx), "goldlack"
 				}
 				return screen.getFontOfTableLine(idx, tr.IsMyTrdReq)
 			})
 	case ShowGoldSellTrdReqs:
 		tableLines = screen.renderTRTable(
 			loud.SellTrdReqs, w,
-			func(idx int, request interface{}) FontType {
+			func(idx int, request interface{}) (FontType, string) {
 				tr := request.(loud.TrdReq)
+				if tr.IsMyTrdReq {
+					return screen.GetDisabledFontByActiveLine(idx), "self"
+				}
 				if screen.user.GetPylonAmount() < tr.Total {
-					return screen.GetDisabledFontByActiveLine(idx)
+					return screen.GetDisabledFontByActiveLine(idx), "pylonlack"
 				}
 				return screen.getFontOfTableLine(idx, tr.IsMyTrdReq)
 			})
@@ -102,10 +108,10 @@ func (screen *GameScreen) renderUserSituation() {
 			[2]string{"Item", "Price (pylon)"},
 			loud.ItemBuyTrdReqs,
 			w,
-			func(idx int, request interface{}) FontType {
+			func(idx int, request interface{}) (FontType, string) {
 				itr := request.(loud.ItemBuyTrdReq)
 				if len(screen.user.GetMatchedItems(itr.TItem)) == 0 {
-					return screen.GetDisabledFontByActiveLine(idx)
+					return screen.GetDisabledFontByActiveLine(idx), "noitem"
 				}
 				return screen.getFontOfTableLine(idx, itr.IsMyTrdReq)
 			})
@@ -123,10 +129,10 @@ func (screen *GameScreen) renderUserSituation() {
 			[2]string{"Item", "Price (pylon)"},
 			loud.ItemSellTrdReqs,
 			w,
-			func(idx int, request interface{}) FontType {
+			func(idx int, request interface{}) (FontType, string) {
 				isMyTrdReq, _, requestPrice := RequestInfo(request)
 				if screen.user.GetPylonAmount() < requestPrice {
-					return screen.GetDisabledFontByActiveLine(idx)
+					return screen.GetDisabledFontByActiveLine(idx), "pylonlack"
 				}
 				return screen.getFontOfTableLine(idx, isMyTrdReq)
 			})
@@ -136,10 +142,10 @@ func (screen *GameScreen) renderUserSituation() {
 			[2]string{"Character", "Price (pylon)"},
 			loud.CharacterSellTrdReqs,
 			w,
-			func(idx int, request interface{}) FontType {
+			func(idx int, request interface{}) (FontType, string) {
 				isMyTrdReq, _, requestPrice := RequestInfo(request)
 				if screen.user.GetPylonAmount() < requestPrice {
-					return screen.GetDisabledFontByActiveLine(idx)
+					return screen.GetDisabledFontByActiveLine(idx), "pylonlack"
 				}
 				return screen.getFontOfTableLine(idx, isMyTrdReq)
 			})
@@ -150,14 +156,14 @@ func (screen *GameScreen) renderUserSituation() {
 			[2]string{"Character", "Price (pylon)"},
 			loud.CharacterBuyTrdReqs,
 			w,
-			func(idx int, request interface{}) FontType {
+			func(idx int, request interface{}) (FontType, string) {
 				itr := request.(loud.CharacterBuyTrdReq)
 				// log.Debugln("GetMatchedCharacters",
 				// 	len(screen.user.GetMatchedCharacters(itr.TCharacter)),
 				// 	request.(loud.CharacterBuyTrdReq),
 				// 	screen.user.InventoryCharacters())
 				if len(screen.user.GetMatchedCharacters(itr.TCharacter)) == 0 {
-					return screen.GetDisabledFontByActiveLine(idx)
+					return screen.GetDisabledFontByActiveLine(idx), "nochr"
 				}
 				return screen.getFontOfTableLine(idx, itr.IsMyTrdReq)
 			})
@@ -230,7 +236,7 @@ func (screen *GameScreen) renderUserSituation() {
 			"Shop items",
 			loud.ShopItems,
 			w,
-			func(idx int, item interface{}) FontType {
+			func(idx int, item interface{}) (FontType, string) {
 				return screen.getFontOfShopItem(idx, item.(loud.Item))
 			})
 	case SelectSellItem:

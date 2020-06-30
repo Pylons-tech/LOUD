@@ -132,20 +132,20 @@ func (screen *GameScreen) getFontByActiveIndex(idx int) FontType {
 	return font
 }
 
-func (screen *GameScreen) getFontOfTableLine(idx int, disabled bool) FontType {
-	font := RegularFont
+func (screen *GameScreen) getFontOfTableLine(idx int, disabled bool) (FontType, string) {
+	font, memo := RegularFont, "ok"
 	isActiveLine := screen.activeLine == idx
 	if isActiveLine && disabled {
-		font = BrownBoldFont
+		font, memo = BrownBoldFont, "disabled"
 	} else if isActiveLine {
 		font = BlueBoldFont
 	} else if disabled {
-		font = BrownFont
+		font, memo = BrownFont, "disabled"
 	}
-	return font
+	return font, memo
 }
 
-func (screen *GameScreen) getFontOfShopItem(idx int, item loud.Item) FontType {
+func (screen *GameScreen) getFontOfShopItem(idx int, item loud.Item) (FontType, string) {
 	font := RegularFont
 	switch {
 	case !screen.user.HasPreItemForAnItem(item): // ! preitem ok
@@ -161,5 +161,5 @@ func (screen *GameScreen) getFontOfShopItem(idx int, item loud.Item) FontType {
 			font = GreyBoldFont
 		}
 	}
-	return font
+	return font, ""
 }
