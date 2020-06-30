@@ -262,7 +262,13 @@ func (screen *GameScreen) renderUserSituation() {
 			"select upgrade item desc",
 			"Item",
 			screen.user.InventoryUpgradableItems(),
-			w, nil)
+			w, func(idx int, itemT interface{}) (FontType, string) {
+				item := itemT.(loud.Item)
+				if item.GetUpgradePrice() > screen.user.GetGold() {
+					return screen.GetDisabledFontByActiveLine(idx), "goldlack"
+				}
+				return screen.getFontOfTableLine(idx, false)
+			})
 	case SelectBuyChr:
 		tableLines = screen.renderITTable(
 			"select buy character desc",

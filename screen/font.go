@@ -146,12 +146,12 @@ func (screen *GameScreen) getFontOfTableLine(idx int, disabled bool) (FontType, 
 }
 
 func (screen *GameScreen) getFontOfShopItem(idx int, item loud.Item) (FontType, string) {
-	font := RegularFont
+	font, memo := RegularFont, ""
 	switch {
 	case !screen.user.HasPreItemForAnItem(item): // ! preitem ok
-		font = GreyFont
+		font, memo = GreyFont, "nopreitem"
 	case !(item.Price <= screen.user.GetGold()): // ! gold enough
-		font = GreyFont
+		font, memo = GreyFont, "goldlack"
 	}
 	if idx == screen.activeLine {
 		switch font {
@@ -161,5 +161,5 @@ func (screen *GameScreen) getFontOfShopItem(idx int, item loud.Item) (FontType, 
 			font = GreyBoldFont
 		}
 	}
-	return font, ""
+	return font, memo
 }

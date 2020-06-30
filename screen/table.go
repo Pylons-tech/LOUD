@@ -129,25 +129,25 @@ func (screen *GameScreen) renderITRTable(header string, theads [2]string, rawArr
 func (screen *GameScreen) renderITTable(header string, th string, rawArrayInterFace interface{}, width int, fontFunc FontFuncType) TextLines {
 	rawArray := InterfaceSlice(rawArrayInterFace)
 	TableSeparators := []string{
-		"╭────────────────────────────────────────────────────╮",
-		"├────────────────────────────────────────────────────┤",
-		"├──────────────────↓↓↓↓↓↓↓↓↓↓↓↓↓↓────────────────────┤",
-		"╰────────────────────────────────────────────────────╯",
-		"╰───────────────────↑↑↑↑↑↑↑↑↑↑↑↑↑↑───────────────────╯",
+		"╭────────────────────────────────────────────────────┬───────────────╮",
+		"├────────────────────────────────────────────────────┼───────────────┤",
+		"├──────────────────↓↓↓↓↓↓↓↓↓↓↓↓↓↓────────────────────┼───────────────┤",
+		"╰────────────────────────────────────────────────────┴───────────────╯",
+		"╰───────────────────↑↑↑↑↑↑↑↑↑↑↑↑↑↑───────────────────┴───────────────╯",
 	}
 	infoLines, startLine, endLine := screen.TableHeightWindow(header, rawArrayInterFace, width)
 	tableLines := screen.TableHeader(
 		infoLines,
 		TableSeparators,
-		screen.renderItemTableLine(-1, th),
+		screen.renderItemTableLine(-1, th, "memo"),
 		startLine,
 	)
 
 	for li, item := range rawArray[startLine:endLine] {
+		font, memo := screen.calcTLFont(fontFunc, startLine+li, false, item)
 		line := screen.renderItemTableLine(
 			startLine+li,
-			fmt.Sprintf("%s  ", formatByStructType(item)))
-		font, _ := screen.calcTLFont(fontFunc, startLine+li, false, item)
+			fmt.Sprintf("%s  ", formatByStructType(item)), memo)
 		tableLines = tableLines.appendF(line, font)
 	}
 	tableLines = tableLines.

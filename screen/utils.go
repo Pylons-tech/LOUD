@@ -389,12 +389,12 @@ func (screen *GameScreen) renderTRLine(text1 string, text2 string, text3 string,
 	return calcText
 }
 
-func (screen *GameScreen) renderItemTableLine(index int, text1 string) string {
+func (screen *GameScreen) renderItemTableLine(index int, text1 string, memo string) string {
 	text := loud.Localize(text1)
 	if index >= 0 {
 		text = fmt.Sprintf(" %d) %s", index+1, text)
 	}
-	calcText := "│" + fillSpace(text, 52) + "│"
+	calcText := "│" + fillSpace(text, 52) + "│" + fillSpace(memo, 15) + "│"
 	return calcText
 }
 
