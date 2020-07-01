@@ -18,8 +18,8 @@ import (
 
 	cf "github.com/Pylons-tech/LOUD/config"
 	"github.com/Pylons-tech/LOUD/log"
-	testing "github.com/Pylons-tech/pylons_sdk/cmd/fixtures_test/evtesting"
-	pylonSDK "github.com/Pylons-tech/pylons_sdk/cmd/test"
+	testing "github.com/Pylons-tech/pylons_sdk/cmd/evtesting"
+	pylonSDK "github.com/Pylons-tech/pylons_sdk/cmd/test_utils"
 	"github.com/Pylons-tech/pylons_sdk/x/pylons/handlers"
 	"github.com/Pylons-tech/pylons_sdk/x/pylons/msgs"
 	"github.com/Pylons-tech/pylons_sdk/x/pylons/types"
