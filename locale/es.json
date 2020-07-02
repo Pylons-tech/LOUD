@@ -30,7 +30,7 @@
     "one": "You are too poor to upgrade this item"
   },
   "home": {
-    "one": "1) Select your active character\n2) Change your character’s name\n"
+    "one": "1) Select your active character\n2) Change your character’s name\n3) Buy characters 🐧 \n"
   },
   "forest": {
     "one": "1) Rabbit(💰 1+)\n2) Goblin 👺 (💰 50)\n3) Wolf 🐺 (💰 1)\n4) Troll 👻 (💰 300)\n5) Giant 🗿 (💰 3000)\n6) Fire Dragon 🦐 (💰 20000)\n7) Ice Dragon 🦈 (💰 20000)\n8) Acid Dragon 🐊 (💰 20000)\n9) Undead Dragon 🐉 (💰 50000)\n"
@@ -39,7 +39,7 @@
     "one": "1) Comprar Artículos\n2) Vender Artículos\n3) Mejorar Artículos\n"
   },
   "pylons central": {
-    "one": "1) Buy characters 🐧 \n2) Buy 💰 5000 for 100 pylons\n3) Sell 💰  from orderbook / place order to buy 💰 \n4) Buy 💰  from orderbook / place order to sell 💰 \n5) Sell 🗡️  from orderbook / place order to buy 🗡️\n6) Buy 🗡️  from orderbook / place order to sell 🗡️\n7) Sell 🐧  from orderbook / place order to buy 🐧 \n8) Buy 🐧  from orderbook / place order to sell 🐧 \n"
+    "one": "1) Buy 💰 5000 for 100 pylons\n2) Sell 💰  from orderbook / place order to buy 💰 \n3) Buy 💰  from orderbook / place order to sell 💰 \n4) Sell 🗡️  from orderbook / place order to buy 🗡️\n5) Buy 🗡️  from orderbook / place order to sell 🗡️\n6) Sell 🐧  from orderbook / place order to buy 🐧 \n7) Buy 🐧  from orderbook / place order to sell 🐧 \n"
   },
   "settings": {
     "one": "Idioma:\n1) English\n2) Español\n"

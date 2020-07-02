@@ -87,6 +87,7 @@ func (screen *GameScreen) HandleInputKeyHomeEntryPoint(input termbox.Event) bool
 	tarStusMap := map[string]PageStatus{
 		"1": SelectActiveChr,
 		"2": SelectRenameChr,
+		"3": SelectBuyChr,
 	}
 
 	if newStus, ok := tarStusMap[Key]; ok {
@@ -107,14 +108,13 @@ func (screen *GameScreen) HandleInputKeyPylonsCentralEntryPoint(input termbox.Ev
 	Key := string(input.Ch)
 
 	tarStusMap := map[string]PageStatus{
-		"1": SelectBuyChr,
-		"2": WaitByGoldWithPylons,
-		"3": ShowGoldBuyTrdReqs,
-		"4": ShowGoldSellTrdReqs,
-		"5": ShowBuyItemTrdReqs,
-		"6": ShowSellItemTrdReqs,
-		"7": ShowBuyChrTrdReqs,
-		"8": ShowSellChrTrdReqs,
+		"1": WaitByGoldWithPylons,
+		"2": ShowGoldBuyTrdReqs,
+		"3": ShowGoldSellTrdReqs,
+		"4": ShowBuyItemTrdReqs,
+		"5": ShowSellItemTrdReqs,
+		"6": ShowBuyChrTrdReqs,
+		"7": ShowSellChrTrdReqs,
 	}
 
 	if newStus, ok := tarStusMap[Key]; ok {
