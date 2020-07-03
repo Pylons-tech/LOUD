@@ -41,6 +41,9 @@
   "pylons central": {
     "one": "1) Buy 💰 5000 for 100 pylons\n2) Sell 💰  from orderbook / place order to buy 💰 \n3) Buy 💰  from orderbook / place order to sell 💰 \n4) Sell 🗡️  from orderbook / place order to buy 🗡️\n5) Buy 🗡️  from orderbook / place order to sell 🗡️\n6) Sell 🐧  from orderbook / place order to buy 🐧 \n7) Buy 🐧  from orderbook / place order to sell 🐧 \n"
   },
+  "friends": {
+    "one": "1) Register a friend\n2) Remove a friend"
+  },
   "settings": {
     "one": "Idioma:\n1) English\n2) Español\n"
   },
@@ -64,6 +67,9 @@
   },
   "go to pylons central": {
     "one": "Pylons C)entral"
+  },
+  "go to friends": {
+    "one": "Fr)iends"
   },
   "go to settings": {
     "one": "Ajust)es"
@@ -91,6 +97,9 @@
   },
   "pylons central desc": {
     "one": "Turn Pylons into useful things. Like pretend gold. Yes! This is a good use of your valuable Pylons."
+  },
+  "friends desc": {
+    "one": "Find more interests with friends."
   },
   "settings desc": {
     "one": "Ajustes"
@@ -473,6 +482,9 @@
   "Please enter new character's name": {
     "one": "Write the new name below. We won’t judge you. It’s probably fine. Note. You spend Pylons to rename your character."
   },
+  "Please enter your friend's name": {
+    "one": "Please enter your friend's name"
+  },
   "Please enter gold amount to sell (should be integer value)": {
     "one": "Please enter gold amount to sell (should be integer value)"
   },
@@ -502,6 +514,9 @@
   },
   "You have successfully updated character's name to %s!": {
     "one": "You have successfully updated character's name to %s!"
+  },
+  "You have successfully registered your friend %s as %s": {
+    "one": "You have successfully registered your friend %s as %s"
   },
   "Your %s character is dead while following rabbits accidently": {
     "one": "Your character accidentally met the king of rabbits who is 100 times bigger than you and angry. Your %s character is dead. What a shame!!! Go back home and pick a new character unless you’re a huge baby."

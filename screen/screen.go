@@ -43,6 +43,7 @@ type GameScreen struct {
 	activeItem       loud.Item
 	activeItSpec     loud.ItemSpec
 	activeCharacter  loud.Character
+	activeFriend     loud.Friend
 	activeChSpec     loud.CharacterSpec
 	activeLine       int
 	activeTrdReq     loud.TrdReq
@@ -51,6 +52,8 @@ type GameScreen struct {
 	goldEnterValue   string
 	actionText       string
 	inputText        string
+	friendNameValue  string
+	friendAddress    string
 	syncingData      bool
 	blockHeight      int64
 	fakeBlockHeight  int64

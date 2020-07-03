@@ -17,6 +17,12 @@ type Item struct {
 	LastUpdate int64
 }
 
+// Friend is a struct to manage friend
+type Friend struct {
+	Name    string
+	Address string
+}
+
 // ItemSpec is a struct to manage game item spec on trading
 type ItemSpec struct {
 	Name   string `json:""`

@@ -62,6 +62,7 @@ func (screen *GameScreen) HandleInputKeyLocationSwitch(input termbox.Event) bool
 		"H": loud.Home,
 		"T": loud.Settings,
 		"C": loud.PylonsCentral,
+		"R": loud.Friends,
 		"D": loud.Develop,
 		"P": loud.Help,
 	}
@@ -126,6 +127,23 @@ func (screen *GameScreen) HandleInputKeyPylonsCentralEntryPoint(input termbox.Ev
 			screen.SetScreenStatus(newStus)
 			screen.Render()
 		}
+		return true
+	}
+	return false
+}
+
+// HandleInputKeyFriendsEntryPoint handles input key at friends tab
+func (screen *GameScreen) HandleInputKeyFriendsEntryPoint(input termbox.Event) bool {
+	Key := string(input.Ch)
+
+	tarStusMap := map[string]PageStatus{
+		"1": FriendRegisterEnterName,
+		"2": FriendRemoveSelect,
+	}
+
+	if newStus, ok := tarStusMap[Key]; ok {
+		screen.SetScreenStatus(newStus)
+		screen.Render()
 		return true
 	}
 	return false
@@ -298,6 +316,7 @@ func (screen *GameScreen) MoveToNextStep() {
 		RsltCancelBuyChrTrdReq:     ShowBuyChrTrdReqs,
 		RsltRenameChr:              SelectRenameChr,
 		RsltSelectActiveChr:        SelectActiveChr,
+		RsltFriendRemove:           FriendRemoveSelect,
 		RsltBuyItem:                SelectBuyItem,
 		RsltBuyChr:                 SelectActiveChr,
 		RsltSellItem:               SelectSellItem,
@@ -345,6 +364,7 @@ func (screen *GameScreen) MoveToPrevStep() {
 		CreateBuyChrTrdReqSelectChr:         ShowBuyChrTrdReqs,
 		CreateBuyChrTrdReqEnterPylonValue:   CreateBuyChrTrdReqSelectChr,
 		SelectRenameChrEntNewName:           SelectRenameChr,
+		FriendRegisterEnterAddress:          FriendRegisterEnterName,
 		RsltHuntRabbits:                     ConfirmHuntRabbits,
 		RsltFightGoblin:                     ConfirmFightGoblin,
 		RsltFightTroll:                      ConfirmFightTroll,
@@ -376,6 +396,7 @@ func (screen *GameScreen) MoveToPrevStep() {
 		RsltCancelBuyChrTrdReq:              ShowBuyChrTrdReqs,
 		RsltRenameChr:                       SelectRenameChr,
 		RsltSelectActiveChr:                 SelectActiveChr,
+		RsltFriendRegister:                  FriendRemoveSelect,
 		RsltBuyItem:                         SelectBuyItem,
 		RsltBuyChr:                          SelectBuyChr,
 		RsltSellItem:                        SelectSellItem,
@@ -492,6 +513,11 @@ func (screen *GameScreen) HandleSecondClassInputKeys(input termbox.Event) bool {
 		switch screen.scrStatus {
 		case ShowLocation:
 			return screen.HandleInputKeyPylonsCentralEntryPoint(input)
+		}
+	} else if screen.user.GetLocation() == loud.Friends {
+		switch screen.scrStatus {
+		case ShowLocation:
+			return screen.HandleInputKeyFriendsEntryPoint(input)
 		}
 	} else if screen.user.GetLocation() == loud.Settings {
 		switch screen.scrStatus {
@@ -621,7 +647,7 @@ func (screen *GameScreen) HandleThirdClassInputKeys(input termbox.Event) bool {
 // HandleThirdClassKeyEnterEvent handles the keys that are level 3's enter event
 func (screen *GameScreen) HandleThirdClassKeyEnterEvent() bool {
 	switch screen.user.GetLocation() {
-	case loud.Home, loud.PylonsCentral, loud.Shop, loud.Forest:
+	case loud.Home, loud.PylonsCentral, loud.Shop, loud.Forest, loud.Friends:
 		switch screen.scrStatus {
 		case ShowGoldBuyTrdReqs:
 			screen.RunSelectedBuyGoldTrdReq()
@@ -708,6 +734,13 @@ func (screen *GameScreen) HandleThirdClassKeyEnterEvent() bool {
 			}
 			screen.activeCharacter = characters[screen.activeLine]
 			screen.RunActiveCharacterSelect(screen.activeLine)
+		case FriendRemoveSelect:
+			friends := screen.user.Friends()
+			if len(friends) <= screen.activeLine || screen.activeLine < 0 {
+				return false
+			}
+			screen.activeFriend = friends[screen.activeLine]
+			screen.RunActiveFriendRemove(screen.activeLine)
 		case SelectRenameChr:
 			characters := screen.user.InventoryCharacters()
 			if len(characters) <= screen.activeLine || screen.activeLine < 0 {
@@ -792,7 +825,7 @@ func (screen *GameScreen) HandleTypingModeInputKeys(input termbox.Event) bool {
 		screen.SetInputTextAndRender(screen.inputText[:lastIdx])
 		return true
 	case termbox.KeySpace:
-		if screen.scrStatus == SelectRenameChrEntNewName {
+		if screen.scrStatus == SelectRenameChrEntNewName || screen.scrStatus == FriendRegisterEnterName {
 			screen.SetInputTextAndRender(screen.inputText + " ")
 			return true
 		}
@@ -801,6 +834,14 @@ func (screen *GameScreen) HandleTypingModeInputKeys(input termbox.Event) bool {
 		switch screen.scrStatus {
 		case SelectRenameChrEntNewName:
 			screen.RunCharacterRename(screen.inputText)
+		case FriendRegisterEnterName:
+			screen.friendNameValue = screen.inputText
+			screen.inputText = ""
+			screen.SetScreenStatusAndRefresh(FriendRegisterEnterAddress)
+		case FriendRegisterEnterAddress:
+			screen.friendAddress = screen.inputText
+			screen.inputText = ""
+			screen.RunFriendRegister()
 		case CreateBuyGoldTrdReqEnterGoldValue:
 			screen.SetScreenStatus(CreateBuyGoldTrdReqEnterPylonValue)
 			screen.goldEnterValue = screen.inputText
@@ -922,7 +963,13 @@ func (screen *GameScreen) HandleTypingModeInputKeys(input termbox.Event) bool {
 	default:
 		iChar := string(input.Ch)
 		Key := strings.ToUpper(iChar)
-		if screen.scrStatus == SelectRenameChrEntNewName {
+		if screen.scrStatus == FriendRegisterEnterName {
+			screen.SetInputTextAndRender(screen.inputText + iChar)
+			return true
+		} else if screen.scrStatus == FriendRegisterEnterAddress {
+			screen.SetInputTextAndRender(screen.inputText + iChar)
+			return true
+		} else if screen.scrStatus == SelectRenameChrEntNewName {
 			validNameStr := regexp.MustCompile(`^[a-zA-Z0-9\s$#@!%^&*()]$`)
 			if validNameStr.MatchString(iChar) {
 				screen.SetInputTextAndRender(screen.inputText + iChar)

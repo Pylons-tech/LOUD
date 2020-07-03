@@ -259,6 +259,18 @@ const (
 	// RsltCancelBuyChrTrdReq describes the result page to cancel trade request
 	RsltCancelBuyChrTrdReq = "RSLT_CANCEL_BUYCHR_TRDREQ"
 
+	// FriendRegisterEnterName describes the friends register enter name step
+	FriendRegisterEnterName = "FRIENDS_REGISTER_ENTER_NAME"
+	// FriendRegisterEnterAddress describes the friends register enter address step
+	FriendRegisterEnterAddress = "FRIENDS_REGISTER_ENTER_ADDRESS"
+	// RsltFriendRegister describes the friends register finish page
+	RsltFriendRegister = "RSLT_REGISTER_FRIEND"
+
+	// FriendRemoveSelect friend describes the selection of a friend to remove
+	FriendRemoveSelect = "FRIENDS_REMOVE_SELECT"
+	// RsltFriendRemove describes the friend remove finish page
+	RsltFriendRemove = "RSLT_FRIEND_REMOVE"
+
 	// HelpAbout describes the help page about the game
 	HelpAbout = "HELP_ABOUT"
 	// HelpGameObjective describes the help page for game objective

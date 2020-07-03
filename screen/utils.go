@@ -375,6 +375,8 @@ func formatByStructType(item interface{}) string {
 		return formatItemSpec(item)
 	case loud.CharacterSpec:
 		return formatCharacterSpec(item)
+	case loud.Friend:
+		return item.Name
 	default:
 		return "unrecognized struct type"
 	}

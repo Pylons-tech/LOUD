@@ -117,6 +117,7 @@ func (screen *GameScreen) renderUserCommands() {
 			loud.Forest:        "forest",
 			loud.Shop:          "shop",
 			loud.PylonsCentral: "pylons central",
+			loud.Friends:       "friends",
 			loud.Settings:      "settings",
 			loud.Develop:       "develop",
 			loud.Help:          "help",
@@ -225,6 +226,9 @@ func (screen *GameScreen) renderUserCommands() {
 			append(fmt.Sprintf("0) %s", loud.Localize("No character selection"))).
 			appendCustomFontSelectCmdsScreenCharacters(screen).
 			appendSelectGoBackCmds()
+	case FriendRemoveSelect:
+		infoLines = infoLines.
+			appendGoOnBackCmds()
 	case SelectBuyItem:
 		infoLines = infoLines.
 			appendCustomFontSelectCmds(

@@ -63,6 +63,7 @@ func (screen *GameScreen) renderUserSituation() {
 			loud.Forest:        loud.Localize("forest desc"),
 			loud.Shop:          loud.Localize("shop desc"),
 			loud.PylonsCentral: loud.Localize("pylons central desc"),
+			loud.Friends:       loud.Localize("friends desc"),
 			loud.Settings:      loud.Localize("settings desc"),
 			loud.Develop:       loud.Localize("develop desc"),
 			loud.Help:          loud.Localize("help desc"),
@@ -195,6 +196,8 @@ func (screen *GameScreen) renderUserSituation() {
 		desc = loud.Localize("Please enter gold amount to buy (should be integer value)")
 	case SelectRenameChrEntNewName:
 		desc = loud.Localize("Please enter new character's name")
+	case FriendRegisterEnterName:
+		desc = loud.Localize("Please enter your friend's name")
 	case CreateSellGoldTrdReqEnterGoldValue:
 		desc = loud.Localize("Please enter gold amount to sell (should be integer value)")
 
@@ -235,6 +238,12 @@ func (screen *GameScreen) renderUserSituation() {
 			"Please select active character",
 			"Character",
 			screen.user.InventoryCharacters(),
+			w, nil)
+	case FriendRemoveSelect:
+		tableLines = screen.renderITTable(
+			"Please select a friend to remove",
+			"Friend",
+			screen.user.Friends(),
 			w, nil)
 	case SelectRenameChr:
 		tableLines = screen.renderITTable(
@@ -418,6 +427,7 @@ func (screen *GameScreen) TxResultSituationDesc() (string, FontType) {
 		RsltFulfillSellGoldTrdReq:  "buy loud", // for fullfill direction is reversed
 		RsltCancelSellGoldTrdReq:   "cancel sell gold trade",
 		RsltSelectActiveChr:        "selecting active character",
+		RsltFriendRegister:         "friend register",
 		RsltRenameChr:              "renaming character",
 		RsltBuyItem:                "buy item",
 		RsltBuyChr:                 "buy character",
@@ -458,6 +468,8 @@ func (screen *GameScreen) TxResultSituationDesc() (string, FontType) {
 			} else {
 				desc = loud.Localize("You have successfully set the active character!")
 			}
+		case RsltFriendRegister:
+			desc = loud.Sprintf("You have successfully registered your friend %s as %s", screen.friendNameValue, screen.friendAddress)
 		case RsltRenameChr:
 			desc = loud.Sprintf("You have successfully updated character's name to %s!", screen.inputText)
 		case RsltBuyItem:

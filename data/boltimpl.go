@@ -91,6 +91,7 @@ type UserData struct {
 	Location        UserLocation
 	Items           []Item
 	Characters      []Character
+	Friends         []Friend
 	ActiveCharacter Character
 	DeadCharacter   Character
 	PrivKey         string
@@ -274,6 +275,10 @@ func (user *dbUser) SetCharacters(items []Character) {
 	user.UserData.Characters = items
 }
 
+func (user *dbUser) SetFriends(friends []Friend) {
+	user.UserData.Friends = friends
+}
+
 func (user *dbUser) SetActiveCharacterIndex(idx int) {
 	length := len(user.UserData.Characters)
 	if idx >= 0 && idx < length {
@@ -386,6 +391,10 @@ func (user *dbUser) InventorySwords() []Item {
 
 func (user *dbUser) InventoryCharacters() []Character {
 	return user.UserData.Characters
+}
+
+func (user *dbUser) Friends() []Friend {
+	return user.UserData.Friends
 }
 
 func (user *dbUser) InventoryUpgradableItems() []Item {

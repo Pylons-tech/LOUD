@@ -36,6 +36,25 @@ func (screen *GameScreen) RunActiveCharacterSelect(index int) {
 	screen.SetScreenStatusAndRefresh(RsltSelectActiveChr)
 }
 
+// RunActiveFriendRemove execute the friend remove action
+func (screen *GameScreen) RunActiveFriendRemove(index int) {
+	friends := screen.user.Friends()
+	friends = append(friends[:index], friends[index+1:]...)
+	screen.user.SetFriends(friends)
+	screen.SetScreenStatusAndRefresh(RsltFriendRemove)
+}
+
+// RunFriendRegister execute the friend register action
+func (screen *GameScreen) RunFriendRegister() {
+	friends := screen.user.Friends()
+	friends = append(friends, loud.Friend{
+		Name:    screen.friendNameValue,
+		Address: screen.friendAddress,
+	})
+	screen.user.SetFriends(friends)
+	screen.SetScreenStatusAndRefresh(RsltFriendRegister)
+}
+
 // RunCharacterRename execute the character rename process
 func (screen *GameScreen) RunCharacterRename(newName string) {
 	screen.RunTxProcess(WaitRenameChr, RsltRenameChr, func() (string, error) {

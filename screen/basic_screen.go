@@ -175,7 +175,9 @@ func (screen *GameScreen) InputActive() bool {
 		CreateBuyItmTrdReqEnterPylonValue,
 		CreateSellChrTrdReqEnterPylonValue,
 		CreateBuyChrTrdReqEnterPylonValue,
-		SelectRenameChrEntNewName:
+		SelectRenameChrEntNewName,
+		FriendRegisterEnterName,
+		FriendRegisterEnterAddress:
 		return true
 	}
 	return false

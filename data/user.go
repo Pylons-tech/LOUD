@@ -3,6 +3,7 @@ package loud
 // UserLocation is a struct to manage user's location
 type UserLocation int
 
+// page tabs
 const (
 	// Home is home
 	Home UserLocation = iota
@@ -12,6 +13,8 @@ const (
 	Shop
 	// PylonsCentral is a place to do trading and buying from pylons
 	PylonsCentral
+	// Friends is a place to manage friends
+	Friends
 	// Settings is a place to control game settings
 	Settings
 	// Develop is a place to run development functions
@@ -42,6 +45,8 @@ type User interface {
 	InventoryCharacters() []Character
 	InventoryUpgradableItems() []Item
 	InventorySellableItems() []Item
+	Friends() []Friend
+	SetFriends([]Friend)
 	GetMatchedItems(ItemSpec) []Item
 	GetMatchedCharacters(CharacterSpec) []Character
 	GetLocation() UserLocation
