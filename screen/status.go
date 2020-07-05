@@ -269,9 +269,9 @@ const (
 	RsltCancelBuyChrTrdReq = "RSLT_CANCEL_BUYCHR_TRDREQ"
 
 	// FriendRegisterEnterName describes the friends register enter name step
-	FriendRegisterEnterName = "FRIENDS_REGISTER_ENTER_NAME"
+	FriendRegisterEnterName = "FRIENDS_REGISTER_ENT_NAME"
 	// FriendRegisterEnterAddress describes the friends register enter address step
-	FriendRegisterEnterAddress = "FRIENDS_REGISTER_ENTER_ADDRESS"
+	FriendRegisterEnterAddress = "FRIENDS_REGISTER_ENT_ADDRESS"
 	// RsltFriendRegister describes the friends register finish page
 	RsltFriendRegister = "RSLT_REGISTER_FRIEND"
 

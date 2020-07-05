@@ -50,6 +50,7 @@ func (screen *GameScreen) renderUserSituation() {
 	h := scrBox.H
 
 	infoLines := []string{}
+	actionLines := []string{}
 	tableLines := TextLines{}
 	desc := ""
 	descfont := RegularFont
@@ -350,10 +351,6 @@ func (screen *GameScreen) renderUserSituation() {
 		infoLines, tableLines = screen.TxWaitSituationDesc(w)
 	}
 
-	if screen.InputActive() && len(screen.actionText) > 0 {
-		infoLines = append(infoLines, screen.actionText)
-	}
-
 	basicLines := loud.ChunkText(desc, w-2)
 
 	colorfulLines := TextLines{}
@@ -381,7 +378,21 @@ func (screen *GameScreen) renderUserSituation() {
 			break
 		}
 	}
-	totalLen := infoLen + len(tableLines)
+	tableLen := len(tableLines)
+
+	if screen.InputActive() && len(screen.actionText) > 0 {
+		actionLines = loud.ChunkText(screen.actionText, w-2)
+		for index, line := range actionLines {
+			PrintString(fmt.Sprintf("%s%s",
+				cursor.MoveTo(y+infoLen+tableLen+index, x),
+				screen.redFont()(fillSpace(line, w))))
+			if index+2 > int(screen.Height()) {
+				break
+			}
+		}
+	}
+
+	totalLen := infoLen + tableLen + len(actionLines)
 
 	screen.drawFill(x, y+totalLen, w, h-totalLen-1)
 }

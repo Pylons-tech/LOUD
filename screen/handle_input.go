@@ -62,7 +62,7 @@ func (screen *GameScreen) HandleInputKeyLocationSwitch(input termbox.Event) bool
 		"H": loud.Home,
 		"T": loud.Settings,
 		"C": loud.PylonsCentral,
-		"R": loud.Friends,
+		"I": loud.Friends,
 		"D": loud.Develop,
 		"P": loud.Help,
 	}
@@ -859,126 +859,168 @@ func (screen *GameScreen) HandleTypingModeInputKeys(input termbox.Event) bool {
 		case SelectRenameChrEntNewName:
 			screen.RunCharacterRename(screen.inputText)
 		case FriendRegisterEnterName:
-			screen.friendNameValue = screen.inputText
-			screen.inputText = ""
-			screen.SetScreenStatusAndRefresh(FriendRegisterEnterAddress)
+			if len(screen.inputText) > 0 {
+				screen.friendNameValue = screen.inputText
+				screen.inputText = ""
+				screen.SetScreenStatusAndRefresh(FriendRegisterEnterAddress)
+			} else {
+				screen.actionText = loud.Sprintf("friend name should be at least 1 letter")
+				screen.Render()
+			}
 		case FriendRegisterEnterAddress:
 			screen.friendAddress = screen.inputText
 			screen.inputText = ""
 			screen.RunFriendRegister()
 		case CreateBuyGoldTrdReqEnterGoldValue:
-			screen.SetScreenStatus(CreateBuyGoldTrdReqEnterPylonValue)
-			screen.goldEnterValue = screen.inputText
-			screen.inputText = ""
-			screen.Render()
-		case CreateBuyGoldTrdReqEnterPylonValue:
-			screen.SetScreenStatus(WaitBuyGoldTrdReqCreation)
-			screen.pylonEnterValue = screen.inputText
-			screen.SetInputTextAndRender("")
-			txhash, err := loud.CreateBuyGoldTrdReq(screen.user, screen.goldEnterValue, screen.pylonEnterValue)
-			log.WithFields(log.Fields{
-				"sent_request": "buy gold",
-			}).Infoln("info log")
-			if err != nil {
-				screen.txFailReason = err.Error()
-				screen.SetScreenStatusAndRefresh(RsltBuyGoldTrdReqCreation)
+			if amount, err := strconv.Atoi(screen.inputText); err == nil && amount > 0 {
+				screen.SetScreenStatus(CreateBuyGoldTrdReqEnterPylonValue)
+				screen.goldEnterValue = screen.inputText
+				screen.inputText = ""
+				screen.Render()
 			} else {
-				time.AfterFunc(2*time.Second, func() {
-					screen.txResult, screen.txFailReason = loud.ProcessTxResult(screen.user, txhash)
+				screen.actionText = loud.Sprintf("gold amount should be valid number and should be at least 1")
+				screen.Render()
+			}
+		case CreateBuyGoldTrdReqEnterPylonValue:
+			if amount, err := strconv.Atoi(screen.inputText); err == nil && amount > 0 {
+				screen.SetScreenStatus(WaitBuyGoldTrdReqCreation)
+				screen.pylonEnterValue = screen.inputText
+				screen.SetInputTextAndRender("")
+				txhash, err := loud.CreateBuyGoldTrdReq(screen.user, screen.goldEnterValue, screen.pylonEnterValue)
+				log.WithFields(log.Fields{
+					"sent_request": "buy gold",
+				}).Infoln("info log")
+				if err != nil {
+					screen.txFailReason = err.Error()
 					screen.SetScreenStatusAndRefresh(RsltBuyGoldTrdReqCreation)
-				})
+				} else {
+					time.AfterFunc(2*time.Second, func() {
+						screen.txResult, screen.txFailReason = loud.ProcessTxResult(screen.user, txhash)
+						screen.SetScreenStatusAndRefresh(RsltBuyGoldTrdReqCreation)
+					})
+				}
+			} else {
+				screen.actionText = loud.Sprintf("pylon amount should be valid number and should be at least 1")
+				screen.Render()
 			}
 		case CreateSellGoldTrdReqEnterGoldValue:
-			screen.SetScreenStatus(CreateSellGoldTrdReqEnterPylonValue)
-			screen.Render()
-			screen.goldEnterValue = screen.inputText
-			screen.inputText = ""
-		case CreateSellGoldTrdReqEnterPylonValue:
-			screen.SetScreenStatus(WaitSellGoldTrdReqCreation)
-			screen.Render()
-			screen.pylonEnterValue = screen.inputText
-			screen.SetInputTextAndRender("")
-			txhash, err := loud.CreateSellGoldTrdReq(screen.user, screen.goldEnterValue, screen.pylonEnterValue)
-			log.WithFields(log.Fields{
-				"sent_request": "sell gold",
-			}).Infoln("info log")
-			if err != nil {
-				screen.txFailReason = err.Error()
-				screen.SetScreenStatusAndRefresh(RsltSellGoldTrdReqCreation)
+			if amount, err := strconv.Atoi(screen.inputText); err == nil && amount > 0 {
+				screen.SetScreenStatus(CreateSellGoldTrdReqEnterPylonValue)
+				screen.goldEnterValue = screen.inputText
+				screen.inputText = ""
 			} else {
-				time.AfterFunc(2*time.Second, func() {
-					screen.txResult, screen.txFailReason = loud.ProcessTxResult(screen.user, txhash)
+				screen.actionText = loud.Sprintf("gold amount should be valid number and should be at least 1")
+				screen.Render()
+			}
+		case CreateSellGoldTrdReqEnterPylonValue:
+			if amount, err := strconv.Atoi(screen.inputText); err == nil && amount > 0 {
+				screen.SetScreenStatus(WaitSellGoldTrdReqCreation)
+				screen.pylonEnterValue = screen.inputText
+				screen.SetInputTextAndRender("")
+				txhash, err := loud.CreateSellGoldTrdReq(screen.user, screen.goldEnterValue, screen.pylonEnterValue)
+				log.WithFields(log.Fields{
+					"sent_request": "sell gold",
+				}).Infoln("info log")
+				if err != nil {
+					screen.txFailReason = err.Error()
 					screen.SetScreenStatusAndRefresh(RsltSellGoldTrdReqCreation)
-				})
+				} else {
+					time.AfterFunc(2*time.Second, func() {
+						screen.txResult, screen.txFailReason = loud.ProcessTxResult(screen.user, txhash)
+						screen.SetScreenStatusAndRefresh(RsltSellGoldTrdReqCreation)
+					})
+				}
+			} else {
+				screen.actionText = loud.Sprintf("gold amount should be valid number and should be at least 1")
+				screen.Render()
 			}
 		case CreateSellItemTrdReqEnterPylonValue:
-			screen.SetScreenStatus(WaitSellItemTrdReqCreation)
-			screen.pylonEnterValue = screen.inputText
-			screen.SetInputTextAndRender("")
-			txhash, err := loud.CreateSellItemTrdReq(screen.user, screen.activeItem, screen.pylonEnterValue)
-			log.WithFields(log.Fields{
-				"sent_request": "sell item",
-			}).Infoln("info log")
-			if err != nil {
-				screen.txFailReason = err.Error()
-				screen.SetScreenStatusAndRefresh(RsltSellItemTrdReqCreation)
-			} else {
-				time.AfterFunc(2*time.Second, func() {
-					screen.txResult, screen.txFailReason = loud.ProcessTxResult(screen.user, txhash)
+			if amount, err := strconv.Atoi(screen.inputText); err == nil && amount > 0 {
+				screen.SetScreenStatus(WaitSellItemTrdReqCreation)
+				screen.pylonEnterValue = screen.inputText
+				screen.SetInputTextAndRender("")
+				txhash, err := loud.CreateSellItemTrdReq(screen.user, screen.activeItem, screen.pylonEnterValue)
+				log.WithFields(log.Fields{
+					"sent_request": "sell item",
+				}).Infoln("info log")
+				if err != nil {
+					screen.txFailReason = err.Error()
 					screen.SetScreenStatusAndRefresh(RsltSellItemTrdReqCreation)
-				})
+				} else {
+					time.AfterFunc(2*time.Second, func() {
+						screen.txResult, screen.txFailReason = loud.ProcessTxResult(screen.user, txhash)
+						screen.SetScreenStatusAndRefresh(RsltSellItemTrdReqCreation)
+					})
+				}
+			} else {
+				screen.actionText = loud.Sprintf("pylon amount should be valid number and should be at least 1")
+				screen.Render()
 			}
 		case CreateBuyItmTrdReqEnterPylonValue:
-			screen.SetScreenStatus(WaitBuyItemTrdReqCreation)
-			screen.pylonEnterValue = screen.inputText
-			screen.SetInputTextAndRender("")
-			txhash, err := loud.CreateBuyItemTrdReq(screen.user, screen.activeItSpec, screen.pylonEnterValue)
-			log.WithFields(log.Fields{
-				"sent_request": "buy item",
-			}).Infoln("info log")
-			if err != nil {
-				screen.txFailReason = err.Error()
-				screen.SetScreenStatusAndRefresh(RsltBuyItemTrdReqCreation)
-			} else {
-				time.AfterFunc(2*time.Second, func() {
-					screen.txResult, screen.txFailReason = loud.ProcessTxResult(screen.user, txhash)
+			if amount, err := strconv.Atoi(screen.inputText); err == nil && amount > 0 {
+				screen.SetScreenStatus(WaitBuyItemTrdReqCreation)
+				screen.pylonEnterValue = screen.inputText
+				screen.SetInputTextAndRender("")
+				txhash, err := loud.CreateBuyItemTrdReq(screen.user, screen.activeItSpec, screen.pylonEnterValue)
+				log.WithFields(log.Fields{
+					"sent_request": "buy item",
+				}).Infoln("info log")
+				if err != nil {
+					screen.txFailReason = err.Error()
 					screen.SetScreenStatusAndRefresh(RsltBuyItemTrdReqCreation)
-				})
-			}
-
-		case CreateSellChrTrdReqEnterPylonValue:
-			screen.SetScreenStatus(WaitSellChrTrdReqCreation)
-			screen.pylonEnterValue = screen.inputText
-			screen.SetInputTextAndRender("")
-			txhash, err := loud.CreateSellCharacterTrdReq(screen.user, screen.activeCharacter, screen.pylonEnterValue)
-			log.WithFields(log.Fields{
-				"sent_request": "sell character",
-			}).Infoln("info log")
-			if err != nil {
-				screen.txFailReason = err.Error()
-				screen.SetScreenStatusAndRefresh(RsltSellChrTrdReqCreation)
+				} else {
+					time.AfterFunc(2*time.Second, func() {
+						screen.txResult, screen.txFailReason = loud.ProcessTxResult(screen.user, txhash)
+						screen.SetScreenStatusAndRefresh(RsltBuyItemTrdReqCreation)
+					})
+				}
 			} else {
-				time.AfterFunc(2*time.Second, func() {
-					screen.txResult, screen.txFailReason = loud.ProcessTxResult(screen.user, txhash)
+				screen.actionText = loud.Sprintf("pylon amount should be valid number and should be at least 1")
+				screen.Render()
+			}
+		case CreateSellChrTrdReqEnterPylonValue:
+			if amount, err := strconv.Atoi(screen.inputText); err == nil && amount > 0 {
+				screen.SetScreenStatus(WaitSellChrTrdReqCreation)
+				screen.pylonEnterValue = screen.inputText
+				screen.SetInputTextAndRender("")
+				txhash, err := loud.CreateSellCharacterTrdReq(screen.user, screen.activeCharacter, screen.pylonEnterValue)
+				log.WithFields(log.Fields{
+					"sent_request": "sell character",
+				}).Infoln("info log")
+				if err != nil {
+					screen.txFailReason = err.Error()
 					screen.SetScreenStatusAndRefresh(RsltSellChrTrdReqCreation)
-				})
+				} else {
+					time.AfterFunc(2*time.Second, func() {
+						screen.txResult, screen.txFailReason = loud.ProcessTxResult(screen.user, txhash)
+						screen.SetScreenStatusAndRefresh(RsltSellChrTrdReqCreation)
+					})
+				}
+			} else {
+				screen.actionText = loud.Sprintf("pylon amount should be valid number and should be at least 1")
+				screen.Render()
 			}
 		case CreateBuyChrTrdReqEnterPylonValue:
-			screen.SetScreenStatus(WaitBuyChrTrdReqCreation)
-			screen.pylonEnterValue = screen.inputText
-			screen.SetInputTextAndRender("")
-			txhash, err := loud.CreateBuyCharacterTrdReq(screen.user, screen.activeChSpec, screen.pylonEnterValue)
-			log.WithFields(log.Fields{
-				"sent_request": "buy character",
-			}).Infoln("info log")
-			if err != nil {
-				screen.txFailReason = err.Error()
-				screen.SetScreenStatusAndRefresh(RsltBuyChrTrdReqCreation)
-			} else {
-				time.AfterFunc(2*time.Second, func() {
-					screen.txResult, screen.txFailReason = loud.ProcessTxResult(screen.user, txhash)
+			if amount, err := strconv.Atoi(screen.inputText); err == nil && amount > 0 {
+				screen.SetScreenStatus(WaitBuyChrTrdReqCreation)
+				screen.pylonEnterValue = screen.inputText
+				screen.SetInputTextAndRender("")
+				txhash, err := loud.CreateBuyCharacterTrdReq(screen.user, screen.activeChSpec, screen.pylonEnterValue)
+				log.WithFields(log.Fields{
+					"sent_request": "buy character",
+				}).Infoln("info log")
+				if err != nil {
+					screen.txFailReason = err.Error()
 					screen.SetScreenStatusAndRefresh(RsltBuyChrTrdReqCreation)
-				})
+				} else {
+					time.AfterFunc(2*time.Second, func() {
+						screen.txResult, screen.txFailReason = loud.ProcessTxResult(screen.user, txhash)
+						screen.SetScreenStatusAndRefresh(RsltBuyChrTrdReqCreation)
+					})
+				}
+			} else {
+				screen.actionText = loud.Sprintf("pylon amount should be valid number and should be at least 1")
+				screen.Render()
 			}
 		default:
 			return false

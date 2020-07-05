@@ -69,7 +69,7 @@
     "one": "Pylons C)entral"
   },
   "go to friends": {
-    "one": "Fr)iends"
+    "one": "Fri)ends"
   },
   "go to settings": {
     "one": "Set)tings"
@@ -760,5 +760,14 @@
   },
   "send item from %s to %s": {
     "one": "send item from %s to %s"
+  },
+  "pylon amount should be valid number and should be at least 1": {
+    "one": "Pylon amount should be valid number and should be at least 1"
+  },
+  "gold amount should be valid number and should be at least 1": {
+    "one": "Gold amount should be valid number and should be at least 1"
+  },
+  "friend name should be at least 1 letter": {
+    "one": "Friend name should be at least 1 letter"
   }
 }
