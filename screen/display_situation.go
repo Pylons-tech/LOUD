@@ -350,6 +350,10 @@ func (screen *GameScreen) renderUserSituation() {
 		infoLines, tableLines = screen.TxWaitSituationDesc(w)
 	}
 
+	if screen.InputActive() && len(screen.actionText) > 0 {
+		infoLines = append(infoLines, screen.actionText)
+	}
+
 	basicLines := loud.ChunkText(desc, w-2)
 
 	colorfulLines := TextLines{}

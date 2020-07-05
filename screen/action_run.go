@@ -5,6 +5,7 @@ import (
 
 	loud "github.com/Pylons-tech/LOUD/data"
 	"github.com/Pylons-tech/LOUD/log"
+	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
 // RunTxProcess execute the screen status changes when running transaction
@@ -46,13 +47,21 @@ func (screen *GameScreen) RunActiveFriendRemove(index int) {
 
 // RunFriendRegister execute the friend register action
 func (screen *GameScreen) RunFriendRegister() {
-	friends := screen.user.Friends()
-	friends = append(friends, loud.Friend{
-		Name:    screen.friendNameValue,
-		Address: screen.friendAddress,
-	})
-	screen.user.SetFriends(friends)
-	screen.SetScreenStatusAndRefresh(RsltFriendRegister)
+	_, err := sdk.AccAddressFromBech32(screen.friendAddress)
+
+	if err != nil {
+		log.Println("Invalid friend address", err.Error())
+		screen.actionText = loud.Sprintf("Invalid friend address \"%s\"", screen.friendAddress)
+		screen.Render()
+	} else {
+		friends := screen.user.Friends()
+		friends = append(friends, loud.Friend{
+			Name:    screen.friendNameValue,
+			Address: screen.friendAddress,
+		})
+		screen.user.SetFriends(friends)
+		screen.SetScreenStatusAndRefresh(RsltFriendRegister)
+	}
 }
 
 // RunCharacterRename execute the character rename process
