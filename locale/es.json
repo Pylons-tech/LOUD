@@ -39,7 +39,7 @@
     "one": "1) Comprar Artículos\n2) Vender Artículos\n3) Mejorar Artículos\n"
   },
   "pylons central": {
-    "one": "1) Buy 💰 5000 for 100 pylons\n2) Sell 💰  from orderbook / place order to buy 💰 \n3) Buy 💰  from orderbook / place order to sell 💰 \n4) Sell 🗡️  from orderbook / place order to buy 🗡️\n5) Buy 🗡️  from orderbook / place order to sell 🗡️\n6) Sell 🐧  from orderbook / place order to buy 🐧 \n7) Buy 🐧  from orderbook / place order to sell 🐧 \n"
+    "one": "1) Buy 💰 5000 for 100 pylons\n2) Sell 💰  from orderbook / place order to buy 💰 \n3) Buy 💰  from orderbook / place order to sell 💰 \n4) Sell 🗡️  from orderbook / place order to buy 🗡️\n5) Buy 🗡️  from orderbook / place order to sell 🗡️\n6) Sell 🐧  from orderbook / place order to buy 🐧 \n7) Buy 🐧  from orderbook / place order to sell 🐧 \n8) Send an item to a friend\n"
   },
   "friends": {
     "one": "1) Register a friend\n2) Remove a friend"
@@ -506,6 +506,12 @@
   "Please select character to rename": {
     "one": "Select the character to rename, then show us how clever you are with the new name\n"
   },
+  "Please select an item to send to %s": {
+    "one": "Please select an item to send to %s"
+  },
+  "Please select a friend to send item to": {
+    "one": "Please select a friend to send item to"
+  },
   "You have successfully unset the active character!": {
     "one": "You have successfully unset the active character!"
   },
@@ -514,6 +520,9 @@
   },
   "You have successfully updated character's name to %s!": {
     "one": "You have successfully updated character's name to %s!"
+  },
+  "You have successfully sent %s to %s!": {
+    "one": "You have successfully sent %s to %s!"
   },
   "You have successfully registered your friend %s as %s": {
     "one": "You have successfully registered your friend %s as %s"
@@ -592,6 +601,9 @@
   },
   "You are waiting to rename character from %s to %s.": {
     "one": "You are waiting to rename character from %s to %s."
+  },
+  "You are waiting to send %s to %s.": {
+    "one": "You are waiting to send %s to %s."
   },
   "spending %d pylon for %d gold": {
     "one": "You are spending %d Pylons to receive %d gold. We’re just bringing it up from the vaults for you."
@@ -742,5 +754,11 @@
   },
   "gold amount shouldn't be zero to be a valid trading": {
     "one": "Gold amount shouldn't be zero to be a valid trading"
+  },
+  "rename character from %s to %s": {
+    "one": "rename character from %s to %s"
+  },
+  "send item from %s to %s": {
+    "one": "send item from %s to %s"
   }
 }

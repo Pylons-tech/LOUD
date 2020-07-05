@@ -116,6 +116,7 @@ func (screen *GameScreen) HandleInputKeyPylonsCentralEntryPoint(input termbox.Ev
 		"5": ShowSellItemTrdReqs,
 		"6": ShowBuyChrTrdReqs,
 		"7": ShowSellChrTrdReqs,
+		"8": SendItemSelectFriend,
 	}
 
 	if newStus, ok := tarStusMap[Key]; ok {
@@ -315,6 +316,8 @@ func (screen *GameScreen) MoveToNextStep() {
 		RsltFulfillBuyChrTrdReq:    ShowBuyChrTrdReqs,
 		RsltCancelBuyChrTrdReq:     ShowBuyChrTrdReqs,
 		RsltRenameChr:              SelectRenameChr,
+		RsltSendItem:               SendItemSelectFriend,
+		SendItemSelectFriend:       SendItemSelectItem,
 		RsltSelectActiveChr:        SelectActiveChr,
 		RsltFriendRemove:           FriendRemoveSelect,
 		RsltBuyItem:                SelectBuyItem,
@@ -395,6 +398,8 @@ func (screen *GameScreen) MoveToPrevStep() {
 		RsltFulfillBuyChrTrdReq:             ShowBuyChrTrdReqs,
 		RsltCancelBuyChrTrdReq:              ShowBuyChrTrdReqs,
 		RsltRenameChr:                       SelectRenameChr,
+		RsltSendItem:                        SendItemSelectFriend,
+		SendItemSelectItem:                  SendItemSelectFriend,
 		RsltSelectActiveChr:                 SelectActiveChr,
 		RsltFriendRegister:                  FriendRemoveSelect,
 		RsltBuyItem:                         SelectBuyItem,
@@ -649,6 +654,18 @@ func (screen *GameScreen) HandleThirdClassKeyEnterEvent() bool {
 	switch screen.user.GetLocation() {
 	case loud.Home, loud.PylonsCentral, loud.Shop, loud.Forest, loud.Friends:
 		switch screen.scrStatus {
+		case SendItemSelectFriend:
+			friends := screen.user.Friends()
+			if screen.activeLine >= 0 || screen.activeLine < len(friends) {
+				screen.activeFriend = friends[screen.activeLine]
+				screen.SetScreenStatusAndRefresh(SendItemSelectItem)
+			}
+		case SendItemSelectItem:
+			items := screen.user.InventoryItems()
+			if screen.activeLine >= 0 || screen.activeLine < len(items) {
+				screen.activeItem = items[screen.activeLine]
+				screen.RunSendItem()
+			}
 		case ShowGoldBuyTrdReqs:
 			screen.RunSelectedBuyGoldTrdReq()
 		case ShowGoldSellTrdReqs:

@@ -62,6 +62,13 @@ func (screen *GameScreen) RunCharacterRename(newName string) {
 	})
 }
 
+// RunSendItem execute the process to send item
+func (screen *GameScreen) RunSendItem() {
+	screen.RunTxProcess(WaitSendItem, RsltSendItem, func() (string, error) {
+		return loud.SendItem(screen.user, screen.activeFriend, screen.activeItem)
+	})
+}
+
 // RunActiveItemBuy execute the item buying process
 func (screen *GameScreen) RunActiveItemBuy() {
 	if !screen.user.HasPreItemForAnItem(screen.activeItem) {

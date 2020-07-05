@@ -211,11 +211,12 @@ func (screen *GameScreen) renderUserCommands() {
 				"Buy character to fulfill selected request( ↵ )",
 				"Place order to sell character(R)",
 				GobackCommand)
-
 	case CreateBuyChrTrdReqSelectChr,
 		CreateSellChrTrdReqSelChr,
 		CreateSellItemTrdReqSelectItem,
-		CreateBuyItemTrdReqSelectItem:
+		CreateBuyItemTrdReqSelectItem,
+		SendItemSelectFriend,
+		SendItemSelectItem:
 		infoLines = infoLines.appendSelectGoBackCmds()
 	case SelectRenameChr:
 		infoLines = infoLines.

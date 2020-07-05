@@ -194,8 +194,26 @@ func (screen *GameScreen) renderUserSituation() {
 		desc = loud.Localize("Please enter pylon amount to get (should be integer value)")
 	case CreateBuyGoldTrdReqEnterGoldValue:
 		desc = loud.Localize("Please enter gold amount to buy (should be integer value)")
+	case SelectRenameChr:
+		tableLines = screen.renderITTable(
+			"Please select character to rename",
+			"Character",
+			screen.user.InventoryCharacters(),
+			w, nil)
 	case SelectRenameChrEntNewName:
 		desc = loud.Localize("Please enter new character's name")
+	case SendItemSelectFriend:
+		tableLines = screen.renderITTable(
+			loud.Localize("Please select a friend to send item to"),
+			"Friend",
+			screen.user.Friends(),
+			w, nil)
+	case SendItemSelectItem:
+		tableLines = screen.renderITTable(
+			loud.Sprintf("Please select an item to send to %s", screen.activeFriend.Name),
+			"Item",
+			screen.user.InventoryItems(),
+			w, nil)
 	case FriendRegisterEnterName:
 		desc = loud.Localize("Please enter your friend's name")
 	case CreateSellGoldTrdReqEnterGoldValue:
@@ -244,12 +262,6 @@ func (screen *GameScreen) renderUserSituation() {
 			"Please select a friend to remove",
 			"Friend",
 			screen.user.Friends(),
-			w, nil)
-	case SelectRenameChr:
-		tableLines = screen.renderITTable(
-			"Please select character to rename",
-			"Character",
-			screen.user.InventoryCharacters(),
 			w, nil)
 	case SelectBuyItem:
 		tableLines = screen.renderITTable(
@@ -429,6 +441,7 @@ func (screen *GameScreen) TxResultSituationDesc() (string, FontType) {
 		RsltSelectActiveChr:        "selecting active character",
 		RsltFriendRegister:         "friend register",
 		RsltRenameChr:              "renaming character",
+		RsltSendItem:               "sending item",
 		RsltBuyItem:                "buy item",
 		RsltBuyChr:                 "buy character",
 		RsltHuntRabbits:            "hunt rabbits",
@@ -472,6 +485,8 @@ func (screen *GameScreen) TxResultSituationDesc() (string, FontType) {
 			desc = loud.Sprintf("You have successfully registered your friend %s as %s", screen.friendNameValue, screen.friendAddress)
 		case RsltRenameChr:
 			desc = loud.Sprintf("You have successfully updated character's name to %s!", screen.inputText)
+		case RsltSendItem:
+			desc = loud.Sprintf("You have successfully sent %s to %s!", screen.activeItem.Name, screen.activeFriend.Name)
 		case RsltBuyItem:
 			desc = loud.Sprintf("You have bought a weapon from the shop")
 			desc += "\n"
@@ -772,6 +787,8 @@ func (screen *GameScreen) TxWaitSituationDesc(width int) ([]string, TextLines) {
 	switch screen.scrStatus {
 	case WaitRenameChr:
 		desc = loud.Sprintf("You are waiting to rename character from %s to %s.", screen.activeCharacter.Name, screen.inputText)
+	case WaitSendItem:
+		desc = loud.Sprintf("You are waiting to send %s to %s.", screen.activeItem.Name, screen.activeFriend.Name)
 	case WaitBuyGoldTrdReqCreation:
 		desc = loud.Localize("You are waiting for gold buy request creation")
 		desc += screen.buyLoudDesc(screen.goldEnterValue, screen.pylonEnterValue)
