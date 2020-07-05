@@ -832,6 +832,13 @@ func (screen *GameScreen) HandleTypingModeInputKeys(input termbox.Event) bool {
 	case termbox.KeyEsc:
 		screen.MoveToPrevStep()
 		return true
+	case termbox.KeyCtrlV:
+		clipboardData, err := clipboard.ReadAll()
+		if err != nil {
+			screen.inputText += clipboardData
+			return true
+		}
+		return false
 	case termbox.KeyBackspace2,
 		termbox.KeyBackspace:
 
