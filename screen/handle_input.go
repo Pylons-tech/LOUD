@@ -44,8 +44,10 @@ func (screen *GameScreen) HandleInputKey(input termbox.Event) {
 		screen.HandleTypingModeInputKeys(input)
 		screen.Render()
 	} else if screen.HandleFirstClassInputKeys(input) {
+		// keys that change the layout and work anywhere
 		return
 	} else if screen.HandleSecondClassInputKeys(input) {
+		// the keys that are level 2, means it handle level 1 pages
 		return
 	} else if screen.HandleThirdClassInputKeys(input) {
 		return
@@ -116,7 +118,7 @@ func (screen *GameScreen) HandleInputKeyPylonsCentralEntryPoint(input termbox.Ev
 		"5": ShowSellItemTrdReqs,
 		"6": ShowBuyChrTrdReqs,
 		"7": ShowSellChrTrdReqs,
-		"8": SendItemSelectFriend,
+		"8": SendItemSelectType,
 	}
 
 	if newStus, ok := tarStusMap[Key]; ok {
@@ -318,6 +320,8 @@ func (screen *GameScreen) MoveToNextStep() {
 		RsltRenameChr:              SelectRenameChr,
 		RsltSendItem:               SendItemSelectFriend,
 		SendItemSelectFriend:       SendItemSelectItem,
+		RsltSendCharacter:          SendCharacterSelectFriend,
+		SendCharacterSelectFriend:  SendCharacterSelectCharacter,
 		RsltSelectActiveChr:        SelectActiveChr,
 		RsltFriendRemove:           FriendRemoveSelect,
 		RsltBuyItem:                SelectBuyItem,
@@ -400,6 +404,10 @@ func (screen *GameScreen) MoveToPrevStep() {
 		RsltRenameChr:                       SelectRenameChr,
 		RsltSendItem:                        SendItemSelectFriend,
 		SendItemSelectItem:                  SendItemSelectFriend,
+		RsltSendCharacter:                   SendCharacterSelectFriend,
+		SendCharacterSelectCharacter:        SendCharacterSelectFriend,
+		SendItemSelectFriend:                SendItemSelectType,
+		SendCharacterSelectFriend:           SendItemSelectType,
 		RsltSelectActiveChr:                 SelectActiveChr,
 		RsltFriendRegister:                  FriendRemoveSelect,
 		RsltBuyItem:                         SelectBuyItem,
@@ -572,6 +580,10 @@ func (screen *GameScreen) HandleThirdClassInputKeys(input termbox.Event) bool {
 		return true
 	}
 
+	if screen.HandleSendItemSelectType(input) {
+		return true
+	}
+
 	if input.Key == termbox.KeyBackspace2 || input.Key == termbox.KeyBackspace {
 		screen.MoveToPrevStep()
 	}
@@ -660,11 +672,23 @@ func (screen *GameScreen) HandleThirdClassKeyEnterEvent() bool {
 				screen.activeFriend = friends[screen.activeLine]
 				screen.SetScreenStatusAndRefresh(SendItemSelectItem)
 			}
+		case SendCharacterSelectFriend:
+			friends := screen.user.Friends()
+			if screen.activeLine >= 0 || screen.activeLine < len(friends) {
+				screen.activeFriend = friends[screen.activeLine]
+				screen.SetScreenStatusAndRefresh(SendCharacterSelectCharacter)
+			}
 		case SendItemSelectItem:
 			items := screen.user.InventoryItems()
 			if screen.activeLine >= 0 || screen.activeLine < len(items) {
 				screen.activeItem = items[screen.activeLine]
 				screen.RunSendItem()
+			}
+		case SendCharacterSelectCharacter:
+			chrs := screen.user.InventoryCharacters()
+			if screen.activeLine >= 0 || screen.activeLine < len(chrs) {
+				screen.activeCharacter = chrs[screen.activeLine]
+				screen.RunSendCharacter()
 			}
 		case ShowGoldBuyTrdReqs:
 			screen.RunSelectedBuyGoldTrdReq()
@@ -821,6 +845,25 @@ func (screen *GameScreen) HandleFightGiantSpecialBonusInputKeys(input termbox.Ev
 
 	if tarBonus, ok := tarBonusMap[Key]; ok {
 		screen.RunFightGiant(tarBonus)
+		return true
+	}
+	return false
+}
+
+// HandleSendItemSelectType select item type to send
+func (screen *GameScreen) HandleSendItemSelectType(input termbox.Event) bool {
+	Key := string(input.Ch)
+	if screen.scrStatus != SendItemSelectType {
+		return false
+	}
+
+	tarStatMap := map[string]PageStatus{
+		"1": SendCharacterSelectFriend,
+		"2": SendItemSelectFriend,
+	}
+
+	if tarStatus, ok := tarStatMap[Key]; ok {
+		screen.SetScreenStatusAndRefresh(tarStatus)
 		return true
 	}
 	return false

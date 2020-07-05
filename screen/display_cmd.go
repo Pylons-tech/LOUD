@@ -216,7 +216,9 @@ func (screen *GameScreen) renderUserCommands() {
 		CreateSellItemTrdReqSelectItem,
 		CreateBuyItemTrdReqSelectItem,
 		SendItemSelectFriend,
-		SendItemSelectItem:
+		SendItemSelectItem,
+		SendCharacterSelectFriend,
+		SendCharacterSelectCharacter:
 		infoLines = infoLines.appendSelectGoBackCmds()
 	case SelectRenameChr:
 		infoLines = infoLines.
@@ -304,6 +306,11 @@ func (screen *GameScreen) renderUserCommands() {
 			appendGoOnBackCmds()
 	case ConfirmFightGiant:
 		cmdString := loud.Localize("confirm fight giant cmds")
+		infoLines = infoLines.
+			append(loud.ChunkText(cmdString, w)...).
+			appendGoOnBackCmds()
+	case SendItemSelectType:
+		cmdString := loud.Localize("determine to send item type cmds")
 		infoLines = infoLines.
 			append(loud.ChunkText(cmdString, w)...).
 			appendGoOnBackCmds()

@@ -509,8 +509,14 @@
   "Please select an item to send to %s": {
     "one": "Please select an item to send to %s"
   },
+  "Please select a character to send to %s": {
+    "one": "Please select a character to send to %s"
+  },
   "Please select a friend to send item to": {
     "one": "Please select a friend to send item to"
+  },
+  "Please select a friend to send character to": {
+    "one": "Please select a friend to send character to"
   },
   "You have successfully unset the active character!": {
     "one": "You have successfully unset the active character!"
@@ -764,6 +770,9 @@
   "send item from %s to %s": {
     "one": "send item from %s to %s"
   },
+  "send character from %s to %s": {
+    "one": "send character from %s to %s"
+  },
   "pylon amount should be valid number and should be at least 1": {
     "one": "Pylon amount should be valid number and should be at least 1"
   },
@@ -772,5 +781,11 @@
   },
   "friend name should be at least 1 letter": {
     "one": "Friend name should be at least 1 letter"
+  },
+  "determine to send item type cmds": {
+    "one": "1) Character \n2) Item\n"
+  },
+  "Please select to send item type": {
+    "one": "Please select to send item type, character or item."
   }
 }

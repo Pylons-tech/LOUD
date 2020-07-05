@@ -195,6 +195,21 @@ func SendItem(user User, friend Friend, item Item) (string, error) {
 	return txhash, nil
 }
 
+// SendCharacter is a functio nto execute send character handler
+func SendCharacter(user User, friend Friend, chr Character) (string, error) {
+	t := GetTestingT()
+	addr := pylonSDK.GetAccountAddr(user.GetUserName(), GetTestingT())
+	senderSdkAddr, _ := sdk.AccAddressFromBech32(addr)
+	friendSdkAddr, _ := sdk.AccAddressFromBech32(friend.Address)
+	sendItemMsg := msgs.NewMsgSendItems([]string{chr.ID}, senderSdkAddr, friendSdkAddr)
+	txhash, err := pylonSDK.TestTxWithMsgWithNonce(t, sendItemMsg, user.GetUserName(), false)
+	if err != nil {
+		return "", fmt.Errorf("error sending transaction; %+v", err)
+	}
+	user.SetLastTransaction(txhash, Sprintf("send character from %s to %s", addr, friend.Address))
+	return txhash, nil
+}
+
 // BuyItem is a function to execute buy item recipe
 func BuyItem(user User, item Item) (string, error) {
 	rcpName := ""

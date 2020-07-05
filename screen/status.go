@@ -26,14 +26,24 @@ const (
 	// RsltRenameChr describes the status for renaming character result screen
 	RsltRenameChr = "RSLT_RENAME_CHAR"
 
+	// SendItemSelectType select item or character to send
+	SendItemSelectType = "SEND_ITEM_SELECT_TYPE"
 	// SendItemSelectFriend select a friend to send an item to
 	SendItemSelectFriend = "SEND_ITEM_SELECT_FRIEND"
 	// SendItemSelectItem select an item to send to friend
-	SendItemSelectItem = "SEND_ITEM_SELECT"
+	SendItemSelectItem = "SEND_ITEM_SELECT_ITEM"
 	// WaitSendItem describes the waiting process for sending item
 	WaitSendItem = "W8_SEND_ITEM"
 	// RsltSendItem describes the result page for sending an item
 	RsltSendItem = "RSLT_SEND_ITEM"
+	// SendCharacterSelectFriend select a friend to send an character to
+	SendCharacterSelectFriend = "SEND_CHAR_SELECT_FRIEND"
+	// SendCharacterSelectCharacter select an character to send to friend
+	SendCharacterSelectCharacter = "SEND_CHAR_SELECT_CHAR"
+	// WaitSendCharacter describes the waiting process for sending character
+	WaitSendCharacter = "W8_SEND_CHAR"
+	// RsltSendCharacter describes the result page for sending an character
+	RsltSendCharacter = "RSLT_SEND_CHAR"
 
 	// SelectSellItem describes the status for sell item selection page
 	SelectSellItem = "SEL_SELLITM"

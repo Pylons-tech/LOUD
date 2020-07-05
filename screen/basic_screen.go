@@ -230,10 +230,12 @@ func (screen *GameScreen) SetScreenStatus(newStatus PageStatus) {
 	case SelectActiveChr, SelectRenameChr:
 		screen.activeLine = screen.user.GetActiveCharacterIndex()
 		screen.SelectDefaultActiveLine(screen.user.InventoryCharacters())
-	case SendItemSelectFriend:
+	case SendItemSelectFriend, SendCharacterSelectFriend:
 		screen.SelectDefaultActiveLine(screen.user.Friends())
 	case SendItemSelectItem:
 		screen.SelectDefaultActiveLine(screen.user.InventoryItems())
+	case SendCharacterSelectCharacter:
+		screen.SelectDefaultActiveLine(screen.user.InventoryCharacters())
 	case SelectBuyChr:
 		screen.activeLine = 0
 	case ShowGoldBuyTrdReqs:
