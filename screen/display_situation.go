@@ -336,6 +336,7 @@ func (screen *GameScreen) renderUserSituation() {
 	case HelpHowItWorks:
 		desc = loud.Localize("help how it works")
 	case HelpPylonsCentral:
+		desc = loud.Localize("help pylons central")
 		tableLines = screen.tradeTableColorDesc(w)
 	case HelpUpcomingReleases:
 		desc = loud.Localize("help upcoming releases")

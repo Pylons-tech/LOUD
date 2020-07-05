@@ -711,7 +711,7 @@
     "one": "The purpose of this game is to defeat the Undead Dragon.\nAs you progress, you will fight enemies, buy swords from the blacksmith, and trade swords that you found in your adventures.\nYou need to have at least one character to play the game and you will also need gold to buy swords. Swords are good. You need swords to fight most monsters. You can get better swords too. Those are pretty awesome. Sometimes you will taste the bitter ashes of defeat, other times you will feel the euphoria of victory. This game is a real emotional rollercoaster.\nYou need swords to fight some monsters, during the game you will experience chilly dying and hot winner emotion."
   },
   "help navigation": {
-    "one": "There are 8 menus that you will use to navigate around the game.\nYou can go to Home, Forest, Shop, Pylons Central, Settings, Help page or Escape from the game using the navigation menu."
+    "one": "There are 8 menus that you will use to navigate around the game.\nYou can go to Home, Forest, Shop, Pylons Central, Friends, Settings, Help page or Escape from the game using the navigation menu."
   },
   "help page layout": {
     "one": "Each page has 5 sections.\n- Navigation menu at the top\n- Inventory on right\n- Commands you can run under menu on left side.\n- Situation box at the center left side.\n- Input box at the bottom left of the page\n- You can see all of your options for any menu at the top of the page.\n- It provides an action list showing you what choices are available and what the hotkeys to select them are.\n"
@@ -721,6 +721,9 @@
   },
   "help how it works": {
     "one": "This game works on a blockchain statemachine.\nThe game state changes when the transaction that contains your command, is confirmed and that command is run on all nodes that are running all over the world.\nThis game engine is a white box and you can experience a real blockchain game world while playing LOUD.\n"
+  },
+  "help pylons central": {
+    "one": "You can do all the operations that spend pylons here. You can buy gold from pylons, do trading and send items/characters to friends.\n"
   },
   "help upcoming releases": {
     "one": "We are excited to hear your feedback on the v0.1.0 release and we will use your suggestions to make decisions on how to go forward.\nWe already have tons of features implemented in the core daemon, so if you ask for something, we can make changes according to that.\nYou will be able to build your own game by forking our project, as this is a prototype game.\n"
