@@ -6,5 +6,6 @@
         { "Rate":"1.0", "Key":"level", "Program": "1" },
         { "Rate":"1.0", "Key":"value", "Program": "23000" }
     ],
-    "Strings":[{ "Key":"Name", "Value":"Angel sword", "Rate":"1.0" }]
+    "Strings":[{ "Key":"Name", "Value":"Angel sword", "Rate":"1.0" }],
+    "TransferFee": 400
 }

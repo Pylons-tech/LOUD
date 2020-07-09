@@ -10,5 +10,6 @@
     "Strings":[
         { "Key":"Name", "Value": "Ruppell's Fox", "Rate":"1.0" },
         { "Key":"Type", "Value": "Character", "Rate":"1.0" }
-    ]
+    ],
+    "TransferFee": 100
 }

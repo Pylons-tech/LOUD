@@ -9,5 +9,6 @@
     "Strings":[
         { "Key":"Name", "Value":"Icy shards", "Rate":"1.0" },
         { "Key":"DropFrom", "Value":"Ice Dragon", "Rate":"1.0" }
-    ]
+    ],
+    "TransferFee": 100
 }

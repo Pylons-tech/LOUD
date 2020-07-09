@@ -9,5 +9,6 @@
     "Strings":[
         { "Key":"Name", "Value":"Fire scale", "Rate":"1.0" },
         { "Key":"DropFrom", "Value":"Fire Dragon", "Rate":"1.0" }
-    ]
+    ],
+    "TransferFee": 100
 }
