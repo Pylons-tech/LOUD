@@ -143,6 +143,10 @@ Deployment of recipes with using existing cookbook (known cookbook)
 ```
 make fixture_tests ARGS="-use-known-cookbook --accounts=eugen"
 ```
+Verification stuff for recipes deployment
+```
+make fixture_tests ARGS="-verify-only --accounts=eugen"
+```
 Deployment of recipes with custom account, this replace account1 to eugen at runtime.
 
 Check if cookbook and all recipes are created by using
