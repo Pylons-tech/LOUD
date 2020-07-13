@@ -1,13 +1,11 @@
 package loud
 
 import (
-	"bytes"
 	"encoding/hex"
 	"encoding/json"
 	"errors"
 	"fmt"
 	"io/ioutil"
-	"net/http"
 	"os"
 	"os/exec"
 	"os/user"
@@ -293,8 +291,19 @@ func CheckSignatureMatchWithAftiCli(t *testing.T, txhash string, privKey string,
 	return true, nil
 }
 
+// WaitForBlockIntervalWithErrorCheck wait blocks and check the error result
+func WaitForBlockIntervalWithErrorCheck(interval int64) {
+	err := pylonSDK.WaitForBlockInterval(interval)
+	if err != nil {
+		log.WithFields(log.Fields{
+			"error": err,
+		}).Fatal("error waiting for blocks")
+	}
+}
+
 // GetInitialPylons is a function to get initial pylons from faucet
 func GetInitialPylons(username string) (string, error) {
+	t := GetTestingT()
 	addr := pylonSDK.GetAccountAddr(username, GetTestingT())
 	sdkAddr, err := sdk.AccAddressFromBech32(addr)
 	log.WithFields(log.Fields{
@@ -302,72 +311,104 @@ func GetInitialPylons(username string) (string, error) {
 		"error":    err,
 	}).Debugln("sdkAddr get result")
 
-	// this code is making the account to useable by doing get-pylons
-	txModel, err := pylonSDK.GenTxWithMsg([]sdk.Msg{msgs.NewMsgGetPylons(types.PremiumTier.Fee, sdkAddr)})
-	if err != nil {
-		return "", err
-	}
-	output, err := pylonSDK.GetAminoCdc().MarshalJSON(txModel)
-	if err != nil {
-		return "", err
-	}
-	tmpDir, err := ioutil.TempDir("", "pylons")
-	if err != nil {
-		return "", err
-	}
-
-	rawTxFile := filepath.Join(tmpDir, "raw_tx_get_pylons_"+addr+".json")
-	err = ioutil.WriteFile(rawTxFile, output, 0644)
-	if err != nil {
-		return "", err
-	}
-
-	// pylonscli tx sign raw_tx_get_pylons_eugen.json --account-number 0 --sequence 0 --offline --from eugen
-	txSignArgs := []string{"tx", "sign", rawTxFile,
-		"--from", addr,
-		"--offline",
-		"--chain-id", "pylonschain",
-		"--sequence", "0",
-		"--account-number", "0",
-	}
-	signedTx, _, err := pylonSDK.RunPylonsCli(txSignArgs, "")
-	if err != nil {
-		return "", err
-	}
-
-	postBodyJSON := make(map[string]interface{})
-	err = json.Unmarshal(signedTx, &postBodyJSON)
-	if err != nil {
-		log.Fatal("Error unmarshalling signedTx into postBody JSON")
-	}
-	postBodyJSON["tx"] = postBodyJSON["value"]
-	postBodyJSON["value"] = nil
-	postBodyJSON["mode"] = "sync"
-	postBody, err := json.Marshal(postBodyJSON)
-
+	// run create-account cli command
+	result, logstr, err := pylonSDK.CreateChainAccount(username)
 	log.WithFields(log.Fields{
-		"postBody": string(postBody),
-	}).Debugln("debug log")
-
+		"result": result,
+		"logstr": logstr,
+		"error":  err,
+	}).Info("creating account on chain result")
 	if err != nil {
-		return "", err
-	}
-	resp, err := http.Post(restEndpoint+"/txs", "application/json", bytes.NewBuffer(postBody))
-	if err != nil {
-		return "", err
+		log.WithFields(log.Fields{
+			"result": result,
+			"logstr": logstr,
+			"error":  err,
+		}).Fatal("error creating account on chain")
 	}
 
-	var result map[string]string
-
-	err = json.NewDecoder(resp.Body).Decode(&result)
+	// use regexp to find txhash from cli command response
+	re := regexp.MustCompile(`"txhash":.*"(.*)"`)
+	caTxHash := re.FindSubmatch([]byte(result))
+	txResponseBytes, err := pylonSDK.WaitAndGetTxData(string(caTxHash[1]), pylonSDK.GetMaxWaitBlock(), t)
 	if err != nil {
-		log.Fatal("Error decoding api response to result")
+		log.WithFields(log.Fields{
+			"result": string(txResponseBytes),
+			"error":  err,
+		}).Fatal("error waiting for create account transaction")
 	}
-	defer resp.Body.Close()
-	log.WithFields(log.Fields{
-		"get_pylons_api_response": pylonSDK.JSONFormatter(result),
-	}).Debugln("debug log")
-	return result["txhash"], nil
+	pylonSDK.GetAccountInfoFromAddr(addr, t)
+
+	getPylonsMsg := msgs.NewMsgGetPylons(types.PremiumTier.Fee, sdkAddr)
+	txhash, err := pylonSDK.TestTxWithMsgWithNonce(t, getPylonsMsg, username, false)
+	if err != nil {
+		return "", fmt.Errorf("error sending transaction; %+v", err)
+	}
+	return txhash, nil
+
+	// if err != nil {
+	// 	return "", err
+	// }
+	// output, err := pylonSDK.GetAminoCdc().MarshalJSON(txModel)
+	// if err != nil {
+	// 	return "", err
+	// }
+	// tmpDir, err := ioutil.TempDir("", "pylons")
+	// if err != nil {
+	// 	return "", err
+	// }
+
+	// rawTxFile := filepath.Join(tmpDir, "raw_tx_get_pylons_"+addr+".json")
+	// err = ioutil.WriteFile(rawTxFile, output, 0644)
+	// if err != nil {
+	// 	return "", err
+	// }
+
+	// // pylonscli tx sign raw_tx_get_pylons_eugen.json --account-number 0 --sequence 0 --offline --from eugen
+	// txSignArgs := []string{"tx", "sign", rawTxFile,
+	// 	"--from", addr,
+	// 	"--offline",
+	// 	"--chain-id", "pylonschain",
+	// 	"--sequence", "0",
+	// 	"--account-number", "0",
+	// }
+	// signedTx, _, err := pylonSDK.RunPylonsCli(txSignArgs, "")
+	// if err != nil {
+	// 	return "", err
+	// }
+
+	// postBodyJSON := make(map[string]interface{})
+	// err = json.Unmarshal(signedTx, &postBodyJSON)
+	// if err != nil {
+	// 	log.Fatal("Error unmarshalling signedTx into postBody JSON")
+	// }
+	// postBodyJSON["tx"] = postBodyJSON["value"]
+	// postBodyJSON["value"] = nil
+	// postBodyJSON["mode"] = "sync"
+	// postBody, err := json.Marshal(postBodyJSON)
+
+	// log.WithFields(log.Fields{
+	// 	"postBody": string(postBody),
+	// }).Debugln("debug log")
+
+	// if err != nil {
+	// 	return "", err
+	// }
+	// resp, err := http.Post(restEndpoint+"/txs", "application/json", bytes.NewBuffer(postBody))
+	// if err != nil {
+	// 	return "", err
+	// }
+
+	// var result map[string]string
+
+	// err = json.NewDecoder(resp.Body).Decode(&result)
+	// if err != nil {
+	// 	log.Fatal("Error decoding api response to result")
+	// }
+	// defer resp.Body.Close()
+	// log.WithFields(log.Fields{
+	// 	"get_pylons_api_response": pylonSDK.JSONFormatter(result),
+	// }).Debugln("debug log")
+	// return result["txhash"], nil
 }
 
 // ComputePrivKeyFromMnemonic calculates private key from mnemonic

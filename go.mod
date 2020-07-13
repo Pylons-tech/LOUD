@@ -4,7 +4,7 @@ go 1.13
 
 require (
 	github.com/ChainSafe/go-schnorrkel v0.0.0-20200405005733-88cbf1b4c40d // indirect
-	github.com/Pylons-tech/pylons_sdk v0.0.0-20200712125152-454651bc0b6c
+	github.com/Pylons-tech/pylons_sdk v0.0.0-20200712132307-f6b2de7fab43
 	github.com/ahmetb/go-cursor v0.0.0-20131010032410-8136607ea412
 	github.com/anmitsu/go-shlex v0.0.0-20161002113705-648efa622239 // indirect
 	github.com/atotto/clipboard v0.1.2
