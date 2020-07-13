@@ -328,8 +328,12 @@ func GetInitialPylons(username string) (string, error) {
 
 	// use regexp to find txhash from cli command response
 	re := regexp.MustCompile(`"txhash":.*"(.*)"`)
-	caTxHash := re.FindSubmatch([]byte(result))
-	txResponseBytes, err := pylonSDK.WaitAndGetTxData(string(caTxHash[1]), pylonSDK.GetMaxWaitBlock(), t)
+	caTxHashSearch := re.FindSubmatch([]byte(result))
+	caTxHash := string(caTxHashSearch[1])
+	log.WithFields(log.Fields{
+		"txhash": caTxHash,
+	}).Info("waiting for create account transaction")
+	txResponseBytes, err := pylonSDK.WaitAndGetTxData(caTxHash, pylonSDK.GetMaxWaitBlock(), t)
 	if err != nil {
 		log.WithFields(log.Fields{
 			"result": string(txResponseBytes),
