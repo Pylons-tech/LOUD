@@ -291,16 +291,6 @@ func CheckSignatureMatchWithAftiCli(t *testing.T, txhash string, privKey string,
 	return true, nil
 }
 
-// WaitForBlockIntervalWithErrorCheck wait blocks and check the error result
-func WaitForBlockIntervalWithErrorCheck(interval int64) {
-	err := pylonSDK.WaitForBlockInterval(interval)
-	if err != nil {
-		log.WithFields(log.Fields{
-			"error": err,
-		}).Fatal("error waiting for blocks")
-	}
-}
-
 // GetInitialPylons is a function to get initial pylons from faucet
 func GetInitialPylons(username string) (string, error) {
 	t := GetTestingT()
