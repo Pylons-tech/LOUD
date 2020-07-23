@@ -69,6 +69,13 @@ func SyncFromNode(user User) {
 		Attack, _ := rawItem.FindDouble("attack")
 		Value, _ := rawItem.FindLong("value")
 		LastUpdate := rawItem.LastUpdate
+		LockedTo := ""
+		if rawItem.OwnerRecipeID != "" {
+			LockedTo = "recipe"
+		}
+		if rawItem.OwnerTradeID != "" {
+			LockedTo = "trade"
+		}
 
 		if itemType == "Character" {
 			myCharacters = append(myCharacters, Character{
@@ -81,6 +88,7 @@ func SyncFromNode(user User) {
 				SpecialDragonKill: SpecialDragonKill,
 				UndeadDragonKill:  UndeadDragonKill,
 				LastUpdate:        LastUpdate,
+				LockedTo:          LockedTo,
 			})
 		} else {
 			myItems = append(myItems, Item{
@@ -90,6 +98,7 @@ func SyncFromNode(user User) {
 				Value:      Value,
 				ID:         rawItem.ID,
 				LastUpdate: LastUpdate,
+				LockedTo:   LockedTo,
 			})
 		}
 	}

@@ -211,6 +211,10 @@ func formatItem(item loud.Item) string {
 	// if item.Attack > 0 {
 	// 	itemStr += fmt.Sprintf(" attack=%d", item.Attack)
 	// }
+
+	if item.LockedTo != "" {
+		itemStr += fmt.Sprintf(" 🔒%s", item.LockedTo)
+	}
 	return itemStr
 }
 
@@ -321,6 +325,9 @@ func formatCharacter(ch loud.Character) string {
 	}
 	if ch.XP > 0 {
 		chStr += fmt.Sprintf(" XP=%s", formatBigNumber(int(ch.XP)))
+	}
+	if ch.LockedTo != "" {
+		chStr += fmt.Sprintf(" 🔒%s", ch.LockedTo)
 	}
 	return chStr
 }

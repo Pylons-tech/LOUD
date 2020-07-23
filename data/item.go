@@ -13,6 +13,7 @@ type Item struct {
 	Attack     int
 	Price      int
 	Value      int
+	LockedTo   string
 	PreItems   []string
 	LastUpdate int64
 }
@@ -37,6 +38,7 @@ type Character struct {
 	Name              string `json:""`
 	Level             int
 	Price             int
+	LockedTo          string
 	XP                float64
 	GiantKill         int
 	Special           int
