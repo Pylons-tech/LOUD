@@ -19,6 +19,7 @@ var customUnicodes = map[string]string{
 	"💰":  "xx", // Gold
 	"🔶":  "xx", //
 	"🔷":  "xx", // pylon
+	"🔒":  "xx", // locked
 	"👀":  "xx", // leave emoji 👀
 	"🗡️": "x",  // sword
 	"🐧":  "xx", // character emoji 🐧

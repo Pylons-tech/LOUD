@@ -28,6 +28,8 @@ type User interface {
 	SetAddress(string)
 	SetGold(int)
 	SetPylonAmount(int)
+	SetLockedGold(int)
+	SetLockedPylonAmount(int)
 	SetItems([]Item)
 	SetCharacters([]Character)
 	SetActiveCharacterIndex(idx int)
@@ -59,7 +61,9 @@ type User interface {
 	GetItemByID(string) *Item
 	GetAddress() string
 	GetGold() int
+	GetLockedGold() int
 	GetPylonAmount() int
+	GetLockedPylonAmount() int
 	GetUserName() string
 	GetLastTxHash() string
 	GetLastTxMetaData() string

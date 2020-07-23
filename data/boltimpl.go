@@ -84,22 +84,24 @@ func LoadWorldFromDB(filename string) World {
 
 // UserData is a JSON-serializable set of information about a User.
 type UserData struct {
-	Gold            int
-	PylonAmount     int
-	Username        string `json:""`
-	Address         string
-	Location        UserLocation
-	Items           []Item
-	Characters      []Character
-	Friends         []Friend
-	ActiveCharacter Character
-	DeadCharacter   Character
-	PrivKey         string
-	TargetMonster   string
-	UsingWeapon     Item
-	lastTransaction string
-	lastTxMetaData  string
-	lastUpdate      int64
+	Gold              int
+	LockedGold        int
+	PylonAmount       int
+	LockedPylonAmount int
+	Username          string `json:""`
+	Address           string
+	Location          UserLocation
+	Items             []Item
+	Characters        []Character
+	Friends           []Friend
+	ActiveCharacter   Character
+	DeadCharacter     Character
+	PrivKey           string
+	TargetMonster     string
+	UsingWeapon       Item
+	lastTransaction   string
+	lastTxMetaData    string
+	lastUpdate        int64
 }
 
 type dbUser struct {
@@ -205,12 +207,29 @@ func (user *dbUser) GetUserName() string {
 func (user *dbUser) SetGold(amount int) {
 	user.UserData.Gold = amount
 }
+
+func (user *dbUser) SetLockedGold(amount int) {
+	user.UserData.LockedGold = amount
+}
+
 func (user *dbUser) GetGold() int {
 	return user.UserData.Gold
 }
 
+func (user *dbUser) GetLockedGold() int {
+	return user.UserData.LockedGold
+}
+
 func (user *dbUser) GetPylonAmount() int {
 	return user.UserData.PylonAmount
+}
+
+func (user *dbUser) SetLockedPylonAmount(amount int) {
+	user.UserData.LockedPylonAmount = amount
+}
+
+func (user *dbUser) GetLockedPylonAmount() int {
+	return user.UserData.LockedPylonAmount
 }
 
 func (user *dbUser) SetPylonAmount(amount int) {

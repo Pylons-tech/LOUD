@@ -38,7 +38,7 @@ func (screen *GameScreen) renderCharacterSheet() {
 	infoLines := []string{
 		fmtFunc(centerText(fmt.Sprintf("%v", screen.user.GetUserName()), " ", w)),
 		fmtFunc(centerText(loud.Localize("inventory"), "─", w)),
-		fmtFunc(fillSpace(fmt.Sprintf("💰 %v", screen.user.GetGold()), w)),
+		fmtFunc(fillSpace(fmt.Sprintf("💰 %d ( 🔒 %d )", screen.user.GetGold(), screen.user.GetLockedGold()), w)),
 		fmtFunc(fillSpace("", w)),
 	}
 
@@ -96,7 +96,7 @@ func (screen *GameScreen) renderCharacterSheet() {
 	nodeLines := []string{
 		fmtFunc(centerText(" "+loud.Localize("pylons network status")+" ", "─", w)),
 		fmtFunc(fillSpace(fmt.Sprintf("%s: %s 📋 (M)", loud.Localize("Address"), truncateRight(screen.user.GetAddress(), 15)), w)),
-		fmtFunc(fillSpace(fmt.Sprintf("%s %s: %v", screen.pylonIcon(), "Pylon", screen.user.GetPylonAmount()), w)),
+		fmtFunc(fillSpace(fmt.Sprintf("🔷 %s: %d ( 🔒 %d )", "Pylon", screen.user.GetPylonAmount(), screen.user.GetLockedPylonAmount()), w)),
 	}
 
 	if len(screen.user.GetLastTxHash()) > 0 {
