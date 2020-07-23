@@ -299,9 +299,10 @@ func (user *dbUser) SetFriends(friends []Friend) {
 }
 
 func (user *dbUser) SetActiveCharacterIndex(idx int) {
-	length := len(user.UserData.Characters)
+	unlockedChrs := user.UnlockedCharacters()
+	length := len(unlockedChrs)
 	if idx >= 0 && idx < length {
-		user.UserData.ActiveCharacter = user.UserData.Characters[idx]
+		user.UserData.ActiveCharacter = unlockedChrs[idx]
 	} else {
 		if len(user.ActiveCharacter.ID) > 0 {
 			user.UserData.DeadCharacter = user.UserData.ActiveCharacter
@@ -312,11 +313,12 @@ func (user *dbUser) SetActiveCharacterIndex(idx int) {
 
 func (user *dbUser) FixLoadedData() {
 	if len(user.ActiveCharacter.ID) > 0 {
-		length := len(user.UserData.Characters)
+		unlockedChrs := user.UnlockedCharacters()
+		length := len(unlockedChrs)
 		idx := user.GetActiveCharacterIndex()
 		if idx >= 0 && idx < length {
 			// update to latest character status
-			user.UserData.ActiveCharacter = user.UserData.Characters[idx]
+			user.UserData.ActiveCharacter = unlockedChrs[idx]
 		} else {
 			// it means old active character is dead
 			user.UserData.DeadCharacter = user.UserData.ActiveCharacter
@@ -351,6 +353,17 @@ func (user *dbUser) GetDeadCharacter() *Character {
 
 func (user *dbUser) InventoryItems() []Item {
 	return user.UserData.Items
+}
+
+func (user *dbUser) UnlockedItems() []Item {
+	iis := user.InventoryItems()
+	uui := []Item{}
+	for _, ii := range iis {
+		if ii.LockedTo == "" {
+			uui = append(uui, ii)
+		}
+	}
+	return uui
 }
 
 func (user *dbUser) HasPreItemForAnItem(item Item) bool {
@@ -410,6 +423,17 @@ func (user *dbUser) InventorySwords() []Item {
 
 func (user *dbUser) InventoryCharacters() []Character {
 	return user.UserData.Characters
+}
+
+func (user *dbUser) UnlockedCharacters() []Character {
+	iic := user.InventoryCharacters()
+	uic := []Character{}
+	for _, ic := range iic {
+		if ic.LockedTo == "" {
+			uic = append(uic, ic)
+		}
+	}
+	return uic
 }
 
 func (user *dbUser) Friends() []Friend {

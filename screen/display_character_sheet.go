@@ -44,13 +44,14 @@ func (screen *GameScreen) renderCharacterSheet() {
 
 	MaxInventorySize := h - 15
 
-	for idx, character := range characters {
+	for _, character := range characters {
 		if len(infoLines) > MaxInventorySize {
 			infoLines = append(infoLines, fmtFunc(fillSpace("...", w)))
 			break
 		}
 		characterInfo := fillSpace(formatCharacter(character), w)
-		if idx == screen.user.GetActiveCharacterIndex() {
+		activeChr := screen.user.GetActiveCharacter()
+		if activeChr != nil && character.ID == activeChr.ID {
 			characterInfo = screen.blueBoldFont()(characterInfo)
 		} else {
 			characterInfo = fmtFunc(characterInfo)

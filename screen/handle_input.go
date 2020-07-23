@@ -94,8 +94,9 @@ func (screen *GameScreen) HandleInputKeyHomeEntryPoint(input termbox.Event) bool
 	}
 
 	if newStus, ok := tarStusMap[Key]; ok {
-		if newStus == SelectRenameChr && len(screen.user.InventoryCharacters()) == 0 {
-			screen.actionText = loud.Sprintf("You need a character for this action!")
+		if (newStus == SelectRenameChr || newStus == SelectActiveChr) &&
+			len(screen.user.UnlockedCharacters()) == 0 {
+			screen.actionText = loud.Sprintf("You need unlocked characters for this action!")
 			screen.Render()
 			return true
 		}
@@ -621,7 +622,7 @@ func (screen *GameScreen) HandleThirdClassInputKeys(input termbox.Event) bool {
 			screen.RunActiveCharacterSelect(screen.activeLine)
 		case SelectRenameChr:
 			screen.activeLine = loud.GetIndexFromString(Key)
-			characters := screen.user.InventoryCharacters()
+			characters := screen.user.UnlockedCharacters()
 			if len(characters) <= screen.activeLine || screen.activeLine < 0 {
 				return false
 			}
@@ -769,7 +770,7 @@ func (screen *GameScreen) HandleThirdClassKeyEnterEvent() bool {
 			screen.inputText = ""
 			screen.Render()
 		case SelectActiveChr:
-			characters := screen.user.InventoryCharacters()
+			characters := screen.user.UnlockedCharacters()
 			if len(characters) <= screen.activeLine || screen.activeLine < 0 {
 				return false
 			}
@@ -783,7 +784,7 @@ func (screen *GameScreen) HandleThirdClassKeyEnterEvent() bool {
 			screen.activeFriend = friends[screen.activeLine]
 			screen.RunActiveFriendRemove(screen.activeLine)
 		case SelectRenameChr:
-			characters := screen.user.InventoryCharacters()
+			characters := screen.user.UnlockedCharacters()
 			if len(characters) <= screen.activeLine || screen.activeLine < 0 {
 				return false
 			}

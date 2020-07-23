@@ -199,7 +199,7 @@ func (screen *GameScreen) renderUserSituation() {
 		tableLines = screen.renderITTable(
 			"Please select character to rename",
 			"Character",
-			screen.user.InventoryCharacters(),
+			screen.user.UnlockedCharacters(),
 			w, nil)
 	case SelectRenameChrEntNewName:
 		desc = loud.Localize("Please enter new character's name")
@@ -270,7 +270,7 @@ func (screen *GameScreen) renderUserSituation() {
 		tableLines = screen.renderITTable(
 			"Please select active character",
 			"Character",
-			screen.user.InventoryCharacters(),
+			screen.user.UnlockedCharacters(),
 			w, nil)
 	case FriendRemoveSelect:
 		tableLines = screen.renderITTable(

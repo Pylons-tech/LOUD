@@ -39,12 +39,14 @@ type User interface {
 	SetLatestBlockHeight(int64)
 	FixLoadedData()
 	InventoryItems() []Item
+	UnlockedItems() []Item
 	HasPreItemForAnItem(Item) bool
 	InventoryItemIDByName(string) string
 	InventoryAngelSwords() []Item
 	InventoryIronSwords() []Item
 	InventorySwords() []Item
 	InventoryCharacters() []Character
+	UnlockedCharacters() []Character
 	InventoryUpgradableItems() []Item
 	InventorySellableItems() []Item
 	Friends() []Friend

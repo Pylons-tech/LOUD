@@ -84,9 +84,9 @@ func (tl TextLines) appendCustomFontSelectCmds(itemsSlice interface{}, activeLin
 	return tl
 }
 
-func (tl TextLines) appendCustomFontSelectCmdsScreenCharacters(screen *GameScreen) TextLines {
+func (tl TextLines) appendCustomFontSelectCmdsUnlockedCharacters(screen *GameScreen) TextLines {
 	return tl.appendCustomFontSelectCmds(
-		screen.user.InventoryCharacters(), screen.activeLine,
+		screen.user.UnlockedCharacters(), screen.activeLine,
 		func(idx int, it interface{}) TextLine {
 			return TextLine{
 				content: formatCharacter(it.(loud.Character)),
@@ -222,12 +222,12 @@ func (screen *GameScreen) renderUserCommands() {
 		infoLines = infoLines.appendSelectGoBackCmds()
 	case SelectRenameChr:
 		infoLines = infoLines.
-			appendCustomFontSelectCmdsScreenCharacters(screen).
+			appendCustomFontSelectCmdsUnlockedCharacters(screen).
 			appendSelectGoBackCmds()
 	case SelectActiveChr:
 		infoLines = infoLines.
 			append(fmt.Sprintf("0) %s", loud.Localize("No character selection"))).
-			appendCustomFontSelectCmdsScreenCharacters(screen).
+			appendCustomFontSelectCmdsUnlockedCharacters(screen).
 			appendSelectGoBackCmds()
 	case FriendRemoveSelect:
 		infoLines = infoLines.

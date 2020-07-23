@@ -440,7 +440,7 @@ func RequestInfo(request interface{}) (bool, interface{}, int) {
 func (screen *GameScreen) ForestStatusCheck(newStus PageStatus) (string, string) {
 	activeCharacter := screen.user.GetActiveCharacter()
 	if activeCharacter == nil {
-		return loud.Sprintf("You need a character for this action!"), loud.Sprintf("no character!")
+		return loud.Sprintf("You need an active character for this action!"), loud.Sprintf("no character!")
 	}
 	switch newStus {
 	case ConfirmFightGiant:

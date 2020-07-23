@@ -260,7 +260,10 @@
   "You need an angel sword for this action!": {
     "one": "You need an iron sword for this action!"
   },
-  "You need a character for this action!": {
+  "You need unlocked characters for this action!": {
+    "one": "You need unlocked characters for this action!"
+  },
+  "You need an active character for this action!": {
     "one": "You need an active character for this action!"
   },
   "You need a fire character for this action!": {
