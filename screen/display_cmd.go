@@ -155,7 +155,7 @@ func (screen *GameScreen) renderUserCommands() {
 			}
 		}
 		if screen.user.GetLocation() == loud.Home {
-			if len(infoLines) > 1 && len(screen.user.InventoryCharacters()) == 0 {
+			if len(infoLines) > 1 && len(screen.user.UnlockedCharacters()) == 0 {
 				// make it grey when no character's there
 				// TODO this is to disable 2. rename character code if something is changed in ordering this should be changed too.
 				// Do we have a better way to manage this? and same for similar changes.

@@ -161,7 +161,6 @@ func (screen *GameScreen) renderUserSituation() {
 				return screen.getFontOfTableLine(idx, isMyTrdReq)
 			})
 	case ShowBuyChrTrdReqs:
-		// log.Debugln("InventoryCharacters", screen.user.InventoryCharacters())
 		tableLines = screen.renderITRTable(
 			"Buy character requests",
 			[2]string{"Character", "Price (pylon)"},
@@ -169,10 +168,6 @@ func (screen *GameScreen) renderUserSituation() {
 			w,
 			func(idx int, request interface{}) (FontType, string) {
 				itr := request.(loud.CharacterBuyTrdReq)
-				// log.Debugln("GetMatchedCharacters",
-				// 	len(screen.user.GetMatchedCharacters(itr.TCharacter)),
-				// 	request.(loud.CharacterBuyTrdReq),
-				// 	screen.user.InventoryCharacters())
 				if itr.IsMyTrdReq {
 					return screen.GetDisabledFontByActiveLine(idx), "self"
 				}
@@ -221,13 +216,13 @@ func (screen *GameScreen) renderUserSituation() {
 		tableLines = screen.renderITTable(
 			loud.Sprintf("Please select an item to send to %s", screen.activeFriend.Name),
 			"Item",
-			screen.user.InventoryItems(),
+			screen.user.UnlockedItems(),
 			w, nil)
 	case SendCharacterSelectCharacter:
 		tableLines = screen.renderITTable(
 			loud.Sprintf("Please select a character to send to %s", screen.activeFriend.Name),
 			"Item",
-			screen.user.InventoryCharacters(),
+			screen.user.UnlockedCharacters(),
 			w, nil)
 	case FriendRegisterEnterName:
 		desc = loud.Localize("Please enter your friend's name")
@@ -238,13 +233,13 @@ func (screen *GameScreen) renderUserSituation() {
 		tableLines = screen.renderITTable(
 			"Select item to sell",
 			"Item",
-			screen.user.InventoryItems(),
+			screen.user.UnlockedItems(),
 			w, nil)
 	case CreateSellChrTrdReqSelChr:
 		tableLines = screen.renderITTable(
 			"Select character to sell",
 			"Character",
-			screen.user.InventoryCharacters(),
+			screen.user.UnlockedCharacters(),
 			w, nil)
 	case CreateSellItemTrdReqEnterPylonValue:
 		desc = loud.Localize("Please enter pylon amount to use (should be integer value)")

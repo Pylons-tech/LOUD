@@ -680,13 +680,13 @@ func (screen *GameScreen) HandleThirdClassKeyEnterEvent() bool {
 				screen.SetScreenStatusAndRefresh(SendCharacterSelectCharacter)
 			}
 		case SendItemSelectItem:
-			items := screen.user.InventoryItems()
+			items := screen.user.UnlockedItems()
 			if screen.activeLine >= 0 || screen.activeLine < len(items) {
 				screen.activeItem = items[screen.activeLine]
 				screen.RunSendItem()
 			}
 		case SendCharacterSelectCharacter:
-			chrs := screen.user.InventoryCharacters()
+			chrs := screen.user.UnlockedCharacters()
 			if screen.activeLine >= 0 || screen.activeLine < len(chrs) {
 				screen.activeCharacter = chrs[screen.activeLine]
 				screen.RunSendCharacter()
@@ -736,7 +736,7 @@ func (screen *GameScreen) HandleThirdClassKeyEnterEvent() bool {
 		case ShowSellChrTrdReqs:
 			screen.RunSelectedCharacterSellTrdReq()
 		case CreateSellItemTrdReqSelectItem:
-			userItems := screen.user.InventoryItems()
+			userItems := screen.user.UnlockedItems()
 			if len(userItems) <= screen.activeLine || screen.activeLine < 0 {
 				return false
 			}
@@ -753,7 +753,7 @@ func (screen *GameScreen) HandleThirdClassKeyEnterEvent() bool {
 			screen.inputText = ""
 			screen.Render()
 		case CreateSellChrTrdReqSelChr:
-			userCharacters := screen.user.InventoryCharacters()
+			userCharacters := screen.user.UnlockedCharacters()
 			if len(userCharacters) <= screen.activeLine || screen.activeLine < 0 {
 				return false
 			}
@@ -807,7 +807,7 @@ func (screen *GameScreen) HandleThirdClassKeyEnterEvent() bool {
 			screen.activeCharacter = characters[screen.activeLine]
 			screen.RunActiveCharacterBuy()
 		case SelectSellItem:
-			items := screen.user.InventoryItems()
+			items := screen.user.UnlockedItems()
 			if len(items) <= screen.activeLine || screen.activeLine < 0 {
 				return false
 			}

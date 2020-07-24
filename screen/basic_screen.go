@@ -233,9 +233,9 @@ func (screen *GameScreen) SetScreenStatus(newStatus PageStatus) {
 	case SendItemSelectFriend, SendCharacterSelectFriend:
 		screen.SelectDefaultActiveLine(screen.user.Friends())
 	case SendItemSelectItem:
-		screen.SelectDefaultActiveLine(screen.user.InventoryItems())
+		screen.SelectDefaultActiveLine(screen.user.UnlockedItems())
 	case SendCharacterSelectCharacter:
-		screen.SelectDefaultActiveLine(screen.user.InventoryCharacters())
+		screen.SelectDefaultActiveLine(screen.user.UnlockedCharacters())
 	case SelectBuyChr:
 		screen.activeLine = 0
 	case ShowGoldBuyTrdReqs:
@@ -261,11 +261,11 @@ func (screen *GameScreen) SetScreenStatus(newStatus PageStatus) {
 	case CreateBuyChrTrdReqSelectChr:
 		screen.SelectDefaultActiveLine(loud.WorldCharacterSpecs)
 	case CreateSellChrTrdReqSelChr:
-		screen.SelectDefaultActiveLine(screen.user.InventoryCharacters())
+		screen.SelectDefaultActiveLine(screen.user.UnlockedCharacters())
 	case CreateBuyItemTrdReqSelectItem:
 		screen.SelectDefaultActiveLine(loud.WorldItemSpecs)
 	case CreateSellItemTrdReqSelectItem:
-		screen.SelectDefaultActiveLine(screen.user.InventoryItems())
+		screen.SelectDefaultActiveLine(screen.user.UnlockedItems())
 	}
 }
 

@@ -389,7 +389,7 @@ func (user *dbUser) InventoryItemIDByName(name string) string {
 }
 
 func (user *dbUser) InventoryAngelSwords() []Item {
-	iis := user.InventoryItems()
+	iis := user.UnlockedItems()
 	uis := []Item{}
 	for _, ii := range iis {
 		if ii.Name == AngelSword {
@@ -400,7 +400,7 @@ func (user *dbUser) InventoryAngelSwords() []Item {
 }
 
 func (user *dbUser) InventoryIronSwords() []Item {
-	iis := user.InventoryItems()
+	iis := user.UnlockedItems()
 	uis := []Item{}
 	for _, ii := range iis {
 		if ii.Name == IronSword {
@@ -411,7 +411,7 @@ func (user *dbUser) InventoryIronSwords() []Item {
 }
 
 func (user *dbUser) InventorySwords() []Item {
-	iis := user.InventoryItems()
+	iis := user.UnlockedItems()
 	uis := []Item{}
 	for _, ii := range iis {
 		if ii.IsSword() {
@@ -441,7 +441,7 @@ func (user *dbUser) Friends() []Friend {
 }
 
 func (user *dbUser) InventoryUpgradableItems() []Item {
-	iis := user.InventoryItems()
+	iis := user.UnlockedItems()
 	uis := []Item{}
 	for _, ii := range iis {
 		if ii.Level == 1 && (ii.Name == CopperSword || ii.Name == WoodenSword) {
@@ -452,7 +452,7 @@ func (user *dbUser) InventoryUpgradableItems() []Item {
 }
 
 func (user *dbUser) InventorySellableItems() []Item {
-	return user.InventoryItems()
+	return user.UnlockedItems()
 }
 
 func (user *dbUser) GetLastTxHash() string {
@@ -478,7 +478,7 @@ func (user dbUser) GetLatestBlockHeight() int64 {
 
 func (user dbUser) GetMatchedItems(itspec ItemSpec) []Item {
 	mitems := []Item{}
-	for _, item := range user.InventoryItems() {
+	for _, item := range user.UnlockedItems() {
 		if len(itspec.Name) != 0 && item.Name != itspec.Name {
 			continue
 		}
@@ -495,7 +495,7 @@ func (user dbUser) GetMatchedItems(itspec ItemSpec) []Item {
 
 func (user dbUser) GetMatchedCharacters(chspec CharacterSpec) []Character {
 	mchars := []Character{}
-	for _, char := range user.InventoryCharacters() {
+	for _, char := range user.UnlockedCharacters() {
 		if chspec.Special > 0 && char.Special != chspec.Special {
 			continue
 		}
