@@ -337,7 +337,7 @@ func (user *dbUser) FixLoadedData() {
 
 func (user *dbUser) GetActiveCharacterIndex() int {
 	// order can be changed on every sync so we should take care of the index by finding by id
-	for idx, ic := range user.InventoryCharacters() {
+	for idx, ic := range user.UnlockedCharacters() {
 		if ic.ID == user.ActiveCharacter.ID {
 			return idx
 		}
