@@ -124,9 +124,14 @@ func (screen *GameScreen) HandleInputKeyPylonsCentralEntryPoint(input termbox.Ev
 
 	if newStus, ok := tarStusMap[Key]; ok {
 		if newStus == WaitByGoldWithPylons {
-			screen.RunTxProcess(WaitByGoldWithPylons, RsltByGoldWithPylons, func() (string, error) {
-				return loud.BuyGoldWithPylons(screen.user)
-			})
+			if loud.GetGoldPurchasePrice() > screen.user.GetUnlockedPylonAmount() {
+				screen.actionText = loud.Sprintf("You should have 100 pylons to purchase 5000 gold!")
+				screen.Render()
+			} else {
+				screen.RunTxProcess(WaitByGoldWithPylons, RsltByGoldWithPylons, func() (string, error) {
+					return loud.BuyGoldWithPylons(screen.user)
+				})
+			}
 		} else {
 			screen.SetScreenStatus(newStus)
 			screen.Render()
@@ -845,6 +850,11 @@ func (screen *GameScreen) HandleFightGiantSpecialBonusInputKeys(input termbox.Ev
 	}
 
 	if tarBonus, ok := tarBonusMap[Key]; ok {
+		if screen.user.GetUnlockedPylonAmount() < loud.GetSpecialGiantFightPrice() { // should have more than 5 pylons for special bonus
+			screen.actionText = loud.Sprintf("You should have more than 5 pylons to fight special giant!")
+			screen.Render()
+			return true
+		}
 		screen.RunFightGiant(tarBonus)
 		return true
 	}

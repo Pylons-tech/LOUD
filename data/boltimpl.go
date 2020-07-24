@@ -220,12 +220,20 @@ func (user *dbUser) GetLockedGold() int {
 	return user.UserData.LockedGold
 }
 
+func (user *dbUser) GetUnlockedGold() int {
+	return user.UserData.Gold - user.UserData.LockedGold
+}
+
 func (user *dbUser) GetPylonAmount() int {
 	return user.UserData.PylonAmount
 }
 
 func (user *dbUser) SetLockedPylonAmount(amount int) {
 	user.UserData.LockedPylonAmount = amount
+}
+
+func (user *dbUser) GetUnlockedPylonAmount() int {
+	return user.UserData.PylonAmount - user.UserData.LockedPylonAmount
 }
 
 func (user *dbUser) GetLockedPylonAmount() int {

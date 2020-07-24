@@ -163,6 +163,12 @@ func (screen *GameScreen) renderUserCommands() {
 				infoLines[1].font = GreyFont
 			}
 		}
+		if screen.user.GetLocation() == loud.PylonsCentral {
+			if loud.GetGoldPurchasePrice() > screen.user.GetUnlockedPylonAmount() {
+				infoLines[0].content += ": " + loud.Sprintf("pylonlack")
+				infoLines[0].font = GreyFont
+			}
+		}
 	case ShowGoldBuyTrdReqs:
 		infoLines = infoLines.
 			appendT(
@@ -244,7 +250,7 @@ func (screen *GameScreen) renderUserCommands() {
 					switch {
 					case !screen.user.HasPreItemForAnItem(item): // ! preitem ok
 						bonusText = fmt.Sprintf(": %s", loud.Localize("no material"))
-					case !(item.Price <= screen.user.GetGold()): // ! gold enough
+					case !(item.Price <= screen.user.GetUnlockedGold()): // ! gold enough
 						bonusText = fmt.Sprintf(": %s", loud.Localize("not enough gold"))
 					}
 					if len(item.PreItems) > 0 {
@@ -309,6 +315,12 @@ func (screen *GameScreen) renderUserCommands() {
 		infoLines = infoLines.
 			append(loud.ChunkText(cmdString, w)...).
 			appendGoOnBackCmds()
+		if screen.user.GetUnlockedPylonAmount() < loud.GetSpecialGiantFightPrice() {
+			for i := 0; i < 3; i++ { // special giants disable
+				infoLines[i].content += ": " + loud.Sprintf("pylonlack")
+				infoLines[i].font = GreyFont
+			}
+		}
 	case SendItemSelectType:
 		cmdString := loud.Localize("determine to send item type cmds")
 		infoLines = infoLines.

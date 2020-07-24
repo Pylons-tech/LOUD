@@ -86,7 +86,7 @@ func (screen *GameScreen) renderUserSituation() {
 				if tr.IsMyTrdReq {
 					return screen.GetDisabledFontByActiveLine(idx), "self"
 				}
-				if screen.user.GetGold() < tr.Amount {
+				if screen.user.GetUnlockedGold() < tr.Amount {
 					return screen.GetDisabledFontByActiveLine(idx), "goldlack"
 				}
 				return screen.getFontOfTableLine(idx, tr.IsMyTrdReq)
@@ -99,7 +99,7 @@ func (screen *GameScreen) renderUserSituation() {
 				if tr.IsMyTrdReq {
 					return screen.GetDisabledFontByActiveLine(idx), "self"
 				}
-				if screen.user.GetPylonAmount() < tr.Total {
+				if screen.user.GetUnlockedPylonAmount() < tr.Total {
 					return screen.GetDisabledFontByActiveLine(idx), "pylonlack"
 				}
 				return screen.getFontOfTableLine(idx, tr.IsMyTrdReq)
@@ -139,7 +139,7 @@ func (screen *GameScreen) renderUserSituation() {
 				if isMyTrdReq {
 					return screen.GetDisabledFontByActiveLine(idx), "self"
 				}
-				if screen.user.GetPylonAmount() < requestPrice {
+				if screen.user.GetUnlockedPylonAmount() < requestPrice {
 					return screen.GetDisabledFontByActiveLine(idx), "pylonlack"
 				}
 				return screen.getFontOfTableLine(idx, isMyTrdReq)
@@ -155,7 +155,7 @@ func (screen *GameScreen) renderUserSituation() {
 				if isMyTrdReq {
 					return screen.GetDisabledFontByActiveLine(idx), "self"
 				}
-				if screen.user.GetPylonAmount() < requestPrice {
+				if screen.user.GetUnlockedPylonAmount() < requestPrice {
 					return screen.GetDisabledFontByActiveLine(idx), "pylonlack"
 				}
 				return screen.getFontOfTableLine(idx, isMyTrdReq)
@@ -295,7 +295,7 @@ func (screen *GameScreen) renderUserSituation() {
 			screen.user.InventoryUpgradableItems(),
 			w, func(idx int, itemT interface{}) (FontType, string) {
 				item := itemT.(loud.Item)
-				if item.GetUpgradePrice() > screen.user.GetGold() {
+				if item.GetUpgradePrice() > screen.user.GetUnlockedGold() {
 					return screen.GetDisabledFontByActiveLine(idx), "goldlack"
 				}
 				return screen.getFontOfTableLine(idx, false)

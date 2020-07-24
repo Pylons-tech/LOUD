@@ -160,7 +160,7 @@ func BuyCharacter(user User, ch Character) (string, error) {
 	default:
 		return "", errors.New("You are trying to buy character which is not in shop")
 	}
-	if ch.Price > user.GetPylonAmount() {
+	if ch.Price > user.GetUnlockedPylonAmount() {
 		return "", errors.New("You don't have enough pylon to buy this character")
 	}
 	return ExecuteRecipe(user, rcpName, []string{})
@@ -250,7 +250,7 @@ func BuyItem(user User, item Item) (string, error) {
 	default:
 		return "", errors.New("You are trying to buy item which is not in shop")
 	}
-	if item.Price > user.GetGold() {
+	if item.Price > user.GetUnlockedGold() {
 		return "", errors.New("You don't have enough gold to buy this item")
 	}
 	return ExecuteRecipe(user, rcpName, itemIDs)
@@ -281,7 +281,7 @@ func UpgradeItem(user User, item Item) (string, error) {
 			rcpName = RcpCopperSwordUpgrade
 		}
 	}
-	if item.GetUpgradePrice() > user.GetGold() {
+	if item.GetUpgradePrice() > user.GetUnlockedGold() {
 		return "", errors.New("You don't have enough gold to upgrade this item")
 	}
 	return ExecuteRecipe(user, rcpName, itemIDs)
@@ -289,11 +289,11 @@ func UpgradeItem(user User, item Item) (string, error) {
 
 // CreateBuyGoldTrdReq is a function to create gold buying trade request
 func CreateBuyGoldTrdReq(user User, goldEnterValue string, pylonEnterValue string) (string, error) {
-	loudValue, err := strconv.Atoi(goldEnterValue)
+	goldValue, err := strconv.Atoi(goldEnterValue)
 	if err != nil {
 		return "", err
 	}
-	if loudValue == 0 {
+	if goldValue == 0 {
 		return "", errors.New("gold amount shouldn't be zero to be a valid trading")
 	}
 	pylonValue, err := strconv.Atoi(pylonEnterValue)
@@ -303,10 +303,13 @@ func CreateBuyGoldTrdReq(user User, goldEnterValue string, pylonEnterValue strin
 	if pylonValue == 0 {
 		return "", errors.New("pylon amount shouldn't be zero to be a valid trading")
 	}
+	if pylonValue > user.GetUnlockedPylonAmount() {
+		return "", errors.New("pylon amount should be lower than the amount of unlocked pylon balance")
+	}
 
 	sdkAddr := GetSDKAddrFromUserName(user.GetUserName())
 
-	inputCoinList := types.GenCoinInputList("loudcoin", int64(loudValue))
+	inputCoinList := types.GenCoinInputList("loudcoin", int64(goldValue))
 
 	outputCoins := sdk.Coins{sdk.NewInt64Coin("pylon", int64(pylonValue))}
 	extraInfo := TextCreatedByLOUD
@@ -323,11 +326,11 @@ func CreateBuyGoldTrdReq(user User, goldEnterValue string, pylonEnterValue strin
 
 // CreateSellGoldTrdReq is a function to create sell gold trade request
 func CreateSellGoldTrdReq(user User, goldEnterValue string, pylonEnterValue string) (string, error) {
-	loudValue, err := strconv.Atoi(goldEnterValue)
+	goldValue, err := strconv.Atoi(goldEnterValue)
 	if err != nil {
 		return "", err
 	}
-	if loudValue == 0 {
+	if goldValue == 0 {
 		return "", errors.New("gold amount shouldn't be zero to be a valid trading")
 	}
 	pylonValue, err := strconv.Atoi(pylonEnterValue)
@@ -337,12 +340,15 @@ func CreateSellGoldTrdReq(user User, goldEnterValue string, pylonEnterValue stri
 	if pylonValue == 0 {
 		return "", errors.New("pylon amount shouldn't be zero to be a valid trading")
 	}
+	if goldValue > user.GetUnlockedGold() {
+		return "", errors.New("gold amount should be lower than the amount of unlocked gold balance")
+	}
 
 	sdkAddr := GetSDKAddrFromUserName(user.GetUserName())
 
 	inputCoinList := types.GenCoinInputList("pylon", int64(pylonValue))
 
-	outputCoins := sdk.Coins{sdk.NewInt64Coin("loudcoin", int64(loudValue))}
+	outputCoins := sdk.Coins{sdk.NewInt64Coin("loudcoin", int64(goldValue))}
 	extraInfo := TextCreatedByLOUD
 
 	createTrdMsg := msgs.NewMsgCreateTrade(

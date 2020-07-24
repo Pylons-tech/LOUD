@@ -790,5 +790,11 @@
   },
   "Please select to send item type": {
     "one": "Please select to send item type, character or item."
+  },
+  "You should have more than 5 pylons to fight special giant!": {
+    "one": "You should have more than 5 pylons to fight special giant!"
+  },
+  "You should have 100 pylons to purchase 5000 gold!": {
+    "one": "You should have 100 pylons to purchase 5000 gold!"
   }
 }

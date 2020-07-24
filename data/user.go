@@ -64,8 +64,10 @@ type User interface {
 	GetAddress() string
 	GetGold() int
 	GetLockedGold() int
+	GetUnlockedGold() int
 	GetPylonAmount() int
 	GetLockedPylonAmount() int
+	GetUnlockedPylonAmount() int
 	GetUserName() string
 	GetLastTxHash() string
 	GetLastTxMetaData() string
