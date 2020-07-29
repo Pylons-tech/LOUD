@@ -88,6 +88,7 @@ type UserData struct {
 	LockedGold        int
 	PylonAmount       int
 	LockedPylonAmount int
+	LockedCoinDetails []LockedCoinDescribe
 	Username          string `json:""`
 	Address           string
 	Location          UserLocation
@@ -270,6 +271,14 @@ func (user *dbUser) SelectFightWeapon() {
 	default:
 		user.UsingWeapon = Item{}
 	}
+}
+
+func (user *dbUser) SetLockedCoinDetails(lcd []LockedCoinDescribe) {
+	user.LockedCoinDetails = lcd
+}
+
+func (user *dbUser) GetLockedCoinDetails() []LockedCoinDescribe {
+	return user.LockedCoinDetails
 }
 
 func (user *dbUser) SetFightMonster(monster string) {

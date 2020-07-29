@@ -240,6 +240,8 @@ func (screen *GameScreen) SetScreenStatus(newStatus PageStatus) {
 		screen.activeLine = 0
 	case ShowGoldBuyTrdReqs:
 		screen.SelectDefaultActiveLine(loud.BuyTrdReqs)
+	case ShowLockedCoins:
+		screen.SelectDefaultActiveLine(screen.user.GetLockedCoinDetails())
 	case ShowGoldSellTrdReqs:
 		screen.SelectDefaultActiveLine(loud.SellTrdReqs)
 	case ShowBuyItemTrdReqs:

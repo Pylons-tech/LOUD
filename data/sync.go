@@ -41,7 +41,7 @@ func SyncFromNode(user User) {
 	user.SetPylonAmount(int(accInfo.Coins.AmountOf("pylon").Int64()))
 	user.SetAddress(accAddr)
 
-	lockedInfo, err := pylonSDK.ListLockedCoinsViaCLI(accAddr)
+	lockedInfo, err := pylonSDK.ListLockedCoinDetailsViaCLI(accAddr)
 	log.WithFields(log.Fields{
 		"locked_info": lockedInfo,
 		"error":       err,
@@ -49,6 +49,23 @@ func SyncFromNode(user User) {
 
 	user.SetLockedGold(int(lockedInfo.Amount.AmountOf("loudcoin").Int64()))
 	user.SetLockedPylonAmount(int(lockedInfo.Amount.AmountOf("pylon").Int64()))
+
+	lockDetails := []LockedCoinDescribe{}
+	for _, lct := range lockedInfo.LockCoinTrades {
+		lockDetails = append(lockDetails, LockedCoinDescribe{
+			ID:     lct.ID,
+			Amount: lct.Amount,
+			Type:   "trade",
+		})
+	}
+	for _, lce := range lockedInfo.LockCoinExecs {
+		lockDetails = append(lockDetails, LockedCoinDescribe{
+			ID:     lce.ID,
+			Amount: lce.Amount,
+			Type:   "recipe",
+		})
+	}
+	user.SetLockedCoinDetails(lockDetails)
 
 	rawItems, _ := pylonSDK.ListItemsViaCLI(accInfo.Address.String())
 	myItems := []Item{}

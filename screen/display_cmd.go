@@ -175,6 +175,10 @@ func (screen *GameScreen) renderUserCommands() {
 				"Sell gold to fulfill selected request( ↵ )",
 				"Place order to buy gold(R)",
 				GobackCommand)
+	case ShowLockedCoins:
+		infoLines = infoLines.
+			appendT(
+				GobackCommand)
 	case ShowGoldSellTrdReqs:
 		infoLines = infoLines.
 			appendT(

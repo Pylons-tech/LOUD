@@ -126,6 +126,38 @@ func (screen *GameScreen) renderITRTable(header string, theads [2]string, rawArr
 	return tableLines
 }
 
+func (screen *GameScreen) renderCoinLockTable(header string, theads [2]string, rawArrayInterFace interface{}, width int, fontFunc FontFuncType) TextLines {
+	rawArray := InterfaceSlice(rawArrayInterFace)
+	TableSeparators := []string{
+		"╭────────────────────────────────────┬───────────────┬───────────────╮",
+		"├────────────────────────────────────┼───────────────┼───────────────┤",
+		"├──────────↓↓↓↓↓↓↓↓↓↓↓↓↓↓────────────┼─────↓↓↓↓↓↓────┼───────────────┤",
+		"╰────────────────────────────────────┴───────────────┴───────────────╯",
+		"╰──────────↑↑↑↑↑↑↑↑↑↑↑↑↑↑────────────┴─────↑↑↑↑↑↑────┴───────────────╯",
+	}
+
+	infoLines, startLine, endLine := screen.TableHeightWindow(header, rawArrayInterFace, width)
+	tableLines := screen.TableHeader(
+		infoLines,
+		TableSeparators,
+		screen.renderItemTrdReqTableLine(theads[0], theads[1], "memo"),
+		startLine,
+	)
+
+	for li, rawItem := range rawArray[startLine:endLine] {
+		lock := rawItem.(loud.LockedCoinDescribe)
+		font, _ := fontFunc(li, lock)
+		line := screen.renderItemTrdReqTableLine(
+			fmt.Sprintf("%s  ", truncateLeft(lock.ID, 30)),
+			formatByStructType(lock.Amount),
+			lock.Type)
+		tableLines = tableLines.appendF(line, font)
+	}
+	tableLines = tableLines.
+		append(screen.TableFooter(TableSeparators, endLine, rawArray))
+	return tableLines
+}
+
 func (screen *GameScreen) renderITTable(header string, th string, rawArrayInterFace interface{}, width int, fontFunc FontFuncType) TextLines {
 	rawArray := InterfaceSlice(rawArrayInterFace)
 	TableSeparators := []string{

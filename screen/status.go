@@ -160,6 +160,9 @@ const (
 	// RsltBuyChr describes the result page for buying character
 	RsltBuyChr = "RSLT_BUYCHR"
 
+	// ShowLockedCoins describes where coins are locked
+	ShowLockedCoins = "SHW_LOCKED_COINS"
+
 	// ShowGoldBuyTrdReqs describes the listing page for buying gold trade requests
 	ShowGoldBuyTrdReqs = "SHW_LOUD_BUY_TRDREQS"
 	// CreateBuyGoldTrdReqEnterGoldValue describes the gold buy trade request creation page's enter gold amount

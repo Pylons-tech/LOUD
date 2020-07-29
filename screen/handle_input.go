@@ -91,6 +91,7 @@ func (screen *GameScreen) HandleInputKeyHomeEntryPoint(input termbox.Event) bool
 		"1": SelectActiveChr,
 		"2": SelectRenameChr,
 		"3": SelectBuyChr,
+		"4": ShowLockedCoins,
 	}
 
 	if newStus, ok := tarStusMap[Key]; ok {

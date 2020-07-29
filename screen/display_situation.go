@@ -91,6 +91,15 @@ func (screen *GameScreen) renderUserSituation() {
 				}
 				return screen.getFontOfTableLine(idx, tr.IsMyTrdReq)
 			})
+	case ShowLockedCoins:
+		tableLines = screen.renderCoinLockTable(
+			"Locked coin list",
+			[2]string{"Where", "Amount"},
+			screen.user.GetLockedCoinDetails(),
+			w,
+			func(idx int, request interface{}) (FontType, string) {
+				return screen.getFontByActiveIndex(idx), "trade"
+			})
 	case ShowGoldSellTrdReqs:
 		tableLines = screen.renderTRTable(
 			loud.SellTrdReqs, w,

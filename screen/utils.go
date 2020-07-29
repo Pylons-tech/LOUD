@@ -12,6 +12,8 @@ import (
 	"github.com/Pylons-tech/LOUD/log"
 	"github.com/ahmetb/go-cursor"
 	"github.com/mgutz/ansi"
+
+	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
 // TextLine is a struct to manage a line on screen
@@ -384,6 +386,17 @@ func formatByStructType(item interface{}) string {
 		return formatCharacterSpec(item)
 	case loud.Friend:
 		return item.Name
+	case sdk.Coins:
+		lockAmountStr := ""
+		goldLockAmount := item.AmountOf("loudcoin").Int64()
+		pylonLockAmount := item.AmountOf("pylon").Int64()
+		if pylonLockAmount > 0 {
+			lockAmountStr += fmt.Sprintf("🔷 %d", pylonLockAmount)
+		}
+		if goldLockAmount > 0 {
+			lockAmountStr += fmt.Sprintf("💰 %d", goldLockAmount)
+		}
+		return lockAmountStr
 	default:
 		return "unrecognized struct type"
 	}

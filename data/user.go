@@ -37,6 +37,7 @@ type User interface {
 	SetLocation(UserLocation)
 	SetLastTransaction(string, string)
 	SetLatestBlockHeight(int64)
+	SetLockedCoinDetails([]LockedCoinDescribe)
 	FixLoadedData()
 	InventoryItems() []Item
 	UnlockedItems() []Item
@@ -55,6 +56,7 @@ type User interface {
 	GetMatchedCharacters(CharacterSpec) []Character
 	GetLocation() UserLocation
 	GetPrivKey() string
+	GetLockedCoinDetails() []LockedCoinDescribe
 	GetActiveCharacterIndex() int
 	GetActiveCharacter() *Character
 	GetDeadCharacter() *Character
