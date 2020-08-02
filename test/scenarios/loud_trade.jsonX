@@ -1,0 +1,80 @@
+[
+    {
+        "ID": "CREATE_LOUD_ITEMS",
+        "runAfter": {
+            "precondition": ["CREATE_LOUD_COOKBOOK"],
+            "blockWait": 0
+        },
+        "action": "multi_msg_tx",
+        "msgRefs": [
+            {
+                "action": "fiat_item",
+                "paramsRef": "./items/copper_sword_lv1.json"
+            },
+            {
+                "action": "fiat_item",
+                "paramsRef": "./items/wooden_sword_lv1.json"
+            }
+        ],
+        "output": {
+            "txResult": {
+                "status": "Success"
+            },
+            "property": [
+                {
+                    "owner": "account1",
+                    "items": [
+                        {
+                            "stringValues": { "Name": "Copper sword" }
+                        },
+                        {
+                            "stringValues": { "Name": "Wooden sword" }
+                        }
+                    ]
+                }
+            ]
+        }
+    },
+    {
+        "ID": "CREATE_LOUD_TRADES",
+        "runAfter": {
+            "precondition": ["CREATE_LOUD_COOKBOOK", "CREATE_LOUD_ITEMS"],
+            "blockWait": 0
+        },
+        "action": "multi_msg_tx",
+        "msgRefs": [
+            {
+                "action": "create_trade",
+                "paramsRef": "./trades/trade_pylon_loud.json"
+            },
+            {
+                "action": "create_trade",
+                "paramsRef": "./trades/trade_loud_pylon.json"
+            },
+            {
+                "action": "create_trade",
+                "paramsRef": "./trades/trade_pylon_sword.json"
+            },
+            {
+                "action": "create_trade",
+                "paramsRef": "./trades/trade_sword_pylon.json"
+            }
+        ],
+        "output": {
+            "txResult": {
+                "status": "Success"
+            },
+            "property": [
+                {
+                    "owner": "account1",
+                    "trades": [
+                        "pylon to loud trading created by loud game",
+                        "loud to pylon trading created by loud game",
+                        "pylon to sword trading created by loud game",
+                        "sword to pylon trading created by loud game"
+                    ]
+                }
+            ]
+        }
+    }
+]
