@@ -1,18 +1,22 @@
 {
     "ID": "LOUD-sell-an-item-recipe-v0.1.0-1589853709",
     "CoinInputs":[],
-    "ItemInputRefs":[
-        "./recipes/item_input/item.json"
+    "ItemInputs":[
+        {
+            "ID": "item",
+            "Ref": "./recipes/item_input/item.json"
+        }
     ],
     "Entries": {
         "CoinOutputs": [{
+            "ID": "coin_reward",
             "Coin":"loudcoin",
             "Count": "value*8/10+rand(20)"
         }]
     },
     "Outputs": [
         {
-            "ResultEntries": ["0"],
+            "EntryIDs": ["coin_reward"],
             "Weight": "1"
         }
     ],

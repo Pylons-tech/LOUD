@@ -1,16 +1,17 @@
 {
     "ID": "LOUD-get-character-recipe-v0.1.0-1589853709",
     "CoinInputs":[],
-    "ItemInputRefs": [],
+    "ItemInputs": [],
     "Entries":{
         "CoinOutputs":[],
         "ItemOutputs":[{
+            "ID": "tiger_character_lv1",
             "Ref": "./recipes/item_output/tiger_character_lv1.json"
         }]
     },
     "Outputs": [
         {
-            "ResultEntries": ["0"],
+            "EntryIDs": ["tiger_character_lv1"],
             "Weight": "1"
         }
     ],

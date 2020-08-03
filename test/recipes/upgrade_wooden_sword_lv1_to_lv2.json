@@ -4,23 +4,25 @@
         "Coin": "loudcoin",
         "Count": "100"
     }],
-    "ItemInputRefs":[
-        "./recipes/item_input/wooden_sword_lv1.json"
+    "ItemInputs":[
+        {
+            "ID": "wooden_sword_lv1",
+            "Ref": "./recipes/item_input/wooden_sword_lv1.json"
+        }
     ],
     "Entries":{
         "CoinOutputs":[],
-        "ItemOutputs":[
+        "ItemModifyOutputs": [
             {
-                "ModifyItem": {
-                    "ItemInputRef": 0,
-                    "ModifyParamsRef": "./recipes/upgrader/level.json"
-                }
+                "ID": "wooden_sword_lv2",
+                "ItemInputRef": "wooden_sword_lv1",
+                "ModifyParamsRef": "./recipes/upgrader/level.json"
             }
         ]
     },
     "Outputs": [
         {
-            "ResultEntries": ["0"],
+            "EntryIDs": ["wooden_sword_lv2"],
             "Weight": "1"
         }
     ],

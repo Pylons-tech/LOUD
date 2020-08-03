@@ -4,50 +4,54 @@
         "Coin": "pylon",
         "Count": "5"
     }],
-    "ItemInputRefs":[
-        "./recipes/item_input/character_nospecial.json",
-        "./recipes/item_input/iron_sword.json"
+    "ItemInputs":[
+        {
+            "ID": "character_nospecial",
+            "Ref": "./recipes/item_input/character_nospecial.json"
+        },
+        {
+            "ID": "iron_sword",
+            "Ref": "./recipes/item_input/iron_sword.json"
+        }
     ],
     "Entries":{
         "CoinOutputs":[{
+            "ID": "coin_reward",
             "Coin":"loudcoin",
             "Count": "3000"
         }],
-        "ItemOutputs":[
+        "ItemModifyOutputs": [
             {
-                "ModifyItem": {
-                    "ItemInputRef": 0,
-                    "ModifyParamsRef": "./recipes/upgrader/character_after_fighting_giant.json"
-                }
+                "ID": "modified_character",
+                "ItemInputRef": "character_nospecial",
+                "ModifyParamsRef": "./recipes/upgrader/character_after_fighting_giant.json"
             },
             {
-                "ModifyItem": {
-                    "ItemInputRef": 1 
-                }
+                "ID": "iron_sword",
+                "ItemInputRef": "iron_sword" 
             },
             {
-                "ModifyItem": {
-                    "ItemInputRef": 0,
-                    "ModifyParamsRef": "./recipes/upgrader/character_after_fighting_giant_get_fire_special.json"
-                }
+                "ID": "fire_character",
+                "ItemInputRef": "character_nospecial",
+                "ModifyParamsRef": "./recipes/upgrader/character_after_fighting_giant_get_fire_special.json"
             }
         ]
     },
     "Outputs": [
         {
-            "ResultEntries": [],
+            "EntryIDs": [],
             "Weight": "5"
         },
         {
-            "ResultEntries": ["0", "1"],
+            "EntryIDs": ["coin_reward", "modified_character"],
             "Weight": "3"
         },
         {
-            "ResultEntries": ["0", "1", "2"],
+            "EntryIDs": ["coin_reward", "modified_character", "iron_sword"],
             "Weight": "82"
         },
         {
-            "ResultEntries": ["0", "2", "3"],
+            "EntryIDs": ["coin_reward", "iron_sword", "fire_character"],
             "Weight": "10"
         }
     ],

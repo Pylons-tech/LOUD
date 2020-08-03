@@ -4,9 +4,10 @@
         "Coin": "pylon",
         "Count": "100"
     }],    
-    "ItemInputRefs":[],
+    "ItemInputs":[],
     "Entries":{
-        "CoinOutputs":[ {
+        "CoinOutputs":[{
+            "ID": "coin_reward",
             "Coin":"loudcoin",
             "Count": "5000"
         }],
@@ -14,7 +15,7 @@
     },
     "Outputs": [
         {
-            "ResultEntries": ["0"],
+            "EntryIDs": ["coin_reward"],
             "Weight": "1"
         }
     ],

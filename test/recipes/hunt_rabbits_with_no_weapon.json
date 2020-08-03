@@ -1,30 +1,33 @@
 {
     "ID": "LOUD-hunt-rabbits-with-no-weapon-recipe-v0.1.0-1589853709",
     "CoinInputs":[],    
-    "ItemInputRefs":[
-        "./recipes/item_input/character.json"
+    "ItemInputs":[
+        {
+            "ID": "character",
+            "Ref": "./recipes/item_input/character.json"
+        }
     ],
     "Entries":{
         "CoinOutputs":[{
+            "ID": "coin_reward",
             "Coin":"loudcoin",
             "Count": "rand(2)+1"
         }],
-        "ItemOutputs":[
+        "ItemModifyOutputs": [
             {
-                "ModifyItem": {
-                    "ItemInputRef": 0,
-                    "ModifyParamsRef": "./recipes/upgrader/character_after_hunting_rabbits.json"
-                }
+                "ID": "modified_character",
+                "ItemInputRef": "character",
+                "ModifyParamsRef": "./recipes/upgrader/character_after_hunting_rabbits.json"
             }
         ]
     },
     "Outputs": [
         {
-            "ResultEntries": ["0", "1"],
+            "EntryIDs": ["coin_reward", "modified_character"],
             "Weight": "99"
         },
         {
-            "ResultEntries": [],
+            "EntryIDs": [],
             "Weight": "1"
         }
     ],
