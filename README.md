@@ -4,7 +4,7 @@
 
 ## Setup development environment
 
-```
+```sh
 git clone https://github.com/Pylons-tech/LOUD
 brew install pre-commit
 brew install golangci/tap/golangci-lint
@@ -16,7 +16,7 @@ pre-commit install
 You need a correctly set up Golang environment over 1.11; this proejct uses `go mod`.
 
 Run make.
-```
+```sh
     make
 ```
 ## Running
@@ -47,36 +47,36 @@ Here GOPATH is configured as /Users/{username}/go
 
 Since Pylons repos are private below command will be needed to run test correctly.  
 
-```
+```sh
 export GOPRIVATE="github.com/Pylons-tech"
 go get "github.com/Pylons-tech/pylons_sdk"
 ```
 
 ### Fresh Local test
 Build game
-```
+```sh
 make
 ```
 Run daemon and rest-server
-```
+```sh
 pylonsd unsafe-reset-all
 pylonsd start
 pylonscli rest-server --chain-id pylonschain
 ```
 Create eugen account by running
-```
+```sh
 make ARGS="eugen -locald" run
 ```
 Create cookbook and recipes with eugen account in test keyring-backend by running
-```
+```sh
 make fixture_tests ARGS="-locald --accounts=eugen"
 ```
 Run game with name "michael"
-```
+```sh
 make ARGS="michael -locald" run
 ```
 Run game with name "michael" and use rest endpoint for tx send
-```
+```sh
 make ARGS="michael -locald -userest" run
 ```
 Deployment of recipes with custom account, this replace account1 to eugen at runtime.
@@ -85,13 +85,13 @@ Deployment of recipes with custom account, this replace account1 to eugen at run
 Development channel is available and to do automation process on development channel
 
 To do automation process correctly with afti's java, copy artifacts_txutil.sh file which has below content
-```
+```sh
 java -cp "jar/txutil.jar:jar/*" com.pylons.txutil.Main $1 $2 $3 $4 $5
 ```
 And also copy `jar` folder in project root scope.
 
 Run below command to run automation.
-```
+```sh
 make ARGS="afti -locald -userest -automate" run
 ```
 ##### For Afti
@@ -99,7 +99,7 @@ make ARGS="afti -locald -userest -automate" run
 Once you see "something went wrong" message on loud app, you can just see loud.log and search for "comparing afticli and pyloncli ;)" and you will be able to see relevant logs on before and after.
 It looks like below.
 
-```
+```log
 2020/02/18 comparing afticli and pyloncli ;) OTuhvokIB+vfqNxx5AAHXbD+xmlq/l7HiOtoJ+805YlkHIr+bnNWlCTYtxMf06w6isk+OGMgLL9MjIx64EVprA== 
 and
  ouhd/DfYAgsXycksZz+bRXFsToWqOPe6XTC6ph7smEp/+CjummjBKzVQecIEJSMkBAvu+5kbmroMXqw51Qb73w==
@@ -115,59 +115,59 @@ You can get message to be signed, sequence, account number, private key, bech32a
 
 ### Fresh Remote node test
 Build game
-```
+```sh
 make
 ```
 
 Create eugen account by running
-```
+```sh
 make ARGS="eugen" run
 ```
 
 After creating eugen account on remote, check eugen account created correctly on node by running
-```
+```sh
 pylonscli query account $(pylonscli keys show -a eugen) --node tcp://35.223.7.2:26657
 ```
 Update cookbook name, id and recipe ID for correct version and timestamp.
 **Warn:** If cookbook name does not change, it's refering to old version of cookbook since now it's finding cookbooks by name.
 
 Deployment of recipes and cookbooks witu eugen account in test keyring-backend by running
-```
+```sh
 make fixture_tests ARGS="-runserial --accounts=eugen"
 ```
 Deployment of recipes using REST endpoint.
-```
+```sh
 make fixture_tests ARGS="-userest --accounts=eugen"
 ```
 Deployment of recipes with using existing cookbook (known cookbook)
-```
+```sh
 make fixture_tests ARGS="-use-known-cookbook --accounts=eugen"
 ```
 Verification stuff for recipes deployment
-```
+```sh
 make fixture_tests ARGS="-verify-only --accounts=eugen"
 ```
 Deployment of recipes with custom account, this replace account1 to eugen at runtime.
 
 Check if cookbook and all recipes are created by using
-```
+```sh
 pylonscli query pylons list_recipe --node tcp://35.223.7.2:26657
 ```
 
 If something went wrong, just create the remaining recipes by editing `scenario/loud.json`.
 
 Run game with name "michael"
-```
+```sh
 make ARGS="michael" run
 ```
 
 Run game with rest endpoint with name "michael"
-```
+```sh
 make ARGS="michael -userest" run
 ```
 
 Development channel is available and to do automation process on remote node
-```
+```sh
 make ARGS="afti -userest -automate" run
 ```
 
@@ -205,3 +205,18 @@ sdk:
   log_level: trace
 ```
 For local work, use `config_local.yml`. I used to have the configuration issue when I configured on `config.yml` and did run app on local node.
+
+### Configuration
+
+```yaml
+# sdk configurations
+sdk:
+  max_wait_block: 3 # if transaction does not exist on chain until after 3 blocks, game think that transaction failed
+  rest_endpoint: http://35.238.123.59:80 # rest endpoint is not being used on loud game 
+  cli_endpoint: tcp://35.223.7.2:26657 # we broadcast to remote node for loud game
+  log_level: trace # log level configuration: trace, debug, info, warn, error, fatal, panic
+
+# app configurations
+app:
+  daemon_timeout_commit: 2 # this should be same as timeout_commit configured at pylonsd configuration
+```

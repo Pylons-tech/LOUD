@@ -219,3 +219,16 @@ Level is upgraded in this mechanism on each fight.
 ```
 Level = Level + XP/(level^3 + 5)
 ```
+
+### Trading
+
+In pylons central, players can trade items, gold and characters.
+
+### Friends
+
+You can register friends on the game and play game with them.
+For now only item transfer feature is enabled but later time there will be multiplayer game.
+
+### Item transfer
+
+Item transfer is to send items to friend. For fees, it is paid by item sender.

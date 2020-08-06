@@ -25,3 +25,7 @@ Yes, but percentage is low and it's different per monster.
 - rest server not opened
 - deployment of same recipe id and cookbook id
 
+## How long does it take to deploy recipes?
+
+- It is related to server connection speed, it is taking around 10s - 20s.
+
