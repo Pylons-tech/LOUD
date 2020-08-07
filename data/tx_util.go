@@ -333,7 +333,7 @@ func GetInitialPylons(username string) (string, error) {
 	getPylonsMsg := msgs.NewMsgGetPylons(types.PremiumTier.Fee, sdkAddr)
 	txhash, err := pylonSDK.TestTxWithMsgWithNonce(t, getPylonsMsg, username, false)
 	if err != nil {
-		return "", fmt.Errorf("error sending transaction; %+v", err)
+		return "", fmt.Errorf("error sending transaction; %s: %+v", txhash, err)
 	}
 	return txhash, nil
 
@@ -643,7 +643,7 @@ func ExecuteRecipe(user User, rcpName string, itemIDs []string) (string, error) 
 	execMsg := msgs.NewMsgExecuteRecipe(rcpID, sdkAddr, itemIDs)
 	txhash, err := pylonSDK.TestTxWithMsgWithNonce(t, execMsg, user.GetUserName(), false)
 	if err != nil {
-		return "", fmt.Errorf("error sending transaction; %+v", err)
+		return "", fmt.Errorf("error sending transaction; %s: %+v", txhash, err)
 	}
 	user.SetLastTransaction(txhash, rcpName)
 	return txhash, nil
@@ -797,7 +797,7 @@ func SendTxMsg(user User, txMsg sdk.Msg) (string, error) {
 	t := GetTestingT()
 	txhash, err := pylonSDK.TestTxWithMsgWithNonce(t, txMsg, user.GetUserName(), false)
 	if err != nil {
-		return "", fmt.Errorf("error sending transaction; %+v", err)
+		return "", fmt.Errorf("error sending transaction; %s: %+v", txhash, err)
 	}
 	user.SetLastTransaction(txhash, txMsg.Type())
 	return txhash, nil

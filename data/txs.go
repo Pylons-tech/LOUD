@@ -174,7 +174,7 @@ func RenameCharacter(user User, ch Character, newName string) (string, error) {
 	renameMsg := msgs.NewMsgUpdateItemString(ch.ID, "Name", newName, sdkAddr)
 	txhash, err := pylonSDK.TestTxWithMsgWithNonce(t, renameMsg, user.GetUserName(), false)
 	if err != nil {
-		return "", fmt.Errorf("error sending transaction; %+v", err)
+		return "", fmt.Errorf("error sending transaction; %s: %+v", txhash, err)
 	}
 	user.SetLastTransaction(txhash, Sprintf("rename character from %s to %s", ch.Name, newName))
 	return txhash, nil
@@ -189,7 +189,7 @@ func SendItem(user User, friend Friend, item Item) (string, error) {
 	sendItemMsg := msgs.NewMsgSendItems([]string{item.ID}, senderSdkAddr, friendSdkAddr)
 	txhash, err := pylonSDK.TestTxWithMsgWithNonce(t, sendItemMsg, user.GetUserName(), false)
 	if err != nil {
-		return "", fmt.Errorf("error sending transaction; %+v", err)
+		return "", fmt.Errorf("error sending transaction; %s: %+v", txhash, err)
 	}
 	user.SetLastTransaction(txhash, Sprintf("send item from %s to %s", addr, friend.Address))
 	return txhash, nil
@@ -204,7 +204,7 @@ func SendCharacter(user User, friend Friend, chr Character) (string, error) {
 	sendItemMsg := msgs.NewMsgSendItems([]string{chr.ID}, senderSdkAddr, friendSdkAddr)
 	txhash, err := pylonSDK.TestTxWithMsgWithNonce(t, sendItemMsg, user.GetUserName(), false)
 	if err != nil {
-		return "", fmt.Errorf("error sending transaction; %+v", err)
+		return "", fmt.Errorf("error sending transaction; %s: %+v", txhash, err)
 	}
 	user.SetLastTransaction(txhash, Sprintf("send character from %s to %s", addr, friend.Address))
 	return txhash, nil
