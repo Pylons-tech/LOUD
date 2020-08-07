@@ -4,7 +4,7 @@ go 1.13
 
 require (
 	github.com/ChainSafe/go-schnorrkel v0.0.0-20200405005733-88cbf1b4c40d // indirect
-	github.com/Pylons-tech/pylons_sdk v0.0.0-20200802164128-975baaf7fc36
+	github.com/Pylons-tech/pylons_sdk v0.0.0-20200807024733-d6f61840a7b2
 	github.com/ahmetb/go-cursor v0.0.0-20131010032410-8136607ea412
 	github.com/anmitsu/go-shlex v0.0.0-20161002113705-648efa622239 // indirect
 	github.com/atotto/clipboard v0.1.2
@@ -28,8 +28,6 @@ require (
 	github.com/vmihailenco/msgpack v0.0.0-20190804092921-cd92a145e6d2
 	github.com/vmihailenco/tagparser v0.1.1 // indirect
 	github.com/wayneashleyberry/terminal-dimensions v1.0.0
-	golang.org/x/crypto v0.0.0-20200406173513-056763e48d71 // indirect
-	golang.org/x/net v0.0.0-20200324143707-d3edc9973b7e // indirect
 	golang.org/x/text v0.3.2
 	google.golang.org/appengine v1.6.5 // indirect
 	google.golang.org/grpc v1.28.1 // indirect
